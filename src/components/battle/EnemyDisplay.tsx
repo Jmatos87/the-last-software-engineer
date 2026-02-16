@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import type { EnemyInstance } from '../../types';
+import type { EnemyInstance, StatusEffect } from '../../types';
+import { calculateDamage, calculateStressDamage } from '../../utils/battleEngine';
 import { HpBar } from '../common/HpBar';
 import { StatusEffects } from '../common/StatusEffects';
 import { Tooltip } from '../common/Tooltip';
@@ -8,9 +9,10 @@ import { Tooltip } from '../common/Tooltip';
 interface EnemyDisplayProps {
   enemy: EnemyInstance;
   isTargeted?: boolean;
+  playerStatusEffects: StatusEffect;
 }
 
-export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted }) => {
+export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, playerStatusEffects }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `enemy-${enemy.instanceId}`,
     data: { enemyInstanceId: enemy.instanceId },
@@ -28,11 +30,20 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted })
   }, [enemy.currentHp]);
 
   const intentIcon = enemy.currentMove.icon;
+  const move = enemy.currentMove;
+
+  // Calculate actual damage after modifiers (strength, weak, vulnerable)
+  const calcDmg = move.damage
+    ? calculateDamage(move.damage, enemy.statusEffects, playerStatusEffects)
+    : 0;
+  const calcStressDmg = move.stressDamage
+    ? calculateStressDamage(move.stressDamage, enemy.statusEffects, playerStatusEffects, enemy.id)
+    : 0;
+
   const intentDesc = (() => {
-    const move = enemy.currentMove;
     const parts: string[] = [move.name + ':'];
-    if (move.damage) parts.push(`${move.damage}${move.times && move.times > 1 ? `x${move.times}` : ''} dmg`);
-    if (move.stressDamage) parts.push(`${move.stressDamage}${move.times && move.times > 1 ? `x${move.times}` : ''} stress`);
+    if (calcDmg) parts.push(`${calcDmg}${move.times && move.times > 1 ? `x${move.times}` : ''} dmg`);
+    if (calcStressDmg) parts.push(`${calcStressDmg}${move.times && move.times > 1 ? `x${move.times}` : ''} stress`);
     if (move.discardCount) parts.push(`discard ${move.discardCount}`);
     if (move.block) parts.push(`${move.block} block`);
     if (move.applyToSelf?.strength) parts.push(`+${move.applyToSelf.strength} str`);
@@ -76,23 +87,23 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted })
           cursor: 'help',
         }}>
           <span>{intentIcon}</span>
-          {enemy.currentMove.damage && (
+          {calcDmg > 0 && (
             <span style={{ color: 'var(--accent-red)' }}>
-              ⚔️{enemy.currentMove.damage}{enemy.currentMove.times && enemy.currentMove.times > 1 ? `x${enemy.currentMove.times}` : ''}
+              ⚔️{calcDmg}{move.times && move.times > 1 ? `x${move.times}` : ''}
             </span>
           )}
-          {enemy.currentMove.stressDamage && (
+          {calcStressDmg > 0 && (
             <span style={{ color: 'var(--accent-purple)' }}>
-              😰{enemy.currentMove.stressDamage}{enemy.currentMove.times && enemy.currentMove.times > 1 ? `x${enemy.currentMove.times}` : ''}
+              😰{calcStressDmg}{move.times && move.times > 1 ? `x${move.times}` : ''}
             </span>
           )}
-          {enemy.currentMove.discardCount && (
+          {move.discardCount && (
             <span style={{ color: 'var(--accent-yellow)' }}>
-              🗑️{enemy.currentMove.discardCount}
+              🗑️{move.discardCount}
             </span>
           )}
-          {enemy.currentMove.block && (
-            <span style={{ color: 'var(--block-color)' }}>{enemy.currentMove.block}</span>
+          {move.block && (
+            <span style={{ color: 'var(--block-color)' }}>{move.block}</span>
           )}
         </div>
       </Tooltip>

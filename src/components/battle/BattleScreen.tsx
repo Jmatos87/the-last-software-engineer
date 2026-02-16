@@ -34,17 +34,19 @@ const PlayerStatusPanel: React.FC = () => {
         minWidth: 140,
       }}
     >
-      <div style={{ width: '100%' }}>
-        <HpBar current={run.hp} max={run.maxHp} height={10} label="HP" />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
+        {battle.playerBlock > 0 && (
+          <span style={{ fontSize: 12, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
+            🛡️{battle.playerBlock}
+          </span>
+        )}
+        <div style={{ flex: 1 }}>
+          <HpBar current={run.hp} max={run.maxHp} height={10} label="HP" />
+        </div>
       </div>
       <div style={{ width: '100%' }}>
         <HpBar current={run.stress} max={run.maxStress} height={10} color="var(--accent-purple)" label="STRESS" />
       </div>
-      {battle.playerBlock > 0 && (
-        <div style={{ fontSize: 12, color: 'var(--block-color)', textAlign: 'center' }}>
-          🛡️ {battle.playerBlock}
-        </div>
-      )}
       <StatusEffects effects={battle.playerStatusEffects} />
     </div>
   );
@@ -156,6 +158,7 @@ export const BattleScreen: React.FC = () => {
                 key={enemy.instanceId}
                 enemy={enemy}
                 isTargeted={draggedCard?.target === 'enemy' || draggedCard?.target === 'all_enemies'}
+                playerStatusEffects={battle.playerStatusEffects}
               />
             ))}
           </div>

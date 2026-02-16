@@ -231,6 +231,10 @@ export const useGameStore = create<GameState>()(
 
       set(s => {
         if (!s.run) return;
+        // Auto-collect any uncollected gold before clearing rewards
+        if (s.pendingRewards && s.pendingRewards.gold > 0) {
+          s.run.gold += s.pendingRewards.gold;
+        }
         s.run.deck.push(instance as any);
         s.pendingRewards = null;
         s.screen = 'MAP';
@@ -239,6 +243,10 @@ export const useGameStore = create<GameState>()(
 
     skipRewardCards: () => {
       set(s => {
+        // Auto-collect any uncollected gold before clearing rewards
+        if (s.run && s.pendingRewards && s.pendingRewards.gold > 0) {
+          s.run.gold += s.pendingRewards.gold;
+        }
         s.pendingRewards = null;
         s.screen = 'MAP';
       });

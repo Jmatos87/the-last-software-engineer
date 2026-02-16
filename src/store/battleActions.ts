@@ -63,7 +63,7 @@ export function executePlayCard(
 
   if (card.cost > battle.energy) return { battle, stressReduction: 0 };
 
-  let newBattle = { ...battle };
+  const newBattle = { ...battle };
   let stressReduction = 0;
   newBattle.energy -= card.cost;
   newBattle.hand = [...battle.hand];
@@ -165,13 +165,9 @@ export function executeEnemyTurn(
   battle: BattleState,
   run: RunState
 ): { battle: BattleState; playerHp: number; playerStress: number } {
-  let newBattle = { ...battle };
+  const newBattle = { ...battle };
   let playerHp = run.hp;
   let playerStress = run.stress;
-
-  // Reset player block (Savings Account retains up to X)
-  const savedBlock = newBattle.playerStatusEffects.savingsAccount || 0;
-  newBattle.playerBlock = savedBlock > 0 ? Math.min(newBattle.playerBlock, savedBlock) : 0;
 
   const enemiesToRemove: string[] = [];
 
@@ -350,6 +346,10 @@ export function executeEnemyTurn(
 }
 
 export function startNewTurn(battle: BattleState, run: RunState): { battle: BattleState; stressChange: number } {
+  // Reset player block (Savings Account retains up to X)
+  const savedBlock = battle.playerStatusEffects.savingsAccount || 0;
+  const newBlock = savedBlock > 0 ? Math.min(battle.playerBlock, savedBlock) : 0;
+
   // Discard hand
   const newDiscard = [...battle.discardPile, ...battle.hand];
   const extraDraw = run.items.reduce((sum, item) => sum + (item.effect.extraDraw || 0), 0);
@@ -391,6 +391,7 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       drawPile: newDrawPile,
       discardPile: newDiscardPile,
       energy: battle.maxEnergy + hustleEnergy,
+      playerBlock: newBlock,
       turn: battle.turn + 1,
     },
     stressChange,
