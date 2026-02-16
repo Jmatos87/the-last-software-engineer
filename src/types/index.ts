@@ -131,6 +131,13 @@ export interface ItemDef {
     extraGold?: number;
     bonusDamage?: number;
     bonusBlock?: number;
+    startBattleStrength?: number;
+    startBattleDexterity?: number;
+    startBattleVulnerable?: number;
+    startBattleWeak?: number;
+    startBattleDamage?: number;
+    stressPerCombat?: number;
+    healPerCombat?: number;
   };
 }
 
@@ -186,6 +193,8 @@ export interface BattleState {
   turn: number;
   playerBlock: number;
   playerStatusEffects: StatusEffect;
+  killCount: number;
+  totalEnemies: number;
 }
 
 // ── Run ──
@@ -211,6 +220,8 @@ export interface GameState {
   pendingRewards: {
     gold: number;
     cardChoices: CardDef[];
+    artifactChoices?: ItemDef[];
+    isBossReward?: boolean;
   } | null;
   pendingEvent: EventDef | null;
   eventOutcome: {
@@ -227,6 +238,7 @@ export interface GameState {
   endTurn: () => void;
   collectRewardGold: () => void;
   pickRewardCard: (cardId: string) => void;
+  claimArtifact: (itemId: string) => void;
   skipRewardCards: () => void;
   rest: () => void;
   upgradeCard: (cardInstanceId: string) => void;

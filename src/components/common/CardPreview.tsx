@@ -109,16 +109,31 @@ export const CardPreview: React.FC<CardPreviewProps> = ({ card, x, y }) => {
         </div>
 
         {/* Description */}
-        <div style={{
-          fontSize: 14,
-          color: 'var(--text-secondary)',
-          textAlign: 'center',
-          lineHeight: 1.5,
-          flex: 1,
-          padding: '6px 0',
-        }}>
-          {card.description}
-        </div>
+        {(() => {
+          const desc = ('upgraded' in card && card.upgraded && card.upgradedDescription)
+            ? card.upgradedDescription : card.description;
+          // Split: first sentence is the mechanical effect, rest is flavor
+          const dotIdx = desc.indexOf('. ');
+          const mechanic = dotIdx >= 0 ? desc.slice(0, dotIdx + 1) : desc;
+          const flavor = dotIdx >= 0 ? desc.slice(dotIdx + 2) : '';
+          return (
+            <div style={{
+              fontSize: 14,
+              textAlign: 'center',
+              lineHeight: 1.5,
+              flex: 1,
+              padding: '6px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+            }}>
+              <div style={{ color: 'var(--text-primary)', fontWeight: 'bold' }}>{mechanic}</div>
+              {flavor && (
+                <div style={{ color: 'var(--text-secondary)', fontSize: 12, fontStyle: 'italic' }}>{flavor}</div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Target indicator */}
         <div style={{

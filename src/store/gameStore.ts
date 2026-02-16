@@ -5,7 +5,7 @@ import { characters } from '../data/characters';
 import { cards, getRewardCards, getCardDef } from '../data/cards';
 import { enemies, normalEncounters, eliteEncounters, bossEncounters } from '../data/enemies';
 import { events } from '../data/events';
-import { items } from '../data/items';
+import { items, getRewardArtifact } from '../data/items';
 import { createCardInstance } from '../utils/deckUtils';
 import { generateMap } from '../utils/mapGenerator';
 import { initBattle, executePlayCard, executeEnemyTurn, startNewTurn } from './battleActions';
@@ -115,11 +115,19 @@ export const useGameStore = create<GameState>()(
       const state = get();
       if (!state.run) return;
 
-      const battleState = initBattle(state.run, enemyDefs);
+      const { battle: battleState, hpAdjust, stressAdjust } = initBattle(state.run, enemyDefs);
 
       set(s => {
-        s.battle = battleState;
+        if (!s.run) return;
+        s.battle = battleState as any;
         s.screen = 'BATTLE';
+        // Apply artifact start-of-combat HP/stress adjustments
+        if (hpAdjust !== 0) {
+          s.run.hp = Math.max(1, Math.min(s.run.maxHp, s.run.hp + hpAdjust));
+        }
+        if (stressAdjust !== 0) {
+          s.run.stress = Math.max(0, Math.min(s.run.maxStress, s.run.stress + stressAdjust));
+        }
       });
     },
 
@@ -136,7 +144,7 @@ export const useGameStore = create<GameState>()(
         }
       });
 
-      // Check if all enemies are dead
+      // Check if all enemies are dead — delay transition so death/flee animations play
       if (newBattle.enemies.length === 0) {
         const isElite = state.run.map.nodes.find(
           n => n.id === state.run!.map.currentNodeId
@@ -145,30 +153,62 @@ export const useGameStore = create<GameState>()(
           n => n.id === state.run!.map.currentNodeId
         )?.type === 'boss';
 
-        if (isBoss) {
-          get().victory();
-          return;
-        }
+        const kills = newBattle.killCount || 0;
+        const total = newBattle.totalEnemies || 1;
+        const allGhosted = kills === 0;
 
-        // Post-battle heal from items
-        const healOnKill = state.run.items.reduce((sum, item) => sum + (item.effect.healOnKill || 0), 0);
+        // Post-battle heal from items (only if you actually killed something)
+        const healOnKill = kills > 0 ? state.run.items.reduce((sum, item) => sum + (item.effect.healOnKill || 0), 0) : 0;
         const extraGold = state.run.items.reduce((sum, item) => sum + (item.effect.extraGold || 0), 0);
         // Take-Home Assignment fast-kill bonus: +15 gold if killed in <= 2 turns
         const takeHomeBonus = (newBattle.turn <= 2 && state.run.map.nodes.find(
           n => n.id === state.run!.map.currentNodeId
         )?.type === 'battle') ? 15 : 0;
-        const goldReward = (isElite ? 30 : 15) + Math.floor(Math.random() * 10) + extraGold + takeHomeBonus;
 
-        set(s => {
-          if (!s.run) return;
-          s.run.hp = Math.min(s.run.maxHp, s.run.hp + healOnKill);
-          s.run.gold += goldReward;
-          s.pendingRewards = {
-            gold: goldReward,
-            cardChoices: getRewardCards(3) as any,
-          };
-          s.screen = 'BATTLE_REWARD';
-        });
+        // Gold scales with kills — no kills (all ghosted) = no gold
+        const baseGold = isElite ? 30 : 15;
+        const goldPerKill = Math.floor(baseGold / total);
+        const goldReward = allGhosted ? 0 : (goldPerKill * kills) + Math.floor(Math.random() * 10) + extraGold + takeHomeBonus;
+
+        // Determine artifact drops
+        const ownedIds = state.run.items.map(i => i.id);
+        let artifactChoices: import('../types').ItemDef[] | undefined;
+        if (isBoss) {
+          artifactChoices = getRewardArtifact(ownedIds, 3);
+        } else if (isElite && Math.random() < 0.5) {
+          artifactChoices = getRewardArtifact(ownedIds, 1);
+        }
+
+        // Delay screen transition so death/flee animations play out
+        setTimeout(() => {
+          if (isBoss) {
+            // Boss gives rewards before victory
+            set(s => {
+              if (!s.run) return;
+              s.run.hp = Math.min(s.run.maxHp, s.run.hp + healOnKill);
+              s.run.gold += goldReward;
+              s.pendingRewards = {
+                gold: goldReward,
+                cardChoices: allGhosted ? [] : getRewardCards(3) as any,
+                artifactChoices: artifactChoices && artifactChoices.length > 0 ? artifactChoices as any : undefined,
+                isBossReward: true,
+              };
+              s.screen = 'BATTLE_REWARD';
+            });
+            return;
+          }
+          set(s => {
+            if (!s.run) return;
+            s.run.hp = Math.min(s.run.maxHp, s.run.hp + healOnKill);
+            s.run.gold += goldReward;
+            s.pendingRewards = {
+              gold: goldReward,
+              cardChoices: allGhosted ? [] : getRewardCards(3) as any,
+              artifactChoices: artifactChoices && artifactChoices.length > 0 ? artifactChoices as any : undefined,
+            };
+            s.screen = 'BATTLE_REWARD';
+          });
+        }, 800);
       }
     },
 
@@ -199,6 +239,75 @@ export const useGameStore = create<GameState>()(
         return;
       }
 
+      // Check if all enemies are gone after enemy turn (e.g. Ghost Company vanished)
+      if (afterEnemyTurn.enemies.length === 0) {
+        const isBoss = state.run.map.nodes.find(
+          n => n.id === state.run!.map.currentNodeId
+        )?.type === 'boss';
+
+        const kills = afterEnemyTurn.killCount || 0;
+        const total = afterEnemyTurn.totalEnemies || 1;
+        const allGhosted = kills === 0;
+
+        // Reduced gold if you didn't kill enemies — only get gold per kill
+        const isElite = state.run.map.nodes.find(
+          n => n.id === state.run!.map.currentNodeId
+        )?.type === 'elite';
+        const extraGold = state.run.items.reduce((sum, item) => sum + (item.effect.extraGold || 0), 0);
+        const baseGold = isElite ? 30 : 15;
+        const goldPerKill = Math.floor(baseGold / total);
+        const goldReward = allGhosted ? 0 : (goldPerKill * kills) + Math.floor(Math.random() * 5) + extraGold;
+        const healOnKill = state.run.items.reduce((sum, item) => sum + (item.effect.healOnKill || 0), 0);
+
+        // Determine artifact drops
+        const ownedIds2 = state.run.items.map(i => i.id);
+        let artifactChoices2: import('../types').ItemDef[] | undefined;
+        if (isBoss) {
+          artifactChoices2 = getRewardArtifact(ownedIds2, 3);
+        } else if (isElite && Math.random() < 0.5) {
+          artifactChoices2 = getRewardArtifact(ownedIds2, 1);
+        }
+
+        // Update HP/stress immediately but keep battle mounted for animations
+        set(s => {
+          if (!s.run) return;
+          s.run.hp = Math.min(s.run.maxHp, playerHp + (kills > 0 ? healOnKill : 0));
+          s.run.stress = Math.max(0, Math.min(s.run.maxStress, playerStress));
+          s.run.gold += goldReward;
+          s.battle = afterEnemyTurn as any;
+        });
+
+        // Delay screen transition so flee/death animations play out
+        setTimeout(() => {
+          if (isBoss) {
+            // Boss gives rewards before victory
+            set(s => {
+              if (!s.run) return;
+              s.pendingRewards = {
+                gold: goldReward,
+                cardChoices: allGhosted ? [] : getRewardCards(3) as any,
+                artifactChoices: artifactChoices2 && artifactChoices2.length > 0 ? artifactChoices2 as any : undefined,
+                isBossReward: true,
+              };
+              s.battle = null;
+              s.screen = 'BATTLE_REWARD';
+            });
+            return;
+          }
+          set(s => {
+            if (!s.run) return;
+            s.pendingRewards = {
+              gold: goldReward,
+              cardChoices: allGhosted ? [] : getRewardCards(3) as any,
+              artifactChoices: artifactChoices2 && artifactChoices2.length > 0 ? artifactChoices2 as any : undefined,
+            };
+            s.battle = null;
+            s.screen = 'BATTLE_REWARD';
+          });
+        }, 800);
+        return;
+      }
+
       // Apply player regen (Touch Grass) before new turn
       const regenAmount = afterEnemyTurn.playerStatusEffects.regen || 0;
       const hpAfterRegen = regenAmount > 0 ? Math.min(state.run.maxHp, playerHp + regenAmount) : playerHp;
@@ -226,19 +335,41 @@ export const useGameStore = create<GameState>()(
       if (!cardDef) return;
 
       const instance = createCardInstance(cardDef);
+      const isBossReward = state.pendingRewards.isBossReward;
 
       set(s => {
         if (!s.run) return;
         s.run.deck.push(instance as any);
         s.pendingRewards = null;
-        s.screen = 'MAP';
+        s.screen = isBossReward ? 'VICTORY' : 'MAP';
+      });
+    },
+
+    claimArtifact: (itemId: string) => {
+      const state = get();
+      if (!state.run || !state.pendingRewards?.artifactChoices) return;
+
+      const item = state.pendingRewards.artifactChoices.find(i => i.id === itemId);
+      if (!item) return;
+
+      set(s => {
+        if (!s.run || !s.pendingRewards) return;
+        s.run.items.push(item as any);
+        // Apply immediate effects (extraHp)
+        if (item.effect.extraHp) {
+          s.run.maxHp += item.effect.extraHp;
+          s.run.hp += item.effect.extraHp;
+        }
+        // Clear artifact choices after picking
+        s.pendingRewards.artifactChoices = undefined;
       });
     },
 
     skipRewardCards: () => {
+      const isBossReward = get().pendingRewards?.isBossReward;
       set(s => {
         s.pendingRewards = null;
-        s.screen = 'MAP';
+        s.screen = isBossReward ? 'VICTORY' : 'MAP';
       });
     },
 
@@ -309,6 +440,16 @@ export const useGameStore = create<GameState>()(
         if (outcome.removeRandomCard && s.run.deck.length > 1) {
           const idx = Math.floor(Math.random() * s.run.deck.length);
           s.run.deck.splice(idx, 1);
+        }
+        if (outcome.addItem) {
+          const itemToAdd = items.find(i => i.id === outcome.addItem);
+          if (itemToAdd && !s.run.items.some(i => i.id === itemToAdd.id)) {
+            s.run.items.push(itemToAdd as any);
+            if (itemToAdd.effect.extraHp) {
+              s.run.maxHp += itemToAdd.effect.extraHp;
+              s.run.hp += itemToAdd.effect.extraHp;
+            }
+          }
         }
         if (outcome.stress) {
           s.run.stress = Math.max(0, Math.min(s.run.maxStress, s.run.stress + outcome.stress));

@@ -10,9 +10,12 @@ interface EnemyDisplayProps {
   enemy: EnemyInstance;
   isTargeted?: boolean;
   playerStatusEffects: StatusEffect;
+  isAttacking?: boolean;
+  isDying?: boolean;
+  isFleeing?: boolean;
 }
 
-export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, playerStatusEffects }) => {
+export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, playerStatusEffects, isAttacking, isDying, isFleeing }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `enemy-${enemy.instanceId}`,
     data: { enemyInstanceId: enemy.instanceId },
@@ -59,7 +62,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
   return (
     <div
       ref={setNodeRef}
-      className={shaking ? 'animate-shake' : ''}
+      className={isFleeing ? 'animate-enemy-flee' : isDying ? 'animate-enemy-death' : isAttacking ? 'animate-enemy-attack' : shaking ? 'animate-shake' : ''}
       style={{
         display: 'flex',
         flexDirection: 'column',

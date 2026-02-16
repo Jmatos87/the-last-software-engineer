@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
-import { CardComponent } from '../battle/CardComponent';
+import { CardPreview } from '../common/CardPreview';
+import type { CardInstance } from '../../types';
 
 export const EventScreen: React.FC = () => {
   const pendingEvent = useGameStore(s => s.pendingEvent);
   const eventOutcome = useGameStore(s => s.eventOutcome);
   const makeEventChoice = useGameStore(s => s.makeEventChoice);
   const dismissEventOutcome = useGameStore(s => s.dismissEventOutcome);
+  const [preview, setPreview] = useState<{ card: CardInstance; x: number; y: number } | null>(null);
 
   if (!pendingEvent) return null;
 
@@ -35,18 +37,56 @@ export const EventScreen: React.FC = () => {
           {eventOutcome.message}
         </p>
 
-        {eventOutcome.cardAdded && (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 12,
-          }}>
-            <span style={{ fontSize: 13, color: 'var(--accent-green)', fontWeight: 'bold' }}>
-              Card added to your deck:
-            </span>
-            <CardComponent card={eventOutcome.cardAdded} disabled />
-          </div>
+        {eventOutcome.cardAdded && (() => {
+          const card = eventOutcome.cardAdded!;
+          const borderColor = card.type === 'attack' ? 'var(--card-attack)'
+            : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
+          return (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 12,
+            }}>
+              <span style={{ fontSize: 13, color: 'var(--accent-green)', fontWeight: 'bold' }}>
+                Card added to your deck:
+              </span>
+              <div
+                style={{
+                  width: 140,
+                  padding: 14,
+                  background: 'var(--bg-card)',
+                  border: `2px solid ${borderColor}`,
+                  borderRadius: 'var(--radius-md)',
+                  textAlign: 'center',
+                  cursor: 'default',
+                  transition: 'all var(--transition-fast)',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.boxShadow = 'none';
+                  setPreview(null);
+                }}
+              >
+                <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
+                <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}</div>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11 }}>
+                  <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
+                  <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {preview && (
+          <CardPreview card={preview.card} x={preview.x} y={preview.y} />
         )}
 
         <button

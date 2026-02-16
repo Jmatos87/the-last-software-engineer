@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useGameStore } from '../../store/gameStore';
-import type { CardInstance } from '../../types';
+import type { CardInstance, EnemyInstance } from '../../types';
 import { CardComponent, CardOverlay } from './CardComponent';
 import { EnemyDisplay } from './EnemyDisplay';
 import { HpBar } from '../common/HpBar';
@@ -57,8 +57,93 @@ export const BattleScreen: React.FC = () => {
   const { run, battle, playCard, endTurn } = useGameStore();
   const [draggedCard, setDraggedCard] = useState<CardInstance | null>(null);
   const [preview, setPreview] = useState<{ card: CardInstance; x: number; y: number } | null>(null);
+  const [heroAnim, setHeroAnim] = useState<'' | 'animate-shake' | 'animate-stress'>('');
+  const [attackingEnemyId, setAttackingEnemyId] = useState<string | null>(null);
+  const [dyingEnemies, setDyingEnemies] = useState<EnemyInstance[]>([]);
+  const [fleeingEnemies, setFleeingEnemies] = useState<EnemyInstance[]>([]);
+  const [enemyTurnPlaying, setEnemyTurnPlaying] = useState(false);
+  const prevHpRef = useRef<number | null>(null);
+  const prevStressRef = useRef<number | null>(null);
+  const prevEnemiesRef = useRef<EnemyInstance[]>([]);
+  const fleeingIdsRef = useRef<Set<string>>(new Set());
+
+  // Track enemy disappearances — distinguish deaths from flee
+  useEffect(() => {
+    if (!battle) { prevEnemiesRef.current = []; return; }
+    const currentIds = new Set(battle.enemies.map(e => e.instanceId));
+    const gone = prevEnemiesRef.current.filter(e => !currentIds.has(e.instanceId));
+    if (gone.length > 0) {
+      const fled = gone.filter(e => fleeingIdsRef.current.has(e.instanceId));
+      const died = gone.filter(e => !fleeingIdsRef.current.has(e.instanceId));
+      if (died.length > 0) {
+        setDyingEnemies(prev => [...prev, ...died]);
+        setTimeout(() => {
+          setDyingEnemies(prev => prev.filter(d => !died.some(dd => dd.instanceId === d.instanceId)));
+        }, 600);
+      }
+      if (fled.length > 0) {
+        setFleeingEnemies(prev => [...prev, ...fled]);
+        setTimeout(() => {
+          setFleeingEnemies(prev => prev.filter(f => !fled.some(ff => ff.instanceId === f.instanceId)));
+          fled.forEach(e => fleeingIdsRef.current.delete(e.instanceId));
+        }, 700);
+      }
+    }
+    prevEnemiesRef.current = battle.enemies;
+  }, [battle?.enemies]);
+
+  useEffect(() => {
+    if (!run) return;
+    if (prevHpRef.current !== null && run.hp < prevHpRef.current) {
+      setHeroAnim('animate-shake');
+      const t = setTimeout(() => setHeroAnim(''), 400);
+      return () => clearTimeout(t);
+    }
+    prevHpRef.current = run.hp;
+  }, [run?.hp]);
+
+  useEffect(() => {
+    if (!run) return;
+    if (prevStressRef.current !== null && run.stress > prevStressRef.current) {
+      setHeroAnim('animate-stress');
+      const t = setTimeout(() => setHeroAnim(''), 500);
+      return () => clearTimeout(t);
+    }
+    prevStressRef.current = run.stress;
+  }, [run?.stress]);
 
   if (!run || !battle) return null;
+
+  const battleWon = battle.enemies.length === 0;
+
+  const handleEndTurn = async () => {
+    if (enemyTurnPlaying || battleWon) return;
+    setEnemyTurnPlaying(true);
+
+    // Snapshot enemies that will attack (have attack-type moves)
+    const attackingEnemies = battle.enemies.filter(e => {
+      const t = e.currentMove.type;
+      return t === 'attack' || t === 'dual_attack' || t === 'attack_defend' || t === 'stress_attack' || t === 'discard';
+    });
+
+    // Detect which enemies will vanish (Ghost Company on move index 2 with debuff type)
+    const willVanish = battle.enemies.filter(e =>
+      e.id === 'ghost_company' && e.moveIndex === 2 && e.currentMove.type === 'debuff'
+    );
+    willVanish.forEach(e => fleeingIdsRef.current.add(e.instanceId));
+
+    // Stagger attack animations
+    for (const enemy of attackingEnemies) {
+      setAttackingEnemyId(enemy.instanceId);
+      await new Promise(r => setTimeout(r, 400));
+      setAttackingEnemyId(null);
+      await new Promise(r => setTimeout(r, 100));
+    }
+
+    // Resolve the actual turn (deaths/flees will be caught by the useEffect above)
+    endTurn();
+    setEnemyTurnPlaying(false);
+  };
 
   const handleDragStart = (event: DragStartEvent) => {
     const card = event.active.data.current?.card as CardInstance | undefined;
@@ -68,7 +153,7 @@ export const BattleScreen: React.FC = () => {
   const handleDragEnd = (event: DragEndEvent) => {
     setDraggedCard(null);
     const { active, over } = event;
-    if (!over) return;
+    if (!over || enemyTurnPlaying || battleWon) return;
 
     const card = active.data.current?.card as CardInstance | undefined;
     if (!card) return;
@@ -135,7 +220,7 @@ export const BattleScreen: React.FC = () => {
             alignItems: 'center',
             gap: 8,
           }}>
-            <div style={{ fontSize: 56 }}>{run.character.icon}</div>
+            <div className={heroAnim} style={{ fontSize: 56 }}>{run.character.icon}</div>
             <PlayerStatusPanel />
           </div>
 
@@ -154,6 +239,7 @@ export const BattleScreen: React.FC = () => {
             gap: 16,
             flexWrap: 'wrap',
             justifyContent: 'center',
+            overflow: 'hidden',
           }}>
             {battle.enemies.map(enemy => (
               <EnemyDisplay
@@ -161,6 +247,23 @@ export const BattleScreen: React.FC = () => {
                 enemy={enemy}
                 isTargeted={draggedCard?.target === 'enemy' || draggedCard?.target === 'all_enemies'}
                 playerStatusEffects={battle.playerStatusEffects}
+                isAttacking={attackingEnemyId === enemy.instanceId}
+              />
+            ))}
+            {dyingEnemies.map(enemy => (
+              <EnemyDisplay
+                key={`dying-${enemy.instanceId}`}
+                enemy={enemy}
+                playerStatusEffects={battle.playerStatusEffects}
+                isDying
+              />
+            ))}
+            {fleeingEnemies.map(enemy => (
+              <EnemyDisplay
+                key={`flee-${enemy.instanceId}`}
+                enemy={enemy}
+                playerStatusEffects={battle.playerStatusEffects}
+                isFleeing
               />
             ))}
           </div>
@@ -237,10 +340,11 @@ export const BattleScreen: React.FC = () => {
           {/* End turn button */}
           <button
             className="danger"
-            onClick={endTurn}
-            style={{ padding: '12px 20px', fontSize: 14, whiteSpace: 'nowrap' }}
+            onClick={handleEndTurn}
+            disabled={enemyTurnPlaying || battleWon}
+            style={{ padding: '12px 20px', fontSize: 14, whiteSpace: 'nowrap', opacity: (enemyTurnPlaying || battleWon) ? 0.5 : 1 }}
           >
-            End Turn
+            {battleWon ? 'Victory!' : enemyTurnPlaying ? 'Enemy Turn...' : 'End Turn'}
           </button>
 
           {/* Discard pile */}

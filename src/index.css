@@ -154,7 +154,39 @@ button.success {
   to { opacity: 0; transform: translateY(-40px); }
 }
 
+@keyframes stressShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15% { transform: translateX(-2px) rotate(-1deg); }
+  30% { transform: translateX(2px) rotate(1deg); }
+  45% { transform: translateX(-2px) rotate(-0.5deg); }
+  60% { transform: translateX(2px) rotate(0.5deg); }
+  75% { transform: translateX(-1px) rotate(0deg); }
+}
+
+@keyframes enemyAttack {
+  0% { transform: translateX(0); }
+  30% { transform: translateX(-30px); }
+  50% { transform: translateX(-30px) scale(1.1); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes enemyDeath {
+  0% { opacity: 1; transform: scale(1); filter: brightness(1); }
+  30% { opacity: 0.8; transform: scale(1.1); filter: brightness(2); }
+  100% { opacity: 0; transform: scale(0.5) translateY(20px); filter: brightness(0.5); }
+}
+
+@keyframes enemyFlee {
+  0% { opacity: 1; transform: translateX(0) scale(1); }
+  15% { transform: translateX(-10px) scale(1.05); }
+  100% { opacity: 0; transform: translateX(300px) scale(0.7); }
+}
+
 .animate-fade-in { animation: fadeIn var(--transition-normal) ease; }
 .animate-slide-up { animation: slideUp var(--transition-slow) ease; }
 .animate-shake { animation: shake 0.4s ease; }
 .animate-damage { animation: damageFlash 0.3s ease; }
+.animate-stress { animation: stressShake 0.5s ease; filter: brightness(1.3) hue-rotate(270deg); }
+.animate-enemy-attack { animation: enemyAttack 0.5s ease; }
+.animate-enemy-death { animation: enemyDeath 0.6s ease forwards; pointer-events: none; }
+.animate-enemy-flee { animation: enemyFlee 0.7s ease forwards; pointer-events: none; }

@@ -16,6 +16,10 @@ export const events: EventDef[] = [
         outcome: { gold: 30, message: 'Crypto profits!' },
       },
       {
+        text: 'Salvage a relic from the repo (Gain Company Swag Mug)',
+        outcome: { addItem: 'company_swag_mug', message: 'You found a dusty mug with a faded startup logo. It still works.' },
+      },
+      {
         text: 'Walk away',
         outcome: { message: 'You leave the repository untouched.' },
       },
@@ -82,6 +86,10 @@ export const events: EventDef[] = [
       {
         text: 'Scavenge for parts (+40 gold, lose 10 HP)',
         outcome: { gold: 40, hp: -10, message: 'You got shocked but found valuable components.' },
+      },
+      {
+        text: 'Grab the on-call pager (Gain On-Call Rotation artifact)',
+        outcome: { addItem: 'on_call_rotation', hp: -5, message: 'The pager vibrates ominously. +2 Dexterity, but you\'ll never sleep again.' },
       },
       {
         text: 'Meditate among the servers (Heal 20 HP)',
@@ -159,6 +167,10 @@ export const events: EventDef[] = [
       {
         text: 'Offer gold to the cat (Lose 40 gold, heal 25 HP, reduce 20 stress)',
         outcome: { gold: -40, hp: 25, stress: -20, message: 'Nyancat purrs. The rainbow heals all wounds.' },
+      },
+      {
+        text: 'Take the glowing headphones (Gain Noise-Canceling Headphones)',
+        outcome: { addItem: 'noise_canceling_headphones', stress: 10, message: 'The headphones hum with ancient meme energy. Draw +1 card each turn!' },
       },
       {
         text: 'Nope',

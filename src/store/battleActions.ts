@@ -14,7 +14,7 @@ import {
   mergeStatusEffects,
 } from '../utils/battleEngine';
 
-export function initBattle(run: RunState, enemyDefs: EnemyDef[]): BattleState {
+export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: BattleState; hpAdjust: number; stressAdjust: number } {
   const enemies: EnemyInstance[] = enemyDefs.map(def => ({
     ...def,
     instanceId: uuidv4(),
@@ -33,17 +33,52 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): BattleState {
 
   const { drawn, newDrawPile, newDiscardPile } = drawCards(drawPile, [], drawCount);
 
+  // Apply start-of-battle artifact effects
+  const playerStatusEffects: import('../types').StatusEffect = {};
+  let hpAdjust = 0;
+  let stressAdjust = 0;
+
+  for (const item of run.items) {
+    if (item.effect.startBattleStrength) {
+      playerStatusEffects.strength = (playerStatusEffects.strength || 0) + item.effect.startBattleStrength;
+    }
+    if (item.effect.startBattleDexterity) {
+      playerStatusEffects.dexterity = (playerStatusEffects.dexterity || 0) + item.effect.startBattleDexterity;
+    }
+    if (item.effect.startBattleVulnerable) {
+      playerStatusEffects.vulnerable = (playerStatusEffects.vulnerable || 0) + item.effect.startBattleVulnerable;
+    }
+    if (item.effect.startBattleWeak) {
+      playerStatusEffects.weak = (playerStatusEffects.weak || 0) + item.effect.startBattleWeak;
+    }
+    if (item.effect.startBattleDamage) {
+      hpAdjust -= item.effect.startBattleDamage;
+    }
+    if (item.effect.stressPerCombat) {
+      stressAdjust += item.effect.stressPerCombat;
+    }
+    if (item.effect.healPerCombat) {
+      hpAdjust += item.effect.healPerCombat;
+    }
+  }
+
   return {
-    enemies,
-    hand: drawn,
-    drawPile: newDrawPile,
-    discardPile: newDiscardPile,
-    exhaustPile: [],
-    energy: run.character.energy + extraEnergy,
-    maxEnergy: run.character.energy + extraEnergy,
-    turn: 1,
-    playerBlock: 0,
-    playerStatusEffects: {},
+    battle: {
+      enemies,
+      hand: drawn,
+      drawPile: newDrawPile,
+      discardPile: newDiscardPile,
+      exhaustPile: [],
+      energy: run.character.energy + extraEnergy,
+      maxEnergy: run.character.energy + extraEnergy,
+      turn: 1,
+      playerBlock: 0,
+      playerStatusEffects,
+      killCount: 0,
+      totalEnemies: enemies.length,
+    },
+    hpAdjust,
+    stressAdjust,
   };
 }
 
@@ -160,10 +195,16 @@ export function executePlayCard(
     newBattle.energy += effects.energy;
   }
 
-  // Move card to discard
-  newBattle.discardPile = [...newBattle.discardPile, card];
+  // Move card to discard (powers get exhausted — single use per battle)
+  if (card.type === 'power') {
+    newBattle.exhaustPile = [...newBattle.exhaustPile, card];
+  } else {
+    newBattle.discardPile = [...newBattle.discardPile, card];
+  }
 
-  // Remove dead enemies
+  // Remove dead enemies and track kills
+  const killed = newBattle.enemies.filter(e => e.currentHp <= 0).length;
+  newBattle.killCount = (newBattle.killCount || 0) + killed;
   newBattle.enemies = newBattle.enemies.filter(e => e.currentHp > 0);
 
   return { battle: newBattle, stressReduction };
@@ -172,7 +213,7 @@ export function executePlayCard(
 export function executeEnemyTurn(
   battle: BattleState,
   run: RunState
-): { battle: BattleState; playerHp: number; playerStress: number } {
+): { battle: BattleState; playerHp: number; playerStress: number; enemiesVanished: number; enemiesKilled: number; vanishedIds: string[] } {
   const newBattle = { ...battle };
   let playerHp = run.hp;
   let playerStress = run.stress;
@@ -342,6 +383,13 @@ export function executeEnemyTurn(
     return updatedEnemy;
   });
 
+  // Count vanished vs killed (by counter-offer thorns) before filtering
+  const enemiesVanished = enemiesToRemove.length;
+  const enemiesKilled = newBattle.enemies.filter(e =>
+    e.currentHp <= 0 && !enemiesToRemove.includes(e.instanceId)
+  ).length;
+  newBattle.killCount = (newBattle.killCount || 0) + enemiesKilled;
+
   // Remove vanished enemies (Ghost Company) and enemies killed by Counter-Offer
   newBattle.enemies = newBattle.enemies.filter(e =>
     e.currentHp > 0 && !enemiesToRemove.includes(e.instanceId)
@@ -350,7 +398,7 @@ export function executeEnemyTurn(
   // Tick player status effects
   newBattle.playerStatusEffects = tickStatusEffects(newBattle.playerStatusEffects);
 
-  return { battle: newBattle, playerHp, playerStress };
+  return { battle: newBattle, playerHp, playerStress, enemiesVanished, enemiesKilled, vanishedIds: enemiesToRemove };
 }
 
 export function startNewTurn(battle: BattleState, run: RunState): { battle: BattleState; stressChange: number } {

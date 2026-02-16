@@ -209,12 +209,17 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
         {card.name}
       </div>
 
-      {/* Description */}
+      {/* Description (truncated) */}
       <div style={{
-        fontSize: 10,
+        fontSize: 9,
         color: 'var(--text-secondary)',
         textAlign: 'center',
-        flex: 1,
+        lineHeight: 1.3,
+        maxHeight: '2.6em',
+        overflow: 'hidden',
+        display: '-webkit-box',
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: 'vertical',
       }}>
         {dynamicDescription}
       </div>

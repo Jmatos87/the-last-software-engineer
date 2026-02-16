@@ -91,7 +91,7 @@ export const enemies: Record<string, EnemyDef> = {
   // Unpaid Take-Home: 3 attacks, 1 buff (75/25)
   unpaid_take_home: {
     id: 'unpaid_take_home',
-    name: 'Unpaid Take-Home',
+    name: 'Unpaid Take-Home Assignment',
     hp: 75,
     icon: '💸',
     isElite: true,
