@@ -162,6 +162,7 @@ export const useGameStore = create<GameState>()(
         set(s => {
           if (!s.run) return;
           s.run.hp = Math.min(s.run.maxHp, s.run.hp + healOnKill);
+          s.run.gold += goldReward;
           s.pendingRewards = {
             gold: goldReward,
             cardChoices: getRewardCards(3) as any,
@@ -214,11 +215,7 @@ export const useGameStore = create<GameState>()(
     },
 
     collectRewardGold: () => {
-      set(s => {
-        if (!s.run || !s.pendingRewards) return;
-        s.run.gold += s.pendingRewards.gold;
-        s.pendingRewards.gold = 0;
-      });
+      // Gold is now auto-collected — this is a no-op kept for compatibility
     },
 
     pickRewardCard: (cardId: string) => {
@@ -232,10 +229,6 @@ export const useGameStore = create<GameState>()(
 
       set(s => {
         if (!s.run) return;
-        // Auto-collect any uncollected gold before clearing rewards
-        if (s.pendingRewards && s.pendingRewards.gold > 0) {
-          s.run.gold += s.pendingRewards.gold;
-        }
         s.run.deck.push(instance as any);
         s.pendingRewards = null;
         s.screen = 'MAP';
@@ -244,10 +237,6 @@ export const useGameStore = create<GameState>()(
 
     skipRewardCards: () => {
       set(s => {
-        // Auto-collect any uncollected gold before clearing rewards
-        if (s.run && s.pendingRewards && s.pendingRewards.gold > 0) {
-          s.run.gold += s.pendingRewards.gold;
-        }
         s.pendingRewards = null;
         s.screen = 'MAP';
       });
@@ -320,6 +309,9 @@ export const useGameStore = create<GameState>()(
         if (outcome.removeRandomCard && s.run.deck.length > 1) {
           const idx = Math.floor(Math.random() * s.run.deck.length);
           s.run.deck.splice(idx, 1);
+        }
+        if (outcome.stress) {
+          s.run.stress = Math.max(0, Math.min(s.run.maxStress, s.run.stress + outcome.stress));
         }
 
         s.eventOutcome = {

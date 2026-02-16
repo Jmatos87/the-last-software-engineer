@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
+import { CardPreview } from '../common/CardPreview';
+import type { CardDef } from '../../types';
 
 export const RestScreen: React.FC = () => {
   const { run, rest, upgradeCard } = useGameStore();
   const [mode, setMode] = useState<'choose' | 'upgrade'>('choose');
+  const [preview, setPreview] = useState<{ card: CardDef; x: number; y: number } | null>(null);
 
   if (!run) return null;
 
@@ -48,6 +51,9 @@ export const RestScreen: React.FC = () => {
           <h3 style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
             Choose a card to upgrade:
           </h3>
+          {preview && (
+            <CardPreview card={preview.card} x={preview.x} y={preview.y} />
+          )}
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -64,22 +70,32 @@ export const RestScreen: React.FC = () => {
                 <div
                   key={card.instanceId}
                   onClick={() => upgradeCard(card.instanceId)}
+                  onMouseEnter={e => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                    e.currentTarget.style.borderColor = 'var(--accent-green)';
+                  }}
+                  onMouseLeave={e => {
+                    setPreview(null);
+                    e.currentTarget.style.borderColor = borderColor;
+                  }}
                   style={{
-                    padding: '8px 12px',
+                    padding: '6px 10px',
                     background: 'var(--bg-card)',
                     border: `1px solid ${borderColor}`,
                     borderRadius: 'var(--radius-sm)',
                     cursor: 'pointer',
                     fontSize: 12,
+                    maxWidth: 140,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
                     transition: 'all var(--transition-fast)',
                   }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent-green)'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = borderColor}
                 >
-                  <span>{card.icon} {card.name}</span>
-                  <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>
-                    {card.description}
-                  </div>
+                  <span>{card.icon}</span>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.name}</span>
+                  <span style={{ color: 'var(--energy-color)', fontSize: 10 }}>({card.cost})</span>
                 </div>
               );
             })}

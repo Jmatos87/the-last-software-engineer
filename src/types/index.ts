@@ -40,8 +40,10 @@ export interface CardEffect {
   applyToSelf?: StatusEffect;
   applyToTarget?: StatusEffect;
   damageAll?: number;
+  applyToAll?: StatusEffect;
   heal?: number;
   copium?: number;
+  stress?: number;
 }
 
 export interface CardDef {
@@ -138,6 +140,7 @@ export interface EventChoice {
   outcome: {
     hp?: number;
     gold?: number;
+    stress?: number;
     addCard?: string;
     removeRandomCard?: boolean;
     addItem?: string;

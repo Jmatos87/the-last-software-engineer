@@ -108,6 +108,14 @@ export function executePlayCard(
     });
   }
 
+  // Apply status effects to all enemies
+  if (effects.applyToAll) {
+    newBattle.enemies = newBattle.enemies.map(enemy => ({
+      ...enemy,
+      statusEffects: mergeStatusEffects(enemy.statusEffects, effects.applyToAll!),
+    }));
+  }
+
   // Apply block
   if (effects.block) {
     const block = calculateBlock(effects.block, battle.playerStatusEffects, run.items);

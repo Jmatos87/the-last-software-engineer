@@ -1,6 +1,117 @@
 import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import type { CardInstance } from '../../types';
+import type { CardInstance, StatusEffect, ItemDef } from '../../types';
+import { useGameStore } from '../../store/gameStore';
+import { calculateDamage, calculateBlock, calculateCopium } from '../../utils/battleEngine';
+
+function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[]) {
+  const effects = card.upgraded && card.upgradedEffects ? card.upgradedEffects : card.effects;
+  const result: Record<string, { base: number; effective: number }> = {};
+
+  if (effects.damage) {
+    const effective = calculateDamage(effects.damage, playerEffects, {}, items);
+    result.damage = { base: effects.damage, effective };
+  }
+  if (effects.damageAll) {
+    const effective = calculateDamage(effects.damageAll, playerEffects, {}, items);
+    result.damageAll = { base: effects.damageAll, effective };
+  }
+  if (effects.block) {
+    const effective = calculateBlock(effects.block, playerEffects, items);
+    result.block = { base: effects.block, effective };
+  }
+  if (effects.copium) {
+    const effective = calculateCopium(effects.copium, playerEffects);
+    result.copium = { base: effects.copium, effective };
+  }
+
+  return result;
+}
+
+function renderDescription(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[]): React.ReactNode {
+  const computed = getEffectiveEffects(card, playerEffects, items);
+  const desc = card.upgraded && card.upgradedDescription ? card.upgradedDescription : card.description;
+
+  // Build replacement map: base value -> { effective, key }
+  // We need to replace specific number occurrences that match card effect values
+  const replacements: { pattern: RegExp; effective: number; base: number }[] = [];
+
+  if (computed.damage) {
+    replacements.push({
+      pattern: new RegExp(`Deal ${computed.damage.base} damage(?!\\.? to ALL)`),
+      effective: computed.damage.effective,
+      base: computed.damage.base,
+    });
+  }
+  if (computed.damageAll) {
+    replacements.push({
+      pattern: new RegExp(`Deal ${computed.damageAll.base} damage to ALL`),
+      effective: computed.damageAll.effective,
+      base: computed.damageAll.base,
+    });
+  }
+  if (computed.block) {
+    replacements.push({
+      pattern: new RegExp(`(?:Gain |gain )${computed.block.base} [Bb]lock`),
+      effective: computed.block.effective,
+      base: computed.block.base,
+    });
+  }
+  if (computed.copium) {
+    replacements.push({
+      pattern: new RegExp(`Reduce ${computed.copium.base} Stress`),
+      effective: computed.copium.effective,
+      base: computed.copium.base,
+    });
+  }
+
+  // If nothing changed, return plain text
+  const anyChanged = replacements.some(r => r.effective !== r.base);
+  if (!anyChanged) return desc;
+
+  // Build JSX by splitting on replacement patterns
+  const parts: React.ReactNode[] = [];
+  let remaining = desc;
+  let key = 0;
+
+  while (remaining.length > 0) {
+    let earliest: { index: number; match: string; effective: number; base: number } | null = null;
+
+    for (const r of replacements) {
+      const m = remaining.match(r.pattern);
+      if (m && m.index !== undefined) {
+        if (!earliest || m.index < earliest.index) {
+          earliest = { index: m.index, match: m[0], effective: r.effective, base: r.base };
+        }
+      }
+    }
+
+    if (!earliest) {
+      parts.push(remaining);
+      break;
+    }
+
+    // Text before match
+    if (earliest.index > 0) {
+      parts.push(remaining.slice(0, earliest.index));
+    }
+
+    // Replace the number in the matched text
+    const buffed = earliest.effective > earliest.base;
+    const color = buffed ? 'var(--accent-green)' : 'var(--accent-red, #ef4444)';
+    const replaced = earliest.match.replace(
+      String(earliest.base),
+      String(earliest.effective)
+    );
+    parts.push(
+      <span key={key++} style={{ color, fontWeight: 'bold' }}>{replaced}</span>
+    );
+
+    remaining = remaining.slice(earliest.index + earliest.match.length);
+  }
+
+  return <>{parts}</>;
+}
 
 interface CardComponentProps {
   card: CardInstance;
@@ -11,6 +122,13 @@ interface CardComponentProps {
 
 export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, onClick, style }) => {
   const isCurse = card.type === 'curse';
+  const battle = useGameStore(s => s.battle);
+  const items = useGameStore(s => s.run?.items ?? []);
+  const playerEffects = battle?.playerStatusEffects ?? {};
+  const dynamicDescription = battle
+    ? renderDescription(card, playerEffects, items)
+    : (card.upgraded && card.upgradedDescription ? card.upgradedDescription : card.description);
+
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: card.instanceId,
     disabled: disabled || isCurse,
@@ -98,7 +216,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
         textAlign: 'center',
         flex: 1,
       }}>
-        {card.description}
+        {dynamicDescription}
       </div>
 
       {/* Target indicator */}

@@ -8,6 +8,7 @@ import { EnemyDisplay } from './EnemyDisplay';
 import { HpBar } from '../common/HpBar';
 import { EnergyOrb } from '../common/EnergyOrb';
 import { StatusEffects } from '../common/StatusEffects';
+import { CardPreview } from '../common/CardPreview';
 
 const PlayerStatusPanel: React.FC = () => {
   const run = useGameStore(s => s.run);
@@ -55,6 +56,7 @@ const PlayerStatusPanel: React.FC = () => {
 export const BattleScreen: React.FC = () => {
   const { run, battle, playCard, endTurn } = useGameStore();
   const [draggedCard, setDraggedCard] = useState<CardInstance | null>(null);
+  const [preview, setPreview] = useState<{ card: CardInstance; x: number; y: number } | null>(null);
 
   if (!run || !battle) return null;
 
@@ -211,11 +213,19 @@ export const BattleScreen: React.FC = () => {
             padding: '4px 0',
           }}>
             {battle.hand.map(card => (
-              <CardComponent
+              <div
                 key={card.instanceId}
-                card={card}
-                disabled={card.cost > battle.energy}
-              />
+                onMouseEnter={e => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                }}
+                onMouseLeave={() => setPreview(null)}
+              >
+                <CardComponent
+                  card={card}
+                  disabled={card.cost > battle.energy}
+                />
+              </div>
             ))}
             {battle.hand.length === 0 && (
               <div style={{ color: 'var(--text-muted)', fontSize: 14, padding: 20 }}>
@@ -264,6 +274,10 @@ export const BattleScreen: React.FC = () => {
       <DragOverlay>
         {draggedCard ? <CardOverlay card={draggedCard} /> : null}
       </DragOverlay>
+
+      {preview && (
+        <CardPreview card={preview.card} x={preview.x} y={preview.y} />
+      )}
     </DndContext>
   );
 };

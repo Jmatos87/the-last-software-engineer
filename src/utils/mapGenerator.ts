@@ -32,12 +32,12 @@ export function generateMap(): GameMap {
 
   // Create nodes
   for (let row = 0; row < ROWS; row++) {
-    const colCount = row === 0 || row === ROWS - 1 ? 1 : COLS;
+    const colCount = row === ROWS - 1 ? 1 : COLS;
     for (let col = 0; col < colCount; col++) {
       const node: MapNode = {
         id: uuidv4(),
         row,
-        col: row === 0 || row === ROWS - 1 ? 1 : col, // center single nodes
+        col: row === ROWS - 1 ? 1 : col, // center only boss node
         type: pickNodeType(row),
         connections: [],
         visited: false,
@@ -65,7 +65,14 @@ export function generateMap(): GameMap {
 
     for (const node of currentRow) {
       if (nextRow.length === 1) {
+        // Last row before boss — all converge
         node.connections.push(nextRow[0].id);
+      } else if (row === 0) {
+        // Row 0: each starting node connects to exactly 1 node in row 1
+        // to create clearly distinct paths. Shuffle row 1 and assign 1:1.
+        const idx = currentRow.indexOf(node);
+        const shuffled = [...nextRow].sort(() => Math.random() - 0.5);
+        node.connections.push(shuffled[idx % shuffled.length].id);
       } else {
         // Connect to at least 1, maybe 2
         const connectCount = Math.random() < 0.5 ? 1 : 2;
@@ -80,6 +87,7 @@ export function generateMap(): GameMap {
     for (const next of nextRow) {
       const hasIncoming = currentRow.some(n => n.connections.includes(next.id));
       if (!hasIncoming) {
+        // For row 0→1, pick a random starting node that doesn't already connect here
         const randomParent = currentRow[Math.floor(Math.random() * currentRow.length)];
         randomParent.connections.push(next.id);
       }

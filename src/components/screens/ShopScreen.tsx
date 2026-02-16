@@ -2,10 +2,13 @@ import React, { useMemo, useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { cards } from '../../data/cards';
 import { getShopItems } from '../../data/items';
+import { CardPreview } from '../common/CardPreview';
+import type { CardDef, CardInstance } from '../../types';
 
 export const ShopScreen: React.FC = () => {
   const { run, buyCard, buyItem, removeCard, returnToMap } = useGameStore();
   const [removeMode, setRemoveMode] = useState(false);
+  const [preview, setPreview] = useState<{ card: CardDef | CardInstance; x: number; y: number } | null>(null);
 
   const shopCards = useMemo(() => {
     const pool = Object.values(cards).filter(c => c.rarity !== 'starter');
@@ -56,6 +59,11 @@ export const ShopScreen: React.FC = () => {
             <div
               key={card.id}
               onClick={() => canAfford && buyCard(card.id)}
+              onMouseEnter={e => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+              }}
+              onMouseLeave={() => setPreview(null)}
               style={{
                 width: 130,
                 padding: 12,
@@ -129,6 +137,11 @@ export const ShopScreen: React.FC = () => {
               <div
                 key={card.instanceId}
                 onClick={() => removeCard(card.instanceId)}
+                onMouseEnter={e => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                }}
+                onMouseLeave={() => setPreview(null)}
                 style={{
                   padding: '4px 8px',
                   background: 'var(--bg-card)',
@@ -144,6 +157,10 @@ export const ShopScreen: React.FC = () => {
           </div>
           <button onClick={() => setRemoveMode(false)} style={{ fontSize: 12 }}>Cancel</button>
         </div>
+      )}
+
+      {preview && (
+        <CardPreview card={preview.card} x={preview.x} y={preview.y} />
       )}
     </div>
   );

@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
+import { CardPreview } from '../common/CardPreview';
+import type { CardDef } from '../../types';
 
 export const BattleRewardScreen: React.FC = () => {
-  const { pendingRewards, collectRewardGold, pickRewardCard, skipRewardCards, run } = useGameStore();
-  const [goldCollected, setGoldCollected] = useState(false);
+  const { pendingRewards, pickRewardCard, skipRewardCards, run } = useGameStore();
+  const [preview, setPreview] = useState<{ card: CardDef; x: number; y: number } | null>(null);
 
   if (!pendingRewards || !run) return null;
-
-  const handleCollectGold = () => {
-    collectRewardGold();
-    setGoldCollected(true);
-  };
 
   return (
     <div style={{
@@ -24,15 +21,10 @@ export const BattleRewardScreen: React.FC = () => {
     }} className="animate-fade-in">
       <h2 style={{ fontSize: 24, color: 'var(--accent-green)' }}>Victory!</h2>
 
-      {/* Gold reward */}
-      {!goldCollected && pendingRewards.gold > 0 && (
-        <button onClick={handleCollectGold} style={{ padding: '12px 24px', fontSize: 16 }}>
-          💰 Collect {pendingRewards.gold} Gold
-        </button>
-      )}
-      {goldCollected && (
-        <span style={{ color: 'var(--gold-color)', fontSize: 14 }}>
-          💰 +{pendingRewards.gold} gold collected! (Total: {run.gold})
+      {/* Gold collected */}
+      {pendingRewards.gold > 0 && (
+        <span style={{ color: 'var(--gold-color)', fontSize: 16 }}>
+          💰 +{pendingRewards.gold} gold (Total: {run.gold})
         </span>
       )}
 
@@ -61,10 +53,13 @@ export const BattleRewardScreen: React.FC = () => {
                   onMouseEnter={e => {
                     e.currentTarget.style.transform = 'translateY(-4px)';
                     e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.transform = 'none';
                     e.currentTarget.style.boxShadow = 'none';
+                    setPreview(null);
                   }}
                 >
                   <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
@@ -84,6 +79,10 @@ export const BattleRewardScreen: React.FC = () => {
             Skip card reward →
           </button>
         </>
+      )}
+
+      {preview && (
+        <CardPreview card={preview.card} x={preview.x} y={preview.y} />
       )}
     </div>
   );

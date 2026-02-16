@@ -113,6 +113,36 @@ CHARACTER_SELECT → MAP → [BATTLE | REST | EVENT | SHOP] → BATTLE_REWARD �
 ## Status Effect System
 Effects: `vulnerable`, `weak`, `strength`, `dexterity`, `regen`, `poison`. All are number values that decrement each turn.
 
+## Change Log / Design Decisions
+
+### Frontend Dev Card Set (planned)
+**Goal:** Give the Frontend Dev class its own unique themed card pool + class-specific events.
+
+**New Cards (16 total):**
+
+*Starter (in starting deck):*
+- `console_log` (keep), `div_block` (keep), `important_override` (!important, 0-cost 4 block), `jsx_spray` (AoE 4 dmg all), `css_animate` (5 block + 4 stress reduction)
+
+*Common (normal battle rewards):*
+- `callback_hell` (9 dmg), `promise_chain` (draw 2), `use_state` (7 block + 3 stress), `flexbox` (6 block + draw 1), `npm_audit` (5 dmg + 2 vulnerable)
+
+*Uncommon (elite battle rewards):*
+- `async_await` (0-cost draw 3), `prototype_pollution` (8 dmg all + 1 weak), `virtual_dom` (16 block), `two_way_binding` (8 dmg + 8 block), `css_grid` (power: 2 dexterity)
+
+*Rare (boss rewards / special events):*
+- `nyancat_rainbow` (12 dmg all + 1 vulnerable), `strict_mode` (power: 3 strength), `observable_stream` (power: 1 networking + 2 selfCare)
+
+**Updated Starter Deck (10 cards):**
+4x console_log, 2x div_block, 1x important_override, 1x jsx_spray, 1x css_animate, 1x coffee_break
+
+**New Frontend Events (4):**
+- "The NPM Black Hole" — node_modules sentience, drops callback_hell
+- "Stack Overflow is Down" — panic scenario, drops async_await
+- "The CSS Centering Challenge" — centering a div, drops flexbox
+- "The Nyancat Shrine" — RGB shrine, drops nyancat_rainbow
+
+**Tone:** All descriptions are satirical/funny job-search and dev humor.
+
 ## Important Notes
 - The store has `as any` casts in several places (Immer/Zustand type workaround) — don't remove these.
 - `cards` in `data/cards.ts` is a `Record<string, CardDef>` keyed by card ID.

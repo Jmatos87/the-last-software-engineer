@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { characters } from '../../data/characters';
 import { getCardDef } from '../../data/cards';
-import { Tooltip } from '../common/Tooltip';
+import { CardPreview } from '../common/CardPreview';
+import type { CardDef } from '../../types';
 
 export const CharacterSelectScreen: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [preview, setPreview] = useState<{ card: CardDef; x: number; y: number } | null>(null);
   const { selectCharacter, startRun, run } = useGameStore();
 
   const selectedChar = characters.find(c => c.id === selectedId);
@@ -75,6 +77,10 @@ export const CharacterSelectScreen: React.FC = () => {
         ))}
       </div>
 
+      {preview && (
+        <CardPreview card={preview.card} x={preview.x} y={preview.y} />
+      )}
+
       {selectedChar && selectedChar.available && (
         <div className="animate-slide-up" style={{
           background: 'var(--bg-secondary)',
@@ -94,23 +100,30 @@ export const CharacterSelectScreen: React.FC = () => {
               const borderColor = card.type === 'attack' ? 'var(--card-attack)'
                 : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
               return (
-                <Tooltip key={i} text={card.description}>
-                  <div style={{
+                <div
+                  key={i}
+                  onMouseEnter={e => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                  }}
+                  onMouseLeave={() => setPreview(null)}
+                  style={{
                     padding: '6px 10px',
                     background: 'var(--bg-card)',
                     border: `1px solid ${borderColor}`,
                     borderRadius: 'var(--radius-sm)',
                     fontSize: 12,
+                    maxWidth: 140,
                     display: 'flex',
                     alignItems: 'center',
                     gap: 4,
                     cursor: 'default',
-                  }}>
-                    <span>{card.icon}</span>
-                    <span>{card.name}</span>
-                    <span style={{ color: 'var(--energy-color)', fontSize: 10 }}>({card.cost})</span>
-                  </div>
-                </Tooltip>
+                  }}
+                >
+                  <span>{card.icon}</span>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.name}</span>
+                  <span style={{ color: 'var(--energy-color)', fontSize: 10, flexShrink: 0 }}>({card.cost})</span>
+                </div>
               );
             })}
           </div>
