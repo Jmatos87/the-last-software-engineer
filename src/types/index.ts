@@ -93,6 +93,7 @@ export interface EnemyDef {
   icon: string;
   isElite?: boolean;
   isBoss?: boolean;
+  hideIntent?: boolean;
 }
 
 export interface EnemyInstance extends EnemyDef {

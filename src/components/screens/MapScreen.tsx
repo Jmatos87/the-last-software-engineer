@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import type { MapNode, NodeType } from '../../types';
-import { HpBar } from '../common/HpBar';
+import { TopBar } from '../common/TopBar';
 
 const nodeIcons: Record<NodeType, string> = {
   battle: '⚔️',
@@ -25,7 +25,17 @@ export const MapScreen: React.FC = () => {
   const { run, navigateToNode } = useGameStore();
   if (!run) return null;
 
+  const mapRef = useRef<HTMLDivElement>(null);
+
   const { map } = run;
+
+  // Scroll to bottom on mount so the player sees their starting position
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.scrollTop = mapRef.current.scrollHeight;
+    }
+  }, [map]);
+
   const rows = useMemo(() => {
     const grouped: MapNode[][] = [];
     for (const node of map.nodes) {
@@ -59,33 +69,10 @@ export const MapScreen: React.FC = () => {
       background: 'var(--bg-primary)',
     }}>
       {/* Top bar */}
-      <div style={{
-        padding: '12px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        background: 'var(--bg-secondary)',
-        borderBottom: '1px solid var(--border-color)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 20 }}>{run.character.icon}</span>
-          <span>{run.character.name}</span>
-          <div style={{ width: 120 }}>
-            <HpBar current={run.hp} max={run.maxHp} height={10} />
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 16, fontSize: 14 }}>
-          <span style={{ color: 'var(--gold-color)' }}>💰 {run.gold}</span>
-          <span style={{ color: 'var(--accent-purple)' }}>Act {run.act}</span>
-          <span style={{ color: 'var(--text-secondary)' }}>📦 {run.deck.length} cards</span>
-          {run.items.map(item => (
-            <span key={item.id} title={`${item.name}: ${item.description}`}>{item.icon}</span>
-          ))}
-        </div>
-      </div>
+      <TopBar />
 
       {/* Map area - scrollable, boss at top */}
-      <div style={{
+      <div ref={mapRef} style={{
         flex: 1,
         overflow: 'auto',
         display: 'flex',

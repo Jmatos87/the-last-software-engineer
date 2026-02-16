@@ -65,6 +65,7 @@ export const enemies: Record<string, EnemyDef> = {
     name: 'Ghost Company',
     hp: 22,
     icon: '👻',
+    hideIntent: true,
     moves: [
       { name: 'Form Letter', type: 'attack', damage: 5, icon: '📨' },
       { name: 'Radio Silence', type: 'attack', damage: 6, icon: '📵' },
@@ -276,6 +277,7 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 120,
     icon: '👻',
     isBoss: true,
+    hideIntent: true,
     moves: [
       { name: 'Haunt', type: 'attack', damage: 9, stressDamage: 5, icon: '👻' },
       { name: 'Read Receipt', type: 'attack', damage: 11, icon: '✓' },

@@ -6,23 +6,23 @@ interface StatusEffectsProps {
   effects: StatusEffect;
 }
 
-const effectInfo: Record<string, { icon: string; label: string; color: string }> = {
-  // Debuffs
-  vulnerable: { icon: '💔', label: 'Vulnerable — Take 50% more damage', color: 'var(--accent-red)' },
-  weak: { icon: '😵', label: 'Weak — Deal 25% less damage', color: 'var(--accent-orange)' },
-  poison: { icon: '☠️', label: 'Poison', color: 'var(--accent-purple)' },
-  hope: { icon: '✨', label: 'Hope — Beware false promises...', color: 'var(--accent-yellow)' },
-  cringe: { icon: '😬', label: 'Cringe — Reduces stress healing', color: 'var(--accent-orange)' },
-  ghosted: { icon: '👻', label: 'Ghosted — Adds curse cards each turn', color: 'var(--accent-purple)' },
-  // Buffs
-  strength: { icon: '😤', label: 'Rage Apply — +1 damage per stack', color: 'var(--accent-red)' },
-  dexterity: { icon: '🧠', label: 'Emotional Intelligence — +1 block & stress reduction per stack', color: 'var(--accent-blue)' },
-  regen: { icon: '🌿', label: 'Touch Grass — Heal HP each turn', color: 'var(--accent-green)' },
-  selfCare: { icon: '🛁', label: 'Self Care — Reduce stress each turn', color: 'var(--accent-green)' },
-  networking: { icon: '🤝', label: 'Networking — Draw extra cards each turn', color: 'var(--accent-blue)' },
-  savingsAccount: { icon: '🏦', label: 'Savings Account — Retain block between turns', color: 'var(--accent-yellow)' },
-  counterOffer: { icon: '💼', label: 'Counter-Offer — Deal damage back when attacked', color: 'var(--accent-orange)' },
-  hustleCulture: { icon: '💪', label: 'Hustle Culture — +1 energy, +3 stress per turn', color: 'var(--accent-red)' },
+const effectInfo: Record<string, { icon: string; label: string; unit: string; color: string }> = {
+  // Debuffs (temporary — decrement each turn)
+  vulnerable: { icon: '💔', label: 'Vulnerable — Take 50% more damage', unit: 'turns', color: 'var(--accent-red)' },
+  weak: { icon: '😵', label: 'Weak — Deal 25% less damage', unit: 'turns', color: 'var(--accent-orange)' },
+  poison: { icon: '☠️', label: 'Poison — Lose HP each turn, then decrements', unit: 'damage', color: 'var(--accent-purple)' },
+  hope: { icon: '✨', label: 'Hope — False promise... explodes into stress when it expires', unit: 'turns', color: 'var(--accent-yellow)' },
+  cringe: { icon: '😬', label: 'Cringe — Stress healing is halved', unit: 'turns', color: 'var(--accent-orange)' },
+  ghosted: { icon: '👻', label: 'Ghosted — A curse card is added to your deck each turn', unit: 'turns', color: 'var(--accent-purple)' },
+  // Buffs (permanent — persist until removed)
+  strength: { icon: '😤', label: 'Rage Apply — +1 damage per attack per stack', unit: 'stacks', color: 'var(--accent-red)' },
+  dexterity: { icon: '🧠', label: 'Emotional Intelligence — +1 block & stress reduction per stack', unit: 'stacks', color: 'var(--accent-blue)' },
+  regen: { icon: '🌿', label: 'Touch Grass — Heal HP equal to stacks each turn', unit: 'stacks', color: 'var(--accent-green)' },
+  selfCare: { icon: '🛁', label: 'Self Care — Reduce stress equal to stacks each turn', unit: 'stacks', color: 'var(--accent-green)' },
+  networking: { icon: '🤝', label: 'Networking — Draw extra cards each turn', unit: 'stacks', color: 'var(--accent-blue)' },
+  savingsAccount: { icon: '🏦', label: 'Savings Account — Retain block between turns (up to stacks)', unit: 'stacks', color: 'var(--accent-yellow)' },
+  counterOffer: { icon: '💼', label: 'Counter-Offer — Deal damage back when hit', unit: 'stacks', color: 'var(--accent-orange)' },
+  hustleCulture: { icon: '💪', label: 'Hustle Culture — +1 energy per turn, but +3 stress per stack', unit: 'stacks', color: 'var(--accent-red)' },
 };
 
 export const StatusEffects: React.FC<StatusEffectsProps> = ({ effects }) => {
@@ -35,7 +35,7 @@ export const StatusEffects: React.FC<StatusEffectsProps> = ({ effects }) => {
         const info = effectInfo[key];
         if (!info) return null;
         return (
-          <Tooltip key={key} text={`${info.label}: ${value}`}>
+          <Tooltip key={key} text={`${info.label} (${value} ${info.unit})`}>
             <div style={{
               display: 'flex',
               alignItems: 'center',

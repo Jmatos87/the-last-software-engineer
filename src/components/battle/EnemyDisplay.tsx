@@ -32,8 +32,8 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
     setPrevHp(enemy.currentHp);
   }, [enemy.currentHp]);
 
-  const intentIcon = enemy.currentMove.icon;
   const move = enemy.currentMove;
+  const hidden = !!enemy.hideIntent;
 
   // Calculate actual damage after modifiers (strength, weak, vulnerable)
   const calcDmg = move.damage
@@ -43,24 +43,95 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
     ? calculateStressDamage(move.stressDamage, enemy.statusEffects, playerStatusEffects, enemy.id)
     : 0;
 
-  const intentDesc = (() => {
-    const parts: string[] = [move.name + ':'];
-    if (calcDmg) parts.push(`${calcDmg}${move.times && move.times > 1 ? `x${move.times}` : ''} dmg`);
-    if (calcStressDmg) parts.push(`${calcStressDmg}${move.times && move.times > 1 ? `x${move.times}` : ''} stress`);
-    if (move.discardCount) parts.push(`discard ${move.discardCount}`);
-    if (move.exhaustCount) parts.push(`exhaust ${move.exhaustCount}`);
-    if (move.goldSteal) parts.push(`steal ${move.goldSteal}g`);
-    if (move.healAmount) parts.push(`heal allies ${move.healAmount}`);
-    if (move.block) parts.push(`${move.block} block`);
-    if (move.applyToSelf?.strength) parts.push(`+${move.applyToSelf.strength} str`);
-    if (move.applyToSelf?.regen) parts.push(`+${move.applyToSelf.regen} regen`);
-    if (move.applyToTarget?.vulnerable) parts.push(`${move.applyToTarget.vulnerable} vuln`);
-    if (move.applyToTarget?.weak) parts.push(`${move.applyToTarget.weak} weak`);
-    if (move.applyToTarget?.hope) parts.push(`${move.applyToTarget.hope} hope`);
-    if (move.applyToTarget?.cringe) parts.push(`${move.applyToTarget.cringe} cringe`);
-    if (move.applyToTarget?.ghosted) parts.push(`${move.applyToTarget.ghosted} ghosted`);
-    return parts.join(' ');
-  })();
+  // For buff/buff_allies moves, applyToTarget means buffing self/allies, not debuffing the player
+  const isBuff = move.type === 'buff' || move.type === 'buff_allies';
+
+  // Status effect display info — covers every key in StatusEffect
+  const effectMeta: Record<string, { icon: string; name: string; desc: string; color: string }> = {
+    vulnerable: { icon: '💔', name: 'Vulnerable', desc: 'take 50% more damage', color: 'var(--accent-red)' },
+    weak: { icon: '😵', name: 'Weak', desc: 'deal 25% less damage', color: 'var(--accent-orange)' },
+    poison: { icon: '☠️', name: 'Poison', desc: 'lose HP each turn', color: 'var(--accent-purple)' },
+    hope: { icon: '✨', name: 'Hope', desc: 'explodes into stress when it expires', color: 'var(--accent-yellow)' },
+    cringe: { icon: '😬', name: 'Cringe', desc: 'stress healing is halved', color: 'var(--accent-orange)' },
+    ghosted: { icon: '👻', name: 'Ghosted', desc: 'curse card added each turn', color: 'var(--accent-purple)' },
+    strength: { icon: '😤', name: 'Strength', desc: '+1 damage per attack per stack', color: 'var(--accent-red)' },
+    dexterity: { icon: '🧠', name: 'Dexterity', desc: '+1 block per stack', color: 'var(--accent-blue)' },
+    regen: { icon: '🌿', name: 'Regen', desc: 'heal HP each turn', color: 'var(--accent-green)' },
+    selfCare: { icon: '🛁', name: 'Self Care', desc: 'reduce stress each turn', color: 'var(--accent-green)' },
+    networking: { icon: '🤝', name: 'Networking', desc: 'draw extra cards each turn', color: 'var(--accent-blue)' },
+    savingsAccount: { icon: '🏦', name: 'Savings Account', desc: 'retain block between turns', color: 'var(--accent-yellow)' },
+    counterOffer: { icon: '💼', name: 'Counter-Offer', desc: 'deal damage back when hit', color: 'var(--accent-orange)' },
+    hustleCulture: { icon: '💪', name: 'Hustle Culture', desc: '+1 energy, +3 stress per turn', color: 'var(--accent-red)' },
+  };
+
+  // Helper: build inline icon + tooltip line for a status effect entry
+  const addEffect = (
+    effects: StatusEffect,
+    parts: { text: string; color: string }[],
+    lines: string[],
+    prefix: string,
+  ) => {
+    for (const [key, value] of Object.entries(effects)) {
+      if (value === undefined || value === 0) continue;
+      const meta = effectMeta[key];
+      if (!meta) continue;
+      const sign = value > 0 ? '+' : '';
+      parts.push({ text: `${meta.icon}${sign}${value}`, color: meta.color });
+      lines.push(`${prefix} ${sign}${value} ${meta.name} (${meta.desc})`);
+    }
+  };
+
+  // Build intent parts (inline icons) and tooltip lines together
+  const intentParts: { text: string; color: string }[] = [];
+  const tooltipLines: string[] = [move.name];
+
+  if (calcDmg > 0) {
+    const dmgText = `${calcDmg}${move.times && move.times > 1 ? `x${move.times}` : ''}`;
+    intentParts.push({ text: `⚔️${dmgText}`, color: 'var(--accent-red)' });
+    tooltipLines.push(`Deal ${calcDmg}${move.times && move.times > 1 ? ` x${move.times}` : ''} damage`);
+  }
+  if (calcStressDmg > 0) {
+    const stressText = `${calcStressDmg}${move.times && move.times > 1 ? `x${move.times}` : ''}`;
+    intentParts.push({ text: `😰${stressText}`, color: 'var(--accent-purple)' });
+    tooltipLines.push(`Inflict ${calcStressDmg}${move.times && move.times > 1 ? ` x${move.times}` : ''} stress`);
+  }
+  if (move.block) {
+    intentParts.push({ text: `🛡️${move.block}`, color: 'var(--block-color)' });
+    tooltipLines.push(`Gain ${move.block} block`);
+  }
+  if (move.discardCount) {
+    intentParts.push({ text: `🗑️${move.discardCount}`, color: 'var(--accent-yellow)' });
+    tooltipLines.push(`Force you to discard ${move.discardCount} card${move.discardCount > 1 ? 's' : ''}`);
+  }
+  if (move.exhaustCount) {
+    intentParts.push({ text: `🔥${move.exhaustCount}`, color: 'var(--accent-orange)' });
+    tooltipLines.push(`Exhaust ${move.exhaustCount} of your cards (removed from combat)`);
+  }
+  if (move.goldSteal) {
+    intentParts.push({ text: `💸${move.goldSteal}g`, color: 'var(--gold-color)' });
+    tooltipLines.push(`Steal ${move.goldSteal} of your gold`);
+  }
+  if (move.healAmount) {
+    intentParts.push({ text: `💊${move.healAmount}`, color: 'var(--accent-green)' });
+    tooltipLines.push(`Heal all allies for ${move.healAmount} HP`);
+  }
+
+  // Self buffs
+  if (move.applyToSelf) {
+    addEffect(move.applyToSelf, intentParts, tooltipLines, 'Gain');
+  }
+
+  // applyToTarget — context depends on move type
+  if (move.applyToTarget) {
+    if (isBuff) {
+      const who = move.type === 'buff_allies' ? 'Buff allies' : 'Gain';
+      addEffect(move.applyToTarget, intentParts, tooltipLines, who);
+    } else {
+      addEffect(move.applyToTarget, intentParts, tooltipLines, 'Apply');
+    }
+  }
+
+  const intentTooltip = tooltipLines.join(' · ');
 
   return (
     <div
@@ -80,54 +151,43 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
       }}
     >
       {/* Intent */}
-      <Tooltip text={intentDesc}>
+      {hidden ? (
         <div style={{
-          padding: '4px 8px',
+          padding: '4px 10px',
           background: 'var(--bg-card)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-sm)',
-          fontSize: 12,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 4,
-          cursor: 'help',
+          fontSize: 13,
+          color: 'var(--text-muted)',
+          fontStyle: 'italic',
         }}>
-          <span>{intentIcon}</span>
-          {calcDmg > 0 && (
-            <span style={{ color: 'var(--accent-red)' }}>
-              ⚔️{calcDmg}{move.times && move.times > 1 ? `x${move.times}` : ''}
-            </span>
-          )}
-          {calcStressDmg > 0 && (
-            <span style={{ color: 'var(--accent-purple)' }}>
-              😰{calcStressDmg}{move.times && move.times > 1 ? `x${move.times}` : ''}
-            </span>
-          )}
-          {move.discardCount && (
-            <span style={{ color: 'var(--accent-yellow)' }}>
-              🗑️{move.discardCount}
-            </span>
-          )}
-          {move.exhaustCount && (
-            <span style={{ color: 'var(--accent-orange)' }}>
-              🔥{move.exhaustCount}
-            </span>
-          )}
-          {move.goldSteal && (
-            <span style={{ color: 'var(--gold-color)' }}>
-              💸{move.goldSteal}
-            </span>
-          )}
-          {move.healAmount && (
-            <span style={{ color: 'var(--accent-green)' }}>
-              💊{move.healAmount}
-            </span>
-          )}
-          {move.block && (
-            <span style={{ color: 'var(--block-color)' }}>{move.block}</span>
-          )}
+          ❓ ???
         </div>
-      </Tooltip>
+      ) : (
+        <Tooltip text={intentTooltip}>
+          <div style={{
+            padding: '4px 8px',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-sm)',
+            fontSize: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            maxWidth: 140,
+            cursor: 'help',
+          }}>
+            <span>{move.icon}</span>
+            {intentParts.map((part, i) => (
+              <span key={i} style={{ color: part.color, whiteSpace: 'nowrap' }}>
+                {part.text}
+              </span>
+            ))}
+          </div>
+        </Tooltip>
+      )}
 
       {/* Enemy icon */}
       <div style={{

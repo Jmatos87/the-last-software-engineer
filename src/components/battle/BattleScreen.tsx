@@ -9,6 +9,7 @@ import { HpBar } from '../common/HpBar';
 import { EnergyOrb } from '../common/EnergyOrb';
 import { StatusEffects } from '../common/StatusEffects';
 import { CardPreview } from '../common/CardPreview';
+import { TopBar } from '../common/TopBar';
 
 const PlayerStatusPanel: React.FC = () => {
   const run = useGameStore(s => s.run);
@@ -183,25 +184,7 @@ export const BattleScreen: React.FC = () => {
         background: 'var(--bg-primary)',
       }}>
         {/* Top bar */}
-        <div style={{
-          padding: '8px 16px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          background: 'var(--bg-secondary)',
-          borderBottom: '1px solid var(--border-color)',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontSize: 20 }}>{run.character.icon}</span>
-            <span style={{ fontSize: 14 }}>{run.character.name}</span>
-          </div>
-          <div style={{ display: 'flex', gap: 16, fontSize: 12, color: 'var(--text-secondary)' }}>
-            <span>Turn {battle.turn}</span>
-            {run.items.map(item => (
-              <span key={item.id} title={`${item.name}: ${item.description}`}>{item.icon}</span>
-            ))}
-          </div>
-        </div>
+        <TopBar extra={<span>Turn {battle.turn}</span>} />
 
         {/* Battle area */}
         <div style={{

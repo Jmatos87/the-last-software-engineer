@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 
 interface TooltipProps {
   text: string;
@@ -6,30 +6,44 @@ interface TooltipProps {
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({ text, children }) => {
-  const [show, setShow] = useState(false);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const show = useCallback(() => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setPos({ x: rect.left + rect.width / 2, y: rect.top });
+    }
+  }, []);
+
+  const hide = useCallback(() => setPos(null), []);
 
   return (
     <div
+      ref={ref}
       style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
+      onMouseEnter={show}
+      onMouseLeave={hide}
     >
       {children}
-      {show && (
+      {pos && (
         <div style={{
-          position: 'absolute',
-          bottom: '100%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          marginBottom: 8,
+          position: 'fixed',
+          left: pos.x,
+          top: pos.y,
+          transform: 'translate(-50%, -100%)',
+          marginTop: -8,
           padding: '6px 10px',
           background: 'var(--bg-secondary)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-sm)',
           fontSize: 12,
           color: 'var(--text-primary)',
-          whiteSpace: 'nowrap',
-          zIndex: 100,
+          whiteSpace: 'normal',
+          maxWidth: 280,
+          width: 'max-content',
+          textAlign: 'center',
+          zIndex: 1000,
           pointerEvents: 'none',
           animation: 'fadeIn 0.15s ease',
         }}>
