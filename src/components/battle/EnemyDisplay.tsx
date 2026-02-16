@@ -32,10 +32,16 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted })
     const move = enemy.currentMove;
     const parts: string[] = [move.name + ':'];
     if (move.damage) parts.push(`${move.damage}${move.times && move.times > 1 ? `x${move.times}` : ''} dmg`);
+    if (move.stressDamage) parts.push(`${move.stressDamage}${move.times && move.times > 1 ? `x${move.times}` : ''} stress`);
+    if (move.discardCount) parts.push(`discard ${move.discardCount}`);
     if (move.block) parts.push(`${move.block} block`);
     if (move.applyToSelf?.strength) parts.push(`+${move.applyToSelf.strength} str`);
+    if (move.applyToSelf?.regen) parts.push(`+${move.applyToSelf.regen} regen`);
     if (move.applyToTarget?.vulnerable) parts.push(`${move.applyToTarget.vulnerable} vuln`);
     if (move.applyToTarget?.weak) parts.push(`${move.applyToTarget.weak} weak`);
+    if (move.applyToTarget?.hope) parts.push(`${move.applyToTarget.hope} hope`);
+    if (move.applyToTarget?.cringe) parts.push(`${move.applyToTarget.cringe} cringe`);
+    if (move.applyToTarget?.ghosted) parts.push(`${move.applyToTarget.ghosted} ghosted`);
     return parts.join(' ');
   })();
 
@@ -72,7 +78,17 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted })
           <span>{intentIcon}</span>
           {enemy.currentMove.damage && (
             <span style={{ color: 'var(--accent-red)' }}>
-              {enemy.currentMove.damage}{enemy.currentMove.times && enemy.currentMove.times > 1 ? `x${enemy.currentMove.times}` : ''}
+              ⚔️{enemy.currentMove.damage}{enemy.currentMove.times && enemy.currentMove.times > 1 ? `x${enemy.currentMove.times}` : ''}
+            </span>
+          )}
+          {enemy.currentMove.stressDamage && (
+            <span style={{ color: 'var(--accent-purple)' }}>
+              😰{enemy.currentMove.stressDamage}{enemy.currentMove.times && enemy.currentMove.times > 1 ? `x${enemy.currentMove.times}` : ''}
+            </span>
+          )}
+          {enemy.currentMove.discardCount && (
+            <span style={{ color: 'var(--accent-yellow)' }}>
+              🗑️{enemy.currentMove.discardCount}
             </span>
           )}
           {enemy.currentMove.block && (

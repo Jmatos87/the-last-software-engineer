@@ -29,6 +29,35 @@ export function calculateDamage(
   return Math.max(0, damage);
 }
 
+export function calculateStressDamage(
+  baseDamage: number,
+  attackerEffects: StatusEffect,
+  defenderEffects: StatusEffect,
+  attackerEnemyId?: string
+): number {
+  let damage = baseDamage;
+
+  // Strength boosts stress damage
+  damage += attackerEffects.strength || 0;
+
+  // Weak reduces stress damage by 25%
+  if ((attackerEffects.weak || 0) > 0) {
+    damage = Math.floor(damage * 0.75);
+  }
+
+  // Vulnerable increases stress damage by 50%
+  if ((defenderEffects.vulnerable || 0) > 0) {
+    damage = Math.floor(damage * 1.5);
+  }
+
+  // Recruiter Bot gets +2 stress per hope stack on target
+  if (attackerEnemyId === 'recruiter_bot' && (defenderEffects.hope || 0) > 0) {
+    damage += 2 * (defenderEffects.hope || 0);
+  }
+
+  return Math.max(0, damage);
+}
+
 export function calculateBlock(
   baseBlock: number,
   effects: StatusEffect,
@@ -45,6 +74,23 @@ export function calculateBlock(
   }
 
   return Math.max(0, block);
+}
+
+export function calculateCopium(
+  baseCopium: number,
+  effects: StatusEffect
+): number {
+  let copium = baseCopium;
+
+  // Dexterity boosts copium
+  copium += effects.dexterity || 0;
+
+  // Cringe reduces copium by 1 per stack
+  if ((effects.cringe || 0) > 0) {
+    copium -= effects.cringe || 0;
+  }
+
+  return Math.max(0, copium);
 }
 
 export function applyDamageToEnemy(
@@ -91,14 +137,31 @@ export function applyDamageToPlayer(
   return { hp: Math.max(0, currentHp - remaining), block };
 }
 
+export function applyStressToPlayer(
+  currentStress: number,
+  damage: number
+): number {
+  return currentStress + damage;
+}
+
 export function tickStatusEffects(effects: StatusEffect): StatusEffect {
   const newEffects: StatusEffect = {};
+  // Temporary (decrement each turn)
   if (effects.vulnerable && effects.vulnerable > 0) newEffects.vulnerable = effects.vulnerable - 1;
   if (effects.weak && effects.weak > 0) newEffects.weak = effects.weak - 1;
+  if (effects.poison && effects.poison > 0) newEffects.poison = effects.poison - 1;
+  if (effects.hope && effects.hope > 0) newEffects.hope = effects.hope - 1;
+  if (effects.cringe && effects.cringe > 0) newEffects.cringe = effects.cringe - 1;
+  if (effects.ghosted && effects.ghosted > 0) newEffects.ghosted = effects.ghosted - 1;
+  // Permanent (persist)
   if (effects.strength) newEffects.strength = effects.strength;
   if (effects.dexterity) newEffects.dexterity = effects.dexterity;
   if (effects.regen) newEffects.regen = effects.regen;
-  if (effects.poison && effects.poison > 0) newEffects.poison = effects.poison - 1;
+  if (effects.selfCare) newEffects.selfCare = effects.selfCare;
+  if (effects.networking) newEffects.networking = effects.networking;
+  if (effects.savingsAccount) newEffects.savingsAccount = effects.savingsAccount;
+  if (effects.counterOffer) newEffects.counterOffer = effects.counterOffer;
+  if (effects.hustleCulture) newEffects.hustleCulture = effects.hustleCulture;
   return newEffects;
 }
 
@@ -110,5 +173,13 @@ export function mergeStatusEffects(existing: StatusEffect, apply: StatusEffect):
     dexterity: (existing.dexterity || 0) + (apply.dexterity || 0) || undefined,
     regen: (existing.regen || 0) + (apply.regen || 0) || undefined,
     poison: (existing.poison || 0) + (apply.poison || 0) || undefined,
+    hope: (existing.hope || 0) + (apply.hope || 0) || undefined,
+    cringe: (existing.cringe || 0) + (apply.cringe || 0) || undefined,
+    ghosted: (existing.ghosted || 0) + (apply.ghosted || 0) || undefined,
+    selfCare: (existing.selfCare || 0) + (apply.selfCare || 0) || undefined,
+    networking: (existing.networking || 0) + (apply.networking || 0) || undefined,
+    savingsAccount: (existing.savingsAccount || 0) + (apply.savingsAccount || 0) || undefined,
+    counterOffer: (existing.counterOffer || 0) + (apply.counterOffer || 0) || undefined,
+    hustleCulture: (existing.hustleCulture || 0) + (apply.hustleCulture || 0) || undefined,
   };
 }

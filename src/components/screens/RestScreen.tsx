@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 
 export const RestScreen: React.FC = () => {
-  const { run, rest, upgradeCard, returnToMap } = useGameStore();
+  const { run, rest, upgradeCard } = useGameStore();
   const [mode, setMode] = useState<'choose' | 'upgrade'>('choose');
 
   if (!run) return null;

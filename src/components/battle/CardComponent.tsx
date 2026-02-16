@@ -10,13 +10,15 @@ interface CardComponentProps {
 }
 
 export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, onClick, style }) => {
+  const isCurse = card.type === 'curse';
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: card.instanceId,
-    disabled,
+    disabled: disabled || isCurse,
     data: { card },
   });
 
-  const borderColor = card.type === 'attack' ? 'var(--card-attack)'
+  const borderColor = isCurse ? 'var(--accent-purple)'
+    : card.type === 'attack' ? 'var(--card-attack)'
     : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
 
   const transformStyle = transform
@@ -39,8 +41,8 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
         display: 'flex',
         flexDirection: 'column',
         gap: 4,
-        cursor: disabled ? 'not-allowed' : 'grab',
-        opacity: disabled ? 0.5 : isDragging ? 0.8 : 1,
+        cursor: disabled || isCurse ? 'not-allowed' : 'grab',
+        opacity: disabled ? 0.5 : isCurse ? 0.7 : isDragging ? 0.8 : 1,
         transform: transformStyle,
         transition: transform ? undefined : 'all var(--transition-fast)',
         zIndex: isDragging ? 100 : 1,

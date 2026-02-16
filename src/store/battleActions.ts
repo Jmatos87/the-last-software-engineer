@@ -1,11 +1,15 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { BattleState, EnemyDef, EnemyInstance, CardInstance, RunState } from '../types';
+import type { BattleState, EnemyDef, EnemyInstance, RunState } from '../types';
 import { createCardInstance, shuffleDeck, drawCards } from '../utils/deckUtils';
+import { getCardDef } from '../data/cards';
 import {
   calculateDamage,
   calculateBlock,
+  calculateCopium,
+  calculateStressDamage,
   applyDamageToEnemy,
   applyDamageToPlayer,
+  applyStressToPlayer,
   tickStatusEffects,
   mergeStatusEffects,
 } from '../utils/battleEngine';
@@ -48,14 +52,19 @@ export function executePlayCard(
   run: RunState,
   cardInstanceId: string,
   targetInstanceId?: string
-): BattleState {
+): { battle: BattleState; stressReduction: number } {
   const cardIndex = battle.hand.findIndex(c => c.instanceId === cardInstanceId);
-  if (cardIndex === -1) return battle;
+  if (cardIndex === -1) return { battle, stressReduction: 0 };
 
   const card = battle.hand[cardIndex];
-  if (card.cost > battle.energy) return battle;
+
+  // Block curse cards from being played
+  if (card.type === 'curse') return { battle, stressReduction: 0 };
+
+  if (card.cost > battle.energy) return { battle, stressReduction: 0 };
 
   let newBattle = { ...battle };
+  let stressReduction = 0;
   newBattle.energy -= card.cost;
   newBattle.hand = [...battle.hand];
   newBattle.hand.splice(cardIndex, 1);
@@ -105,6 +114,11 @@ export function executePlayCard(
     newBattle.playerBlock = (newBattle.playerBlock || 0) + block;
   }
 
+  // Apply copium — directly reduces stress
+  if (effects.copium) {
+    stressReduction = calculateCopium(effects.copium, battle.playerStatusEffects);
+  }
+
   // Apply self buffs
   if (effects.applyToSelf) {
     newBattle.playerStatusEffects = mergeStatusEffects(newBattle.playerStatusEffects, effects.applyToSelf);
@@ -138,29 +152,28 @@ export function executePlayCard(
     newBattle.energy += effects.energy;
   }
 
-  // Heal
-  if (effects.heal) {
-    // Handled at run level
-  }
-
   // Move card to discard
   newBattle.discardPile = [...newBattle.discardPile, card];
 
   // Remove dead enemies
   newBattle.enemies = newBattle.enemies.filter(e => e.currentHp > 0);
 
-  return newBattle;
+  return { battle: newBattle, stressReduction };
 }
 
 export function executeEnemyTurn(
   battle: BattleState,
   run: RunState
-): { battle: BattleState; playerHp: number } {
+): { battle: BattleState; playerHp: number; playerStress: number } {
   let newBattle = { ...battle };
   let playerHp = run.hp;
+  let playerStress = run.stress;
 
-  // Reset player block
-  newBattle.playerBlock = 0;
+  // Reset player block (Savings Account retains up to X)
+  const savedBlock = newBattle.playerStatusEffects.savingsAccount || 0;
+  newBattle.playerBlock = savedBlock > 0 ? Math.min(newBattle.playerBlock, savedBlock) : 0;
+
+  const enemiesToRemove: string[] = [];
 
   // Each enemy acts
   newBattle.enemies = newBattle.enemies.map(enemy => {
@@ -169,6 +182,16 @@ export function executeEnemyTurn(
 
     // Reset enemy block
     updatedEnemy.block = 0;
+
+    // Enemy regen (heal at start of action)
+    if ((updatedEnemy.statusEffects.regen || 0) > 0) {
+      updatedEnemy.currentHp = Math.min(
+        updatedEnemy.maxHp,
+        updatedEnemy.currentHp + (updatedEnemy.statusEffects.regen || 0)
+      );
+    }
+
+    const thorns = newBattle.playerStatusEffects.counterOffer || 0;
 
     switch (move.type) {
       case 'attack': {
@@ -182,6 +205,81 @@ export function executeEnemyTurn(
           const result = applyDamageToPlayer(playerHp, newBattle.playerBlock, dmg);
           playerHp = result.hp;
           newBattle.playerBlock = result.block;
+        }
+        // Counter-Offer thorns
+        if (thorns > 0) {
+          updatedEnemy = applyDamageToEnemy(updatedEnemy, thorns);
+        }
+        // Some attacks also deal stress as a rider
+        if (move.stressDamage) {
+          const stressDmg = calculateStressDamage(
+            move.stressDamage,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects,
+            enemy.id
+          );
+          playerStress = applyStressToPlayer(playerStress, stressDmg);
+        }
+        break;
+      }
+      case 'stress_attack': {
+        const times = move.times || 1;
+        for (let i = 0; i < times; i++) {
+          const stressDmg = calculateStressDamage(
+            move.stressDamage || 0,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects,
+            enemy.id
+          );
+          playerStress = applyStressToPlayer(playerStress, stressDmg);
+        }
+        break;
+      }
+      case 'dual_attack': {
+        // HP damage
+        if (move.damage) {
+          const dmg = calculateDamage(
+            move.damage,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects
+          );
+          const hpResult = applyDamageToPlayer(playerHp, newBattle.playerBlock, dmg);
+          playerHp = hpResult.hp;
+          newBattle.playerBlock = hpResult.block;
+          // Counter-Offer thorns
+          if (thorns > 0) {
+            updatedEnemy = applyDamageToEnemy(updatedEnemy, thorns);
+          }
+        }
+        // Stress damage
+        if (move.stressDamage) {
+          const stressDmg = calculateStressDamage(
+            move.stressDamage,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects,
+            enemy.id
+          );
+          playerStress = applyStressToPlayer(playerStress, stressDmg);
+        }
+        break;
+      }
+      case 'discard': {
+        // Discard random cards from hand
+        const discardCount = move.discardCount || 1;
+        for (let i = 0; i < discardCount && newBattle.hand.length > 0; i++) {
+          const idx = Math.floor(Math.random() * newBattle.hand.length);
+          const [discarded] = newBattle.hand.splice(idx, 1);
+          newBattle.discardPile = [...newBattle.discardPile, discarded];
+        }
+        // Discard moves can also deal stress
+        if (move.stressDamage) {
+          const stressDmg = calculateStressDamage(
+            move.stressDamage,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects,
+            enemy.id
+          );
+          playerStress = applyStressToPlayer(playerStress, stressDmg);
         }
         break;
       }
@@ -202,6 +300,10 @@ export function executeEnemyTurn(
             move.applyToTarget
           );
         }
+        // Ghost Company vanish: after applying ghosted on move index 2, mark for removal
+        if (enemy.id === 'ghost_company' && enemy.moveIndex === 2) {
+          enemiesToRemove.push(enemy.instanceId);
+        }
         break;
       }
       case 'attack_defend': {
@@ -214,6 +316,13 @@ export function executeEnemyTurn(
         playerHp = result.hp;
         newBattle.playerBlock = result.block;
         updatedEnemy.block += move.block || 0;
+        // Counter-Offer thorns
+        if (thorns > 0) {
+          updatedEnemy = applyDamageToEnemy(updatedEnemy, thorns);
+        }
+        if (move.applyToSelf) {
+          updatedEnemy.statusEffects = mergeStatusEffects(updatedEnemy.statusEffects, move.applyToSelf);
+        }
         break;
       }
     }
@@ -229,26 +338,61 @@ export function executeEnemyTurn(
     return updatedEnemy;
   });
 
+  // Remove vanished enemies (Ghost Company) and enemies killed by Counter-Offer
+  newBattle.enemies = newBattle.enemies.filter(e =>
+    e.currentHp > 0 && !enemiesToRemove.includes(e.instanceId)
+  );
+
   // Tick player status effects
   newBattle.playerStatusEffects = tickStatusEffects(newBattle.playerStatusEffects);
 
-  return { battle: newBattle, playerHp };
+  return { battle: newBattle, playerHp, playerStress };
 }
 
-export function startNewTurn(battle: BattleState, run: RunState): BattleState {
+export function startNewTurn(battle: BattleState, run: RunState): { battle: BattleState; stressChange: number } {
   // Discard hand
   const newDiscard = [...battle.discardPile, ...battle.hand];
   const extraDraw = run.items.reduce((sum, item) => sum + (item.effect.extraDraw || 0), 0);
-  const drawCount = 5 + extraDraw;
+  const networkingDraw = battle.playerStatusEffects.networking || 0;
+  const drawCount = 5 + extraDraw + networkingDraw;
 
   const { drawn, newDrawPile, newDiscardPile } = drawCards(battle.drawPile, newDiscard, drawCount);
 
+  let hand = drawn;
+
+  // Ghosted status: add curse cards to hand
+  const ghostedStacks = battle.playerStatusEffects.ghosted || 0;
+  if (ghostedStacks > 0) {
+    const curseDef = getCardDef('ghosted_curse');
+    if (curseDef) {
+      for (let i = 0; i < ghostedStacks; i++) {
+        hand = [...hand, createCardInstance(curseDef)];
+      }
+    }
+  }
+
+  // Hustle Culture: bonus energy
+  const hustleEnergy = battle.playerStatusEffects.hustleCulture || 0;
+
+  // Stress changes from buffs
+  let stressChange = 0;
+  // Self Care: reduce stress
+  const selfCare = battle.playerStatusEffects.selfCare || 0;
+  if (selfCare > 0) stressChange -= selfCare;
+  // Hustle Culture: gain stress
+  if (hustleEnergy > 0) stressChange += 3 * hustleEnergy;
+
+  // Touch Grass (regen): heal HP — handled in executeEnemyTurn already via regen
+
   return {
-    ...battle,
-    hand: drawn,
-    drawPile: newDrawPile,
-    discardPile: newDiscardPile,
-    energy: battle.maxEnergy,
-    turn: battle.turn + 1,
+    battle: {
+      ...battle,
+      hand,
+      drawPile: newDrawPile,
+      discardPile: newDiscardPile,
+      energy: battle.maxEnergy + hustleEnergy,
+      turn: battle.turn + 1,
+    },
+    stressChange,
   };
 }

@@ -6,9 +6,10 @@ interface HpBarProps {
   showNumbers?: boolean;
   height?: number;
   color?: string;
+  label?: string;
 }
 
-export const HpBar: React.FC<HpBarProps> = ({ current, max, showNumbers = true, height = 12, color }) => {
+export const HpBar: React.FC<HpBarProps> = ({ current, max, showNumbers = true, height = 12, color, label }) => {
   const pct = Math.max(0, Math.min(100, (current / max) * 100));
   const barColor = color || (pct > 60 ? 'var(--accent-green)' : pct > 30 ? 'var(--accent-yellow)' : 'var(--hp-bar)');
 
@@ -37,7 +38,7 @@ export const HpBar: React.FC<HpBarProps> = ({ current, max, showNumbers = true, 
       </div>
       {showNumbers && (
         <span style={{ fontSize: 12, color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
-          {current}/{max}
+          {label ? `${label} ` : ''}{current}/{max}
         </span>
       )}
     </div>

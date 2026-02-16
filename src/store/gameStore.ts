@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { GameState, EnemyDef, RunState } from '../types';
+import type { GameState, EnemyDef } from '../types';
 import { characters } from '../data/characters';
 import { cards, getRewardCards, getCardDef } from '../data/cards';
 import { enemies, normalEncounters, eliteEncounters, bossEncounters } from '../data/enemies';
 import { events } from '../data/events';
-import { items, getShopItems } from '../data/items';
+import { items } from '../data/items';
 import { createCardInstance } from '../utils/deckUtils';
 import { generateMap } from '../utils/mapGenerator';
 import { initBattle, executePlayCard, executeEnemyTurn, startNewTurn } from './battleActions';
@@ -34,6 +34,8 @@ export const useGameStore = create<GameState>()(
           deck,
           items: [],
           map,
+          stress: 0,
+          maxStress: char.maxStress,
           floor: 0,
           act: 1,
         };
@@ -124,10 +126,13 @@ export const useGameStore = create<GameState>()(
       const state = get();
       if (!state.battle || !state.run) return;
 
-      const newBattle = executePlayCard(state.battle, state.run, cardInstanceId, targetInstanceId);
+      const { battle: newBattle, stressReduction } = executePlayCard(state.battle, state.run, cardInstanceId, targetInstanceId);
 
       set(s => {
         s.battle = newBattle as any;
+        if (s.run && stressReduction > 0) {
+          s.run.stress = Math.max(0, s.run.stress - stressReduction);
+        }
       });
 
       // Check if all enemies are dead
@@ -147,7 +152,11 @@ export const useGameStore = create<GameState>()(
         // Post-battle heal from items
         const healOnKill = state.run.items.reduce((sum, item) => sum + (item.effect.healOnKill || 0), 0);
         const extraGold = state.run.items.reduce((sum, item) => sum + (item.effect.extraGold || 0), 0);
-        const goldReward = (isElite ? 30 : 15) + Math.floor(Math.random() * 10) + extraGold;
+        // Take-Home Assignment fast-kill bonus: +15 gold if killed in <= 2 turns
+        const takeHomeBonus = (newBattle.turn <= 2 && state.run.map.nodes.find(
+          n => n.id === state.run!.map.currentNodeId
+        )?.type === 'battle') ? 15 : 0;
+        const goldReward = (isElite ? 30 : 15) + Math.floor(Math.random() * 10) + extraGold + takeHomeBonus;
 
         set(s => {
           if (!s.run) return;
@@ -165,7 +174,7 @@ export const useGameStore = create<GameState>()(
       const state = get();
       if (!state.battle || !state.run) return;
 
-      const { battle: afterEnemyTurn, playerHp } = executeEnemyTurn(state.battle, state.run);
+      const { battle: afterEnemyTurn, playerHp, playerStress } = executeEnemyTurn(state.battle, state.run);
 
       if (playerHp <= 0) {
         set(s => {
@@ -176,10 +185,29 @@ export const useGameStore = create<GameState>()(
         return;
       }
 
-      const newTurn = startNewTurn(afterEnemyTurn, state.run);
+      if (playerStress >= state.run.maxStress) {
+        set(s => {
+          if (s.run) {
+            s.run.hp = 0;
+            s.run.stress = s.run.maxStress;
+          }
+          s.battle = null;
+        });
+        get().gameOver();
+        return;
+      }
+
+      // Apply player regen (Touch Grass) before new turn
+      const regenAmount = afterEnemyTurn.playerStatusEffects.regen || 0;
+      const hpAfterRegen = regenAmount > 0 ? Math.min(state.run.maxHp, playerHp + regenAmount) : playerHp;
+
+      const { battle: newTurn, stressChange } = startNewTurn(afterEnemyTurn, state.run);
 
       set(s => {
-        if (s.run) s.run.hp = playerHp;
+        if (s.run) {
+          s.run.hp = hpAfterRegen;
+          s.run.stress = Math.max(0, Math.min(s.run.maxStress, playerStress + stressChange));
+        }
         s.battle = newTurn as any;
       });
     },
@@ -221,6 +249,8 @@ export const useGameStore = create<GameState>()(
         if (!s.run) return;
         const heal = Math.floor(s.run.maxHp * 0.3);
         s.run.hp = Math.min(s.run.maxHp, s.run.hp + heal);
+        const stressHeal = Math.floor(s.run.maxStress * 0.3);
+        s.run.stress = Math.max(0, s.run.stress - stressHeal);
         s.screen = 'MAP';
       });
     },

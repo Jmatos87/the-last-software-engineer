@@ -7,12 +7,22 @@ interface StatusEffectsProps {
 }
 
 const effectInfo: Record<string, { icon: string; label: string; color: string }> = {
-  vulnerable: { icon: '💔', label: 'Vulnerable', color: 'var(--accent-red)' },
-  weak: { icon: '😵', label: 'Weak', color: 'var(--accent-orange)' },
-  strength: { icon: '💪', label: 'Strength', color: 'var(--accent-red)' },
-  dexterity: { icon: '🏃', label: 'Dexterity', color: 'var(--accent-green)' },
-  regen: { icon: '💚', label: 'Regen', color: 'var(--accent-green)' },
+  // Debuffs
+  vulnerable: { icon: '💔', label: 'Vulnerable — Take 50% more damage', color: 'var(--accent-red)' },
+  weak: { icon: '😵', label: 'Weak — Deal 25% less damage', color: 'var(--accent-orange)' },
   poison: { icon: '☠️', label: 'Poison', color: 'var(--accent-purple)' },
+  hope: { icon: '✨', label: 'Hope — Beware false promises...', color: 'var(--accent-yellow)' },
+  cringe: { icon: '😬', label: 'Cringe — Reduces stress healing', color: 'var(--accent-orange)' },
+  ghosted: { icon: '👻', label: 'Ghosted — Adds curse cards each turn', color: 'var(--accent-purple)' },
+  // Buffs
+  strength: { icon: '😤', label: 'Rage Apply — +1 damage per stack', color: 'var(--accent-red)' },
+  dexterity: { icon: '🧠', label: 'Emotional Intelligence — +1 block & stress reduction per stack', color: 'var(--accent-blue)' },
+  regen: { icon: '🌿', label: 'Touch Grass — Heal HP each turn', color: 'var(--accent-green)' },
+  selfCare: { icon: '🛁', label: 'Self Care — Reduce stress each turn', color: 'var(--accent-green)' },
+  networking: { icon: '🤝', label: 'Networking — Draw extra cards each turn', color: 'var(--accent-blue)' },
+  savingsAccount: { icon: '🏦', label: 'Savings Account — Retain block between turns', color: 'var(--accent-yellow)' },
+  counterOffer: { icon: '💼', label: 'Counter-Offer — Deal damage back when attacked', color: 'var(--accent-orange)' },
+  hustleCulture: { icon: '💪', label: 'Hustle Culture — +1 energy, +3 stress per turn', color: 'var(--accent-red)' },
 };
 
 export const StatusEffects: React.FC<StatusEffectsProps> = ({ effects }) => {

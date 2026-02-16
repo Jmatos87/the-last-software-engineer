@@ -123,7 +123,7 @@ export const MapScreen: React.FC = () => {
           )}
 
           {/* Draw nodes */}
-          {rows.map((rowNodes, rowIdx) =>
+          {rows.map((rowNodes, _rowIdx) =>
             rowNodes.map(node => {
               const x = 250 + getNodePosition(node, rowNodes);
               const y = (rows.length - 1 - node.row) * 100 + 40;

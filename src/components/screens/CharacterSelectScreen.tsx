@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { characters } from '../../data/characters';
 import { getCardDef } from '../../data/cards';
+import { Tooltip } from '../common/Tooltip';
 
 export const CharacterSelectScreen: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -93,20 +94,23 @@ export const CharacterSelectScreen: React.FC = () => {
               const borderColor = card.type === 'attack' ? 'var(--card-attack)'
                 : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
               return (
-                <div key={i} style={{
-                  padding: '6px 10px',
-                  background: 'var(--bg-card)',
-                  border: `1px solid ${borderColor}`,
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: 12,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 4,
-                }}>
-                  <span>{card.icon}</span>
-                  <span>{card.name}</span>
-                  <span style={{ color: 'var(--energy-color)', fontSize: 10 }}>({card.cost})</span>
-                </div>
+                <Tooltip key={i} text={card.description}>
+                  <div style={{
+                    padding: '6px 10px',
+                    background: 'var(--bg-card)',
+                    border: `1px solid ${borderColor}`,
+                    borderRadius: 'var(--radius-sm)',
+                    fontSize: 12,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    cursor: 'default',
+                  }}>
+                    <span>{card.icon}</span>
+                    <span>{card.name}</span>
+                    <span style={{ color: 'var(--energy-color)', fontSize: 10 }}>({card.cost})</span>
+                  </div>
+                </Tooltip>
               );
             })}
           </div>

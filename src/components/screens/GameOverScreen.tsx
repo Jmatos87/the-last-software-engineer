@@ -17,7 +17,9 @@ export const GameOverScreen: React.FC = () => {
       <div style={{ fontSize: 64 }}>💀</div>
       <h1 style={{ fontSize: 32, color: 'var(--accent-red)' }}>GAME OVER</h1>
       <p style={{ color: 'var(--text-secondary)', fontSize: 16 }}>
-        Your code has been deprecated.
+        {run && run.stress >= run.maxStress
+          ? 'Mental breakdown! The job search has claimed another victim.'
+          : 'Your code has been deprecated.'}
       </p>
       {run && (
         <div style={{

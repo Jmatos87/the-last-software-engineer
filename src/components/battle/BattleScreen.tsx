@@ -9,26 +9,43 @@ import { HpBar } from '../common/HpBar';
 import { EnergyOrb } from '../common/EnergyOrb';
 import { StatusEffects } from '../common/StatusEffects';
 
-const SelfDropZone: React.FC = () => {
+const PlayerStatusPanel: React.FC = () => {
+  const run = useGameStore(s => s.run);
+  const battle = useGameStore(s => s.battle);
   const { setNodeRef, isOver } = useDroppable({
     id: 'self-target',
     data: { selfTarget: true },
   });
 
+  if (!run || !battle) return null;
+
   return (
     <div
       ref={setNodeRef}
       style={{
-        padding: '8px 16px',
-        background: isOver ? 'rgba(74, 222, 128, 0.15)' : 'var(--bg-card)',
-        border: `2px dashed ${isOver ? 'var(--accent-green)' : 'var(--border-color)'}`,
+        padding: '8px 12px',
+        background: isOver ? 'rgba(74, 222, 128, 0.1)' : 'var(--bg-card)',
+        border: `2px solid ${isOver ? 'var(--accent-green)' : 'var(--border-color)'}`,
         borderRadius: 'var(--radius-md)',
-        fontSize: 12,
-        color: 'var(--text-secondary)',
         transition: 'all var(--transition-fast)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 6,
+        minWidth: 140,
       }}
     >
-      🙋 Drop skills here
+      <div style={{ width: '100%' }}>
+        <HpBar current={run.hp} max={run.maxHp} height={10} label="HP" />
+      </div>
+      <div style={{ width: '100%' }}>
+        <HpBar current={run.stress} max={run.maxStress} height={10} color="var(--accent-purple)" label="STRESS" />
+      </div>
+      {battle.playerBlock > 0 && (
+        <div style={{ fontSize: 12, color: 'var(--block-color)', textAlign: 'center' }}>
+          🛡️ {battle.playerBlock}
+        </div>
+      )}
+      <StatusEffects effects={battle.playerStatusEffects} />
     </div>
   );
 };
@@ -88,15 +105,6 @@ export const BattleScreen: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ fontSize: 20 }}>{run.character.icon}</span>
             <span style={{ fontSize: 14 }}>{run.character.name}</span>
-            <div style={{ width: 120 }}>
-              <HpBar current={run.hp} max={run.maxHp} height={10} />
-            </div>
-            {battle.playerBlock > 0 && (
-              <span style={{ color: 'var(--block-color)', fontSize: 14 }}>
-                🛡️ {battle.playerBlock}
-              </span>
-            )}
-            <StatusEffects effects={battle.playerStatusEffects} />
           </div>
           <div style={{ display: 'flex', gap: 16, fontSize: 12, color: 'var(--text-secondary)' }}>
             <span>Turn {battle.turn}</span>
@@ -124,7 +132,7 @@ export const BattleScreen: React.FC = () => {
             gap: 8,
           }}>
             <div style={{ fontSize: 56 }}>{run.character.icon}</div>
-            <SelfDropZone />
+            <PlayerStatusPanel />
           </div>
 
           {/* VS divider */}

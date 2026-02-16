@@ -11,17 +11,25 @@ export type Screen =
   | 'VICTORY';
 
 // ── Cards ──
-export type CardType = 'attack' | 'skill' | 'power';
+export type CardType = 'attack' | 'skill' | 'power' | 'curse';
 export type CardTarget = 'enemy' | 'self' | 'all_enemies';
-export type CardRarity = 'starter' | 'common' | 'uncommon' | 'rare';
+export type CardRarity = 'starter' | 'common' | 'uncommon' | 'rare' | 'curse';
 
 export interface StatusEffect {
   vulnerable?: number;
   weak?: number;
-  strength?: number;
-  dexterity?: number;
-  regen?: number;
+  strength?: number;       // "Rage Apply" — +dmg per attack
+  dexterity?: number;      // "Emotional Intelligence" — +block & +stress reduction
+  regen?: number;          // "Touch Grass" — heal HP per turn
   poison?: number;
+  hope?: number;
+  cringe?: number;
+  ghosted?: number;
+  selfCare?: number;       // reduce stress per turn
+  networking?: number;     // draw +1 card per turn per stack
+  savingsAccount?: number; // retain up to X block between turns
+  counterOffer?: number;   // deal X damage back when hit
+  hustleCulture?: number;  // +1 energy per turn, +3 stress per turn per stack
 }
 
 export interface CardEffect {
@@ -33,6 +41,7 @@ export interface CardEffect {
   applyToTarget?: StatusEffect;
   damageAll?: number;
   heal?: number;
+  copium?: number;
 }
 
 export interface CardDef {
@@ -56,7 +65,7 @@ export interface CardInstance extends CardDef {
 }
 
 // ── Enemies ──
-export type EnemyMoveType = 'attack' | 'defend' | 'buff' | 'debuff' | 'attack_defend';
+export type EnemyMoveType = 'attack' | 'defend' | 'buff' | 'debuff' | 'attack_defend' | 'stress_attack' | 'dual_attack' | 'discard';
 
 export interface EnemyMove {
   name: string;
@@ -66,6 +75,8 @@ export interface EnemyMove {
   times?: number;
   applyToSelf?: StatusEffect;
   applyToTarget?: StatusEffect;
+  stressDamage?: number;
+  discardCount?: number;
   icon: string;
 }
 
@@ -97,6 +108,7 @@ export interface CharacterDef {
   hp: number;
   energy: number;
   description: string;
+  maxStress: number;
   starterDeckIds: string[];
   icon: string;
   available: boolean;
@@ -182,6 +194,8 @@ export interface RunState {
   deck: CardInstance[];
   items: ItemDef[];
   map: GameMap;
+  stress: number;
+  maxStress: number;
   floor: number;
   act: number;
 }
