@@ -3,7 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import type { GameState, EnemyDef } from '../types';
 import { characters } from '../data/characters';
 import { cards, getRewardCards, getCardDef } from '../data/cards';
-import { enemies, normalEncounters, eliteEncounters, bossEncounters } from '../data/enemies';
+import { enemies, getNormalEncounter, getEliteEncounter, getBossEncounter } from '../data/enemies';
 import { events } from '../data/events';
 import { items, getRewardArtifact } from '../data/items';
 import { createCardInstance } from '../utils/deckUtils';
@@ -24,7 +24,7 @@ export const useGameStore = create<GameState>()(
       if (!char || !char.available) return;
 
       const deck = char.starterDeckIds.map(id => createCardInstance(getCardDef(id)));
-      const map = generateMap();
+      const map = generateMap(1);
 
       set(state => {
         state.run = {
@@ -75,21 +75,23 @@ export const useGameStore = create<GameState>()(
       });
 
       // Transition to appropriate screen
+      const act = state.run.act;
+      const totalRows = Math.max(...state.run.map.nodes.map(n => n.row)) + 1;
       switch (node.type) {
         case 'battle': {
-          const encounter = normalEncounters[Math.floor(Math.random() * normalEncounters.length)];
+          const encounter = getNormalEncounter(act, node.row, totalRows);
           const enemyDefs = encounter.map(id => enemies[id]);
           get().startBattle(enemyDefs);
           break;
         }
         case 'elite': {
-          const encounter = eliteEncounters[Math.floor(Math.random() * eliteEncounters.length)];
+          const encounter = getEliteEncounter(act);
           const enemyDefs = encounter.map(id => enemies[id]);
           get().startBattle(enemyDefs);
           break;
         }
         case 'boss': {
-          const encounter = bossEncounters[0];
+          const encounter = getBossEncounter(act);
           const enemyDefs = encounter.map(id => enemies[id]);
           get().startBattle(enemyDefs);
           break;
@@ -216,7 +218,14 @@ export const useGameStore = create<GameState>()(
       const state = get();
       if (!state.battle || !state.run) return;
 
-      const { battle: afterEnemyTurn, playerHp, playerStress } = executeEnemyTurn(state.battle, state.run);
+      const { battle: afterEnemyTurn, playerHp, playerStress, goldChange } = executeEnemyTurn(state.battle, state.run);
+
+      // Apply gold changes from enemy actions (gold steal)
+      if (goldChange !== 0) {
+        set(s => {
+          if (s.run) s.run.gold = Math.max(0, s.run.gold + goldChange);
+        });
+      }
 
       if (playerHp <= 0) {
         set(s => {
@@ -341,7 +350,19 @@ export const useGameStore = create<GameState>()(
         if (!s.run) return;
         s.run.deck.push(instance as any);
         s.pendingRewards = null;
-        s.screen = isBossReward ? 'VICTORY' : 'MAP';
+        if (isBossReward) {
+          if (s.run.act >= 3) {
+            s.screen = 'VICTORY';
+          } else {
+            // Advance to next act
+            s.run.act += 1;
+            s.run.floor = 0;
+            s.run.map = generateMap(s.run.act) as any;
+            s.screen = 'MAP';
+          }
+        } else {
+          s.screen = 'MAP';
+        }
       });
     },
 
@@ -369,7 +390,19 @@ export const useGameStore = create<GameState>()(
       const isBossReward = get().pendingRewards?.isBossReward;
       set(s => {
         s.pendingRewards = null;
-        s.screen = isBossReward ? 'VICTORY' : 'MAP';
+        if (isBossReward) {
+          if (!s.run || s.run.act >= 3) {
+            s.screen = 'VICTORY';
+          } else {
+            // Advance to next act
+            s.run.act += 1;
+            s.run.floor = 0;
+            s.run.map = generateMap(s.run.act) as any;
+            s.screen = 'MAP';
+          }
+        } else {
+          s.screen = 'MAP';
+        }
       });
     },
 

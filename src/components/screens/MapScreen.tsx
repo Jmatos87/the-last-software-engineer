@@ -76,6 +76,7 @@ export const MapScreen: React.FC = () => {
         </div>
         <div style={{ display: 'flex', gap: 16, fontSize: 14 }}>
           <span style={{ color: 'var(--gold-color)' }}>💰 {run.gold}</span>
+          <span style={{ color: 'var(--accent-purple)' }}>Act {run.act}</span>
           <span style={{ color: 'var(--text-secondary)' }}>📦 {run.deck.length} cards</span>
           {run.items.map(item => (
             <span key={item.id} title={`${item.name}: ${item.description}`}>{item.icon}</span>

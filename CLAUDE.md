@@ -73,10 +73,13 @@ src/
 
 ### Game Flow
 ```
-CHARACTER_SELECT → MAP → [BATTLE | REST | EVENT | SHOP] → BATTLE_REWARD → MAP → ... → BOSS → VICTORY
-                                                                                        ↓
-                                                                                    GAME_OVER
+CHARACTER_SELECT → MAP → [BATTLE | REST | EVENT | SHOP] → BATTLE_REWARD → MAP → ...
+  → ACT 1 BOSS → REWARD → ACT 2 MAP → ... → ACT 2 BOSS → REWARD → ACT 3 MAP → ... → ACT 3 BOSS → VICTORY
+                                                                                                      ↓
+                                                                                                  GAME_OVER
 ```
+Acts 1-2 boss victory generates a new map for the next act. Act 3 boss victory → VICTORY screen.
+Player keeps deck, items, gold, HP between acts.
 
 ### Battle System
 - `battleActions.ts` contains **pure functions** (`initBattle`, `executePlayCard`, `executeEnemyTurn`, `startNewTurn`) that take state and return new state.
@@ -111,7 +114,39 @@ CHARACTER_SELECT → MAP → [BATTLE | REST | EVENT | SHOP] → BATTLE_REWARD �
 - `GameState` — top-level store type (state + all actions)
 
 ## Status Effect System
-Effects: `vulnerable`, `weak`, `strength`, `dexterity`, `regen`, `poison`. All are number values that decrement each turn.
+Temporary (decrement each turn): `vulnerable`, `weak`, `poison`, `hope`, `cringe`, `ghosted`.
+Permanent (persist): `strength`, `dexterity`, `regen`, `selfCare`, `networking`, `savingsAccount`, `counterOffer`, `hustleCulture`.
+
+## Enemy Move Types
+Basic: `attack`, `defend`, `buff`, `debuff`, `attack_defend`, `stress_attack`, `dual_attack`, `discard`.
+Advanced: `exhaust` (cards to exhaust pile), `buff_allies` (buff other enemies), `gold_steal` (steal player gold), `heal_allies` (heal other enemies).
+
+## Act Structure — 3 Acts, 60 Enemies Total
+**Act 1 — The Application Abyss** (Job search chaos)
+- 12 commons, 5 elites, 3 bosses (HR Phone Screen, ATS Final Form, Ghosting Phantom)
+- New enemy mechanics: exhaust (Cover Letter Shredder), buff allies (Keyword Stuffer), gold steal (Application Fee Scammer), swarms (LinkedIn Notifications)
+
+**Act 2 — The Interview Gauntlet** (Technical screens & personality tests)
+- 12 commons, 5 elites, 3 bosses (Panel Interview Hydra, Live Coding Challenge, VP of Engineering)
+- Reactive enemies, DPS checks, spawning-style buffs, energy drain themes
+
+**Act 3 — Corporate Final Round** (Suits, offers, and existential dread)
+- 12 commons, 5 elites, 3 bosses (Offer Committee, The CEO, Imposter Syndrome Final Form)
+- Multi-mechanic enemies, resource drain, deck destruction, doom-timer style escalation
+
+## Map Generation
+- **12 rows**, 2-4 columns per row (3 starting paths, 1 boss node)
+- **~36 nodes per act** with zone-based distribution:
+  - Early zone (first 25%): battles only, no elites
+  - Mid zone (middle 50%): elites appear, full variety
+  - Late zone (final 25%): harder encounters, guaranteed rest
+- Elite placement rules: never in early zone, max per path (Act 1: 1, Act 2: 2, Act 3: 3), min 2 rows apart
+- `generateMap(act)` accepts act number for act-aware generation
+
+## Encounter Selection
+- `getNormalEncounter(act, row, totalRows)` — solos in early zone, full pool (solos+duos+trios) in mid/late
+- `getEliteEncounter(act)` — act-specific elite pool
+- `getBossEncounter(act)` — act-specific boss pool (random selection from 3 per act)
 
 ## Change Log / Design Decisions
 
@@ -147,6 +182,6 @@ Effects: `vulnerable`, `weak`, `strength`, `dexterity`, `regen`, `poison`. All a
 - The store has `as any` casts in several places (Immer/Zustand type workaround) — don't remove these.
 - `cards` in `data/cards.ts` is a `Record<string, CardDef>` keyed by card ID.
 - `enemies` in `data/enemies.ts` is a `Record<string, EnemyDef>` keyed by enemy ID.
-- Encounter arrays (`normalEncounters`, `eliteEncounters`, `bossEncounters`) are `string[][]` — arrays of enemy ID groups.
-- Map generation produces rows 0-14 with a boss node at the end.
+- Encounter helpers: `getNormalEncounter(act, row, totalRows)`, `getEliteEncounter(act)`, `getBossEncounter(act)`. Legacy arrays (`normalEncounters`, `eliteEncounters`, `bossEncounters`) still exported for backwards compat.
+- Map generation: `generateMap(act)` produces 12-row maps with ~36 nodes per act, boss at row 11.
 - Gold starts at 50. Rest heals 30% maxHP. Card removal costs 75 gold.

@@ -48,6 +48,9 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
     if (calcDmg) parts.push(`${calcDmg}${move.times && move.times > 1 ? `x${move.times}` : ''} dmg`);
     if (calcStressDmg) parts.push(`${calcStressDmg}${move.times && move.times > 1 ? `x${move.times}` : ''} stress`);
     if (move.discardCount) parts.push(`discard ${move.discardCount}`);
+    if (move.exhaustCount) parts.push(`exhaust ${move.exhaustCount}`);
+    if (move.goldSteal) parts.push(`steal ${move.goldSteal}g`);
+    if (move.healAmount) parts.push(`heal allies ${move.healAmount}`);
     if (move.block) parts.push(`${move.block} block`);
     if (move.applyToSelf?.strength) parts.push(`+${move.applyToSelf.strength} str`);
     if (move.applyToSelf?.regen) parts.push(`+${move.applyToSelf.regen} regen`);
@@ -103,6 +106,21 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
           {move.discardCount && (
             <span style={{ color: 'var(--accent-yellow)' }}>
               🗑️{move.discardCount}
+            </span>
+          )}
+          {move.exhaustCount && (
+            <span style={{ color: 'var(--accent-orange)' }}>
+              🔥{move.exhaustCount}
+            </span>
+          )}
+          {move.goldSteal && (
+            <span style={{ color: 'var(--gold-color)' }}>
+              💸{move.goldSteal}
+            </span>
+          )}
+          {move.healAmount && (
+            <span style={{ color: 'var(--accent-green)' }}>
+              💊{move.healAmount}
             </span>
           )}
           {move.block && (

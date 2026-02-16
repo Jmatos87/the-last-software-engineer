@@ -213,10 +213,11 @@ export function executePlayCard(
 export function executeEnemyTurn(
   battle: BattleState,
   run: RunState
-): { battle: BattleState; playerHp: number; playerStress: number; enemiesVanished: number; enemiesKilled: number; vanishedIds: string[] } {
+): { battle: BattleState; playerHp: number; playerStress: number; enemiesVanished: number; enemiesKilled: number; vanishedIds: string[]; goldChange: number } {
   const newBattle = { ...battle };
   let playerHp = run.hp;
   let playerStress = run.stress;
+  let goldChange = 0;
 
   const enemiesToRemove: string[] = [];
 
@@ -328,6 +329,65 @@ export function executeEnemyTurn(
         }
         break;
       }
+      case 'exhaust': {
+        // Exhaust random cards from hand (removed from combat entirely)
+        const exhaustCount = move.exhaustCount || 1;
+        for (let i = 0; i < exhaustCount && newBattle.hand.length > 0; i++) {
+          const idx = Math.floor(Math.random() * newBattle.hand.length);
+          const [exhausted] = newBattle.hand.splice(idx, 1);
+          newBattle.exhaustPile = [...newBattle.exhaustPile, exhausted];
+        }
+        if (move.stressDamage) {
+          const stressDmg = calculateStressDamage(
+            move.stressDamage,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects,
+            enemy.id
+          );
+          playerStress = applyStressToPlayer(playerStress, stressDmg);
+        }
+        break;
+      }
+      case 'buff_allies': {
+        // Apply buffs to all OTHER enemies (not self)
+        if (move.applyToTarget) {
+          newBattle.enemies = newBattle.enemies.map(e => {
+            if (e.instanceId === enemy.instanceId) return e;
+            return {
+              ...e,
+              statusEffects: mergeStatusEffects(e.statusEffects, move.applyToTarget!),
+            };
+          });
+        }
+        break;
+      }
+      case 'gold_steal': {
+        // Steal gold from the player
+        const steal = move.goldSteal || 0;
+        goldChange -= steal;
+        if (move.stressDamage) {
+          const stressDmg = calculateStressDamage(
+            move.stressDamage,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects,
+            enemy.id
+          );
+          playerStress = applyStressToPlayer(playerStress, stressDmg);
+        }
+        break;
+      }
+      case 'heal_allies': {
+        // Heal all OTHER enemies
+        const healAmt = move.healAmount || 0;
+        newBattle.enemies = newBattle.enemies.map(e => {
+          if (e.instanceId === enemy.instanceId) return e;
+          return {
+            ...e,
+            currentHp: Math.min(e.maxHp, e.currentHp + healAmt),
+          };
+        });
+        break;
+      }
       case 'defend': {
         updatedEnemy.block += move.block || 0;
         break;
@@ -398,7 +458,7 @@ export function executeEnemyTurn(
   // Tick player status effects
   newBattle.playerStatusEffects = tickStatusEffects(newBattle.playerStatusEffects);
 
-  return { battle: newBattle, playerHp, playerStress, enemiesVanished, enemiesKilled, vanishedIds: enemiesToRemove };
+  return { battle: newBattle, playerHp, playerStress, enemiesVanished, enemiesKilled, vanishedIds: enemiesToRemove, goldChange };
 }
 
 export function startNewTurn(battle: BattleState, run: RunState): { battle: BattleState; stressChange: number } {

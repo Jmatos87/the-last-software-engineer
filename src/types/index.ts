@@ -67,7 +67,7 @@ export interface CardInstance extends CardDef {
 }
 
 // ── Enemies ──
-export type EnemyMoveType = 'attack' | 'defend' | 'buff' | 'debuff' | 'attack_defend' | 'stress_attack' | 'dual_attack' | 'discard';
+export type EnemyMoveType = 'attack' | 'defend' | 'buff' | 'debuff' | 'attack_defend' | 'stress_attack' | 'dual_attack' | 'discard' | 'exhaust' | 'buff_allies' | 'gold_steal' | 'heal_allies';
 
 export interface EnemyMove {
   name: string;
@@ -79,6 +79,9 @@ export interface EnemyMove {
   applyToTarget?: StatusEffect;
   stressDamage?: number;
   discardCount?: number;
+  exhaustCount?: number;
+  goldSteal?: number;
+  healAmount?: number;
   icon: string;
 }
 
