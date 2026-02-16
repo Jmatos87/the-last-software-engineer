@@ -96,6 +96,7 @@ export interface EnemyMove {
   goldSteal?: number;
   healAmount?: number;
   icon: string;
+  quip?: string;
 }
 
 export interface EnemyDef {

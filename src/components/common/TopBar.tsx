@@ -44,7 +44,16 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
       {run.items.length > 0 && (
         <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginLeft: 4 }}>
           {run.items.map(item => (
-            <Tooltip key={item.id} text={`${item.name}: ${item.description}`}>
+            <Tooltip key={item.id} content={
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: 4, color: 'var(--gold-color)' }}>
+                  {item.icon} {item.name}
+                </div>
+                <div style={{ color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                  {item.description}
+                </div>
+              </div>
+            }>
               <span style={{ fontSize: 18, cursor: 'help' }}>{item.icon}</span>
             </Tooltip>
           ))}

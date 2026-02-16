@@ -60,6 +60,7 @@ export const BattleScreen: React.FC = () => {
   const [preview, setPreview] = useState<{ card: CardInstance; x: number; y: number } | null>(null);
   const [heroAnim, setHeroAnim] = useState<'' | 'animate-shake' | 'animate-stress'>('');
   const [attackingEnemyId, setAttackingEnemyId] = useState<string | null>(null);
+  const [speechBubbles, setSpeechBubbles] = useState<Record<string, string>>({});
   const [dyingEnemies, setDyingEnemies] = useState<EnemyInstance[]>([]);
   const [fleeingEnemies, setFleeingEnemies] = useState<EnemyInstance[]>([]);
   const [enemyTurnPlaying, setEnemyTurnPlaying] = useState(false);
@@ -133,12 +134,22 @@ export const BattleScreen: React.FC = () => {
     );
     willVanish.forEach(e => fleeingIdsRef.current.add(e.instanceId));
 
-    // Stagger attack animations
+    // Stagger attack animations with speech bubbles
     for (const enemy of attackingEnemies) {
+      const quip = enemy.currentMove.quip;
       setAttackingEnemyId(enemy.instanceId);
-      await new Promise(r => setTimeout(r, 400));
+      if (quip) {
+        const eid = enemy.instanceId;
+        setSpeechBubbles(prev => ({ ...prev, [eid]: quip }));
+        setTimeout(() => setSpeechBubbles(prev => {
+          const next = { ...prev };
+          delete next[eid];
+          return next;
+        }), 1500);
+      }
+      await new Promise(r => setTimeout(r, 600));
       setAttackingEnemyId(null);
-      await new Promise(r => setTimeout(r, 100));
+      await new Promise(r => setTimeout(r, 150));
     }
 
     // Resolve the actual turn (deaths/flees will be caught by the useEffect above)
@@ -231,6 +242,7 @@ export const BattleScreen: React.FC = () => {
                 isTargeted={draggedCard?.target === 'enemy' || draggedCard?.target === 'all_enemies'}
                 playerStatusEffects={battle.playerStatusEffects}
                 isAttacking={attackingEnemyId === enemy.instanceId}
+                speechBubble={speechBubbles[enemy.instanceId] || null}
               />
             ))}
             {dyingEnemies.map(enemy => (

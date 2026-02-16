@@ -1,11 +1,12 @@
 import React, { useState, useRef, useCallback } from 'react';
 
 interface TooltipProps {
-  text: string;
+  text?: string;
+  content?: React.ReactNode;
   children: React.ReactNode;
 }
 
-export const Tooltip: React.FC<TooltipProps> = ({ text, children }) => {
+export const Tooltip: React.FC<TooltipProps> = ({ text, content, children }) => {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -47,7 +48,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ text, children }) => {
           pointerEvents: 'none',
           animation: 'fadeIn 0.15s ease',
         }}>
-          {text}
+          {content || text}
         </div>
       )}
     </div>

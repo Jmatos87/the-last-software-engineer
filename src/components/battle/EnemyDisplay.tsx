@@ -13,9 +13,10 @@ interface EnemyDisplayProps {
   isAttacking?: boolean;
   isDying?: boolean;
   isFleeing?: boolean;
+  speechBubble?: string | null;
 }
 
-export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, playerStatusEffects, isAttacking, isDying, isFleeing }) => {
+export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, playerStatusEffects, isAttacking, isDying, isFleeing, speechBubble }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `enemy-${enemy.instanceId}`,
     data: { enemyInstanceId: enemy.instanceId },
@@ -150,44 +151,38 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
         minWidth: 100,
       }}
     >
-      {/* Intent */}
-      {hidden ? (
-        <div style={{
-          padding: '4px 10px',
-          background: 'var(--bg-card)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-sm)',
-          fontSize: 13,
-          color: 'var(--text-muted)',
-          fontStyle: 'italic',
-        }}>
-          ❓ ???
-        </div>
-      ) : (
-        <Tooltip text={intentTooltip}>
-          <div style={{
-            padding: '4px 8px',
+      {/* Speech bubble placeholder — fixed height so layout doesn't shift */}
+      <div style={{ minHeight: 32, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+        {speechBubble && (
+          <div className="animate-speech-bubble" style={{
+            position: 'relative',
             background: 'var(--bg-card)',
-            border: '1px solid var(--border-color)',
-            borderRadius: 'var(--radius-sm)',
-            fontSize: 12,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            maxWidth: 140,
-            cursor: 'help',
+            border: '1px solid var(--accent-yellow)',
+            borderRadius: 'var(--radius-md)',
+            padding: '4px 10px',
+            fontSize: 11,
+            color: 'var(--text-primary)',
+            fontStyle: 'italic',
+            maxWidth: 160,
+            width: 'max-content',
+            textAlign: 'center',
+            lineHeight: 1.3,
           }}>
-            <span>{move.icon}</span>
-            {intentParts.map((part, i) => (
-              <span key={i} style={{ color: part.color, whiteSpace: 'nowrap' }}>
-                {part.text}
-              </span>
-            ))}
+            {speechBubble}
+            <div style={{
+              position: 'absolute',
+              bottom: -6,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 0,
+              height: 0,
+              borderLeft: '6px solid transparent',
+              borderRight: '6px solid transparent',
+              borderTop: '6px solid var(--accent-yellow)',
+            }} />
           </div>
-        </Tooltip>
-      )}
+        )}
+      </div>
 
       {/* Enemy icon */}
       <div style={{
@@ -228,6 +223,45 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
 
       {/* Status effects */}
       <StatusEffects effects={enemy.statusEffects} />
+
+      {/* Intent — below HP */}
+      {hidden ? (
+        <div style={{
+          padding: '4px 10px',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
+          borderRadius: 'var(--radius-sm)',
+          fontSize: 13,
+          color: 'var(--text-muted)',
+          fontStyle: 'italic',
+        }}>
+          ❓ ???
+        </div>
+      ) : (
+        <Tooltip text={intentTooltip}>
+          <div style={{
+            padding: '4px 8px',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-sm)',
+            fontSize: 12,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            maxWidth: 140,
+            cursor: 'help',
+          }}>
+            <span>{move.icon}</span>
+            {intentParts.map((part, i) => (
+              <span key={i} style={{ color: part.color, whiteSpace: 'nowrap' }}>
+                {part.text}
+              </span>
+            ))}
+          </div>
+        </Tooltip>
+      )}
     </div>
   );
 };

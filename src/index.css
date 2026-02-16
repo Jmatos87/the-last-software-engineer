@@ -190,3 +190,9 @@ button.success {
 .animate-enemy-attack { animation: enemyAttack 0.5s ease; }
 .animate-enemy-death { animation: enemyDeath 0.6s ease forwards; pointer-events: none; }
 .animate-enemy-flee { animation: enemyFlee 0.7s ease forwards; pointer-events: none; }
+.animate-speech-bubble { animation: speechPop 0.3s ease; }
+@keyframes speechPop {
+  0% { opacity: 0; transform: scale(0.7) translateY(6px); }
+  60% { opacity: 1; transform: scale(1.05) translateY(-1px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}

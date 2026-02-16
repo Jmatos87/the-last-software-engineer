@@ -231,10 +231,10 @@ export const useGameStore = create<GameState>()(
         // Delay screen transition so death/flee animations play out
         setTimeout(() => {
           if (isBoss) {
-            // Boss gives rewards before victory
+            // Boss gives rewards before victory — full heal on boss kill
             set(s => {
               if (!s.run) return;
-              s.run.hp = Math.min(s.run.maxHp, s.run.hp + healOnKill);
+              s.run.hp = s.run.maxHp;
               s.run.gold += goldReward;
               s.pendingRewards = {
                 gold: goldReward,
@@ -338,9 +338,10 @@ export const useGameStore = create<GameState>()(
         // Delay screen transition so flee/death animations play out
         setTimeout(() => {
           if (isBoss) {
-            // Boss gives rewards before victory
+            // Boss gives rewards before victory — full heal on boss kill
             set(s => {
               if (!s.run) return;
+              s.run.hp = s.run.maxHp;
               s.pendingRewards = {
                 gold: goldReward,
                 cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id)) as any,
