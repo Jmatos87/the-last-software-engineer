@@ -1,0 +1,220 @@
+// ── Screen ──
+export type Screen =
+  | 'CHARACTER_SELECT'
+  | 'MAP'
+  | 'BATTLE'
+  | 'BATTLE_REWARD'
+  | 'REST'
+  | 'EVENT'
+  | 'SHOP'
+  | 'GAME_OVER'
+  | 'VICTORY';
+
+// ── Cards ──
+export type CardType = 'attack' | 'skill' | 'power';
+export type CardTarget = 'enemy' | 'self' | 'all_enemies';
+export type CardRarity = 'starter' | 'common' | 'uncommon' | 'rare';
+
+export interface StatusEffect {
+  vulnerable?: number;
+  weak?: number;
+  strength?: number;
+  dexterity?: number;
+  regen?: number;
+  poison?: number;
+}
+
+export interface CardEffect {
+  damage?: number;
+  block?: number;
+  draw?: number;
+  energy?: number;
+  applyToSelf?: StatusEffect;
+  applyToTarget?: StatusEffect;
+  damageAll?: number;
+  heal?: number;
+}
+
+export interface CardDef {
+  id: string;
+  name: string;
+  type: CardType;
+  target: CardTarget;
+  cost: number;
+  rarity: CardRarity;
+  description: string;
+  effects: CardEffect;
+  upgraded?: boolean;
+  upgradedEffects?: CardEffect;
+  upgradedDescription?: string;
+  icon: string;
+}
+
+export interface CardInstance extends CardDef {
+  instanceId: string;
+  upgraded: boolean;
+}
+
+// ── Enemies ──
+export type EnemyMoveType = 'attack' | 'defend' | 'buff' | 'debuff' | 'attack_defend';
+
+export interface EnemyMove {
+  name: string;
+  type: EnemyMoveType;
+  damage?: number;
+  block?: number;
+  times?: number;
+  applyToSelf?: StatusEffect;
+  applyToTarget?: StatusEffect;
+  icon: string;
+}
+
+export interface EnemyDef {
+  id: string;
+  name: string;
+  hp: number;
+  moves: EnemyMove[];
+  icon: string;
+  isElite?: boolean;
+  isBoss?: boolean;
+}
+
+export interface EnemyInstance extends EnemyDef {
+  instanceId: string;
+  currentHp: number;
+  maxHp: number;
+  block: number;
+  statusEffects: StatusEffect;
+  moveIndex: number;
+  currentMove: EnemyMove;
+}
+
+// ── Character ──
+export interface CharacterDef {
+  id: string;
+  name: string;
+  title: string;
+  hp: number;
+  energy: number;
+  description: string;
+  starterDeckIds: string[];
+  icon: string;
+  available: boolean;
+}
+
+// ── Items (Relics) ──
+export interface ItemDef {
+  id: string;
+  name: string;
+  description: string;
+  rarity: CardRarity;
+  icon: string;
+  effect: {
+    extraEnergy?: number;
+    extraDraw?: number;
+    extraHp?: number;
+    healOnKill?: number;
+    extraGold?: number;
+    bonusDamage?: number;
+    bonusBlock?: number;
+  };
+}
+
+// ── Events ──
+export interface EventChoice {
+  text: string;
+  outcome: {
+    hp?: number;
+    gold?: number;
+    addCard?: string;
+    removeRandomCard?: boolean;
+    addItem?: string;
+    message: string;
+  };
+}
+
+export interface EventDef {
+  id: string;
+  title: string;
+  description: string;
+  choices: EventChoice[];
+  icon: string;
+}
+
+// ── Map ──
+export type NodeType = 'battle' | 'elite' | 'rest' | 'event' | 'shop' | 'boss';
+
+export interface MapNode {
+  id: string;
+  row: number;
+  col: number;
+  type: NodeType;
+  connections: string[];
+  visited: boolean;
+}
+
+export interface GameMap {
+  nodes: MapNode[];
+  currentNodeId: string | null;
+  currentRow: number;
+}
+
+// ── Battle ──
+export interface BattleState {
+  enemies: EnemyInstance[];
+  hand: CardInstance[];
+  drawPile: CardInstance[];
+  discardPile: CardInstance[];
+  exhaustPile: CardInstance[];
+  energy: number;
+  maxEnergy: number;
+  turn: number;
+  playerBlock: number;
+  playerStatusEffects: StatusEffect;
+}
+
+// ── Run ──
+export interface RunState {
+  character: CharacterDef;
+  hp: number;
+  maxHp: number;
+  gold: number;
+  deck: CardInstance[];
+  items: ItemDef[];
+  map: GameMap;
+  floor: number;
+  act: number;
+}
+
+// ── Game Store ──
+export interface GameState {
+  screen: Screen;
+  run: RunState | null;
+  battle: BattleState | null;
+  pendingRewards: {
+    gold: number;
+    cardChoices: CardDef[];
+  } | null;
+  pendingEvent: EventDef | null;
+
+  // Actions
+  selectCharacter: (characterId: string) => void;
+  startRun: () => void;
+  navigateToNode: (nodeId: string) => void;
+  startBattle: (enemies: EnemyDef[]) => void;
+  playCard: (cardInstanceId: string, targetInstanceId?: string) => void;
+  endTurn: () => void;
+  collectRewardGold: () => void;
+  pickRewardCard: (cardId: string) => void;
+  skipRewardCards: () => void;
+  rest: () => void;
+  upgradeCard: (cardInstanceId: string) => void;
+  makeEventChoice: (choiceIndex: number) => void;
+  buyCard: (cardId: string) => void;
+  buyItem: (itemId: string) => void;
+  removeCard: (cardInstanceId: string) => void;
+  returnToMap: () => void;
+  gameOver: () => void;
+  victory: () => void;
+  restart: () => void;
+}
