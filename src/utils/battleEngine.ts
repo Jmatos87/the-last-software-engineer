@@ -78,12 +78,18 @@ export function calculateBlock(
 
 export function calculateCopium(
   baseCopium: number,
-  effects: StatusEffect
+  effects: StatusEffect,
+  items: ItemDef[] = []
 ): number {
   let copium = baseCopium;
 
   // Dexterity boosts copium
   copium += effects.dexterity || 0;
+
+  // Bonus copium from relics
+  for (const item of items) {
+    copium += item.effect.bonusCopium || 0;
+  }
 
   // Cringe reduces copium by 1 per stack
   if ((effects.cringe || 0) > 0) {

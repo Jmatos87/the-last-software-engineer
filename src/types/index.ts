@@ -14,6 +14,7 @@ export type Screen =
 export type CardType = 'attack' | 'skill' | 'power' | 'curse';
 export type CardTarget = 'enemy' | 'self' | 'all_enemies';
 export type CardRarity = 'starter' | 'common' | 'uncommon' | 'rare' | 'curse';
+export type CardClass = 'frontend' | 'backend' | 'architect' | 'ai_engineer';
 
 export interface StatusEffect {
   vulnerable?: number;
@@ -44,6 +45,13 @@ export interface CardEffect {
   heal?: number;
   copium?: number;
   stress?: number;
+  // New effect fields
+  times?: number;            // multi-hit: repeat damage X times
+  selfDamage?: number;       // deal damage to self
+  addStress?: number;        // add stress to self
+  gainGold?: number;         // gain gold in combat
+  exhaustRandom?: number;    // exhaust random cards from hand
+  exhaustFromDraw?: number;  // exhaust cards from draw pile
 }
 
 export interface CardDef {
@@ -59,6 +67,11 @@ export interface CardDef {
   upgradedEffects?: CardEffect;
   upgradedDescription?: string;
   icon: string;
+  // New fields
+  class?: CardClass;       // undefined = neutral
+  archetype?: string;      // hint for smart reward weighting
+  exhaust?: boolean;       // non-power cards that exhaust when played
+  ethereal?: boolean;      // exhaust at end of turn if not played
 }
 
 export interface CardInstance extends CardDef {
@@ -116,6 +129,7 @@ export interface CharacterDef {
   description: string;
   maxStress: number;
   starterDeckIds: string[];
+  starterRelicId?: string;
   icon: string;
   available: boolean;
 }
@@ -127,6 +141,8 @@ export interface ItemDef {
   description: string;
   rarity: CardRarity;
   icon: string;
+  class?: CardClass;      // class-gated relic (undefined = neutral)
+  isStarter?: boolean;     // given at run start
   effect: {
     extraEnergy?: number;
     extraDraw?: number;
@@ -142,6 +158,42 @@ export interface ItemDef {
     startBattleDamage?: number;
     stressPerCombat?: number;
     healPerCombat?: number;
+    // New trigger-based effects
+    onPlayAttack?: { strength?: number; block?: number; draw?: number };
+    onPlaySkill?: { block?: number; draw?: number; energy?: number };
+    onPlayPower?: { draw?: number; block?: number };
+    onExhaust?: { damage?: number; block?: number; draw?: number; heal?: number };
+    perPowerPlayed?: { strength?: number; dexterity?: number };
+    strengthPerTurn?: number;
+    blockPerTurn?: number;
+    copiumPerTurn?: number;
+    bonusCopium?: number;
+    counterOfferStart?: number;
+    savingsAccountStart?: number;
+    energyOnFirstAttack?: number;
+    drawOnFirstSkill?: number;
+    multiHitBonus?: number;
+    exhaustSynergyDamage?: number;
+    exhaustSynergyBlock?: number;
+    exhaustDoubleTrigger?: boolean;
+    firstPowerDraw?: number;
+    extraGoldPercent?: number;
+    cardRemovalDiscount?: number;
+    startBattleBlock?: number;
+    drawOnCardDraw?: number;
+    firstSkillBlock?: number;
+    vulnerableAlsoWeak?: boolean;
+    cardsPlayedEnergy?: number;       // gain energy when N+ cards played in a turn
+    cardsPlayedThreshold?: number;    // the N threshold
+    startCombatStrengthPerPower?: boolean;  // gain strength = powers in deck
+    selfDamageReflect?: boolean;      // reflect self-damage to random enemy
+    selfDamageHalved?: boolean;       // halve self-damage from cards
+    stressGainHalved?: boolean;       // halve stress gain from cards
+    strengthIfHasStrength?: boolean;  // +1 strength at turn start if you have strength
+    startCombatActStrength?: boolean; // gain str+dex = act number
+    addRandomCardStart?: boolean;     // add random 0-cost class card at combat start
+    firstPowerFree?: boolean;         // first power each combat costs 0
+    exhaustGainEnergy?: boolean;      // gain 1 energy when exhaust
   };
 }
 
@@ -165,6 +217,7 @@ export interface EventDef {
   description: string;
   choices: EventChoice[];
   icon: string;
+  class?: CardClass;  // class-specific events
 }
 
 // ── Map ──
@@ -199,6 +252,12 @@ export interface BattleState {
   playerStatusEffects: StatusEffect;
   killCount: number;
   totalEnemies: number;
+  // New tracking
+  powersPlayedThisCombat: number;
+  cardsPlayedThisTurn: number;
+  firstAttackPlayedThisTurn: boolean;
+  firstSkillPlayedThisTurn: boolean;
+  firstPowerPlayedThisCombat: boolean;
 }
 
 // ── Run ──
@@ -231,6 +290,7 @@ export interface GameState {
   eventOutcome: {
     message: string;
     cardAdded?: CardInstance;
+    cardRemoved?: CardInstance;
   } | null;
 
   // Actions

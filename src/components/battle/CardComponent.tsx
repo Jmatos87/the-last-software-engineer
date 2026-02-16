@@ -21,7 +21,7 @@ function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, it
     result.block = { base: effects.block, effective };
   }
   if (effects.copium) {
-    const effective = calculateCopium(effects.copium, playerEffects);
+    const effective = calculateCopium(effects.copium, playerEffects, items);
     result.copium = { base: effects.copium, effective };
   }
 
@@ -224,13 +224,23 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
         {dynamicDescription}
       </div>
 
-      {/* Target indicator */}
+      {/* Keywords & Target */}
       <div style={{
         fontSize: 9,
         color: 'var(--text-muted)',
         textAlign: 'center',
+        display: 'flex',
+        gap: 4,
+        justifyContent: 'center',
+        flexWrap: 'wrap',
       }}>
         {card.target === 'enemy' ? '🎯 Target' : card.target === 'self' ? '🙋 Self' : '🌍 All'}
+        {(card.exhaust || card.type === 'power') && (
+          <span style={{ color: 'var(--accent-purple, #a855f7)' }}>Exhaust</span>
+        )}
+        {card.ethereal && (
+          <span style={{ color: 'var(--text-muted)' }}>Ethereal</span>
+        )}
       </div>
     </div>
   );

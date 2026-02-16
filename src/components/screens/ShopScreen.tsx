@@ -10,13 +10,24 @@ export const ShopScreen: React.FC = () => {
   const [removeMode, setRemoveMode] = useState(false);
   const [preview, setPreview] = useState<{ card: CardDef | CardInstance; x: number; y: number } | null>(null);
 
+  const characterId = run?.character?.id;
+
   const shopCards = useMemo(() => {
-    const pool = Object.values(cards).filter(c => c.rarity !== 'starter');
+    // Class-gated: show class cards + neutral cards only
+    const classId = characterId === 'frontend_dev' ? 'frontend'
+      : characterId === 'backend_dev' ? 'backend'
+      : characterId === 'architect' ? 'architect'
+      : characterId === 'ai_engineer' ? 'ai_engineer' : undefined;
+    const pool = Object.values(cards).filter(c => {
+      if (c.rarity === 'starter' || c.rarity === 'curse') return false;
+      if (!classId) return true;
+      return !c.class || c.class === classId;
+    });
     const shuffled = [...pool].sort(() => Math.random() - 0.5);
     return shuffled.slice(0, 5);
-  }, []);
+  }, [characterId]);
 
-  const shopItems = useMemo(() => getShopItems(3), []);
+  const shopItems = useMemo(() => getShopItems(3, characterId), [characterId]);
 
   if (!run) return null;
 
@@ -119,45 +130,53 @@ export const ShopScreen: React.FC = () => {
       </div>
 
       {/* Remove card */}
-      <h3 style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 12 }}>
-        Remove a Card (💰 75)
-      </h3>
-      {!removeMode ? (
-        <button
-          onClick={() => setRemoveMode(true)}
-          disabled={run.gold < 75 || run.deck.length <= 1}
-          style={{ width: 'fit-content' }}
-        >
-          Browse deck to remove...
-        </button>
-      ) : (
-        <div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
-            {run.deck.map(card => (
-              <div
-                key={card.instanceId}
-                onClick={() => removeCard(card.instanceId)}
-                onMouseEnter={e => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
-                }}
-                onMouseLeave={() => setPreview(null)}
-                style={{
-                  padding: '4px 8px',
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--accent-red)',
-                  borderRadius: 'var(--radius-sm)',
-                  cursor: 'pointer',
-                  fontSize: 11,
-                }}
+      {(() => {
+        const discount = run.items.reduce((sum: number, item: any) => sum + (item.effect.cardRemovalDiscount || 0), 0);
+        const removalCost = Math.max(0, 75 - discount);
+        return (
+          <>
+            <h3 style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 12 }}>
+              Remove a Card (💰 {removalCost})
+            </h3>
+            {!removeMode ? (
+              <button
+                onClick={() => setRemoveMode(true)}
+                disabled={run.gold < removalCost || run.deck.length <= 1}
+                style={{ width: 'fit-content' }}
               >
-                {card.icon} {card.name}
+              Browse deck to remove...
+              </button>
+            ) : (
+              <div>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
+                  {run.deck.map(card => (
+                    <div
+                      key={card.instanceId}
+                      onClick={() => removeCard(card.instanceId)}
+                      onMouseEnter={e => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                      }}
+                      onMouseLeave={() => setPreview(null)}
+                      style={{
+                        padding: '4px 8px',
+                        background: 'var(--bg-card)',
+                        border: '1px solid var(--accent-red)',
+                        borderRadius: 'var(--radius-sm)',
+                        cursor: 'pointer',
+                        fontSize: 11,
+                      }}
+                    >
+                      {card.icon} {card.name}
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => setRemoveMode(false)} style={{ fontSize: 12 }}>Cancel</button>
               </div>
-            ))}
-          </div>
-          <button onClick={() => setRemoveMode(false)} style={{ fontSize: 12 }}>Cancel</button>
-        </div>
-      )}
+            )}
+          </>
+        );
+      })()}
 
       {preview && (
         <CardPreview card={preview.card} x={preview.x} y={preview.y} />

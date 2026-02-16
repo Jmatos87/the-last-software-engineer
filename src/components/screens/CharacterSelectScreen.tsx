@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { characters } from '../../data/characters';
 import { getCardDef } from '../../data/cards';
+import { getStarterRelic } from '../../data/items';
 import { CardPreview } from '../common/CardPreview';
 import type { CardDef } from '../../types';
 
@@ -63,10 +64,26 @@ export const CharacterSelectScreen: React.FC = () => {
                 <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>
                   {char.description}
                 </p>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 16, fontSize: 12 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 12, fontSize: 12, flexWrap: 'wrap' }}>
                   <span>❤️ {char.hp}</span>
                   <span>⚡ {char.energy}</span>
+                  <span>🃏 {char.starterDeckIds.length}</span>
                 </div>
+                {(() => {
+                  const relic = char.starterRelicId ? getStarterRelic(char.id) : null;
+                  return relic ? (
+                    <div style={{
+                      marginTop: 8,
+                      padding: '4px 8px',
+                      background: 'var(--bg-secondary)',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: 10,
+                      color: 'var(--text-secondary)',
+                    }}>
+                      {relic.icon} {relic.name}
+                    </div>
+                  ) : null;
+                })()}
               </>
             ) : (
               <p style={{ fontSize: 12, color: 'var(--text-muted)', fontStyle: 'italic' }}>
@@ -90,6 +107,27 @@ export const CharacterSelectScreen: React.FC = () => {
           maxWidth: 600,
           width: '100%',
         }}>
+          {(() => {
+            const relic = selectedChar.starterRelicId ? getStarterRelic(selectedChar.id) : null;
+            return relic ? (
+              <div style={{
+                marginBottom: 16,
+                padding: 12,
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-md)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+              }}>
+                <span style={{ fontSize: 28 }}>{relic.icon}</span>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--accent-cyan)' }}>{relic.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{relic.description}</div>
+                </div>
+              </div>
+            ) : null;
+          })()}
           <h3 style={{ marginBottom: 12, fontSize: 14, color: 'var(--text-secondary)' }}>
             Starter Deck ({selectedChar.starterDeckIds.length} cards)
           </h3>
