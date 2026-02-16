@@ -210,6 +210,10 @@ export interface GameState {
     cardChoices: CardDef[];
   } | null;
   pendingEvent: EventDef | null;
+  eventOutcome: {
+    message: string;
+    cardAdded?: CardInstance;
+  } | null;
 
   // Actions
   selectCharacter: (characterId: string) => void;
@@ -224,6 +228,7 @@ export interface GameState {
   rest: () => void;
   upgradeCard: (cardInstanceId: string) => void;
   makeEventChoice: (choiceIndex: number) => void;
+  dismissEventOutcome: () => void;
   buyCard: (cardId: string) => void;
   buyItem: (itemId: string) => void;
   removeCard: (cardInstanceId: string) => void;

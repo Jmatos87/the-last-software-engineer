@@ -17,6 +17,7 @@ export const useGameStore = create<GameState>()(
     battle: null,
     pendingRewards: null,
     pendingEvent: null,
+    eventOutcome: null,
 
     selectCharacter: (characterId: string) => {
       const char = characters.find(c => c.id === characterId);
@@ -298,6 +299,7 @@ export const useGameStore = create<GameState>()(
         if (outcome.gold) {
           s.run.gold += outcome.gold;
         }
+        let cardAdded: any = undefined;
         if (outcome.addCard) {
           let cardDef;
           if (outcome.addCard === 'random_common') {
@@ -310,7 +312,9 @@ export const useGameStore = create<GameState>()(
             cardDef = cards[outcome.addCard];
           }
           if (cardDef) {
-            s.run.deck.push(createCardInstance(cardDef) as any);
+            const instance = createCardInstance(cardDef);
+            s.run.deck.push(instance as any);
+            cardAdded = instance;
           }
         }
         if (outcome.removeRandomCard && s.run.deck.length > 1) {
@@ -318,7 +322,17 @@ export const useGameStore = create<GameState>()(
           s.run.deck.splice(idx, 1);
         }
 
+        s.eventOutcome = {
+          message: outcome.message,
+          cardAdded: cardAdded,
+        };
+      });
+    },
+
+    dismissEventOutcome: () => {
+      set(s => {
         s.pendingEvent = null;
+        s.eventOutcome = null;
         s.screen = 'MAP';
       });
     },
@@ -384,6 +398,7 @@ export const useGameStore = create<GameState>()(
         s.battle = null;
         s.pendingRewards = null;
         s.pendingEvent = null;
+        s.eventOutcome = null;
       });
     },
   }))
