@@ -1,7 +1,7 @@
 # CLAUDE.md — The Last Software Engineer
 
 ## Project Overview
-A **Slay the Spire-style roguelike deck-building game** built as a single-page web app. The player selects a character, navigates a procedurally generated map, fights enemies with a card-based combat system, collects rewards, and progresses through acts.
+A **Slay the Spire-style roguelike deck-building game** built as a single-page web app. The player selects a character, navigates a procedurally generated map, fights enemies with a card-based combat system, collects rewards, and progresses through acts. Satirical job-search / dev humor theme.
 
 ## Tech Stack
 - **Framework:** React 19 + TypeScript 5.9
@@ -29,14 +29,36 @@ src/
 ├── main.tsx                 # Entry point, renders <App /> into #root
 ├── index.css                # All styles (single file)
 ├── types/index.ts           # All TypeScript types/interfaces
+├── hooks/
+│   └── useMobile.ts         # Mobile/landscape detection hook (compact mode)
 ├── store/
-│   ├── gameStore.ts         # Zustand store — all game state + actions
+│   ├── gameStore.ts         # Zustand store — all game state + actions + save/load
 │   └── battleActions.ts     # Pure functions for battle logic (init, play card, enemy turn)
 ├── data/
-│   ├── cards.ts             # Card definitions + helpers (getRewardCards, getCardDef)
+│   ├── cards/               # Card definitions split by class
+│   │   ├── frontendCards.ts
+│   │   ├── backendCards.ts
+│   │   ├── architectCards.ts
+│   │   ├── aiEngineerCards.ts
+│   │   ├── neutralCards.ts
+│   │   ├── helpers.ts       # getRewardCards, getCardDef, etc.
+│   │   └── index.ts         # Barrel — re-exports `cards` record + helpers
+│   ├── enemies/             # Enemy definitions split by act
+│   │   ├── act1Enemies.ts
+│   │   ├── act2Enemies.ts
+│   │   ├── act3Enemies.ts
+│   │   ├── encounters.ts    # getNormalEncounter, getEliteEncounter, getBossEncounter
+│   │   └── index.ts         # Barrel — re-exports `enemies` record + encounter helpers
+│   ├── events/              # Event definitions split by category
+│   │   ├── neutralEvents.ts
+│   │   ├── frontendEvents.ts
+│   │   ├── backendEvents.ts
+│   │   ├── architectEvents.ts
+│   │   ├── aiEngineerEvents.ts
+│   │   ├── consumableEvents.ts
+│   │   └── index.ts         # Barrel — re-exports `events` array
 │   ├── characters.ts        # Character definitions (starter decks, stats)
-│   ├── enemies.ts           # Enemy definitions + encounter tables (normal, elite, boss)
-│   ├── events.ts            # Event definitions with choices/outcomes
+│   ├── consumables.ts       # Consumable (single-use battle item) definitions
 │   └── items.ts             # Item (relic) definitions + shop helpers
 ├── utils/
 │   ├── battleEngine.ts      # Damage/block calculation, status effect resolution
@@ -46,12 +68,15 @@ src/
 │   ├── battle/
 │   │   ├── BattleScreen.tsx  # Main battle UI (hand, enemies, energy, end turn)
 │   │   ├── CardComponent.tsx # Individual card rendering + drag source
+│   │   ├── ConsumableBar.tsx # Consumable slot bar during combat
 │   │   └── EnemyDisplay.tsx  # Enemy HP, intent, status effects
 │   ├── common/
+│   │   ├── CardPreview.tsx   # Hover card preview (desktop only)
 │   │   ├── EnergyOrb.tsx     # Energy display
 │   │   ├── HpBar.tsx         # HP bar component
-│   │   ├── StatusEffects.tsx  # Status effect icons
-│   │   └── Tooltip.tsx       # Hover tooltip
+│   │   ├── StatusEffects.tsx # Status effect icons
+│   │   ├── Tooltip.tsx       # Hover tooltip
+│   │   └── TopBar.tsx        # Persistent top bar (HP, gold, stress, act info)
 │   └── screens/
 │       ├── CharacterSelectScreen.tsx
 │       ├── MapScreen.tsx
@@ -63,6 +88,8 @@ src/
 │       └── VictoryScreen.tsx
 ```
 
+**Note:** Data directories use barrel `index.ts` files. Import paths like `'../data/enemies'` resolve to `enemies/index.ts` via Vite.
+
 ## Architecture Patterns
 
 ### State Management
@@ -70,6 +97,7 @@ src/
 - Store uses **Immer middleware** — mutate state directly inside `set()` callbacks.
 - Actions are defined inline in the store creator, not in separate files.
 - Screen navigation is state-driven: set `state.screen` to a `Screen` type value.
+- **Save/load:** `gameStore.ts` persists run state to `localStorage`. Includes migration logic for renamed fields (e.g., strength→confidence).
 
 ### Game Flow
 ```
@@ -79,13 +107,15 @@ CHARACTER_SELECT → MAP → [BATTLE | REST | EVENT | SHOP] → BATTLE_REWARD �
                                                                                                   GAME_OVER
 ```
 Acts 1-2 boss victory generates a new map for the next act. Act 3 boss victory → VICTORY screen.
-Player keeps deck, items, gold, HP between acts.
+Player keeps deck, items, gold, HP, consumables between acts.
 
 ### Battle System
 - `battleActions.ts` contains **pure functions** (`initBattle`, `executePlayCard`, `executeEnemyTurn`, `startNewTurn`) that take state and return new state.
 - `battleEngine.ts` handles damage calculation, block, status effects (vulnerable, weak, confidence, resilience, poison, regen).
 - Cards are played by `instanceId` (unique per card copy), enemies targeted by `instanceId`.
 - Dead enemies are removed from `battle.enemies` array — when empty, battle is won.
+- Card damage previews account for enemy vulnerability (defender effects passed through).
+- Enemy intent damage is color-coded: green when debuffed, red when buffed vs. base.
 
 ### Data Model
 - **Definitions** (`CardDef`, `EnemyDef`, etc.) are static templates in `src/data/`.
@@ -101,24 +131,43 @@ Player keeps deck, items, gold, HP between acts.
 - CSS is all in `src/index.css` — no component-level styles, no CSS-in-JS.
 - Emoji icons are used for cards, enemies, items, and UI elements (no image assets).
 
+## Characters (4 playable classes)
+- **Frontend Dev** — reactive/fortress archetypes, CSS/JS themed cards
+- **Backend Dev** — brute force/rate limiter archetypes, server/security themed cards
+- **Architect** — design patterns/tech spec archetypes, systems themed cards
+- **AI Engineer** — gradient descent/prompt engineering/hallucination archetypes, ML themed cards
+
+Each class has its own card pool, starter deck, starter relic, and class-specific events.
+
 ## Key Types (src/types/index.ts)
 - `Screen` — union of all screen names
 - `CardDef` / `CardInstance` — card template / runtime card
 - `EnemyDef` / `EnemyInstance` — enemy template / runtime enemy
 - `CharacterDef` — playable character stats + starter deck
 - `ItemDef` — relic with passive effects
+- `ConsumableDef` — single-use battle item
 - `EventDef` / `EventChoice` — random event with branching outcomes
 - `MapNode` / `GameMap` — procedural map structure
 - `BattleState` — hand, draw/discard/exhaust piles, energy, block, status
-- `RunState` — character, HP, gold, deck, items, map, floor, act
+- `RunState` — character, HP, gold, deck, items, consumables, map, floor, act
 - `GameState` — top-level store type (state + all actions)
 
 ## UX Rules
 - **Reward previews are mandatory.** Whenever the player is offered cards, relics, items, or consumables as rewards (battle rewards, events, shops, etc.), the UI must show the full description so the player can make an informed decision before accepting. Never present a reward as just a name/icon — always include its description text.
+- **Inline descriptions everywhere.** All reward/picker screens show descriptions inline (not hover-only), so mobile users can see them too.
 
 ## Status Effect System
 Temporary (decrement each turn): `vulnerable`, `weak`, `poison`, `hope`, `cringe`, `ghosted`.
 Permanent (persist): `confidence`, `resilience`, `regen`, `selfCare`, `networking`, `savingsAccount`, `counterOffer`, `hustleCulture`.
+
+- **Confidence** — +1 damage per attack per stack (was "strength")
+- **Resilience** — +1 block & stress reduction per stack (was "dexterity")
+
+## Consumable System
+- **15 single-use battle items** (6 common, 6 uncommon, 3 rare) in `src/data/consumables.ts`
+- Player has **3 consumable slots** (`run.maxConsumables`)
+- Used during combat via `ConsumableBar` component
+- Dropped from battle rewards, events, and shops
 
 ## Enemy Move Types
 Basic: `attack`, `defend`, `buff`, `debuff`, `attack_defend`, `stress_attack`, `dual_attack`, `discard`.
@@ -127,7 +176,7 @@ Advanced: `exhaust` (cards to exhaust pile), `buff_allies` (buff other enemies),
 ## Act Structure — 3 Acts, 60 Enemies Total
 **Act 1 — The Application Abyss** (Job search chaos)
 - 12 commons, 5 elites, 3 bosses (HR Phone Screen, ATS Final Form, Ghosting Phantom)
-- New enemy mechanics: exhaust (Cover Letter Shredder), buff allies (Keyword Stuffer), gold steal (Application Fee Scammer), swarms (LinkedIn Notifications)
+- Enemy mechanics: exhaust, buff allies, gold steal, swarms
 
 **Act 2 — The Interview Gauntlet** (Technical screens & personality tests)
 - 12 commons, 5 elites, 3 bosses (Panel Interview Hydra, Live Coding Challenge, VP of Engineering)
@@ -151,40 +200,23 @@ Advanced: `exhaust` (cards to exhaust pile), `buff_allies` (buff other enemies),
 - `getEliteEncounter(act)` — act-specific elite pool
 - `getBossEncounter(act)` — act-specific boss pool (random selection from 3 per act)
 
-## Change Log / Design Decisions
+## Rest Site
+- **Rest** — Heal 30% maxHP
+- **Upgrade** — Pick a card to upgrade (shows current → upgraded description)
+- **Train** (Act 2+) — Gain a random class card
+- **Reflect** (Act 3+) — Remove a card from deck
 
-### Frontend Dev Card Set (planned)
-**Goal:** Give the Frontend Dev class its own unique themed card pool + class-specific events.
-
-**New Cards (16 total):**
-
-*Starter (in starting deck):*
-- `console_log` (keep), `div_block` (keep), `important_override` (!important, 0-cost 4 block), `jsx_spray` (AoE 4 dmg all), `css_animate` (5 block + 4 stress reduction)
-
-*Common (normal battle rewards):*
-- `callback_hell` (9 dmg), `promise_chain` (draw 2), `use_state` (7 block + 3 stress), `flexbox` (6 block + draw 1), `npm_audit` (5 dmg + 2 vulnerable)
-
-*Uncommon (elite battle rewards):*
-- `async_await` (0-cost draw 3), `prototype_pollution` (8 dmg all + 1 weak), `virtual_dom` (16 block), `two_way_binding` (8 dmg + 8 block), `css_grid` (power: 2 resilience)
-
-*Rare (boss rewards / special events):*
-- `nyancat_rainbow` (12 dmg all + 1 vulnerable), `strict_mode` (power: 3 confidence), `observable_stream` (power: 1 networking + 2 selfCare)
-
-**Updated Starter Deck (10 cards):**
-4x console_log, 2x div_block, 1x important_override, 1x jsx_spray, 1x css_animate, 1x coffee_break
-
-**New Frontend Events (4):**
-- "The NPM Black Hole" — node_modules sentience, drops callback_hell
-- "Stack Overflow is Down" — panic scenario, drops async_await
-- "The CSS Centering Challenge" — centering a div, drops flexbox
-- "The Nyancat Shrine" — RGB shrine, drops nyancat_rainbow
-
-**Tone:** All descriptions are satirical/funny job-search and dev humor.
+## Mobile Support
+- `useMobile()` hook in `src/hooks/useMobile.ts` detects mobile/landscape via media queries
+- Returns `{ compact }` boolean — components use this for responsive layouts
+- All reward/picker screens work on mobile (inline descriptions, no hover dependency)
 
 ## Important Notes
 - The store has `as any` casts in several places (Immer/Zustand type workaround) — don't remove these.
-- `cards` in `data/cards.ts` is a `Record<string, CardDef>` keyed by card ID.
-- `enemies` in `data/enemies.ts` is a `Record<string, EnemyDef>` keyed by enemy ID.
-- Encounter helpers: `getNormalEncounter(act, row, totalRows)`, `getEliteEncounter(act)`, `getBossEncounter(act)`. Legacy arrays (`normalEncounters`, `eliteEncounters`, `bossEncounters`) still exported for backwards compat.
+- `cards` in `data/cards/index.ts` is a `Record<string, CardDef>` keyed by card ID.
+- `enemies` in `data/enemies/index.ts` is a `Record<string, EnemyDef>` keyed by enemy ID.
+- Encounter helpers: `getNormalEncounter(act, row, totalRows)`, `getEliteEncounter(act)`, `getBossEncounter(act)`.
 - Map generation: `generateMap(act)` produces 12-row maps with ~36 nodes per act, boss at row 11.
 - Gold starts at 50. Rest heals 30% maxHP. Card removal costs 75 gold.
+- `removeChosenCard` — events let the player pick which card to remove (not random).
+- Save migration in `gameStore.ts` handles renamed fields (strength→confidence, dexterity→resilience).
