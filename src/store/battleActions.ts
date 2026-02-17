@@ -39,11 +39,11 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: Batt
   let stressAdjust = 0;
 
   for (const item of run.items) {
-    if (item.effect.startBattleStrength) {
-      playerStatusEffects.strength = (playerStatusEffects.strength || 0) + item.effect.startBattleStrength;
+    if (item.effect.startBattleConfidence) {
+      playerStatusEffects.confidence = (playerStatusEffects.confidence || 0) + item.effect.startBattleConfidence;
     }
-    if (item.effect.startBattleDexterity) {
-      playerStatusEffects.dexterity = (playerStatusEffects.dexterity || 0) + item.effect.startBattleDexterity;
+    if (item.effect.startBattleResilience) {
+      playerStatusEffects.resilience = (playerStatusEffects.resilience || 0) + item.effect.startBattleResilience;
     }
     if (item.effect.startBattleVulnerable) {
       playerStatusEffects.vulnerable = (playerStatusEffects.vulnerable || 0) + item.effect.startBattleVulnerable;
@@ -66,14 +66,14 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: Batt
     if (item.effect.startBattleBlock) {
       // Will be applied to playerBlock below
     }
-    if (item.effect.startCombatStrengthPerPower) {
+    if (item.effect.startCombatConfidencePerPower) {
       // Count power cards in deck
       const powerCount = run.deck.filter(c => c.type === 'power').length;
-      playerStatusEffects.strength = (playerStatusEffects.strength || 0) + powerCount;
+      playerStatusEffects.confidence = (playerStatusEffects.confidence || 0) + powerCount;
     }
-    if (item.effect.startCombatActStrength) {
-      playerStatusEffects.strength = (playerStatusEffects.strength || 0) + run.act;
-      playerStatusEffects.dexterity = (playerStatusEffects.dexterity || 0) + run.act;
+    if (item.effect.startCombatActConfidence) {
+      playerStatusEffects.confidence = (playerStatusEffects.confidence || 0) + run.act;
+      playerStatusEffects.resilience = (playerStatusEffects.resilience || 0) + run.act;
     }
   }
 
@@ -400,11 +400,11 @@ export function executePlayCard(
     // Microservices Diagram: each power gives +1 permanent damage
     for (const item of run.items) {
       if (item.effect.perPowerPlayed) {
-        if (item.effect.perPowerPlayed.strength) {
-          newBattle.playerStatusEffects = mergeStatusEffects(newBattle.playerStatusEffects, { strength: item.effect.perPowerPlayed.strength });
+        if (item.effect.perPowerPlayed.confidence) {
+          newBattle.playerStatusEffects = mergeStatusEffects(newBattle.playerStatusEffects, { confidence: item.effect.perPowerPlayed.confidence });
         }
-        if (item.effect.perPowerPlayed.dexterity) {
-          newBattle.playerStatusEffects = mergeStatusEffects(newBattle.playerStatusEffects, { dexterity: item.effect.perPowerPlayed.dexterity });
+        if (item.effect.perPowerPlayed.resilience) {
+          newBattle.playerStatusEffects = mergeStatusEffects(newBattle.playerStatusEffects, { resilience: item.effect.perPowerPlayed.resilience });
         }
       }
     }
@@ -822,11 +822,11 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   // Hustle Culture: gain stress
   if (hustleEnergy > 0) stressChange += 3 * hustleEnergy;
 
-  // Relic: strengthPerTurn (fine_tuning, scaling_laws handled via powers, but some relics give it)
+  // Relic: confidencePerTurn (fine_tuning, scaling_laws handled via powers, but some relics give it)
   let turnStartStatusMerge: import('../types').StatusEffect = {};
   for (const item of run.items) {
-    if (item.effect.strengthPerTurn) {
-      turnStartStatusMerge.strength = (turnStartStatusMerge.strength || 0) + item.effect.strengthPerTurn;
+    if (item.effect.confidencePerTurn) {
+      turnStartStatusMerge.confidence = (turnStartStatusMerge.confidence || 0) + item.effect.confidencePerTurn;
     }
     if (item.effect.blockPerTurn) {
       // Added to block below
@@ -834,8 +834,8 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
     if (item.effect.copiumPerTurn) {
       stressChange -= item.effect.copiumPerTurn;
     }
-    if (item.effect.strengthIfHasStrength && (battle.playerStatusEffects.strength || 0) > 0) {
-      turnStartStatusMerge.strength = (turnStartStatusMerge.strength || 0) + 1;
+    if (item.effect.confidenceIfHasConfidence && (battle.playerStatusEffects.confidence || 0) > 0) {
+      turnStartStatusMerge.confidence = (turnStartStatusMerge.confidence || 0) + 1;
     }
   }
 

@@ -12,9 +12,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'production_server', name: 'Production Server', icon: '🖥️',
-    description: 'Start of combat: gain 1 Strength. Running since 2016. Nobody dares touch it.',
+    description: 'Start of combat: gain 1 Confidence (+1 attack damage). Running since 2016. Nobody dares touch it.',
     rarity: 'starter', class: 'backend', isStarter: true,
-    effect: { startBattleStrength: 1 },
+    effect: { startBattleConfidence: 1 },
   },
   {
     id: 'whiteboard_marker', name: 'Whiteboard Marker', icon: '🖊️',
@@ -58,9 +58,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'tailwind_config', name: 'Tailwind Config', icon: '🎨',
-    description: '+1 Dexterity at start of combat. Block from cards +2.',
+    description: '+1 Resilience (+1 block from cards) at start of combat. Block from cards +2.',
     rarity: 'rare', class: 'frontend',
-    effect: { startBattleDexterity: 1, bonusBlock: 2 },
+    effect: { startBattleResilience: 1, bonusBlock: 2 },
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -86,9 +86,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'kubernetes_cluster', name: 'Kubernetes Cluster', icon: '☸️',
-    description: 'At start of combat, gain Strength equal to power cards in deck.',
+    description: 'At start of combat, gain Confidence (+1 attack damage) equal to power cards in deck.',
     rarity: 'rare', class: 'backend',
-    effect: { startCombatStrengthPerPower: true },
+    effect: { startCombatConfidencePerPower: true },
   },
   {
     id: 'database_replica', name: 'Database Replica', icon: '💾',
@@ -120,9 +120,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'microservices_diagram', name: 'Microservices Diagram', icon: '🔀',
-    description: 'Each power played gives +1 Strength this combat (permanent).',
+    description: 'Each power played gives +1 Confidence (+1 attack damage) this combat (permanent).',
     rarity: 'rare', class: 'architect',
-    effect: { perPowerPlayed: { strength: 1 } },
+    effect: { perPowerPlayed: { confidence: 1 } },
   },
   {
     id: 'legacy_codebase', name: 'Legacy Codebase', icon: '📜',
@@ -136,9 +136,9 @@ export const items: ItemDef[] = [
   // ═══════════════════════════════════════════════════════════════
   {
     id: 'training_data', name: 'Training Data', icon: '📊',
-    description: 'At start of turn, if you have Strength, gain 1 more.',
+    description: 'At start of turn, if you have Confidence (+attack damage), gain 1 more.',
     rarity: 'common', class: 'ai_engineer',
-    effect: { strengthIfHasStrength: true },
+    effect: { confidenceIfHasConfidence: true },
   },
   {
     id: 'prompt_template', name: 'Prompt Template', icon: '📝',
@@ -154,9 +154,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'tpu_farm', name: 'TPU Farm', icon: '🏭',
-    description: 'Start of combat: gain Strength and Dexterity equal to current act number.',
+    description: 'Start of combat: gain Confidence (+attack damage) and Resilience (+block from cards) equal to current act number.',
     rarity: 'rare', class: 'ai_engineer',
-    effect: { startCombatActStrength: true },
+    effect: { startCombatActConfidence: true },
   },
   {
     id: 'safety_filter', name: 'Safety Filter', icon: '🔒',
@@ -261,9 +261,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'crunch_mode', name: 'Crunch Mode',
-    description: '+3 Strength at combat start, but take 5 damage.',
+    description: '+3 Confidence (+3 attack damage) at combat start, but take 5 damage.',
     rarity: 'rare', icon: '🔥',
-    effect: { startBattleStrength: 3, startBattleDamage: 5 },
+    effect: { startBattleConfidence: 3, startBattleDamage: 5 },
   },
   {
     id: 'imposter_syndrome', name: 'Imposter Syndrome',
@@ -279,9 +279,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'on_call_rotation', name: 'On-Call Rotation',
-    description: '+2 Dexterity at combat start, but +8 stress per combat.',
+    description: '+2 Resilience (+2 block from cards) at combat start, but +8 stress per combat.',
     rarity: 'uncommon', icon: '📟',
-    effect: { startBattleDexterity: 2, stressPerCombat: 8 },
+    effect: { startBattleResilience: 2, stressPerCombat: 8 },
   },
   // New neutral relics
   {

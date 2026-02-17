@@ -131,7 +131,7 @@ export const frontendCards: Record<string, CardDef> = {
   useEffect_loop: {
     id: 'useEffect_loop', name: 'useEffect Loop', type: 'attack', target: 'enemy', cost: 0, rarity: 'uncommon',
     class: 'frontend', archetype: 'reactive',
-    description: 'Deal 3 damage. (Scales with cards played this turn via strength.) useEffect with no dependency array.',
+    description: 'Deal 3 damage. (Scales with cards played this turn via confidence.) useEffect with no dependency array.',
     effects: { damage: 3 },
     upgradedEffects: { damage: 5 },
     upgradedDescription: 'Deal 5 damage.',
@@ -178,19 +178,19 @@ export const frontendCards: Record<string, CardDef> = {
   hot_reload: {
     id: 'hot_reload', name: 'Hot Reload', type: 'power', target: 'self', cost: 1, rarity: 'rare',
     class: 'frontend', archetype: 'reactive',
-    description: 'Gain 1 Networking. Save file. See changes. Repeat until 3 AM.',
+    description: 'Gain 1 Networking (draw +1 card/turn). Save file. See changes. Repeat until 3 AM.',
     effects: { applyToSelf: { networking: 1 } },
     upgradedEffects: { applyToSelf: { networking: 2 } },
-    upgradedDescription: 'Gain 2 Networking.',
+    upgradedDescription: 'Gain 2 Networking (draw +1 card/turn).',
     icon: '🔥',
   },
   css_grid: {
     id: 'css_grid', name: 'CSS Grid', type: 'power', target: 'self', cost: 2, rarity: 'rare',
     class: 'frontend', archetype: 'fortress',
-    description: 'Gain 2 Dexterity. display: grid. Perfect layout.',
-    effects: { applyToSelf: { dexterity: 2 } },
-    upgradedEffects: { applyToSelf: { dexterity: 3 } },
-    upgradedDescription: 'Gain 3 Dexterity.',
+    description: 'Gain 2 Resilience (+1 block & stress heal per stack). display: grid. Perfect layout.',
+    effects: { applyToSelf: { resilience: 2 } },
+    upgradedEffects: { applyToSelf: { resilience: 3 } },
+    upgradedDescription: 'Gain 3 Resilience (+1 block & stress heal per stack).',
     icon: '📐',
   },
   nyancat_rainbow: {
@@ -205,10 +205,10 @@ export const frontendCards: Record<string, CardDef> = {
   z_index_9999: {
     id: 'z_index_9999', name: 'z-index: 9999', type: 'power', target: 'self', cost: 2, rarity: 'rare',
     class: 'frontend', archetype: 'fortress',
-    description: 'Gain 8 Savings Account. Nothing gets above you.',
+    description: 'Gain 8 Savings Account (retain block between turns). Nothing gets above you.',
     effects: { applyToSelf: { savingsAccount: 8 } },
     upgradedEffects: { applyToSelf: { savingsAccount: 12 } },
-    upgradedDescription: 'Gain 12 Savings Account.',
+    upgradedDescription: 'Gain 12 Savings Account (retain block between turns).',
     icon: '🔝',
   },
 };

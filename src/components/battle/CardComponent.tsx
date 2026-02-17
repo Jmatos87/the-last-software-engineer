@@ -5,16 +5,16 @@ import { useGameStore } from '../../store/gameStore';
 import { calculateDamage, calculateBlock, calculateCopium } from '../../utils/battleEngine';
 import { useMobile } from '../../hooks/useMobile';
 
-function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[]) {
+function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[], defenderEffects: StatusEffect) {
   const effects = card.upgraded && card.upgradedEffects ? card.upgradedEffects : card.effects;
   const result: Record<string, { base: number; effective: number }> = {};
 
   if (effects.damage) {
-    const effective = calculateDamage(effects.damage, playerEffects, {}, items);
+    const effective = calculateDamage(effects.damage, playerEffects, defenderEffects, items);
     result.damage = { base: effects.damage, effective };
   }
   if (effects.damageAll) {
-    const effective = calculateDamage(effects.damageAll, playerEffects, {}, items);
+    const effective = calculateDamage(effects.damageAll, playerEffects, defenderEffects, items);
     result.damageAll = { base: effects.damageAll, effective };
   }
   if (effects.block) {
@@ -29,8 +29,8 @@ function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, it
   return result;
 }
 
-function renderDescription(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[]): React.ReactNode {
-  const computed = getEffectiveEffects(card, playerEffects, items);
+function renderDescription(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[], defenderEffects: StatusEffect): React.ReactNode {
+  const computed = getEffectiveEffects(card, playerEffects, items, defenderEffects);
   const desc = card.upgraded && card.upgradedDescription ? card.upgradedDescription : card.description;
 
   // Build replacement map: base value -> { effective, key }
@@ -127,8 +127,11 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
   const battle = useGameStore(s => s.battle);
   const items = useGameStore(s => s.run?.items ?? []);
   const playerEffects = battle?.playerStatusEffects ?? {};
+  // If any enemy is vulnerable, show the buffed damage on attack cards
+  const anyEnemyVulnerable = battle?.enemies.some(e => (e.statusEffects.vulnerable || 0) > 0);
+  const defenderEffects: StatusEffect = anyEnemyVulnerable ? { vulnerable: 1 } : {};
   const dynamicDescription = battle
-    ? renderDescription(card, playerEffects, items)
+    ? renderDescription(card, playerEffects, items, defenderEffects)
     : (card.upgraded && card.upgradedDescription ? card.upgradedDescription : card.description);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({

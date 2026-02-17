@@ -68,7 +68,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     moves: [
       { name: 'Vesting Cliff', type: 'exhaust', exhaustCount: 1, stressDamage: 4, icon: '📅', quip: '"Only 3 more years to go!"' },
       { name: 'Paper Money', type: 'attack', damage: 11, icon: '📄', quip: '"Worth millions! On paper."' },
-      { name: 'Dilution', type: 'debuff', applyToTarget: { strength: -1 }, icon: '💧', quip: '"New funding round! Your share: 0.0001%"' },
+      { name: 'Dilution', type: 'debuff', applyToTarget: { confidence: -1 }, icon: '💧', quip: '"New funding round! Your share: 0.0001%"' },
       { name: 'Golden Cage', type: 'exhaust', exhaustCount: 1, icon: '🔒', quip: '"Leave now and lose it all."' },
     ],
   },
@@ -81,7 +81,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     moves: [
       { name: 'Legal Binding', type: 'exhaust', exhaustCount: 2, icon: '⚖️', quip: '"You signed page 47. Remember?"' },
       { name: 'Cease & Desist', type: 'attack', damage: 13, icon: '🚫', quip: '"Our lawyers will be in touch."' },
-      { name: 'Restriction', type: 'debuff', applyToTarget: { weak: 2, dexterity: -1 }, icon: '🔗', quip: '"No working in tech for 2 years."' },
+      { name: 'Restriction', type: 'debuff', applyToTarget: { weak: 2, resilience: -1 }, icon: '🔗', quip: '"No working in tech for 2 years."' },
       { name: 'Court Order', type: 'attack', damage: 17, stressDamage: 5, icon: '⚖️', quip: '"See you in court. We have 40 lawyers."' },
     ],
   },
@@ -93,7 +93,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🔄',
     moves: [
       { name: 'Pivoting to AI', type: 'attack', damage: 14, icon: '🤖', quip: '"We\'re an AI company now."' },
-      { name: 'Pivoting to Blockchain', type: 'buff', applyToSelf: { strength: 2 }, icon: '⛓️', quip: '"Web3 is definitely still a thing."' },
+      { name: 'Pivoting to Blockchain', type: 'buff', applyToSelf: { confidence: 2 }, icon: '⛓️', quip: '"Web3 is definitely still a thing."' },
       { name: 'Pivoting to Cloud', type: 'attack_defend', damage: 10, block: 10, icon: '☁️', quip: '"Everything is serverless now."' },
       { name: 'Pivoting to... Pivot', type: 'stress_attack', stressDamage: 8, icon: '🔄', quip: '"Our core business is pivoting."' },
     ],
@@ -173,15 +173,15 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🎩',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 4 }, quip: '"The board demands RESULTS. NOW."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"The board demands RESULTS. NOW."' },
     ],
     moves: [
       // Phase 1: Board politics (indices 0-2)
       { name: 'Executive Order', type: 'attack', damage: 16, icon: '📜', quip: '"This came from the top."' },
       { name: 'Quarterly Review', type: 'attack_defend', damage: 12, block: 14, icon: '📊', quip: '"Numbers are down. Your fault."' },
-      { name: 'Shareholder Pressure', type: 'buff', applyToSelf: { strength: 3 }, icon: '📈', quip: '"The shareholders demand growth!"' },
+      { name: 'Shareholder Pressure', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"The shareholders demand growth!"' },
       // Phase 2: Hostile board (indices 3-5)
-      { name: 'Emergency Board Meeting', type: 'buff', applyToSelf: { strength: 4 }, icon: '🔥', quip: '"This is a CRISIS."' },
+      { name: 'Emergency Board Meeting', type: 'buff', applyToSelf: { confidence: 4 }, icon: '🔥', quip: '"This is a CRISIS."' },
       { name: 'Board Decision', type: 'attack', damage: 22, stressDamage: 8, icon: '⚡', quip: '"The board has spoken."' },
       { name: 'Hostile Acquisition', type: 'attack', damage: 12, times: 2, stressDamage: 6, icon: '☠️', quip: '"We\'re taking EVERYTHING."' },
     ],
@@ -194,7 +194,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '⛓️',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 4 }, quip: '"You\'ll NEVER leave."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"You\'ll NEVER leave."' },
     ],
     moves: [
       // Phase 1: Resource drain (indices 0-2)
@@ -202,7 +202,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'Retention Hit', type: 'attack', damage: 15, icon: '⛓️', quip: '"You can\'t afford to leave."' },
       { name: 'Stock Lock', type: 'exhaust', exhaustCount: 2, icon: '🔒', quip: '"90-day exercise window. Good luck."' },
       // Phase 2: Golden fury (indices 3-5)
-      { name: 'Unvested Fury', type: 'buff', applyToSelf: { strength: 4 }, icon: '💎', quip: '"Your equity is WORTHLESS."' },
+      { name: 'Unvested Fury', type: 'buff', applyToSelf: { confidence: 4 }, icon: '💎', quip: '"Your equity is WORTHLESS."' },
       { name: 'Golden Slam', type: 'attack', damage: 20, stressDamage: 5, icon: '💰', quip: '"Trapped by your own success!"' },
       { name: 'Market Crash', type: 'attack', damage: 10, times: 2, icon: '📉', quip: '"Portfolio value: ZERO."' },
     ],
@@ -215,7 +215,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🌀',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"EVERYTHING must go."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"EVERYTHING must go."' },
     ],
     moves: [
       // Phase 1: Corporate chaos (indices 0-2)
@@ -223,7 +223,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'New Manager', type: 'attack', damage: 14, stressDamage: 5, icon: '👤', quip: '"Meet your 4th manager this year."' },
       { name: 'Restructure', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '🌀', quip: '"Your role has been \'realigned.\'"' },
       // Phase 2: Scorched earth (indices 3-5)
-      { name: 'Scorched Earth', type: 'buff', applyToSelf: { strength: 4 }, icon: '🔥', quip: '"Burn the org chart."' },
+      { name: 'Scorched Earth', type: 'buff', applyToSelf: { confidence: 4 }, icon: '🔥', quip: '"Burn the org chart."' },
       { name: 'Mass Layoff', type: 'attack', damage: 20, icon: '🌊', quip: '"Efficiency optimization complete."' },
       { name: 'Reorg Slam', type: 'attack', damage: 10, times: 2, stressDamage: 6, icon: '💥', quip: '"Your role has been ELIMINATED."' },
     ],
@@ -237,7 +237,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     isElite: true,
     moves: [
       { name: 'Legacy Code', type: 'attack', damage: 10, icon: '📟', quip: '"This was written in jQuery. In 2024."' },
-      { name: 'Accumulate', type: 'buff', applyToSelf: { strength: 3 }, icon: '📈', quip: '"TODO: fix later (2019)"' },
+      { name: 'Accumulate', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"TODO: fix later (2019)"' },
       { name: 'Spaghetti Strike', type: 'attack', damage: 14, icon: '🍝', quip: '"One file. 14,000 lines."' },
       { name: 'Technical Bankruptcy', type: 'attack', damage: 20, stressDamage: 6, icon: '💥', quip: '"No tests. No docs. No hope."' },
     ],
@@ -250,15 +250,15 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '📉',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"Your 30 days are UP."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"Your 30 days are UP."' },
     ],
     moves: [
       // Phase 1: Performance warning (indices 0-2)
-      { name: 'Performance Review', type: 'debuff', applyToTarget: { strength: -1, dexterity: -1 }, icon: '📉', quip: '"Meets expectations. Barely."' },
+      { name: 'Performance Review', type: 'debuff', applyToTarget: { confidence: -1, resilience: -1 }, icon: '📉', quip: '"Meets expectations. Barely."' },
       { name: 'Improvement Plan', type: 'stress_attack', stressDamage: 10, icon: '📋', quip: '"You have 30 days."' },
       { name: 'Final Warning', type: 'attack', damage: 16, stressDamage: 6, icon: '⚠️', quip: '"This is your last chance."' },
       // Phase 2: Termination mode (indices 3-5)
-      { name: 'Clock Is Ticking', type: 'buff', applyToSelf: { strength: 3 }, icon: '⏰', quip: '"Tick. Tock."' },
+      { name: 'Clock Is Ticking', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⏰', quip: '"Tick. Tock."' },
       { name: 'Last Chance', type: 'attack', damage: 20, icon: '⚠️', quip: '"This is it."' },
       { name: 'Terminated', type: 'attack', damage: 25, stressDamage: 12, icon: '🚪', quip: '"Security will escort you out."' },
     ],
@@ -273,8 +273,8 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '👥',
     isBoss: true,
     phases: [
-      { hpPercent: 60, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"The committee is getting serious."' },
-      { hpPercent: 30, moveStartIndex: 5, onEnter: { strength: 5 }, quip: '"FINAL DELIBERATION."' },
+      { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"The committee is getting serious."' },
+      { hpPercent: 30, moveStartIndex: 5, onEnter: { confidence: 5 }, quip: '"FINAL DELIBERATION."' },
     ],
     moves: [
       // Phase 1 (indices 0-2)
@@ -285,7 +285,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'Budget Discussion', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '💰', quip: '"Headcount is frozen. Mostly."' },
       { name: 'Counter-Counter Offer', type: 'attack', damage: 20, stressDamage: 8, icon: '⚖️', quip: '"We counter your counter. Again."' },
       // Phase 3 (indices 5-7)
-      { name: 'Unanimous Decision', type: 'buff', applyToSelf: { strength: 2 }, icon: '📈', quip: '"The committee is aligned."' },
+      { name: 'Unanimous Decision', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"The committee is aligned."' },
       { name: 'Committee Slam', type: 'attack', damage: 32, icon: '💥', quip: '"Motion to reject. All in favor?"' },
       { name: 'Offer Rescinded', type: 'attack', damage: 28, stressDamage: 10, icon: '📄', quip: '"The offer has been WITHDRAWN."' },
     ],
@@ -298,12 +298,12 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🏆',
     isBoss: true,
     phases: [
-      { hpPercent: 60, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"Enough pleasantries."' },
-      { hpPercent: 30, moveStartIndex: 5, onEnter: { strength: 5 }, quip: '"I AM the company."' },
+      { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"Enough pleasantries."' },
+      { hpPercent: 30, moveStartIndex: 5, onEnter: { confidence: 5 }, quip: '"I AM the company."' },
     ],
     moves: [
       // Phase 1: "Vision" (indices 0-2)
-      { name: 'Visionary Speech', type: 'buff', applyToSelf: { strength: 2 }, icon: '🎤', quip: '"We\'re changing the world."' },
+      { name: 'Visionary Speech', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🎤', quip: '"We\'re changing the world."' },
       { name: 'Inspire Fear', type: 'stress_attack', stressDamage: 10, icon: '😨', quip: '"Layoffs? What layoffs?"' },
       { name: 'Corporate Strategy', type: 'attack_defend', damage: 12, block: 10, icon: '📊', quip: '"It\'s a paradigm shift."' },
       // Phase 2: "Execution" (indices 3-4)
@@ -311,7 +311,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'Disruption', type: 'attack', damage: 16, stressDamage: 8, icon: '💥', quip: '"We disrupted the disruptors."' },
       // Phase 3: "Hostile" (indices 5-8)
       { name: 'Move Fast Break Things', type: 'attack', damage: 22, icon: '🔥', quip: '"Including your career!"' },
-      { name: 'Golden Parachute', type: 'buff', applyToSelf: { strength: 3 }, icon: '🪂', quip: '"I have a $50M exit package."' },
+      { name: 'Golden Parachute', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🪂', quip: '"I have a $50M exit package."' },
       { name: 'Hostile Takeover', type: 'attack', damage: 34, stressDamage: 14, icon: '☠️', quip: '"Bow before the brand."' },
       { name: 'Scorched Earth', type: 'attack', damage: 26, stressDamage: 10, icon: '🔥', quip: '"If I can\'t have it, NO ONE can."' },
     ],
@@ -324,19 +324,19 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🎭',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"The doubt is spreading..."' },
-      { hpPercent: 25, moveStartIndex: 5, onEnter: { strength: 5 }, quip: '"COMPLETE MELTDOWN IMMINENT."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"The doubt is spreading..."' },
+      { hpPercent: 25, moveStartIndex: 5, onEnter: { confidence: 5 }, quip: '"COMPLETE MELTDOWN IMMINENT."' },
     ],
     moves: [
       // Phase 1 (indices 0-2)
-      { name: 'You\'re A Fraud', type: 'debuff', applyToTarget: { strength: -2 }, icon: '🎭', quip: '"You don\'t deserve this offer."' },
+      { name: 'You\'re A Fraud', type: 'debuff', applyToTarget: { confidence: -2 }, icon: '🎭', quip: '"You don\'t deserve this offer."' },
       { name: 'Everyone Knows', type: 'stress_attack', stressDamage: 15, icon: '👁️', quip: '"They\'re all whispering about you."' },
       { name: 'Spiral of Doubt', type: 'stress_attack', stressDamage: 12, icon: '🌀', quip: '"Was any of it real?"' },
       // Phase 2 (indices 3-4)
       { name: 'They\'ll Find Out', type: 'attack', damage: 12, stressDamage: 10, icon: '😱', quip: '"Day one. They\'ll know."' },
       { name: 'Crushing Anxiety', type: 'stress_attack', stressDamage: 18, icon: '💀', quip: '"You can\'t even breathe right."' },
       // Phase 3 (indices 5-7)
-      { name: 'Identity Crisis', type: 'debuff', applyToTarget: { weak: 3, vulnerable: 3, strength: -1 }, icon: '🪞', quip: '"Who even are you anymore?"' },
+      { name: 'Identity Crisis', type: 'debuff', applyToTarget: { weak: 3, vulnerable: 3, confidence: -1 }, icon: '🪞', quip: '"Who even are you anymore?"' },
       { name: 'Complete Meltdown', type: 'attack', damage: 26, stressDamage: 30, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
       { name: 'You Never Belonged', type: 'attack', damage: 22, stressDamage: 15, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
     ],
@@ -368,7 +368,7 @@ export const act3Duos: string[][] = [
   ['meeting_email', 'background_check'],                  // Exhaust + burst damage
   ['benefits_mimic', 'relocation_package'],               // Surprise burst + gold drain
   ['burnout_ember', 'burnout_ember'],                     // Poison swarm (6-8 poison/cycle)
-  ['the_pivot', 'burnout_ember'],                         // Strength scaling + DoT
+  ['the_pivot', 'burnout_ember'],                         // Confidence scaling + DoT
 ];
 
 export const act3Trios: string[][] = [

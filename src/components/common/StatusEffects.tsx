@@ -15,8 +15,8 @@ const effectInfo: Record<string, { icon: string; label: string; unit: string; co
   cringe: { icon: '😬', label: 'Cringe — Stress healing is halved', unit: 'turns', color: 'var(--accent-orange)' },
   ghosted: { icon: '👻', label: 'Ghosted — A curse card is added to your deck each turn', unit: 'turns', color: 'var(--accent-purple)' },
   // Buffs (permanent — persist until removed)
-  strength: { icon: '😤', label: 'Rage Apply — +1 damage per attack per stack', unit: 'stacks', color: 'var(--accent-red)' },
-  dexterity: { icon: '🧠', label: 'Emotional Intelligence — +1 block & stress reduction per stack', unit: 'stacks', color: 'var(--accent-blue)' },
+  confidence: { icon: '😤', label: 'Confidence — +1 damage per attack per stack', unit: 'stacks', color: 'var(--accent-red)' },
+  resilience: { icon: '🧠', label: 'Resilience — +1 block & stress reduction per stack', unit: 'stacks', color: 'var(--accent-blue)' },
   regen: { icon: '🌿', label: 'Touch Grass — Heal HP equal to stacks each turn', unit: 'stacks', color: 'var(--accent-green)' },
   selfCare: { icon: '🛁', label: 'Self Care — Reduce stress equal to stacks each turn', unit: 'stacks', color: 'var(--accent-green)' },
   networking: { icon: '🤝', label: 'Networking — Draw extra cards each turn', unit: 'stacks', color: 'var(--accent-blue)' },

@@ -38,8 +38,8 @@ export const BattleRewardScreen: React.FC = () => {
     if (e.extraGold) lines.push({ text: `+${e.extraGold} Gold/combat`, negative: false });
     if (e.bonusDamage) lines.push({ text: `+${e.bonusDamage} Attack damage`, negative: false });
     if (e.bonusBlock) lines.push({ text: `+${e.bonusBlock} Skill block`, negative: false });
-    if (e.startBattleStrength) lines.push({ text: `+${e.startBattleStrength} Strength`, negative: false });
-    if (e.startBattleDexterity) lines.push({ text: `+${e.startBattleDexterity} Dexterity`, negative: false });
+    if (e.startBattleConfidence) lines.push({ text: `+${e.startBattleConfidence} Confidence`, negative: false });
+    if (e.startBattleResilience) lines.push({ text: `+${e.startBattleResilience} Resilience`, negative: false });
     if (e.healPerCombat) lines.push({ text: `Heal ${e.healPerCombat} at combat start`, negative: false });
     if (e.startBattleVulnerable) lines.push({ text: `Start Vulnerable ${e.startBattleVulnerable}`, negative: true });
     if (e.startBattleWeak) lines.push({ text: `Start Weak ${e.startBattleWeak}`, negative: true });

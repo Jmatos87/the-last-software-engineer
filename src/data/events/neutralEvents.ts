@@ -93,7 +93,7 @@ export const neutralEvents: EventDef[] = [
       },
       {
         text: 'Grab the on-call pager (Gain On-Call Rotation artifact)',
-        outcome: { addItem: 'on_call_rotation', hp: -5, message: 'The pager vibrates ominously. +2 Dexterity, but you\'ll never sleep again.' },
+        outcome: { addItem: 'on_call_rotation', hp: -5, message: 'The pager vibrates ominously. +2 Resilience, but you\'ll never sleep again.' },
       },
       {
         text: 'Meditate among the servers (Heal 20 HP)',

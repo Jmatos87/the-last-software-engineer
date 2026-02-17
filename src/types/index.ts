@@ -51,8 +51,8 @@ export type CardClass = 'frontend' | 'backend' | 'architect' | 'ai_engineer';
 export interface StatusEffect {
   vulnerable?: number;
   weak?: number;
-  strength?: number;       // "Rage Apply" — +dmg per attack
-  dexterity?: number;      // "Emotional Intelligence" — +block & +stress reduction
+  confidence?: number;       // "Confidence" — +1 dmg per attack per stack
+  resilience?: number;      // "Resilience" — +1 block & stress reduction per stack
   regen?: number;          // "Touch Grass" — heal HP per turn
   poison?: number;
   hope?: number;
@@ -194,20 +194,20 @@ export interface ItemDef {
     extraGold?: number;
     bonusDamage?: number;
     bonusBlock?: number;
-    startBattleStrength?: number;
-    startBattleDexterity?: number;
+    startBattleConfidence?: number;
+    startBattleResilience?: number;
     startBattleVulnerable?: number;
     startBattleWeak?: number;
     startBattleDamage?: number;
     stressPerCombat?: number;
     healPerCombat?: number;
     // New trigger-based effects
-    onPlayAttack?: { strength?: number; block?: number; draw?: number };
+    onPlayAttack?: { confidence?: number; block?: number; draw?: number };
     onPlaySkill?: { block?: number; draw?: number; energy?: number };
     onPlayPower?: { draw?: number; block?: number };
     onExhaust?: { damage?: number; block?: number; draw?: number; heal?: number };
-    perPowerPlayed?: { strength?: number; dexterity?: number };
-    strengthPerTurn?: number;
+    perPowerPlayed?: { confidence?: number; resilience?: number };
+    confidencePerTurn?: number;
     blockPerTurn?: number;
     copiumPerTurn?: number;
     bonusCopium?: number;
@@ -228,12 +228,12 @@ export interface ItemDef {
     vulnerableAlsoWeak?: boolean;
     cardsPlayedEnergy?: number;       // gain energy when N+ cards played in a turn
     cardsPlayedThreshold?: number;    // the N threshold
-    startCombatStrengthPerPower?: boolean;  // gain strength = powers in deck
+    startCombatConfidencePerPower?: boolean;  // gain confidence = powers in deck
     selfDamageReflect?: boolean;      // reflect self-damage to random enemy
     selfDamageHalved?: boolean;       // halve self-damage from cards
     stressGainHalved?: boolean;       // halve stress gain from cards
-    strengthIfHasStrength?: boolean;  // +1 strength at turn start if you have strength
-    startCombatActStrength?: boolean; // gain str+dex = act number
+    confidenceIfHasConfidence?: boolean;  // +1 confidence at turn start if you have confidence
+    startCombatActConfidence?: boolean; // gain confidence+resilience = act number
     addRandomCardStart?: boolean;     // add random 0-cost class card at combat start
     firstPowerFree?: boolean;         // first power each combat costs 0
     exhaustGainEnergy?: boolean;      // gain 1 energy when exhaust

@@ -104,9 +104,9 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 24,
     icon: '🔑',
     moves: [
-      { name: 'SEO Boost', type: 'buff_allies', applyToTarget: { strength: 1 }, icon: '📈', quip: '"Leverage those core competencies!"' },
+      { name: 'SEO Boost', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '📈', quip: '"Leverage those core competencies!"' },
       { name: 'Buzzword Slap', type: 'attack', damage: 5, icon: '💬', quip: '"Synergize this!"' },
-      { name: 'Synergy!', type: 'buff_allies', applyToTarget: { strength: 1 }, icon: '🤝', quip: '"Let\'s align our paradigms!"' },
+      { name: 'Synergy!', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '🤝', quip: '"Let\'s align our paradigms!"' },
       { name: 'Jargon Jab', type: 'attack', damage: 6, icon: '📝', quip: '"Circle back on that deliverable!"' },
     ],
   },
@@ -117,7 +117,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 32,
     icon: '🧌',
     moves: [
-      { name: 'Overqualified!', type: 'debuff', applyToTarget: { dexterity: -1 }, icon: '📜', quip: '"PhD for data entry? Pass."' },
+      { name: 'Overqualified!', type: 'debuff', applyToTarget: { resilience: -1 }, icon: '📜', quip: '"PhD for data entry? Pass."' },
       { name: 'Troll Smash', type: 'attack', damage: 7, icon: '👊', quip: '"Just learn to code lol"' },
       { name: 'Underqualified!', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '📋', quip: '"Only 9 years of React?"' },
       { name: 'Flame War', type: 'attack', damage: 8, icon: '🔥', quip: '"Tabs vs spaces... FIGHT!"' },
@@ -170,7 +170,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '💸',
     isElite: true,
     moves: [
-      { name: 'Scope Creep', type: 'buff', applyToSelf: { strength: 2 }, icon: '📈', quip: '"Oh also build the backend."' },
+      { name: 'Scope Creep', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"Oh also build the backend."' },
       { name: 'Crunch Time', type: 'attack', damage: 10, icon: '😰', quip: '"Due in 4 hours. No pressure!"' },
       { name: 'Pair Stress', type: 'attack', damage: 7, times: 2, icon: '😵', quip: '"This should be a weekend project!"' },
       { name: 'Full-Stack Assault', type: 'attack', damage: 14, icon: '💥', quip: '"Add CI/CD and deploy to prod."' },
@@ -185,7 +185,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '📱',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"Time to go VIRAL."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"Time to go VIRAL."' },
     ],
     moves: [
       // Phase 1: Soft harassment (indices 0-2)
@@ -193,7 +193,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Humble Brag', type: 'debuff', applyToTarget: { cringe: 2 }, icon: '😬', quip: '"I turned down 47 offers this week."' },
       { name: 'Engagement Farming', type: 'attack_defend', damage: 7, block: 6, applyToSelf: { regen: 3 }, icon: '🌱', quip: '"I cried at my standing desk today."' },
       // Phase 2: Influencer rage mode (indices 3-5)
-      { name: 'Personal Brand', type: 'buff', applyToSelf: { strength: 3 }, icon: '🤳', quip: '"I\'m building an EMPIRE."' },
+      { name: 'Personal Brand', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤳', quip: '"I\'m building an EMPIRE."' },
       { name: 'Influencer Barrage', type: 'attack', damage: 5, times: 3, icon: '📱', quip: '"Like. Share. SUBSCRIBE."' },
       { name: 'Thought Leader Slam', type: 'attack', damage: 14, stressDamage: 6, icon: '💡', quip: '"I posted about hustle culture at 4 AM."' },
     ],
@@ -206,11 +206,11 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '⚙️',
     isElite: true,
     moves: [
-      { name: 'Absorb Pattern', type: 'buff', applyToSelf: { strength: 1 }, icon: '🔄', quip: '"Optimizing rejection pipeline..."' },
+      { name: 'Absorb Pattern', type: 'buff', applyToSelf: { confidence: 1 }, icon: '🔄', quip: '"Optimizing rejection pipeline..."' },
       { name: 'System Slam', type: 'attack', damage: 12, icon: '⚙️', quip: '"Application #4,729 processed."' },
       { name: 'Data Crunch', type: 'attack', damage: 8, times: 2, icon: '💾', quip: '"Your data is now our data."' },
       { name: 'Process Queue', type: 'attack_defend', damage: 10, block: 8, icon: '📊', quip: '"You are #8,341 in the queue."' },
-      { name: 'Pipeline Sync', type: 'buff_allies', applyToTarget: { strength: 1 }, icon: '🔗', quip: '"Syncing rejection pipelines..."' },
+      { name: 'Pipeline Sync', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '🔗', quip: '"Syncing rejection pipelines..."' },
     ],
   },
 
@@ -224,7 +224,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Small Talk', type: 'stress_attack', stressDamage: 8, icon: '💬', quip: '"So... what do you do?"' },
       { name: 'Awkward Handshake', type: 'attack', damage: 9, stressDamage: 4, icon: '🤝', quip: '"*limp fish grip*"' },
       { name: 'Elevator Pitch', type: 'attack', damage: 11, icon: '🗣️', quip: '"I\'m disrupting disruption."' },
-      { name: 'Exchange Cards', type: 'buff', applyToSelf: { strength: 3 }, icon: '📇', quip: '"Let\'s connect on LinkedIn!"' },
+      { name: 'Exchange Cards', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📇', quip: '"Let\'s connect on LinkedIn!"' },
     ],
   },
 
@@ -235,15 +235,15 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '✉️',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 2 }, quip: '"INITIATING BATCH REJECTION PROTOCOL."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"INITIATING BATCH REJECTION PROTOCOL."' },
     ],
     moves: [
       // Phase 1: Standard rejection flow (indices 0-2)
-      { name: 'Demoralize', type: 'debuff', applyToTarget: { strength: -1 }, icon: '😞', quip: '"Thank you for your interest."' },
+      { name: 'Demoralize', type: 'debuff', applyToTarget: { confidence: -1 }, icon: '😞', quip: '"Thank you for your interest."' },
       { name: 'Form Rejection', type: 'attack', damage: 10, stressDamage: 5, icon: '✉️', quip: '"Dear [CANDIDATE_NAME]..."' },
       { name: 'Not A Good Fit', type: 'attack', damage: 16, icon: '❌', quip: '"We\'re looking for a unicorn."' },
       // Phase 2: Automated rejection machine (indices 3-5)
-      { name: 'Auto-Reject Mode', type: 'buff', applyToSelf: { strength: 3 }, icon: '⚙️', quip: '"PROCESSING 10,000 APPLICATIONS..."' },
+      { name: 'Auto-Reject Mode', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⚙️', quip: '"PROCESSING 10,000 APPLICATIONS..."' },
       { name: 'Rejection Cascade', type: 'attack', damage: 6, times: 3, icon: '✉️', quip: '"Rejected. Rejected. Rejected."' },
       { name: 'Mass Rejection', type: 'attack', damage: 18, stressDamage: 8, icon: '❌', quip: '"Your entire career has been archived."' },
     ],
@@ -258,8 +258,8 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '📞',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 2 }, quip: '"Gloves are off. Let\'s talk comp."' },
-      { hpPercent: 25, moveStartIndex: 7, onEnter: { strength: 3 }, quip: '"This interview is OVER."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"Gloves are off. Let\'s talk comp."' },
+      { hpPercent: 25, moveStartIndex: 7, onEnter: { confidence: 3 }, quip: '"This interview is OVER."' },
     ],
     moves: [
       // Phase 1: soft questions (indices 0-2)
@@ -272,7 +272,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'We\'ll Be In Touch', type: 'attack', damage: 20, stressDamage: 10, icon: '☎️', quip: '"(Narrator: They weren\'t.)"' },
       { name: 'Benefits Bait', type: 'attack', damage: 12, stressDamage: 5, icon: '🎣', quip: '"We have unlimited PTO! (Don\'t use it.)"' },
       // Phase 3: final stand (indices 7-8)
-      { name: 'No More Questions', type: 'buff', applyToSelf: { strength: 3 }, icon: '🔥', quip: '"I\'ve heard ENOUGH."' },
+      { name: 'No More Questions', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🔥', quip: '"I\'ve heard ENOUGH."' },
       { name: 'REJECTED', type: 'attack', damage: 24, stressDamage: 10, icon: '❌', quip: '"We went with another candidate. Forever."' },
     ],
   },
@@ -284,8 +284,8 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '🏗️',
     isBoss: true,
     phases: [
-      { hpPercent: 60, moveStartIndex: 4, onEnter: { strength: 3 }, quip: '"THIS ISN\'T EVEN MY FINAL FORM."' },
-      { hpPercent: 25, moveStartIndex: 8, onEnter: { strength: 4 }, quip: '"CRITICAL FAILURE IMMINENT."' },
+      { hpPercent: 60, moveStartIndex: 4, onEnter: { confidence: 3 }, quip: '"THIS ISN\'T EVEN MY FINAL FORM."' },
+      { hpPercent: 25, moveStartIndex: 8, onEnter: { confidence: 4 }, quip: '"CRITICAL FAILURE IMMINENT."' },
     ],
     moves: [
       // Phase 1: scans + discards (indices 0-3)
@@ -294,12 +294,12 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Keyword Purge', type: 'attack', damage: 10, icon: '⚡', quip: '"You said \'passionate.\' Cringe."' },
       { name: 'Database Overwrite', type: 'attack_defend', damage: 7, block: 10, icon: '💾', quip: '"Your file has been... updated."' },
       // Phase 2: raw power (indices 4-7)
-      { name: 'TRANSFORM', type: 'buff', applyToSelf: { strength: 3 }, icon: '🔥', quip: '"MAXIMUM OVERDRIVE ENGAGED."' },
+      { name: 'TRANSFORM', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🔥', quip: '"MAXIMUM OVERDRIVE ENGAGED."' },
       { name: 'Maximum Overdrive', type: 'attack', damage: 18, icon: '💥', quip: '"REJECT. REJECT. REJECT."' },
       { name: 'Total Rejection', type: 'attack', damage: 14, times: 2, icon: '❌', quip: '"Application status: OBLITERATED."' },
       { name: 'System Crash', type: 'attack', damage: 26, stressDamage: 8, icon: '💀', quip: '"Fatal error: career not found."' },
       // Phase 3: final stand (indices 8-9)
-      { name: 'TOTAL SYSTEM FAILURE', type: 'buff', applyToSelf: { strength: 4 }, icon: '⚠️', quip: '"ALL SYSTEMS: OVERDRIVE."' },
+      { name: 'TOTAL SYSTEM FAILURE', type: 'buff', applyToSelf: { confidence: 4 }, icon: '⚠️', quip: '"ALL SYSTEMS: OVERDRIVE."' },
       { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
     ],
   },
@@ -312,8 +312,8 @@ export const act1Enemies: Record<string, EnemyDef> = {
     isBoss: true,
     hideIntent: true,
     phases: [
-      { hpPercent: 40, moveStartIndex: 3, onEnter: { strength: 2 }, quip: '"You\'ll never hear from us again."' },
-      { hpPercent: 25, moveStartIndex: 6, onEnter: { strength: 3 }, quip: '"You\'ll never hear from ANYONE again."' },
+      { hpPercent: 40, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"You\'ll never hear from us again."' },
+      { hpPercent: 25, moveStartIndex: 6, onEnter: { confidence: 3 }, quip: '"You\'ll never hear from ANYONE again."' },
     ],
     moves: [
       // Phase 1: eerie (indices 0-2)
@@ -325,7 +325,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Maybe Next Time', type: 'debuff', applyToTarget: { weak: 2, ghosted: 2 }, icon: '💨', quip: '"We\'ll definitely reach out soon!"' },
       { name: 'Full Ghosting', type: 'attack', damage: 21, stressDamage: 8, icon: '☠️', quip: '"The position has been filled... forever."' },
       // Phase 3: final stand (indices 6-7)
-      { name: 'Eternal Silence', type: 'buff', applyToSelf: { strength: 3 }, icon: '🕳️', quip: '"The void is permanent."' },
+      { name: 'Eternal Silence', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🕳️', quip: '"The void is permanent."' },
       { name: 'Final Ghosting', type: 'attack', damage: 24, stressDamage: 12, icon: '☠️', quip: '"You never existed to us."' },
     ],
   },

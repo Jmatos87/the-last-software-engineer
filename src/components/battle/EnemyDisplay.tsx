@@ -38,7 +38,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
   const move = enemy.currentMove;
   const hidden = !!enemy.hideIntent;
 
-  // Calculate actual damage after modifiers (strength, weak, vulnerable)
+  // Calculate actual damage after modifiers (confidence, weak, vulnerable)
   const calcDmg = move.damage
     ? calculateDamage(move.damage, enemy.statusEffects, playerStatusEffects)
     : 0;
@@ -57,8 +57,8 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
     hope: { icon: '✨', name: 'Hope', desc: 'explodes into stress when it expires', color: 'var(--accent-yellow)' },
     cringe: { icon: '😬', name: 'Cringe', desc: 'stress healing is halved', color: 'var(--accent-orange)' },
     ghosted: { icon: '👻', name: 'Ghosted', desc: 'curse card added each turn', color: 'var(--accent-purple)' },
-    strength: { icon: '😤', name: 'Strength', desc: '+1 damage per attack per stack', color: 'var(--accent-red)' },
-    dexterity: { icon: '🧠', name: 'Dexterity', desc: '+1 block per stack', color: 'var(--accent-blue)' },
+    confidence: { icon: '😤', name: 'Confidence', desc: '+1 damage per attack per stack', color: 'var(--accent-red)' },
+    resilience: { icon: '🧠', name: 'Resilience', desc: '+1 block per stack', color: 'var(--accent-blue)' },
     regen: { icon: '🌿', name: 'Regen', desc: 'heal HP each turn', color: 'var(--accent-green)' },
     selfCare: { icon: '🛁', name: 'Self Care', desc: 'reduce stress each turn', color: 'var(--accent-green)' },
     networking: { icon: '🤝', name: 'Networking', desc: 'draw extra cards each turn', color: 'var(--accent-blue)' },
@@ -89,13 +89,17 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
   const tooltipLines: string[] = [move.name];
 
   if (calcDmg > 0) {
+    const baseDmg = move.damage || 0;
+    const dmgColor = calcDmg < baseDmg ? 'var(--accent-green)' : calcDmg > baseDmg ? 'var(--accent-red)' : 'var(--accent-red)';
     const dmgText = `${calcDmg}${move.times && move.times > 1 ? `x${move.times}` : ''}`;
-    intentParts.push({ text: `⚔️${dmgText}`, color: 'var(--accent-red)' });
+    intentParts.push({ text: `⚔️${dmgText}`, color: dmgColor });
     tooltipLines.push(`Deal ${calcDmg}${move.times && move.times > 1 ? ` x${move.times}` : ''} damage`);
   }
   if (calcStressDmg > 0) {
+    const baseStress = move.stressDamage || 0;
+    const stressColor = calcStressDmg < baseStress ? 'var(--accent-green)' : calcStressDmg > baseStress ? 'var(--accent-red)' : 'var(--accent-purple)';
     const stressText = `${calcStressDmg}${move.times && move.times > 1 ? `x${move.times}` : ''}`;
-    intentParts.push({ text: `😰${stressText}`, color: 'var(--accent-purple)' });
+    intentParts.push({ text: `😰${stressText}`, color: stressColor });
     tooltipLines.push(`Inflict ${calcStressDmg}${move.times && move.times > 1 ? ` x${move.times}` : ''} stress`);
   }
   if (move.block) {

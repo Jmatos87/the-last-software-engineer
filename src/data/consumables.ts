@@ -65,11 +65,11 @@ export const consumables: Record<string, ConsumableDef> = {
   leetcode_grind: {
     id: 'leetcode_grind',
     name: 'LeetCode Grind Session',
-    description: '+2 Strength. You solved 50 mediums in one sitting.',
+    description: '+2 Confidence (+2 attack damage). You solved 50 mediums in one sitting.',
     rarity: 'uncommon',
     icon: '💻',
     target: 'self',
-    effect: { applyToSelf: { strength: 2 } },
+    effect: { applyToSelf: { confidence: 2 } },
   },
   kombucha: {
     id: 'kombucha',

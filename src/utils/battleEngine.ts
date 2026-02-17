@@ -8,8 +8,8 @@ export function calculateDamage(
 ): number {
   let damage = baseDamage;
 
-  // Add strength
-  damage += attackerEffects.strength || 0;
+  // Add confidence
+  damage += attackerEffects.confidence || 0;
 
   // Add item bonus damage
   for (const item of items) {
@@ -37,8 +37,8 @@ export function calculateStressDamage(
 ): number {
   let damage = baseDamage;
 
-  // Strength boosts stress damage
-  damage += attackerEffects.strength || 0;
+  // Confidence boosts stress damage
+  damage += attackerEffects.confidence || 0;
 
   // Weak reduces stress damage by 25%
   if ((attackerEffects.weak || 0) > 0) {
@@ -65,8 +65,8 @@ export function calculateBlock(
 ): number {
   let block = baseBlock;
 
-  // Add dexterity
-  block += effects.dexterity || 0;
+  // Add resilience
+  block += effects.resilience || 0;
 
   // Add item bonus block
   for (const item of items) {
@@ -83,8 +83,8 @@ export function calculateCopium(
 ): number {
   let copium = baseCopium;
 
-  // Dexterity boosts copium
-  copium += effects.dexterity || 0;
+  // Resilience boosts copium
+  copium += effects.resilience || 0;
 
   // Bonus copium from relics
   for (const item of items) {
@@ -160,8 +160,8 @@ export function tickStatusEffects(effects: StatusEffect): StatusEffect {
   if (effects.cringe && effects.cringe > 0) newEffects.cringe = effects.cringe - 1;
   if (effects.ghosted && effects.ghosted > 0) newEffects.ghosted = effects.ghosted - 1;
   // Permanent (persist)
-  if (effects.strength) newEffects.strength = effects.strength;
-  if (effects.dexterity) newEffects.dexterity = effects.dexterity;
+  if (effects.confidence) newEffects.confidence = effects.confidence;
+  if (effects.resilience) newEffects.resilience = effects.resilience;
   if (effects.regen) newEffects.regen = effects.regen;
   if (effects.selfCare) newEffects.selfCare = effects.selfCare;
   if (effects.networking) newEffects.networking = effects.networking;
@@ -175,8 +175,8 @@ export function mergeStatusEffects(existing: StatusEffect, apply: StatusEffect):
   return {
     vulnerable: (existing.vulnerable || 0) + (apply.vulnerable || 0) || undefined,
     weak: (existing.weak || 0) + (apply.weak || 0) || undefined,
-    strength: (existing.strength || 0) + (apply.strength || 0) || undefined,
-    dexterity: (existing.dexterity || 0) + (apply.dexterity || 0) || undefined,
+    confidence: (existing.confidence || 0) + (apply.confidence || 0) || undefined,
+    resilience: (existing.resilience || 0) + (apply.resilience || 0) || undefined,
     regen: (existing.regen || 0) + (apply.regen || 0) || undefined,
     poison: (existing.poison || 0) + (apply.poison || 0) || undefined,
     hope: (existing.hope || 0) + (apply.hope || 0) || undefined,

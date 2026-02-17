@@ -45,6 +45,36 @@ function loadGame(): { screen: import('../types').Screen; run: import('../types'
       data.run.consumables = [];
       data.run.maxConsumables = 3;
     }
+    // Migrate strength→confidence, dexterity→resilience rename
+    if (data.run) {
+      const migrateEffects = (fx: Record<string, unknown> | undefined) => {
+        if (!fx) return;
+        if ('strength' in fx) { (fx as any).confidence = fx.strength; delete fx.strength; }
+        if ('dexterity' in fx) { (fx as any).resilience = fx.dexterity; delete fx.dexterity; }
+      };
+      // Player deck card effects
+      for (const card of data.run.deck || []) {
+        migrateEffects(card.effects?.applyToSelf);
+        migrateEffects(card.effects?.applyToTarget);
+        migrateEffects(card.effects?.applyToAll);
+        migrateEffects(card.upgradedEffects?.applyToSelf);
+        migrateEffects(card.upgradedEffects?.applyToTarget);
+        migrateEffects(card.upgradedEffects?.applyToAll);
+      }
+      // Item effect property renames
+      for (const item of data.run.items || []) {
+        const e = item.effect;
+        if (!e) continue;
+        if ('startBattleStrength' in e) { e.startBattleConfidence = e.startBattleStrength; delete e.startBattleStrength; }
+        if ('startBattleDexterity' in e) { e.startBattleResilience = e.startBattleDexterity; delete e.startBattleDexterity; }
+        if ('strengthPerTurn' in e) { e.confidencePerTurn = e.strengthPerTurn; delete e.strengthPerTurn; }
+        if ('strengthIfHasStrength' in e) { e.confidenceIfHasConfidence = e.strengthIfHasStrength; delete e.strengthIfHasStrength; }
+        if ('startCombatStrengthPerPower' in e) { e.startCombatConfidencePerPower = e.startCombatStrengthPerPower; delete e.startCombatStrengthPerPower; }
+        if ('startCombatActStrength' in e) { e.startCombatActConfidence = e.startCombatActStrength; delete e.startCombatActStrength; }
+        if (e.perPowerPlayed) { migrateEffects(e.perPowerPlayed); }
+        if (e.onPlayAttack) { migrateEffects(e.onPlayAttack); }
+      }
+    }
     return data;
   } catch { return null; }
 }
