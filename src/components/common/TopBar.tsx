@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { HpBar } from './HpBar';
 import { Tooltip } from './Tooltip';
 
 export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
   const run = useGameStore(s => s.run);
+  const restart = useGameStore(s => s.restart);
+  const [showQuitModal, setShowQuitModal] = useState(false);
   if (!run) return null;
 
   return (
@@ -64,6 +66,72 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
       {extra && (
         <div style={{ marginLeft: 'auto', fontSize: 13, color: 'var(--text-secondary)' }}>
           {extra}
+        </div>
+      )}
+
+      {/* Restart run */}
+      <button
+        onClick={() => setShowQuitModal(true)}
+        style={{
+          marginLeft: extra ? 8 : 'auto',
+          padding: '4px 10px',
+          fontSize: 11,
+          background: 'transparent',
+          border: '1px solid var(--border-color)',
+          color: 'var(--text-secondary)',
+          cursor: 'pointer',
+          borderRadius: 'var(--radius-sm)',
+        }}
+      >
+        ✕ Quit Run
+      </button>
+
+      {/* Quit confirmation modal */}
+      {showQuitModal && (
+        <div
+          onClick={() => setShowQuitModal(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: 'var(--bg-primary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: 'var(--radius-md, 8px)',
+              padding: '32px 40px',
+              textAlign: 'center',
+              maxWidth: 360,
+            }}
+          >
+            <div style={{ fontSize: 36, marginBottom: 12 }}>🚪</div>
+            <h3 style={{ margin: '0 0 8px', fontSize: 18 }}>Abandon Run?</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 13, margin: '0 0 24px' }}>
+              All progress will be lost. You'll return to class select.
+            </p>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+              <button
+                onClick={() => setShowQuitModal(false)}
+                style={{ padding: '8px 24px', fontSize: 14 }}
+              >
+                Keep Going
+              </button>
+              <button
+                onClick={restart}
+                className="danger"
+                style={{ padding: '8px 24px', fontSize: 14 }}
+              >
+                Quit Run
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

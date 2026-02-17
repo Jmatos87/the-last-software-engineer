@@ -77,6 +77,11 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: Batt
     }
   }
 
+  // Stress threshold debuffs
+  if (run.stress >= 50) {
+    playerStatusEffects.weak = (playerStatusEffects.weak || 0) + 1;
+  }
+
   let startBlock = 0;
   for (const item of run.items) {
     if (item.effect.startBattleBlock) {
@@ -112,7 +117,7 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: Batt
       drawPile: newDrawPile,
       discardPile: newDiscardPile,
       exhaustPile: [],
-      energy: run.character.energy + extraEnergy,
+      energy: Math.max(0, run.character.energy + extraEnergy - (run.stress >= 75 ? 1 : 0)),
       maxEnergy: run.character.energy + extraEnergy,
       turn: 1,
       playerBlock: startBlock,
@@ -705,10 +710,45 @@ export function executeEnemyTurn(
       }
     }
 
-    // Advance move index
-    const nextIndex = (updatedEnemy.moveIndex + 1) % updatedEnemy.moves.length;
-    updatedEnemy.moveIndex = nextIndex;
-    updatedEnemy.currentMove = updatedEnemy.moves[nextIndex];
+    // Phase transition check + advance move index
+    if (updatedEnemy.phases && updatedEnemy.phases.length > 0) {
+      const hpPercent = (updatedEnemy.currentHp / updatedEnemy.maxHp) * 100;
+      let targetPhaseIdx = -1;
+      for (let pi = 0; pi < updatedEnemy.phases.length; pi++) {
+        if (hpPercent <= updatedEnemy.phases[pi].hpPercent) {
+          targetPhaseIdx = pi;
+        }
+      }
+      const prevPhase = updatedEnemy.currentPhaseIndex ?? -1;
+      if (targetPhaseIdx > prevPhase) {
+        // New phase entered — apply onEnter buffs and jump to phase moves
+        updatedEnemy.currentPhaseIndex = targetPhaseIdx;
+        const phase = updatedEnemy.phases[targetPhaseIdx];
+        if (phase.onEnter) {
+          updatedEnemy.statusEffects = mergeStatusEffects(updatedEnemy.statusEffects, phase.onEnter);
+        }
+        updatedEnemy.moveIndex = phase.moveStartIndex;
+        updatedEnemy.currentMove = updatedEnemy.moves[phase.moveStartIndex];
+      } else if (targetPhaseIdx >= 0) {
+        // Already in phase — cycle within phase moves only
+        const phase = updatedEnemy.phases[targetPhaseIdx];
+        const phaseStart = phase.moveStartIndex;
+        const phaseMoves = updatedEnemy.moves.length - phaseStart;
+        const nextIndex = phaseStart + ((updatedEnemy.moveIndex - phaseStart + 1) % phaseMoves);
+        updatedEnemy.moveIndex = nextIndex;
+        updatedEnemy.currentMove = updatedEnemy.moves[nextIndex];
+      } else {
+        // No phase active — normal cycling
+        const nextIndex = (updatedEnemy.moveIndex + 1) % updatedEnemy.moves.length;
+        updatedEnemy.moveIndex = nextIndex;
+        updatedEnemy.currentMove = updatedEnemy.moves[nextIndex];
+      }
+    } else {
+      // No phases defined — normal cycling
+      const nextIndex = (updatedEnemy.moveIndex + 1) % updatedEnemy.moves.length;
+      updatedEnemy.moveIndex = nextIndex;
+      updatedEnemy.currentMove = updatedEnemy.moves[nextIndex];
+    }
 
     // Tick enemy status effects
     updatedEnemy.statusEffects = tickStatusEffects(updatedEnemy.statusEffects);

@@ -239,11 +239,22 @@ export const useGameStore = create<GameState>()(
           n => n.id === state.run!.map.currentNodeId
         )?.type === 'battle') ? 15 : 0;
 
-        // Gold scales with kills — no kills (all ghosted) = no gold
-        const baseGold = isElite ? 30 : 15;
+        // Gold scaling by act
+        const act = state.run.act;
+        let baseGold: number, randRange: number;
+        if (isBoss) {
+          baseGold = act === 1 ? 50 : act === 2 ? 75 : 100;
+          randRange = act === 1 ? 20 : act === 2 ? 25 : 30;
+        } else if (isElite) {
+          baseGold = act === 1 ? 30 : act === 2 ? 40 : 50;
+          randRange = act === 1 ? 15 : act === 2 ? 20 : 25;
+        } else {
+          baseGold = act === 1 ? 15 : act === 2 ? 20 : 25;
+          randRange = act === 1 ? 10 : act === 2 ? 15 : 20;
+        }
         const goldPerKill = Math.floor(baseGold / total);
         const extraGoldPercent = state.run.items.reduce((sum, item) => sum + (item.effect.extraGoldPercent || 0), 0);
-        const rawGold = allGhosted ? 0 : (goldPerKill * kills) + Math.floor(Math.random() * 10) + extraGold + takeHomeBonus;
+        const rawGold = allGhosted ? 0 : (goldPerKill * kills) + Math.floor(Math.random() * randRange) + extraGold + takeHomeBonus;
         const goldReward = extraGoldPercent > 0 ? Math.floor(rawGold * (1 + extraGoldPercent / 100)) : rawGold;
 
         // Determine artifact drops
@@ -265,7 +276,7 @@ export const useGameStore = create<GameState>()(
               s.run.gold += goldReward;
               s.pendingRewards = {
                 gold: goldReward,
-                cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id)) as any,
+                cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), act, 'boss') as any,
                 artifactChoices: artifactChoices && artifactChoices.length > 0 ? artifactChoices as any : undefined,
                 isBossReward: true,
               };
@@ -273,13 +284,16 @@ export const useGameStore = create<GameState>()(
             });
             return;
           }
+          // Post-fight passive stress
+          const actStress = act === 1 ? 3 : act === 2 ? 5 : 8;
           set(s => {
             if (!s.run) return;
             s.run.hp = Math.min(s.run.maxHp, s.run.hp + healOnKill);
             s.run.gold += goldReward;
+            s.run.stress = Math.min(s.run.maxStress, s.run.stress + actStress);
             s.pendingRewards = {
               gold: goldReward,
-              cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id)) as any,
+              cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), act, isElite ? 'elite' : 'normal') as any,
               artifactChoices: artifactChoices && artifactChoices.length > 0 ? artifactChoices as any : undefined,
             };
             s.screen = 'BATTLE_REWARD';
@@ -332,15 +346,26 @@ export const useGameStore = create<GameState>()(
         const total = afterEnemyTurn.totalEnemies || 1;
         const allGhosted = kills === 0;
 
-        // Reduced gold if you didn't kill enemies — only get gold per kill
+        // Gold scaling by act
         const isElite = state.run.map.nodes.find(
           n => n.id === state.run!.map.currentNodeId
         )?.type === 'elite';
         const extraGold = state.run.items.reduce((sum, item) => sum + (item.effect.extraGold || 0), 0);
-        const baseGold = isElite ? 30 : 15;
-        const goldPerKill = Math.floor(baseGold / total);
+        const act2 = state.run.act;
+        let baseGold2: number, randRange2: number;
+        if (isBoss) {
+          baseGold2 = act2 === 1 ? 50 : act2 === 2 ? 75 : 100;
+          randRange2 = act2 === 1 ? 20 : act2 === 2 ? 25 : 30;
+        } else if (isElite) {
+          baseGold2 = act2 === 1 ? 30 : act2 === 2 ? 40 : 50;
+          randRange2 = act2 === 1 ? 15 : act2 === 2 ? 20 : 25;
+        } else {
+          baseGold2 = act2 === 1 ? 15 : act2 === 2 ? 20 : 25;
+          randRange2 = act2 === 1 ? 10 : act2 === 2 ? 15 : 20;
+        }
+        const goldPerKill = Math.floor(baseGold2 / total);
         const extraGoldPercent2 = state.run.items.reduce((sum, item) => sum + (item.effect.extraGoldPercent || 0), 0);
-        const rawGold2 = allGhosted ? 0 : (goldPerKill * kills) + Math.floor(Math.random() * 5) + extraGold;
+        const rawGold2 = allGhosted ? 0 : (goldPerKill * kills) + Math.floor(Math.random() * randRange2) + extraGold;
         const goldReward = extraGoldPercent2 > 0 ? Math.floor(rawGold2 * (1 + extraGoldPercent2 / 100)) : rawGold2;
         const healOnKill = state.run.items.reduce((sum, item) => sum + (item.effect.healOnKill || 0), 0);
 
@@ -363,6 +388,7 @@ export const useGameStore = create<GameState>()(
         });
 
         // Delay screen transition so flee/death animations play out
+        const actStress2 = act2 === 1 ? 3 : act2 === 2 ? 5 : 8;
         setTimeout(() => {
           if (isBoss) {
             // Boss gives rewards before victory — full heal on boss kill
@@ -371,7 +397,7 @@ export const useGameStore = create<GameState>()(
               s.run.hp = s.run.maxHp;
               s.pendingRewards = {
                 gold: goldReward,
-                cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id)) as any,
+                cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), act2, 'boss') as any,
                 artifactChoices: artifactChoices2 && artifactChoices2.length > 0 ? artifactChoices2 as any : undefined,
                 isBossReward: true,
               };
@@ -382,9 +408,10 @@ export const useGameStore = create<GameState>()(
           }
           set(s => {
             if (!s.run) return;
+            s.run.stress = Math.min(s.run.maxStress, s.run.stress + actStress2);
             s.pendingRewards = {
               gold: goldReward,
-              cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id)) as any,
+              cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), act2, isElite ? 'elite' : 'normal') as any,
               artifactChoices: artifactChoices2 && artifactChoices2.length > 0 ? artifactChoices2 as any : undefined,
             };
             s.battle = null;
@@ -500,7 +527,8 @@ export const useGameStore = create<GameState>()(
         if (!s.run) return;
         const heal = Math.floor(s.run.maxHp * 0.3);
         s.run.hp = Math.min(s.run.maxHp, s.run.hp + heal);
-        const stressHeal = Math.floor(s.run.maxStress * 0.3);
+        const stressRate = s.run.act === 1 ? 0.35 : s.run.act === 2 ? 0.25 : 0.20;
+        const stressHeal = Math.floor(s.run.maxStress * stressRate);
         s.run.stress = Math.max(0, s.run.stress - stressHeal);
         s.screen = 'MAP';
       });
@@ -540,23 +568,34 @@ export const useGameStore = create<GameState>()(
         if (!s.run) return;
 
         const outcome = choice.outcome;
+        // Event reward scaling by act
+        const evtScale = s.run.act === 1 ? 1 : s.run.act === 2 ? 1.5 : 2;
         if (outcome.hp) {
-          s.run.hp = Math.max(1, Math.min(s.run.maxHp, s.run.hp + outcome.hp));
+          const scaledHp = outcome.hp > 0 ? Math.floor(outcome.hp * evtScale) : outcome.hp;
+          s.run.hp = Math.max(1, Math.min(s.run.maxHp, s.run.hp + scaledHp));
         }
         if (outcome.gold) {
-          s.run.gold += outcome.gold;
+          const scaledGold = outcome.gold > 0 ? Math.floor(outcome.gold * evtScale) : outcome.gold;
+          s.run.gold += scaledGold;
         }
         let cardAdded: any = undefined;
         if (outcome.addCard) {
           let cardDef;
-          if (outcome.addCard === 'random_common') {
+          // Event card quality scaling by act
+          let evtCardType = outcome.addCard;
+          if (evtCardType === 'random_common' && s.run.act >= 2) evtCardType = 'random_uncommon';
+          if (evtCardType === 'random_uncommon' && s.run.act >= 3 && Math.random() < 0.5) evtCardType = 'random_rare';
+          if (evtCardType === 'random_common') {
             const commons = Object.values(cards).filter(c => c.rarity === 'common');
             cardDef = commons[Math.floor(Math.random() * commons.length)];
-          } else if (outcome.addCard === 'random_uncommon') {
+          } else if (evtCardType === 'random_uncommon') {
             const uncommons = Object.values(cards).filter(c => c.rarity === 'uncommon');
             cardDef = uncommons[Math.floor(Math.random() * uncommons.length)];
+          } else if (evtCardType === 'random_rare') {
+            const rares = Object.values(cards).filter(c => c.rarity === 'rare');
+            cardDef = rares[Math.floor(Math.random() * rares.length)];
           } else {
-            cardDef = cards[outcome.addCard];
+            cardDef = cards[evtCardType];
           }
           if (cardDef) {
             const instance = createCardInstance(cardDef);
@@ -660,6 +699,34 @@ export const useGameStore = create<GameState>()(
         const idx = s.run.deck.findIndex(c => c.instanceId === cardInstanceId);
         if (idx !== -1) s.run.deck.splice(idx, 1);
       });
+    },
+
+    train: () => {
+      set(s => {
+        if (!s.run) return;
+        const playerClass = getPlayerClass(s.run.character.id);
+        const uncommons = Object.values(cards).filter((c: any) =>
+          c.rarity === 'uncommon' && c.class === playerClass
+        );
+        if (uncommons.length > 0) {
+          const pick = uncommons[Math.floor(Math.random() * uncommons.length)] as any;
+          s.run.deck.push(createCardInstance(pick) as any);
+        }
+        s.screen = 'MAP';
+      });
+      const updated = get();
+      saveGame({ screen: updated.screen, run: updated.run });
+    },
+
+    reflectRemoveCard: (cardInstanceId: string) => {
+      set(s => {
+        if (!s.run || s.run.deck.length <= 1) return;
+        const idx = s.run.deck.findIndex(c => c.instanceId === cardInstanceId);
+        if (idx !== -1) s.run.deck.splice(idx, 1);
+        s.screen = 'MAP';
+      });
+      const updated = get();
+      saveGame({ screen: updated.screen, run: updated.run });
     },
 
     returnToMap: () => {

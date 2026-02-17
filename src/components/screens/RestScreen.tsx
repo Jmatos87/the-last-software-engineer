@@ -4,8 +4,8 @@ import { CardPreview } from '../common/CardPreview';
 import type { CardDef } from '../../types';
 
 export const RestScreen: React.FC = () => {
-  const { run, rest, upgradeCard } = useGameStore();
-  const [mode, setMode] = useState<'choose' | 'upgrade'>('choose');
+  const { run, rest, upgradeCard, train, reflectRemoveCard } = useGameStore();
+  const [mode, setMode] = useState<'choose' | 'upgrade' | 'reflect'>('choose');
   const [preview, setPreview] = useState<{ card: CardDef; upgraded: CardDef; x: number; y: number } | null>(null);
 
   if (!run) return null;
@@ -30,7 +30,7 @@ export const RestScreen: React.FC = () => {
       </p>
 
       {mode === 'choose' ? (
-        <div style={{ display: 'flex', gap: 16 }}>
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
           <button
             onClick={rest}
             className="success"
@@ -45,8 +45,25 @@ export const RestScreen: React.FC = () => {
           >
             ⬆️ Upgrade a Card
           </button>
+          {run.act >= 2 && (
+            <button
+              onClick={train}
+              style={{ padding: '16px 32px', fontSize: 16 }}
+            >
+              🏋️ Train (Gain Card)
+            </button>
+          )}
+          {run.act >= 3 && (
+            <button
+              onClick={() => setMode('reflect')}
+              disabled={run.deck.length <= 1}
+              style={{ padding: '16px 32px', fontSize: 16 }}
+            >
+              🧘 Reflect (Remove Card)
+            </button>
+          )}
         </div>
-      ) : (
+      ) : mode === 'upgrade' ? (
         <>
           <h3 style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
             Choose a card to upgrade:
@@ -90,6 +107,54 @@ export const RestScreen: React.FC = () => {
                     setPreview(null);
                     e.currentTarget.style.borderColor = borderColor;
                   }}
+                  style={{
+                    padding: '6px 10px',
+                    background: 'var(--bg-card)',
+                    border: `1px solid ${borderColor}`,
+                    borderRadius: 'var(--radius-sm)',
+                    cursor: 'pointer',
+                    fontSize: 12,
+                    maxWidth: 140,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    transition: 'all var(--transition-fast)',
+                  }}
+                >
+                  <span>{card.icon}</span>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.name}</span>
+                  <span style={{ color: 'var(--energy-color)', fontSize: 10 }}>({card.cost})</span>
+                </div>
+              );
+            })}
+          </div>
+          <button onClick={() => setMode('choose')} style={{ fontSize: 13 }}>
+            ← Back
+          </button>
+        </>
+      ) : (
+        <>
+          <h3 style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
+            Choose a card to remove from your deck:
+          </h3>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 8,
+            justifyContent: 'center',
+            maxWidth: 600,
+            maxHeight: 300,
+            overflow: 'auto',
+          }}>
+            {run.deck.map(card => {
+              const borderColor = card.type === 'attack' ? 'var(--card-attack)'
+                : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
+              return (
+                <div
+                  key={card.instanceId}
+                  onClick={() => reflectRemoveCard(card.instanceId)}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent-red, #e74c3c)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = borderColor; }}
                   style={{
                     padding: '6px 10px',
                     background: 'var(--bg-card)',

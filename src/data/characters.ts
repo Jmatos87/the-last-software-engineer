@@ -27,7 +27,7 @@ export const characters: CharacterDef[] = [
     title: 'The Server Sentinel',
     hp: 85,
     energy: 3,
-    maxStress: 100,
+    maxStress: 110,
     description: 'Tanky, hits hard, methodical. Slow but devastating. Highest HP pool.',
     starterDeckIds: [
       'sql_injection', 'sql_injection', 'sql_injection', 'sql_injection',
@@ -47,7 +47,7 @@ export const characters: CharacterDef[] = [
     title: 'The System Designer',
     hp: 65,
     energy: 4,
-    maxStress: 100,
+    maxStress: 90,
     description: 'Fragile but resourceful. More energy, lower HP. Plans ahead, builds engines.',
     starterDeckIds: [
       'singleton_pattern', 'singleton_pattern', 'singleton_pattern', 'singleton_pattern',
@@ -67,7 +67,7 @@ export const characters: CharacterDef[] = [
     title: 'The Model Trainer',
     hp: 70,
     energy: 3,
-    maxStress: 100,
+    maxStress: 85,
     description: 'Volatile and powerful. High variance, high reward. Unique stress-interaction mechanics.',
     starterDeckIds: [
       'training_epoch', 'training_epoch', 'training_epoch', 'training_epoch',

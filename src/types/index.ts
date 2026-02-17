@@ -100,6 +100,13 @@ export interface EnemyMove {
   quip?: string;
 }
 
+export interface EnemyPhase {
+  hpPercent: number;
+  moveStartIndex: number;
+  onEnter?: StatusEffect;
+  quip?: string;
+}
+
 export interface EnemyDef {
   id: string;
   name: string;
@@ -109,6 +116,7 @@ export interface EnemyDef {
   isElite?: boolean;
   isBoss?: boolean;
   hideIntent?: boolean;
+  phases?: EnemyPhase[];
 }
 
 export interface EnemyInstance extends EnemyDef {
@@ -119,6 +127,7 @@ export interface EnemyInstance extends EnemyDef {
   statusEffects: StatusEffect;
   moveIndex: number;
   currentMove: EnemyMove;
+  currentPhaseIndex?: number;
 }
 
 // ── Character ──
@@ -315,6 +324,8 @@ export interface GameState {
   buyCard: (cardId: string) => void;
   buyItem: (itemId: string) => void;
   removeCard: (cardInstanceId: string) => void;
+  train: () => void;
+  reflectRemoveCard: (cardInstanceId: string) => void;
   returnToMap: () => void;
   gameOver: () => void;
   victory: () => void;
