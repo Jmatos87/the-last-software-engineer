@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
-import { CardPreview } from '../common/CardPreview';
 import { useMobile } from '../../hooks/useMobile';
-import type { CardDef, ItemDef } from '../../types';
+import type { ItemDef } from '../../types';
 
 export const BattleRewardScreen: React.FC = () => {
   const { compact } = useMobile();
   const { pendingRewards, pickRewardCard, skipRewardCards, claimArtifact, pickRewardConsumable, skipRewardConsumable, run } = useGameStore();
-  const [preview, setPreview] = useState<{ card: CardDef; x: number; y: number } | null>(null);
   const [artifactClaimed, setArtifactClaimed] = useState(false);
   const [consumableClaimed, setConsumableClaimed] = useState(false);
 
@@ -223,7 +221,7 @@ export const BattleRewardScreen: React.FC = () => {
                   key={card.id}
                   onClick={() => pickRewardCard(card.id)}
                   style={{
-                    width: compact ? 100 : 140,
+                    width: compact ? 120 : 160,
                     padding: compact ? 8 : 14,
                     background: 'var(--bg-card)',
                     border: `2px solid ${borderColor}`,
@@ -232,24 +230,22 @@ export const BattleRewardScreen: React.FC = () => {
                     transition: 'all var(--transition-fast)',
                     textAlign: 'center',
                   }}
-                  onMouseEnter={compact ? undefined : e => {
+                  onMouseEnter={e => {
                     e.currentTarget.style.transform = 'translateY(-4px)';
                     e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
                   }}
-                  onMouseLeave={compact ? undefined : e => {
+                  onMouseLeave={e => {
                     e.currentTarget.style.transform = 'none';
                     e.currentTarget.style.boxShadow = 'none';
-                    setPreview(null);
                   }}
                 >
                   <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
                   <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}</div>
-                  <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11 }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
                     <span style={{ color: 'var(--energy-color)' }}>&#9889;{card.cost}</span>
                     <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
                   </div>
+                  <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
                 </div>
               );
             })}
@@ -266,9 +262,6 @@ export const BattleRewardScreen: React.FC = () => {
         </button>
       )}
 
-      {preview && (
-        <CardPreview card={preview.card} x={preview.x} y={preview.y} />
-      )}
     </div>
   );
 };

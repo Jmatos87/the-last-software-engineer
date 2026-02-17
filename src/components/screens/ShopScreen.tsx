@@ -3,15 +3,12 @@ import { useGameStore } from '../../store/gameStore';
 import { cards } from '../../data/cards';
 import { getShopItems } from '../../data/items';
 import { getShopConsumables } from '../../data/consumables';
-import { CardPreview } from '../common/CardPreview';
 import { useMobile } from '../../hooks/useMobile';
-import type { CardDef, CardInstance } from '../../types';
 
 export const ShopScreen: React.FC = () => {
   const { compact } = useMobile();
   const { run, buyCard, buyItem, buyConsumable, removeCard, returnToMap } = useGameStore();
   const [removeMode, setRemoveMode] = useState(false);
-  const [preview, setPreview] = useState<{ card: CardDef | CardInstance; x: number; y: number } | null>(null);
 
   const characterId = run?.character?.id;
 
@@ -77,11 +74,6 @@ export const ShopScreen: React.FC = () => {
             <div
               key={card.id}
               onClick={() => canAfford && buyCard(card.id)}
-              onMouseEnter={e => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
-              }}
-              onMouseLeave={() => setPreview(null)}
               style={{
                 width: compact ? 100 : 130,
                 padding: compact ? 8 : 12,
@@ -189,28 +181,34 @@ export const ShopScreen: React.FC = () => {
               </button>
             ) : (
               <div>
-                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
-                  {run.deck.map(card => (
-                    <div
-                      key={card.instanceId}
-                      onClick={() => removeCard(card.instanceId)}
-                      onMouseEnter={e => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
-                      }}
-                      onMouseLeave={() => setPreview(null)}
-                      style={{
-                        padding: '4px 8px',
-                        background: 'var(--bg-card)',
-                        border: '1px solid var(--accent-red)',
-                        borderRadius: 'var(--radius-sm)',
-                        cursor: 'pointer',
-                        fontSize: 11,
-                      }}
-                    >
-                      {card.icon} {card.name}
-                    </div>
-                  ))}
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
+                  {run.deck.map(card => {
+                    const borderColor = card.type === 'attack' ? 'var(--card-attack)'
+                      : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
+                    return (
+                      <div
+                        key={card.instanceId}
+                        onClick={() => removeCard(card.instanceId)}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent-red)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = borderColor; }}
+                        style={{
+                          width: compact ? 100 : 130,
+                          padding: compact ? 8 : 10,
+                          background: 'var(--bg-card)',
+                          border: `1px solid ${borderColor}`,
+                          borderRadius: 'var(--radius-md)',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          transition: 'all var(--transition-fast)',
+                        }}
+                      >
+                        <div style={{ fontSize: 20, marginBottom: 4 }}>{card.icon}</div>
+                        <div style={{ fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
+                        <div style={{ fontSize: 10, color: 'var(--energy-color)', marginBottom: 4 }}>⚡{card.cost}</div>
+                        <div style={{ fontSize: 9, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
+                      </div>
+                    );
+                  })}
                 </div>
                 <button onClick={() => setRemoveMode(false)} style={{ fontSize: 12 }}>Cancel</button>
               </div>
@@ -219,9 +217,6 @@ export const ShopScreen: React.FC = () => {
         );
       })()}
 
-      {preview && (
-        <CardPreview card={preview.card} x={preview.x} y={preview.y} />
-      )}
     </div>
   );
 };

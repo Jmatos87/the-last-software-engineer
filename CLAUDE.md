@@ -83,7 +83,7 @@ Player keeps deck, items, gold, HP between acts.
 
 ### Battle System
 - `battleActions.ts` contains **pure functions** (`initBattle`, `executePlayCard`, `executeEnemyTurn`, `startNewTurn`) that take state and return new state.
-- `battleEngine.ts` handles damage calculation, block, status effects (vulnerable, weak, strength, dexterity, poison, regen).
+- `battleEngine.ts` handles damage calculation, block, status effects (vulnerable, weak, confidence, resilience, poison, regen).
 - Cards are played by `instanceId` (unique per card copy), enemies targeted by `instanceId`.
 - Dead enemies are removed from `battle.enemies` array — when empty, battle is won.
 
@@ -113,9 +113,12 @@ Player keeps deck, items, gold, HP between acts.
 - `RunState` — character, HP, gold, deck, items, map, floor, act
 - `GameState` — top-level store type (state + all actions)
 
+## UX Rules
+- **Reward previews are mandatory.** Whenever the player is offered cards, relics, items, or consumables as rewards (battle rewards, events, shops, etc.), the UI must show the full description so the player can make an informed decision before accepting. Never present a reward as just a name/icon — always include its description text.
+
 ## Status Effect System
 Temporary (decrement each turn): `vulnerable`, `weak`, `poison`, `hope`, `cringe`, `ghosted`.
-Permanent (persist): `strength`, `dexterity`, `regen`, `selfCare`, `networking`, `savingsAccount`, `counterOffer`, `hustleCulture`.
+Permanent (persist): `confidence`, `resilience`, `regen`, `selfCare`, `networking`, `savingsAccount`, `counterOffer`, `hustleCulture`.
 
 ## Enemy Move Types
 Basic: `attack`, `defend`, `buff`, `debuff`, `attack_defend`, `stress_attack`, `dual_attack`, `discard`.
@@ -162,10 +165,10 @@ Advanced: `exhaust` (cards to exhaust pile), `buff_allies` (buff other enemies),
 - `callback_hell` (9 dmg), `promise_chain` (draw 2), `use_state` (7 block + 3 stress), `flexbox` (6 block + draw 1), `npm_audit` (5 dmg + 2 vulnerable)
 
 *Uncommon (elite battle rewards):*
-- `async_await` (0-cost draw 3), `prototype_pollution` (8 dmg all + 1 weak), `virtual_dom` (16 block), `two_way_binding` (8 dmg + 8 block), `css_grid` (power: 2 dexterity)
+- `async_await` (0-cost draw 3), `prototype_pollution` (8 dmg all + 1 weak), `virtual_dom` (16 block), `two_way_binding` (8 dmg + 8 block), `css_grid` (power: 2 resilience)
 
 *Rare (boss rewards / special events):*
-- `nyancat_rainbow` (12 dmg all + 1 vulnerable), `strict_mode` (power: 3 strength), `observable_stream` (power: 1 networking + 2 selfCare)
+- `nyancat_rainbow` (12 dmg all + 1 vulnerable), `strict_mode` (power: 3 confidence), `observable_stream` (power: 1 networking + 2 selfCare)
 
 **Updated Starter Deck (10 cards):**
 4x console_log, 2x div_block, 1x important_override, 1x jsx_spray, 1x css_animate, 1x coffee_break

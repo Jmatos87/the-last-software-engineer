@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useGameStore } from '../../store/gameStore';
-import { CardPreview } from '../common/CardPreview';
 import { useMobile } from '../../hooks/useMobile';
 import type { CardInstance } from '../../types';
 
@@ -13,7 +12,6 @@ export const EventScreen: React.FC = () => {
   const pendingRemoveCount = useGameStore(s => s.pendingRemoveCount);
   const confirmRemoveEventCard = useGameStore(s => s.confirmRemoveEventCard);
   const run = useGameStore(s => s.run);
-  const [preview, setPreview] = useState<{ card: CardInstance; x: number; y: number } | null>(null);
 
   if (!pendingEvent) return null;
 
@@ -42,7 +40,7 @@ export const EventScreen: React.FC = () => {
           Choose {pendingRemoveCount} card{pendingRemoveCount > 1 ? 's' : ''} to remove:
         </p>
 
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 700 }}>
           {run.deck.map(card => {
             const borderColor = card.type === 'attack' ? 'var(--card-attack)'
               : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
@@ -50,30 +48,29 @@ export const EventScreen: React.FC = () => {
               <div
                 key={card.instanceId}
                 onClick={() => confirmRemoveEventCard(card.instanceId)}
-                onMouseEnter={e => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
-                }}
-                onMouseLeave={() => setPreview(null)}
                 style={{
-                  padding: '6px 10px',
+                  width: compact ? 110 : 130,
+                  padding: compact ? 8 : 10,
                   background: 'var(--bg-card)',
                   border: `1px solid ${borderColor}`,
-                  borderRadius: 'var(--radius-sm)',
+                  borderRadius: 'var(--radius-md)',
                   cursor: 'pointer',
-                  fontSize: 12,
+                  textAlign: 'center',
                   transition: 'all var(--transition-fast)',
                 }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent-red)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = borderColor; }}
               >
-                {card.icon} {card.name}
+                <div style={{ fontSize: 20, marginBottom: 4 }}>{card.icon}</div>
+                <div style={{ fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 6, fontSize: 10, marginBottom: 4 }}>
+                  <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
+                </div>
+                <div style={{ fontSize: 9, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
               </div>
             );
           })}
         </div>
-
-        {preview && (
-          <CardPreview card={preview.card} x={preview.x} y={preview.y} />
-        )}
       </div>
     );
   }
@@ -120,33 +117,22 @@ export const EventScreen: React.FC = () => {
               </span>
               <div
                 style={{
-                  width: 140,
+                  width: 160,
                   padding: 14,
                   background: 'var(--bg-card)',
                   border: `2px solid ${borderColor}`,
                   borderRadius: 'var(--radius-md)',
                   textAlign: 'center',
                   cursor: 'default',
-                  transition: 'all var(--transition-fast)',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                  setPreview(null);
                 }}
               >
                 <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
                 <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}</div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
                   <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
                   <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
                 </div>
+                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
               </div>
             </div>
           );
@@ -168,33 +154,22 @@ export const EventScreen: React.FC = () => {
               </span>
               <div
                 style={{
-                  width: 140,
+                  width: 160,
                   padding: 14,
                   background: 'var(--bg-card)',
                   border: `2px solid ${borderColor}`,
                   borderRadius: 'var(--radius-md)',
                   textAlign: 'center',
                   cursor: 'default',
-                  transition: 'all var(--transition-fast)',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                  setPreview(null);
                 }}
               >
                 <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
-                <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}</div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11 }}>
-                  <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
+                <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}+</div>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
+                  <span style={{ color: 'var(--energy-color)' }}>⚡{card.upgradedCost ?? card.cost}</span>
                   <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
                 </div>
+                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.upgradedDescription ?? card.description}</div>
               </div>
             </div>
           );
@@ -216,7 +191,7 @@ export const EventScreen: React.FC = () => {
               </span>
               <div
                 style={{
-                  width: 140,
+                  width: 160,
                   padding: 14,
                   background: 'var(--bg-card)',
                   border: `2px solid ${borderColor}`,
@@ -224,26 +199,15 @@ export const EventScreen: React.FC = () => {
                   textAlign: 'center',
                   cursor: 'default',
                   opacity: 0.7,
-                  transition: 'all var(--transition-fast)',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                  setPreview(null);
                 }}
               >
                 <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
                 <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4, textDecoration: 'line-through' }}>{card.name}</div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
                   <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
                   <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
                 </div>
+                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
               </div>
             </div>
           );
@@ -267,7 +231,7 @@ export const EventScreen: React.FC = () => {
                   <div
                     key={idx}
                     style={{
-                      width: 120,
+                      width: 140,
                       padding: 10,
                       background: 'var(--bg-card)',
                       border: `2px solid ${borderColor}`,
@@ -277,7 +241,12 @@ export const EventScreen: React.FC = () => {
                     }}
                   >
                     <div style={{ fontSize: 24, marginBottom: 4 }}>{card.icon}</div>
-                    <div style={{ fontSize: 11, fontWeight: 'bold', textDecoration: 'line-through' }}>{card.name}</div>
+                    <div style={{ fontSize: 11, fontWeight: 'bold', textDecoration: 'line-through', marginBottom: 4 }}>{card.name}</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 6, fontSize: 10, marginBottom: 4 }}>
+                      <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
+                      <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
+                    </div>
+                    <div style={{ fontSize: 9, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
                   </div>
                 );
               })}
@@ -299,7 +268,8 @@ export const EventScreen: React.FC = () => {
                 Consumable added:
               </span>
               <div style={{
-                padding: '8px 16px',
+                width: 160,
+                padding: 14,
                 background: 'var(--bg-card)',
                 border: `2px solid ${rarityColor}`,
                 borderRadius: 'var(--radius-md)',
@@ -307,15 +277,12 @@ export const EventScreen: React.FC = () => {
               }}>
                 <span style={{ fontSize: 24 }}>{c.icon}</span>
                 <div style={{ fontSize: 12, fontWeight: 'bold', marginTop: 4 }}>{c.name}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{c.rarity}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 6 }}>{c.rarity}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{c.description}</div>
               </div>
             </div>
           );
         })()}
-
-        {preview && (
-          <CardPreview card={preview.card} x={preview.x} y={preview.y} />
-        )}
 
         <button
           onClick={dismissEventOutcome}

@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
-import { CardPreview } from '../common/CardPreview';
 import { useMobile } from '../../hooks/useMobile';
-import type { CardDef } from '../../types';
 
 export const RestScreen: React.FC = () => {
   const { compact } = useMobile();
   const { run, rest, upgradeCard, train, reflectRemoveCard } = useGameStore();
   const [mode, setMode] = useState<'choose' | 'upgrade' | 'reflect'>('choose');
-  const [preview, setPreview] = useState<{ card: CardDef; upgraded: CardDef; x: number; y: number } | null>(null);
 
   if (!run) return null;
 
@@ -71,62 +68,42 @@ export const RestScreen: React.FC = () => {
           <h3 style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
             Choose a card to upgrade:
           </h3>
-          {preview && (
-            <>
-              <CardPreview card={preview.card} x={preview.x - 130} y={preview.y} label="Current" />
-              <CardPreview card={preview.upgraded} x={preview.x + 130} y={preview.y} label="Upgraded" />
-            </>
-          )}
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: 8,
+            gap: 10,
             justifyContent: 'center',
-            maxWidth: 600,
-            maxHeight: 300,
+            maxWidth: 700,
+            maxHeight: compact ? undefined : 400,
             overflow: 'auto',
           }}>
             {upgradableCards.map(card => {
               const borderColor = card.type === 'attack' ? 'var(--card-attack)'
                 : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
+              const upgDesc = card.upgradedDescription ?? card.description;
+              const upgCost = card.upgradedCost ?? card.cost;
               return (
                 <div
                   key={card.instanceId}
                   onClick={() => upgradeCard(card.instanceId)}
-                  onMouseEnter={e => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const upgraded = {
-                      ...card,
-                      name: card.name + '+',
-                      upgraded: true,
-                      cost: card.upgradedCost ?? card.cost,
-                      effects: card.upgradedEffects ?? card.effects,
-                      description: card.upgradedDescription ?? card.description,
-                    };
-                    setPreview({ card, upgraded, x: rect.left + rect.width / 2, y: rect.top });
-                    e.currentTarget.style.borderColor = 'var(--accent-green)';
-                  }}
-                  onMouseLeave={e => {
-                    setPreview(null);
-                    e.currentTarget.style.borderColor = borderColor;
-                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent-green)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = borderColor; }}
                   style={{
-                    padding: '6px 10px',
+                    width: compact ? 110 : 140,
+                    padding: compact ? 8 : 10,
                     background: 'var(--bg-card)',
                     border: `1px solid ${borderColor}`,
-                    borderRadius: 'var(--radius-sm)',
+                    borderRadius: 'var(--radius-md)',
                     cursor: 'pointer',
-                    fontSize: 12,
-                    maxWidth: 140,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 4,
+                    textAlign: 'center',
                     transition: 'all var(--transition-fast)',
                   }}
                 >
-                  <span>{card.icon}</span>
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.name}</span>
-                  <span style={{ color: 'var(--energy-color)', fontSize: 10 }}>({card.cost})</span>
+                  <div style={{ fontSize: 20, marginBottom: 4 }}>{card.icon}</div>
+                  <div style={{ fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
+                  <div style={{ fontSize: 10, color: 'var(--energy-color)', marginBottom: 4 }}>⚡{card.cost} → ⚡{upgCost}</div>
+                  <div style={{ fontSize: 9, color: 'var(--text-muted)', lineHeight: 1.3, marginBottom: 4 }}>{card.description}</div>
+                  <div style={{ fontSize: 9, color: 'var(--accent-green)', lineHeight: 1.3 }}>→ {upgDesc}</div>
                 </div>
               );
             })}
@@ -143,10 +120,10 @@ export const RestScreen: React.FC = () => {
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: 8,
+            gap: 10,
             justifyContent: 'center',
-            maxWidth: 600,
-            maxHeight: 300,
+            maxWidth: 700,
+            maxHeight: compact ? undefined : 400,
             overflow: 'auto',
           }}>
             {run.deck.map(card => {
@@ -156,25 +133,23 @@ export const RestScreen: React.FC = () => {
                 <div
                   key={card.instanceId}
                   onClick={() => reflectRemoveCard(card.instanceId)}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent-red, #e74c3c)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent-red)'; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = borderColor; }}
                   style={{
-                    padding: '6px 10px',
+                    width: compact ? 110 : 130,
+                    padding: compact ? 8 : 10,
                     background: 'var(--bg-card)',
                     border: `1px solid ${borderColor}`,
-                    borderRadius: 'var(--radius-sm)',
+                    borderRadius: 'var(--radius-md)',
                     cursor: 'pointer',
-                    fontSize: 12,
-                    maxWidth: 140,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 4,
+                    textAlign: 'center',
                     transition: 'all var(--transition-fast)',
                   }}
                 >
-                  <span>{card.icon}</span>
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.name}</span>
-                  <span style={{ color: 'var(--energy-color)', fontSize: 10 }}>({card.cost})</span>
+                  <div style={{ fontSize: 20, marginBottom: 4 }}>{card.icon}</div>
+                  <div style={{ fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
+                  <div style={{ fontSize: 10, color: 'var(--energy-color)', marginBottom: 4 }}>⚡{card.cost}</div>
+                  <div style={{ fontSize: 9, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
                 </div>
               );
             })}
