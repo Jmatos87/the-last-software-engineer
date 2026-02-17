@@ -166,7 +166,7 @@ export const enemies: Record<string, EnemyDef> = {
   unpaid_take_home: {
     id: 'unpaid_take_home',
     name: 'Unpaid Take-Home Assignment',
-    hp: 75,
+    hp: 88,
     icon: '💸',
     isElite: true,
     moves: [
@@ -174,27 +174,29 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Crunch Time', type: 'attack', damage: 10, icon: '😰', quip: '"Due in 4 hours. No pressure!"' },
       { name: 'Pair Stress', type: 'attack', damage: 7, times: 2, icon: '😵', quip: '"This should be a weekend project!"' },
       { name: 'Full-Stack Assault', type: 'attack', damage: 14, icon: '💥', quip: '"Add CI/CD and deploy to prod."' },
+      { name: 'Overscoped!', type: 'exhaust', exhaustCount: 1, icon: '📋', quip: '"Oh, and write the documentation."' },
     ],
   },
 
   linkedin_influencer: {
     id: 'linkedin_influencer',
     name: 'LinkedIn Influencer',
-    hp: 65,
+    hp: 78,
     icon: '📱',
     isElite: true,
     moves: [
       { name: 'Viral Post', type: 'attack', damage: 10, icon: '📢', quip: '"Agree? 👇 Like & repost."' },
       { name: 'Humble Brag', type: 'debuff', applyToTarget: { cringe: 2 }, icon: '😬', quip: '"I turned down 47 offers this week."' },
       { name: '#Blessed', type: 'attack', damage: 8, icon: '🙏', quip: '"Grateful for my 12th promotion."' },
-      { name: 'Engagement Farming', type: 'attack_defend', damage: 7, block: 6, applyToSelf: { regen: 2 }, icon: '🌱', quip: '"I cried at my standing desk today."' },
+      { name: 'Engagement Farming', type: 'attack_defend', damage: 7, block: 6, applyToSelf: { regen: 3 }, icon: '🌱', quip: '"I cried at my standing desk today."' },
+      { name: 'Personal Brand', type: 'debuff', applyToTarget: { cringe: 2, weak: 1 }, icon: '🤳', quip: '"My morning routine starts at 4 AM."' },
     ],
   },
 
   applicant_tracking_golem: {
     id: 'applicant_tracking_golem',
     name: 'Applicant Tracking Golem',
-    hp: 80,
+    hp: 95,
     icon: '⚙️',
     isElite: true,
     moves: [
@@ -202,34 +204,36 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'System Slam', type: 'attack', damage: 12, icon: '⚙️', quip: '"Application #4,729 processed."' },
       { name: 'Data Crunch', type: 'attack', damage: 8, times: 2, icon: '💾', quip: '"Your data is now our data."' },
       { name: 'Process Queue', type: 'attack_defend', damage: 10, block: 8, icon: '📊', quip: '"You are #8,341 in the queue."' },
+      { name: 'Pipeline Sync', type: 'buff_allies', applyToTarget: { strength: 1 }, icon: '🔗', quip: '"Syncing rejection pipelines..."' },
     ],
   },
 
   networking_event: {
     id: 'networking_event',
     name: 'The Networking Event',
-    hp: 70,
+    hp: 82,
     icon: '🍸',
     isElite: true,
     moves: [
-      { name: 'Small Talk', type: 'stress_attack', stressDamage: 6, icon: '💬', quip: '"So... what do you do?"' },
+      { name: 'Small Talk', type: 'stress_attack', stressDamage: 8, icon: '💬', quip: '"So... what do you do?"' },
       { name: 'Awkward Handshake', type: 'attack', damage: 9, stressDamage: 4, icon: '🤝', quip: '"*limp fish grip*"' },
       { name: 'Elevator Pitch', type: 'attack', damage: 11, icon: '🗣️', quip: '"I\'m disrupting disruption."' },
-      { name: 'Exchange Cards', type: 'buff', applyToSelf: { strength: 2 }, icon: '📇', quip: '"Let\'s connect on LinkedIn!"' },
+      { name: 'Exchange Cards', type: 'buff', applyToSelf: { strength: 3 }, icon: '📇', quip: '"Let\'s connect on LinkedIn!"' },
     ],
   },
 
   automated_rejection: {
     id: 'automated_rejection',
     name: 'Automated Rejection Letter',
-    hp: 60,
+    hp: 73,
     icon: '✉️',
     isElite: true,
     moves: [
       { name: 'Demoralize', type: 'debuff', applyToTarget: { strength: -1 }, icon: '😞', quip: '"Thank you for your interest."' },
       { name: 'Form Rejection', type: 'attack', damage: 10, stressDamage: 5, icon: '✉️', quip: '"Dear [CANDIDATE_NAME]..."' },
       { name: 'We\'ll Keep You On File', type: 'stress_attack', stressDamage: 8, icon: '📁', quip: '"(We won\'t.)"' },
-      { name: 'Not A Good Fit', type: 'attack', damage: 13, icon: '❌', quip: '"We\'re looking for a unicorn."' },
+      { name: 'Not A Good Fit', type: 'attack', damage: 16, icon: '❌', quip: '"We\'re looking for a unicorn."' },
+      { name: 'File This Away', type: 'discard', discardCount: 1, stressDamage: 3, icon: '🗄️', quip: '"Your application has been archived."' },
     ],
   },
 
@@ -238,7 +242,7 @@ export const enemies: Record<string, EnemyDef> = {
   hr_phone_screen: {
     id: 'hr_phone_screen',
     name: 'HR Phone Screen',
-    hp: 150,
+    hp: 163,
     icon: '📞',
     isBoss: true,
     phases: [
@@ -253,13 +257,14 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Where Do You See Yourself?', type: 'attack', damage: 14, icon: '🔮', quip: '"In 5 years. Be specific."' },
       { name: 'Salary Expectations?', type: 'attack', damage: 16, stressDamage: 6, icon: '💵', quip: '"What\'s your current comp?"' },
       { name: 'We\'ll Be In Touch', type: 'attack', damage: 20, stressDamage: 10, icon: '☎️', quip: '"(Narrator: They weren\'t.)"' },
+      { name: 'Benefits Bait', type: 'attack', damage: 12, stressDamage: 5, icon: '🎣', quip: '"We have unlimited PTO! (Don\'t use it.)"' },
     ],
   },
 
   ats_final_form: {
     id: 'ats_final_form',
     name: 'The ATS Final Form',
-    hp: 170,
+    hp: 182,
     icon: '🏗️',
     isBoss: true,
     phases: [
@@ -275,14 +280,14 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'TRANSFORM', type: 'buff', applyToSelf: { strength: 3 }, icon: '🔥', quip: '"MAXIMUM OVERDRIVE ENGAGED."' },
       { name: 'Maximum Overdrive', type: 'attack', damage: 18, icon: '💥', quip: '"REJECT. REJECT. REJECT."' },
       { name: 'Total Rejection', type: 'attack', damage: 14, times: 2, icon: '❌', quip: '"Application status: OBLITERATED."' },
-      { name: 'System Crash', type: 'attack', damage: 22, stressDamage: 8, icon: '💀', quip: '"Fatal error: career not found."' },
+      { name: 'System Crash', type: 'attack', damage: 26, stressDamage: 8, icon: '💀', quip: '"Fatal error: career not found."' },
     ],
   },
 
   ghosting_phantom: {
     id: 'ghosting_phantom',
     name: 'The Ghosting Phantom',
-    hp: 130,
+    hp: 143,
     icon: '👻',
     isBoss: true,
     hideIntent: true,
@@ -297,7 +302,7 @@ export const enemies: Record<string, EnemyDef> = {
       // Phase 2: aggressive + debuffs (indices 3-5)
       { name: 'Spectral Slash', type: 'attack', damage: 15, icon: '💫', quip: '"I was never even real."' },
       { name: 'Maybe Next Time', type: 'debuff', applyToTarget: { weak: 2, ghosted: 2 }, icon: '💨', quip: '"We\'ll definitely reach out soon!"' },
-      { name: 'Full Ghosting', type: 'attack', damage: 17, stressDamage: 8, icon: '☠️', quip: '"The position has been filled... forever."' },
+      { name: 'Full Ghosting', type: 'attack', damage: 21, stressDamage: 8, icon: '☠️', quip: '"The position has been filled... forever."' },
     ],
   },
 
@@ -468,35 +473,37 @@ export const enemies: Record<string, EnemyDef> = {
   senior_dev_interrogator: {
     id: 'senior_dev_interrogator',
     name: 'Senior Dev Interrogator',
-    hp: 120,
+    hp: 133,
     icon: '🧓',
     isElite: true,
     moves: [
       { name: 'Explain Your Process', type: 'attack', damage: 10, stressDamage: 5, icon: '🔬', quip: '"Walk me through every decision."' },
       { name: 'Code Review', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 1 }, icon: '👀', quip: '"I see you used var. In 2026."' },
       { name: 'Deep Dive', type: 'attack', damage: 14, icon: '🤿', quip: '"Let\'s go three levels deeper."' },
-      { name: 'Years of Experience', type: 'buff', applyToSelf: { strength: 2 }, icon: '📅', quip: '"I\'ve been doing this since Perl."' },
+      { name: 'Years of Experience', type: 'buff', applyToSelf: { strength: 3 }, icon: '📅', quip: '"I\'ve been doing this since Perl."' },
+      { name: 'Code Purge', type: 'exhaust', exhaustCount: 1, stressDamage: 3, icon: '🧹', quip: '"This doesn\'t meet our standards."' },
     ],
   },
 
   whiteboard_hydra: {
     id: 'whiteboard_hydra',
     name: 'The Whiteboard Hydra',
-    hp: 110,
+    hp: 123,
     icon: '🐉',
     isElite: true,
     moves: [
       { name: 'Follow-Up Question', type: 'attack', damage: 9, icon: '❓', quip: '"But what about concurrency?"' },
       { name: 'Multi-Part Problem', type: 'attack', damage: 7, times: 2, icon: '📝', quip: '"Part A... and Part B."' },
       { name: 'Whiteboard Barrage', type: 'attack', damage: 12, stressDamage: 4, icon: '📊', quip: '"Now diagram the entire system."' },
-      { name: 'Grow Heads', type: 'buff', applyToSelf: { strength: 2 }, icon: '🐲', quip: '"One more follow-up question..."' },
+      { name: 'Grow Heads', type: 'buff', applyToSelf: { strength: 3 }, icon: '🐲', quip: '"One more follow-up question..."' },
+      { name: 'Erase Board', type: 'discard', discardCount: 2, icon: '🧽', quip: '"Start over. From scratch."' },
     ],
   },
 
   hr_gatekeeper: {
     id: 'hr_gatekeeper',
     name: 'HR Gatekeeper',
-    hp: 105,
+    hp: 118,
     icon: '🚪',
     isElite: true,
     moves: [
@@ -504,36 +511,37 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Red Tape', type: 'stress_attack', stressDamage: 8, icon: '📎', quip: '"That requires three approvals."' },
       { name: 'Policy Enforcement', type: 'attack_defend', damage: 10, block: 8, icon: '📋', quip: '"Per section 4, subsection C..."' },
       { name: 'Access Denied', type: 'attack', damage: 14, stressDamage: 5, icon: '🚫', quip: '"You don\'t have clearance."' },
+      { name: 'Forms in Triplicate', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '📝', quip: '"Fill out form HR-42B. In triplicate."' },
     ],
   },
 
   the_algorithm: {
     id: 'the_algorithm',
     name: 'The Algorithm',
-    hp: 130,
+    hp: 145,
     icon: '🧮',
     isElite: true,
     moves: [
-      { name: 'Analyze Pattern', type: 'buff', applyToSelf: { strength: 1, dexterity: 1 }, icon: '📊', quip: '"Training on your weaknesses..."' },
+      { name: 'Analyze Pattern', type: 'buff', applyToSelf: { strength: 2, dexterity: 1 }, icon: '📊', quip: '"Training on your weaknesses..."' },
       { name: 'Optimized Strike', type: 'attack', damage: 12, icon: '⚡', quip: '"Calculated. Precise. Devastating."' },
       { name: 'Recursive Loop', type: 'attack', damage: 8, times: 2, icon: '🔄', quip: '"while(true) { reject(); }"' },
       { name: 'Machine Learning', type: 'attack_defend', damage: 11, block: 6, icon: '🤖', quip: '"I learned from 10M rejections."' },
-      { name: 'Neural Overload', type: 'attack', damage: 18, stressDamage: 8, icon: '🧠', quip: '"Processing power: MAXIMUM."' },
+      { name: 'Neural Overload', type: 'attack', damage: 22, stressDamage: 8, icon: '🧠', quip: '"Processing power: MAXIMUM."' },
     ],
   },
 
   crunch_time_manager: {
     id: 'crunch_time_manager',
     name: 'Crunch Time Manager',
-    hp: 115,
+    hp: 128,
     icon: '⏰',
     isElite: true,
     moves: [
       { name: 'Need This By EOD', type: 'attack', damage: 10, stressDamage: 6, icon: '⏰', quip: '"EOD means 5 PM my time zone."' },
-      { name: 'Overtime Mandate', type: 'buff', applyToSelf: { strength: 2 }, icon: '📈', quip: '"We\'re all pulling extra hours!"' },
+      { name: 'Overtime Mandate', type: 'buff', applyToSelf: { strength: 3 }, icon: '📈', quip: '"We\'re all pulling extra hours!"' },
       { name: 'Weekend Work', type: 'attack', damage: 13, stressDamage: 5, icon: '📅', quip: '"Just a quick Saturday deploy."' },
       { name: 'Sprint Review', type: 'attack', damage: 15, icon: '🏃', quip: '"Why is this ticket still open?"' },
-      { name: 'All-Hands Pressure', type: 'attack', damage: 20, stressDamage: 10, icon: '💥', quip: '"The board is watching."' },
+      { name: 'All-Hands Pressure', type: 'attack', damage: 25, stressDamage: 10, icon: '💥', quip: '"The board is watching."' },
     ],
   },
 
@@ -542,11 +550,11 @@ export const enemies: Record<string, EnemyDef> = {
   panel_interview_hydra: {
     id: 'panel_interview_hydra',
     name: 'Panel Interview Hydra',
-    hp: 240,
+    hp: 258,
     icon: '🐲',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 2, dexterity: 1 }, quip: '"The panel has reached a consensus."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3, dexterity: 1 }, quip: '"The panel has reached a consensus."' },
     ],
     moves: [
       // Phase 1 (indices 0-2)
@@ -556,14 +564,14 @@ export const enemies: Record<string, EnemyDef> = {
       // Phase 2 (indices 3-5)
       { name: 'Cross-Examination', type: 'attack', damage: 14, stressDamage: 5, icon: '⚔️', quip: '"That contradicts what you said."' },
       { name: 'Group Deliberation', type: 'defend', block: 15, icon: '🤔', quip: '"We need to align internally."' },
-      { name: 'Final Verdict', type: 'attack', damage: 20, stressDamage: 10, icon: '⚖️', quip: '"The panel has decided."' },
+      { name: 'Final Verdict', type: 'attack', damage: 26, stressDamage: 10, icon: '⚖️', quip: '"The panel has decided."' },
     ],
   },
 
   live_coding_challenge: {
     id: 'live_coding_challenge',
     name: 'The Live Coding Challenge',
-    hp: 220,
+    hp: 238,
     icon: '⌨️',
     isBoss: true,
     phases: [
@@ -574,22 +582,22 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Timer Start', type: 'attack', damage: 8, icon: '⏱️', quip: '"You have 45 minutes. Go."' },
       { name: 'Syntax Error', type: 'attack', damage: 10, stressDamage: 4, icon: '🔴', quip: '"Missing semicolon on line 1."' },
       { name: 'Runtime Exception', type: 'attack', damage: 12, icon: '💥', quip: '"undefined is not a function."' },
-      { name: 'Compiler Fury', type: 'buff', applyToSelf: { strength: 3 }, icon: '🔥', quip: '"142 errors found."' },
+      { name: 'Compiler Fury', type: 'buff', applyToSelf: { strength: 4 }, icon: '🔥', quip: '"142 errors found."' },
       // Phase 2 (indices 4-6)
       { name: 'Stack Overflow', type: 'attack', damage: 14, stressDamage: 6, icon: '📚', quip: '"Maximum call stack exceeded."' },
       { name: 'Segfault', type: 'attack', damage: 18, icon: '💀', quip: '"Core dumped. So did your career."' },
-      { name: 'TIME\'S UP!', type: 'attack', damage: 25, stressDamage: 14, icon: '⏰', quip: '"Pencils down. Step away."' },
+      { name: 'TIME\'S UP!', type: 'attack', damage: 30, stressDamage: 14, icon: '⏰', quip: '"Pencils down. Step away."' },
     ],
   },
 
   vp_of_engineering: {
     id: 'vp_of_engineering',
     name: 'The VP of Engineering',
-    hp: 260,
+    hp: 278,
     icon: '👔',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 4, onEnter: { strength: 3 }, quip: '"Now the real interview begins."' },
+      { hpPercent: 50, moveStartIndex: 4, onEnter: { strength: 4 }, quip: '"Now the real interview begins."' },
     ],
     moves: [
       // Phase 1: "casual chat" (indices 0-3)
@@ -601,7 +609,7 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Technical Deep-Dive', type: 'buff', applyToSelf: { strength: 3 }, icon: '🤿', quip: '"Gloves off."' },
       { name: 'Architecture Review', type: 'attack', damage: 16, icon: '🏗️', quip: '"This doesn\'t scale."' },
       { name: 'Scale Question', type: 'attack', damage: 14, stressDamage: 6, icon: '📊', quip: '"What if we have a billion users?"' },
-      { name: 'Executive Decision', type: 'attack', damage: 24, stressDamage: 12, icon: '⚡', quip: '"I\'ve seen enough."' },
+      { name: 'Executive Decision', type: 'attack', damage: 30, stressDamage: 12, icon: '⚡', quip: '"I\'ve seen enough."' },
     ],
   },
 

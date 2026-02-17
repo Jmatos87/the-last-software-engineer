@@ -196,3 +196,29 @@ button.success {
   60% { opacity: 1; transform: scale(1.05) translateY(-1px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
+
+/* Consumable slots */
+.consumable-slot {
+  width: 36px;
+  height: 36px;
+  border: 2px dashed var(--border-color);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  background: transparent;
+}
+.consumable-slot.filled {
+  border-style: solid;
+  background: var(--bg-card);
+  animation: pulseConsumable 2s ease-in-out infinite;
+}
+.consumable-slot.filled:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 12px rgba(74, 158, 255, 0.3);
+}
+@keyframes pulseConsumable {
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: 0 0 8px rgba(74, 158, 255, 0.15); }
+}

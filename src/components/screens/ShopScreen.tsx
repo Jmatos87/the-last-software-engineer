@@ -2,11 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { cards } from '../../data/cards';
 import { getShopItems } from '../../data/items';
+import { getShopConsumables } from '../../data/consumables';
 import { CardPreview } from '../common/CardPreview';
 import type { CardDef, CardInstance } from '../../types';
 
 export const ShopScreen: React.FC = () => {
-  const { run, buyCard, buyItem, removeCard, returnToMap } = useGameStore();
+  const { run, buyCard, buyItem, buyConsumable, removeCard, returnToMap } = useGameStore();
   const [removeMode, setRemoveMode] = useState(false);
   const [preview, setPreview] = useState<{ card: CardDef | CardInstance; x: number; y: number } | null>(null);
 
@@ -28,6 +29,7 @@ export const ShopScreen: React.FC = () => {
   }, [characterId]);
 
   const shopItems = useMemo(() => getShopItems(3, characterId), [characterId]);
+  const shopConsumableItems = useMemo(() => getShopConsumables(run?.act || 1, 2), [run?.act]);
 
   if (!run) return null;
 
@@ -36,6 +38,9 @@ export const ShopScreen: React.FC = () => {
 
   const getItemCost = (rarity: string) =>
     rarity === 'common' ? 100 : rarity === 'uncommon' ? 150 : 250;
+
+  const getConsumableCost = (rarity: string) =>
+    rarity === 'common' ? 40 : rarity === 'uncommon' ? 65 : 120;
 
   return (
     <div style={{
@@ -123,6 +128,40 @@ export const ShopScreen: React.FC = () => {
               <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginBottom: 6 }}>{item.description}</div>
               <div style={{ color: 'var(--gold-color)', fontSize: 13, fontWeight: 'bold' }}>
                 {owned ? 'OWNED' : `💰 ${cost}`}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Consumables for sale */}
+      <h3 style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 12 }}>Consumables</h3>
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
+        {shopConsumableItems.map(c => {
+          const cost = getConsumableCost(c.rarity);
+          const canAfford = run.gold >= cost;
+          const slotsFull = run.consumables.length >= run.maxConsumables;
+          const rarityColor = c.rarity === 'rare' ? 'var(--accent-yellow)' : c.rarity === 'uncommon' ? 'var(--accent-blue)' : 'var(--text-secondary)';
+          return (
+            <div
+              key={c.id}
+              onClick={() => canAfford && !slotsFull && buyConsumable(c.id)}
+              style={{
+                width: 140,
+                padding: 12,
+                background: 'var(--bg-card)',
+                border: `1px solid ${rarityColor}`,
+                borderRadius: 'var(--radius-md)',
+                cursor: canAfford && !slotsFull ? 'pointer' : 'not-allowed',
+                opacity: canAfford && !slotsFull ? 1 : 0.5,
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ fontSize: 28, marginBottom: 4 }}>{c.icon}</div>
+              <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{c.name}</div>
+              <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginBottom: 6 }}>{c.description}</div>
+              <div style={{ color: 'var(--gold-color)', fontSize: 13, fontWeight: 'bold' }}>
+                {slotsFull ? 'SLOTS FULL' : `💰 ${cost}`}
               </div>
             </div>
           );

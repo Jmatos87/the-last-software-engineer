@@ -8,9 +8,72 @@ export const EventScreen: React.FC = () => {
   const eventOutcome = useGameStore(s => s.eventOutcome);
   const makeEventChoice = useGameStore(s => s.makeEventChoice);
   const dismissEventOutcome = useGameStore(s => s.dismissEventOutcome);
+  const pendingRemoveCount = useGameStore(s => s.pendingRemoveCount);
+  const confirmRemoveEventCard = useGameStore(s => s.confirmRemoveEventCard);
+  const run = useGameStore(s => s.run);
   const [preview, setPreview] = useState<{ card: CardInstance; x: number; y: number } | null>(null);
 
   if (!pendingEvent) return null;
+
+  // Show card picker for removeChosenCard
+  if (pendingRemoveCount && pendingRemoveCount > 0 && run) {
+    return (
+      <div style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 24,
+        padding: 32,
+        maxWidth: 700,
+        margin: '0 auto',
+      }} className="animate-fade-in">
+        <div style={{ fontSize: 64 }}>{pendingEvent.icon}</div>
+        <h2 style={{ fontSize: 22, color: 'var(--accent-yellow)' }}>{pendingEvent.title}</h2>
+        <p style={{
+          color: 'var(--accent-red)',
+          fontSize: 16,
+          fontWeight: 'bold',
+        }}>
+          Choose {pendingRemoveCount} card{pendingRemoveCount > 1 ? 's' : ''} to remove:
+        </p>
+
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+          {run.deck.map(card => {
+            const borderColor = card.type === 'attack' ? 'var(--card-attack)'
+              : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
+            return (
+              <div
+                key={card.instanceId}
+                onClick={() => confirmRemoveEventCard(card.instanceId)}
+                onMouseEnter={e => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                }}
+                onMouseLeave={() => setPreview(null)}
+                style={{
+                  padding: '6px 10px',
+                  background: 'var(--bg-card)',
+                  border: `1px solid ${borderColor}`,
+                  borderRadius: 'var(--radius-sm)',
+                  cursor: 'pointer',
+                  fontSize: 12,
+                  transition: 'all var(--transition-fast)',
+                }}
+              >
+                {card.icon} {card.name}
+              </div>
+            );
+          })}
+        </div>
+
+        {preview && (
+          <CardPreview card={preview.card} x={preview.x} y={preview.y} />
+        )}
+      </div>
+    );
+  }
 
   // Show outcome after a choice is made
   if (eventOutcome) {
@@ -177,6 +240,70 @@ export const EventScreen: React.FC = () => {
                   <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
                   <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
                 </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {eventOutcome.cardsRemoved && eventOutcome.cardsRemoved.length > 0 && (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 12,
+          }}>
+            <span style={{ fontSize: 13, color: 'var(--hp-color)', fontWeight: 'bold' }}>
+              Cards removed from your deck:
+            </span>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+              {eventOutcome.cardsRemoved.map((card: CardInstance, idx: number) => {
+                const borderColor = card.type === 'attack' ? 'var(--card-attack)'
+                  : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      width: 120,
+                      padding: 10,
+                      background: 'var(--bg-card)',
+                      border: `2px solid ${borderColor}`,
+                      borderRadius: 'var(--radius-md)',
+                      textAlign: 'center',
+                      opacity: 0.7,
+                    }}
+                  >
+                    <div style={{ fontSize: 24, marginBottom: 4 }}>{card.icon}</div>
+                    <div style={{ fontSize: 11, fontWeight: 'bold', textDecoration: 'line-through' }}>{card.name}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {eventOutcome.consumableAdded && (() => {
+          const c = eventOutcome.consumableAdded!;
+          const rarityColor = c.rarity === 'rare' ? 'var(--accent-yellow)' : c.rarity === 'uncommon' ? 'var(--accent-blue)' : 'var(--text-secondary)';
+          return (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 8,
+            }}>
+              <span style={{ fontSize: 13, color: 'var(--accent-cyan)', fontWeight: 'bold' }}>
+                Consumable added:
+              </span>
+              <div style={{
+                padding: '8px 16px',
+                background: 'var(--bg-card)',
+                border: `2px solid ${rarityColor}`,
+                borderRadius: 'var(--radius-md)',
+                textAlign: 'center',
+              }}>
+                <span style={{ fontSize: 24 }}>{c.icon}</span>
+                <div style={{ fontSize: 12, fontWeight: 'bold', marginTop: 4 }}>{c.name}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{c.rarity}</div>
               </div>
             </div>
           );

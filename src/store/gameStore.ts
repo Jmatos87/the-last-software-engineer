@@ -1,14 +1,18 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { GameState, EnemyDef } from '../types';
+import type { GameState, EnemyDef, ConsumableInstance } from '../types';
 import { characters } from '../data/characters';
 import { cards, getRewardCards, getCardDef } from '../data/cards';
 import { enemies, getNormalEncounter, getEliteEncounter, getBossEncounter } from '../data/enemies';
 import { events } from '../data/events';
 import { items, getRewardArtifact, getStarterRelic } from '../data/items';
+import { consumables, getConsumableDrop, getRareConsumable, getRandomConsumable, getConsumableDef } from '../data/consumables';
 import { createCardInstance } from '../utils/deckUtils';
 import { generateMap } from '../utils/mapGenerator';
 import { initBattle, executePlayCard, executeEnemyTurn, startNewTurn } from './battleActions';
+import { calculateDamage, applyDamageToEnemy, mergeStatusEffects } from '../utils/battleEngine';
+import { drawCards } from '../utils/deckUtils';
+import { v4 as uuidv4 } from 'uuid';
 import type { CardClass } from '../types';
 
 function getPlayerClass(characterId?: string): CardClass | undefined {
@@ -35,7 +39,13 @@ function loadGame(): { screen: import('../types').Screen; run: import('../types'
   try {
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
-    return JSON.parse(raw);
+    const data = JSON.parse(raw);
+    // Migrate old saves without consumable fields
+    if (data.run && !data.run.consumables) {
+      data.run.consumables = [];
+      data.run.maxConsumables = 3;
+    }
+    return data;
   } catch { return null; }
 }
 
@@ -49,6 +59,9 @@ export const useGameStore = create<GameState>()(
     pendingRewards: null,
     pendingEvent: null,
     eventOutcome: null,
+    pendingRemoveCount: null,
+    pendingRemoveMessage: null,
+    pendingRemoveCardsRemoved: [],
 
     selectCharacter: (characterId: string) => {
       const char = characters.find(c => c.id === characterId);
@@ -70,6 +83,8 @@ export const useGameStore = create<GameState>()(
           gold: 50,
           deck,
           items: starterItems as any,
+          consumables: [],
+          maxConsumables: 3,
           map,
           stress: 0,
           maxStress: char.maxStress,
@@ -266,6 +281,19 @@ export const useGameStore = create<GameState>()(
           artifactChoices = getRewardArtifact(ownedIds, 1, state.run?.character?.id);
         }
 
+        // Determine consumable drops
+        const canHoldConsumable = state.run.consumables.length < state.run.maxConsumables;
+        let consumableChoices: import('../types').ConsumableDef[] | undefined;
+        if (canHoldConsumable) {
+          if (isBoss) {
+            consumableChoices = [getRareConsumable()];
+          } else if (isElite) {
+            consumableChoices = [getConsumableDrop(act)];
+          } else if (Math.random() < 0.5) {
+            consumableChoices = [getConsumableDrop(act)];
+          }
+        }
+
         // Delay screen transition so death/flee animations play out
         setTimeout(() => {
           if (isBoss) {
@@ -278,6 +306,7 @@ export const useGameStore = create<GameState>()(
                 gold: goldReward,
                 cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), act, 'boss') as any,
                 artifactChoices: artifactChoices && artifactChoices.length > 0 ? artifactChoices as any : undefined,
+                consumableChoices: consumableChoices,
                 isBossReward: true,
               };
               s.screen = 'BATTLE_REWARD';
@@ -295,6 +324,7 @@ export const useGameStore = create<GameState>()(
               gold: goldReward,
               cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), act, isElite ? 'elite' : 'normal') as any,
               artifactChoices: artifactChoices && artifactChoices.length > 0 ? artifactChoices as any : undefined,
+              consumableChoices: consumableChoices,
             };
             s.screen = 'BATTLE_REWARD';
           });
@@ -378,6 +408,19 @@ export const useGameStore = create<GameState>()(
           artifactChoices2 = getRewardArtifact(ownedIds2, 1, state.run?.character?.id);
         }
 
+        // Determine consumable drops
+        const canHoldConsumable2 = state.run.consumables.length < state.run.maxConsumables;
+        let consumableChoices2: import('../types').ConsumableDef[] | undefined;
+        if (canHoldConsumable2) {
+          if (isBoss) {
+            consumableChoices2 = [getRareConsumable()];
+          } else if (isElite) {
+            consumableChoices2 = [getConsumableDrop(act2)];
+          } else if (Math.random() < 0.5) {
+            consumableChoices2 = [getConsumableDrop(act2)];
+          }
+        }
+
         // Update HP/stress immediately but keep battle mounted for animations
         set(s => {
           if (!s.run) return;
@@ -399,6 +442,7 @@ export const useGameStore = create<GameState>()(
                 gold: goldReward,
                 cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), act2, 'boss') as any,
                 artifactChoices: artifactChoices2 && artifactChoices2.length > 0 ? artifactChoices2 as any : undefined,
+                consumableChoices: consumableChoices2,
                 isBossReward: true,
               };
               s.battle = null;
@@ -413,6 +457,7 @@ export const useGameStore = create<GameState>()(
               gold: goldReward,
               cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), act2, isElite ? 'elite' : 'normal') as any,
               artifactChoices: artifactChoices2 && artifactChoices2.length > 0 ? artifactChoices2 as any : undefined,
+              consumableChoices: consumableChoices2,
             };
             s.battle = null;
             s.screen = 'BATTLE_REWARD';
@@ -637,11 +682,62 @@ export const useGameStore = create<GameState>()(
           }
         }
 
+        // Handle addConsumable
+        let consumableAdded: ConsumableInstance | undefined;
+        if (outcome.addConsumable && s.run.consumables.length < s.run.maxConsumables) {
+          let cDef: import('../types').ConsumableDef | undefined;
+          const cType = outcome.addConsumable;
+          if (cType === 'random_common') cDef = getRandomConsumable('common');
+          else if (cType === 'random_uncommon') cDef = getRandomConsumable('uncommon');
+          else if (cType === 'random_rare') cDef = getRandomConsumable('rare');
+          else if (cType === 'random_common_x2') {
+            // Add 2 commons
+            const c1 = getRandomConsumable('common');
+            const inst1: ConsumableInstance = { ...c1, instanceId: uuidv4() };
+            s.run.consumables.push(inst1 as any);
+            consumableAdded = inst1;
+            if (s.run.consumables.length < s.run.maxConsumables) {
+              const c2 = getRandomConsumable('common');
+              const inst2: ConsumableInstance = { ...c2, instanceId: uuidv4() };
+              s.run.consumables.push(inst2 as any);
+            }
+            cDef = undefined; // Already handled
+          } else if (cType === 'random_uncommon_x2') {
+            const c1 = getRandomConsumable('uncommon');
+            const inst1: ConsumableInstance = { ...c1, instanceId: uuidv4() };
+            s.run.consumables.push(inst1 as any);
+            consumableAdded = inst1;
+            if (s.run.consumables.length < s.run.maxConsumables) {
+              const c2 = getRandomConsumable('uncommon');
+              const inst2: ConsumableInstance = { ...c2, instanceId: uuidv4() };
+              s.run.consumables.push(inst2 as any);
+            }
+            cDef = undefined;
+          } else {
+            cDef = getConsumableDef(cType);
+          }
+          if (cDef) {
+            const inst: ConsumableInstance = { ...cDef, instanceId: uuidv4() };
+            s.run.consumables.push(inst as any);
+            consumableAdded = inst;
+          }
+        }
+
+        // If removeChosenCard, defer outcome — show card picker
+        if (outcome.removeChosenCard && outcome.removeChosenCard > 0 && s.run.deck.length > 1) {
+          s.pendingRemoveCount = outcome.removeChosenCard;
+          s.pendingRemoveMessage = outcome.message;
+          s.pendingRemoveCardsRemoved = [] as any;
+          // Don't set eventOutcome yet — EventScreen will show card picker
+          return;
+        }
+
         s.eventOutcome = {
           message: outcome.message,
           cardAdded: cardAdded,
           cardRemoved: cardRemoved,
           cardUpgraded: cardUpgraded,
+          consumableAdded: consumableAdded,
         };
       });
     },
@@ -650,6 +746,9 @@ export const useGameStore = create<GameState>()(
       set(s => {
         s.pendingEvent = null;
         s.eventOutcome = null;
+        s.pendingRemoveCount = null;
+        s.pendingRemoveMessage = null;
+        s.pendingRemoveCardsRemoved = [];
         s.screen = 'MAP';
       });
       const updated = get();
@@ -754,6 +853,175 @@ export const useGameStore = create<GameState>()(
         s.pendingRewards = null;
         s.pendingEvent = null;
         s.eventOutcome = null;
+        s.pendingRemoveCount = null;
+        s.pendingRemoveMessage = null;
+        s.pendingRemoveCardsRemoved = [];
+      });
+    },
+
+    useConsumable: (instanceId: string, targetInstanceId?: string) => {
+      const state = get();
+      if (!state.battle || !state.run) return;
+
+      const cIdx = state.run.consumables.findIndex(c => c.instanceId === instanceId);
+      if (cIdx === -1) return;
+      const consumable = state.run.consumables[cIdx];
+
+      set(s => {
+        if (!s.run || !s.battle) return;
+        // Remove consumable
+        s.run.consumables.splice(cIdx, 1);
+
+        const eff = consumable.effect;
+
+        // Heal
+        if (eff.heal) {
+          s.run.hp = Math.min(s.run.maxHp, s.run.hp + eff.heal);
+        }
+
+        // Energy
+        if (eff.energy) {
+          s.battle.energy += eff.energy;
+        }
+
+        // Block
+        if (eff.block) {
+          s.battle.playerBlock += eff.block;
+        }
+
+        // Draw
+        if (eff.draw) {
+          const { drawn, newDrawPile, newDiscardPile } = drawCards(
+            s.battle.drawPile, s.battle.discardPile, eff.draw
+          );
+          s.battle.hand = [...s.battle.hand, ...drawn] as any;
+          s.battle.drawPile = newDrawPile as any;
+          s.battle.discardPile = newDiscardPile as any;
+        }
+
+        // Stress relief
+        if (eff.stressRelief) {
+          s.run.stress = Math.max(0, s.run.stress - eff.stressRelief);
+        }
+
+        // Gold
+        if (eff.goldGain) {
+          s.run.gold += eff.goldGain;
+        }
+
+        // Self buffs
+        if (eff.applyToSelf) {
+          s.battle.playerStatusEffects = mergeStatusEffects(
+            s.battle.playerStatusEffects, eff.applyToSelf
+          ) as any;
+        }
+
+        // Single target damage + debuffs
+        if (targetInstanceId && (eff.damage || eff.applyToTarget)) {
+          const eIdx = s.battle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+          if (eIdx !== -1) {
+            if (eff.damage) {
+              const dmg = calculateDamage(eff.damage, s.battle.playerStatusEffects, s.battle.enemies[eIdx].statusEffects);
+              s.battle.enemies[eIdx] = applyDamageToEnemy(s.battle.enemies[eIdx], dmg) as any;
+            }
+            if (eff.applyToTarget) {
+              s.battle.enemies[eIdx] = {
+                ...s.battle.enemies[eIdx],
+                statusEffects: mergeStatusEffects(s.battle.enemies[eIdx].statusEffects, eff.applyToTarget),
+              } as any;
+            }
+          }
+        }
+
+        // AoE damage + debuffs
+        if (eff.damageAll) {
+          s.battle.enemies = s.battle.enemies.map(enemy => {
+            const dmg = calculateDamage(eff.damageAll!, s.battle!.playerStatusEffects, enemy.statusEffects);
+            return applyDamageToEnemy(enemy, dmg);
+          }) as any;
+        }
+        if (eff.applyToAll) {
+          s.battle.enemies = s.battle.enemies.map(enemy => ({
+            ...enemy,
+            statusEffects: mergeStatusEffects(enemy.statusEffects, eff.applyToAll!),
+          })) as any;
+        }
+
+        // Remove dead enemies
+        const killed = s.battle.enemies.filter(e => e.currentHp <= 0).length;
+        s.battle.killCount = (s.battle.killCount || 0) + killed;
+        s.battle.enemies = s.battle.enemies.filter(e => e.currentHp > 0) as any;
+      });
+
+      // Check if battle won after consumable use
+      const afterUse = get();
+      if (afterUse.battle && afterUse.battle.enemies.length === 0) {
+        // Trigger the same victory logic — call playCard with a no-op to trigger victory check
+        // Actually, we can just let the BattleScreen detect the empty enemies array
+        // The victory check in playCard's post-processing handles this
+      }
+    },
+
+    pickRewardConsumable: (consumableId: string) => {
+      set(s => {
+        if (!s.run || !s.pendingRewards?.consumableChoices) return;
+        const cDef = s.pendingRewards.consumableChoices.find(c => c.id === consumableId);
+        if (!cDef || s.run.consumables.length >= s.run.maxConsumables) return;
+        const inst: ConsumableInstance = { ...cDef, instanceId: uuidv4() };
+        s.run.consumables.push(inst as any);
+        s.pendingRewards.consumableChoices = undefined;
+      });
+    },
+
+    skipRewardConsumable: () => {
+      set(s => {
+        if (!s.pendingRewards) return;
+        s.pendingRewards.consumableChoices = undefined;
+      });
+    },
+
+    buyConsumable: (consumableId: string) => {
+      const cDef = consumables[consumableId];
+      if (!cDef) return;
+      const cost = cDef.rarity === 'common' ? 40 : cDef.rarity === 'uncommon' ? 65 : 120;
+
+      set(s => {
+        if (!s.run || s.run.gold < cost || s.run.consumables.length >= s.run.maxConsumables) return;
+        s.run.gold -= cost;
+        const inst: ConsumableInstance = { ...cDef, instanceId: uuidv4() };
+        s.run.consumables.push(inst as any);
+      });
+    },
+
+    confirmRemoveEventCard: (cardInstanceId: string) => {
+      set(s => {
+        if (!s.run || !s.pendingRemoveCount || s.run.deck.length <= 1) return;
+        const idx = s.run.deck.findIndex(c => c.instanceId === cardInstanceId);
+        if (idx === -1) return;
+
+        const removed = { ...s.run.deck[idx] };
+        s.run.deck.splice(idx, 1);
+        s.pendingRemoveCardsRemoved = [...s.pendingRemoveCardsRemoved, removed] as any;
+        s.pendingRemoveCount -= 1;
+
+        if (s.pendingRemoveCount <= 0) {
+          // All removals done — show outcome
+          s.eventOutcome = {
+            message: s.pendingRemoveMessage || 'Cards removed.',
+            cardsRemoved: s.pendingRemoveCardsRemoved as any,
+          };
+          s.pendingRemoveCount = null;
+          s.pendingRemoveMessage = null;
+          s.pendingRemoveCardsRemoved = [];
+        }
+      });
+    },
+
+    discardConsumable: (instanceId: string) => {
+      set(s => {
+        if (!s.run) return;
+        const idx = s.run.consumables.findIndex(c => c.instanceId === instanceId);
+        if (idx !== -1) s.run.consumables.splice(idx, 1);
       });
     },
   }))

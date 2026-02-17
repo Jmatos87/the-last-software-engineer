@@ -62,6 +62,29 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
         </div>
       )}
 
+      {/* Consumables */}
+      {run.consumables && run.consumables.length > 0 && (
+        <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginLeft: 4 }}>
+          {run.consumables.map(c => (
+            <Tooltip key={c.instanceId} content={
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: 4, color: 'var(--accent-cyan)' }}>
+                  {c.icon} {c.name}
+                </div>
+                <div style={{ color: 'var(--text-secondary)', lineHeight: 1.4, fontSize: 12 }}>
+                  {c.description}
+                </div>
+              </div>
+            }>
+              <span style={{ fontSize: 14, cursor: 'help' }}>{c.icon}</span>
+            </Tooltip>
+          ))}
+          <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>
+            {run.consumables.length}/{run.maxConsumables}
+          </span>
+        </div>
+      )}
+
       {/* Optional extra content (e.g. turn counter) */}
       {extra && (
         <div style={{ marginLeft: 'auto', fontSize: 13, color: 'var(--text-secondary)' }}>

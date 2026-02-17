@@ -1,3 +1,35 @@
+// ── Consumables ──
+export type ConsumableRarity = 'common' | 'uncommon' | 'rare';
+export type ConsumableTarget = 'self' | 'enemy' | 'all_enemies';
+
+export interface ConsumableEffect {
+  damage?: number;
+  damageAll?: number;
+  heal?: number;
+  block?: number;
+  energy?: number;
+  draw?: number;
+  stressRelief?: number;
+  applyToSelf?: StatusEffect;
+  applyToTarget?: StatusEffect;
+  applyToAll?: StatusEffect;
+  goldGain?: number;
+}
+
+export interface ConsumableDef {
+  id: string;
+  name: string;
+  description: string;
+  rarity: ConsumableRarity;
+  icon: string;
+  target: ConsumableTarget;
+  effect: ConsumableEffect;
+}
+
+export interface ConsumableInstance extends ConsumableDef {
+  instanceId: string;
+}
+
 // ── Screen ──
 export type Screen =
   | 'CHARACTER_SELECT'
@@ -217,8 +249,10 @@ export interface EventChoice {
     stress?: number;
     addCard?: string;
     removeRandomCard?: boolean;
+    removeChosenCard?: number;
     upgradeRandomCard?: boolean;
     addItem?: string;
+    addConsumable?: string;
     message: string;
   };
 }
@@ -280,6 +314,8 @@ export interface RunState {
   gold: number;
   deck: CardInstance[];
   items: ItemDef[];
+  consumables: ConsumableInstance[];
+  maxConsumables: number;
   map: GameMap;
   stress: number;
   maxStress: number;
@@ -296,6 +332,7 @@ export interface GameState {
     gold: number;
     cardChoices: CardDef[];
     artifactChoices?: ItemDef[];
+    consumableChoices?: ConsumableDef[];
     isBossReward?: boolean;
   } | null;
   pendingEvent: EventDef | null;
@@ -303,8 +340,13 @@ export interface GameState {
     message: string;
     cardAdded?: CardInstance;
     cardRemoved?: CardInstance;
+    cardsRemoved?: CardInstance[];
     cardUpgraded?: CardInstance;
+    consumableAdded?: ConsumableInstance;
   } | null;
+  pendingRemoveCount: number | null;
+  pendingRemoveMessage: string | null;
+  pendingRemoveCardsRemoved: CardInstance[];
 
   // Actions
   selectCharacter: (characterId: string) => void;
@@ -330,4 +372,10 @@ export interface GameState {
   gameOver: () => void;
   victory: () => void;
   restart: () => void;
+  useConsumable: (instanceId: string, targetInstanceId?: string) => void;
+  pickRewardConsumable: (consumableId: string) => void;
+  skipRewardConsumable: () => void;
+  buyConsumable: (consumableId: string) => void;
+  confirmRemoveEventCard: (cardInstanceId: string) => void;
+  discardConsumable: (instanceId: string) => void;
 }

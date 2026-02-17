@@ -5,6 +5,7 @@ import { useGameStore } from '../../store/gameStore';
 import type { CardInstance, EnemyInstance } from '../../types';
 import { CardComponent, CardOverlay } from './CardComponent';
 import { EnemyDisplay } from './EnemyDisplay';
+import { ConsumableBar } from './ConsumableBar';
 import { HpBar } from '../common/HpBar';
 import { EnergyOrb } from '../common/EnergyOrb';
 import { StatusEffects } from '../common/StatusEffects';
@@ -55,7 +56,7 @@ const PlayerStatusPanel: React.FC = () => {
 };
 
 export const BattleScreen: React.FC = () => {
-  const { run, battle, playCard, endTurn } = useGameStore();
+  const { run, battle, playCard, endTurn, useConsumable } = useGameStore();
   const [draggedCard, setDraggedCard] = useState<CardInstance | null>(null);
   const [preview, setPreview] = useState<{ card: CardInstance; x: number; y: number } | null>(null);
   const [heroAnim, setHeroAnim] = useState<'' | 'animate-shake' | 'animate-stress'>('');
@@ -64,6 +65,7 @@ export const BattleScreen: React.FC = () => {
   const [dyingEnemies, setDyingEnemies] = useState<EnemyInstance[]>([]);
   const [fleeingEnemies, setFleeingEnemies] = useState<EnemyInstance[]>([]);
   const [enemyTurnPlaying, setEnemyTurnPlaying] = useState(false);
+  const [targetingConsumableId, setTargetingConsumableId] = useState<string | null>(null);
   const prevHpRef = useRef<number | null>(null);
   const prevStressRef = useRef<number | null>(null);
   const prevEnemiesRef = useRef<EnemyInstance[]>([]);
@@ -216,6 +218,10 @@ export const BattleScreen: React.FC = () => {
           }}>
             <div className={heroAnim} style={{ fontSize: 56 }}>{run.character.icon}</div>
             <PlayerStatusPanel />
+            <ConsumableBar
+              onTargetEnemy={(cId) => setTargetingConsumableId(cId)}
+              disabled={enemyTurnPlaying || battleWon}
+            />
           </div>
 
           {/* VS divider */}
@@ -234,16 +240,28 @@ export const BattleScreen: React.FC = () => {
             flexWrap: 'wrap',
             justifyContent: 'center',
             overflow: 'hidden',
+            position: 'relative',
+            zIndex: targetingConsumableId ? 10 : undefined,
           }}>
             {battle.enemies.map(enemy => (
-              <EnemyDisplay
+              <div
                 key={enemy.instanceId}
-                enemy={enemy}
-                isTargeted={draggedCard?.target === 'enemy' || draggedCard?.target === 'all_enemies'}
-                playerStatusEffects={battle.playerStatusEffects}
-                isAttacking={attackingEnemyId === enemy.instanceId}
-                speechBubble={speechBubbles[enemy.instanceId] || null}
-              />
+                onClick={() => {
+                  if (targetingConsumableId) {
+                    useConsumable(targetingConsumableId, enemy.instanceId);
+                    setTargetingConsumableId(null);
+                  }
+                }}
+                style={{ cursor: targetingConsumableId ? 'crosshair' : undefined }}
+              >
+                <EnemyDisplay
+                  enemy={enemy}
+                  isTargeted={draggedCard?.target === 'enemy' || draggedCard?.target === 'all_enemies' || !!targetingConsumableId}
+                  playerStatusEffects={battle.playerStatusEffects}
+                  isAttacking={attackingEnemyId === enemy.instanceId}
+                  speechBubble={speechBubbles[enemy.instanceId] || null}
+                />
+              </div>
             ))}
             {dyingEnemies.map(enemy => (
               <EnemyDisplay
@@ -373,6 +391,36 @@ export const BattleScreen: React.FC = () => {
       <DragOverlay>
         {draggedCard ? <CardOverlay card={draggedCard} /> : null}
       </DragOverlay>
+
+      {targetingConsumableId && (
+        <div
+          onClick={() => setTargetingConsumableId(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 5,
+            cursor: 'not-allowed',
+          }}
+        />
+      )}
+
+      {targetingConsumableId && (
+        <div style={{
+          position: 'fixed',
+          top: 8,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: 'var(--accent-yellow)',
+          color: '#000',
+          padding: '4px 12px',
+          borderRadius: 'var(--radius-sm)',
+          fontSize: 12,
+          fontWeight: 'bold',
+          zIndex: 10,
+        }}>
+          Select target enemy (click to cancel)
+        </div>
+      )}
 
       {preview && (
         <CardPreview card={preview.card} x={preview.x} y={preview.y} />

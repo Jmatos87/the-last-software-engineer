@@ -4,14 +4,17 @@ import { CardPreview } from '../common/CardPreview';
 import type { CardDef, ItemDef } from '../../types';
 
 export const BattleRewardScreen: React.FC = () => {
-  const { pendingRewards, pickRewardCard, skipRewardCards, claimArtifact, run } = useGameStore();
+  const { pendingRewards, pickRewardCard, skipRewardCards, claimArtifact, pickRewardConsumable, skipRewardConsumable, run } = useGameStore();
   const [preview, setPreview] = useState<{ card: CardDef; x: number; y: number } | null>(null);
   const [artifactClaimed, setArtifactClaimed] = useState(false);
+  const [consumableClaimed, setConsumableClaimed] = useState(false);
 
   if (!pendingRewards || !run) return null;
 
   const hasArtifacts = pendingRewards.artifactChoices && pendingRewards.artifactChoices.length > 0;
+  const hasConsumables = pendingRewards.consumableChoices && pendingRewards.consumableChoices.length > 0;
   const isBoss = pendingRewards.isBossReward;
+  const slotsFull = run.consumables.length >= run.maxConsumables;
 
   const handleClaimArtifact = (itemId: string) => {
     claimArtifact(itemId);
@@ -143,8 +146,69 @@ export const BattleRewardScreen: React.FC = () => {
         </>
       )}
 
+      {/* Consumable reward */}
+      {hasConsumables && !consumableClaimed && (!hasArtifacts || artifactClaimed) && (
+        <>
+          <h3 style={{ fontSize: 16, color: 'var(--text-secondary)' }}>
+            Found a consumable!
+          </h3>
+          {slotsFull ? (
+            <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>
+              Consumable slots full ({run.consumables.length}/{run.maxConsumables})
+            </p>
+          ) : (
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
+              {pendingRewards.consumableChoices!.map(c => {
+                const rarityColor = c.rarity === 'rare' ? 'var(--accent-yellow)' : c.rarity === 'uncommon' ? 'var(--accent-blue)' : 'var(--text-secondary)';
+                return (
+                  <div
+                    key={c.id}
+                    onClick={() => {
+                      pickRewardConsumable(c.id);
+                      setConsumableClaimed(true);
+                    }}
+                    style={{
+                      width: 150,
+                      padding: 14,
+                      background: 'var(--bg-card)',
+                      border: `2px solid ${rarityColor}`,
+                      borderRadius: 'var(--radius-md)',
+                      cursor: 'pointer',
+                      textAlign: 'center',
+                      transition: 'all var(--transition-fast)',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.transform = 'translateY(-4px)';
+                      e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.transform = 'none';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    <div style={{ fontSize: 32, marginBottom: 8 }}>{c.icon}</div>
+                    <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{c.name}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>{c.rarity}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{c.description}</div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <button
+            onClick={() => {
+              skipRewardConsumable();
+              setConsumableClaimed(true);
+            }}
+            style={{ fontSize: 12, color: 'var(--text-muted)' }}
+          >
+            {slotsFull ? 'Continue' : 'Skip consumable'}
+          </button>
+        </>
+      )}
+
       {/* Card choices */}
-      {pendingRewards.cardChoices.length > 0 && (!hasArtifacts || artifactClaimed) && (
+      {pendingRewards.cardChoices.length > 0 && (!hasArtifacts || artifactClaimed) && (!hasConsumables || consumableClaimed) && (
         <>
           <h3 style={{ fontSize: 16, color: 'var(--text-secondary)' }}>Choose a card to add to your deck:</h3>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -193,7 +257,7 @@ export const BattleRewardScreen: React.FC = () => {
         </>
       )}
 
-      {pendingRewards.cardChoices.length === 0 && (!hasArtifacts || artifactClaimed) && (
+      {pendingRewards.cardChoices.length === 0 && (!hasArtifacts || artifactClaimed) && (!hasConsumables || consumableClaimed) && (
         <button onClick={skipRewardCards} style={{ fontSize: 14, marginTop: 8 }}>
           Continue &#8594;
         </button>
