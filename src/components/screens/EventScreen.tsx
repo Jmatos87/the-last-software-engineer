@@ -85,6 +85,54 @@ export const EventScreen: React.FC = () => {
           );
         })()}
 
+        {eventOutcome.cardUpgraded && (() => {
+          const card = eventOutcome.cardUpgraded!;
+          const borderColor = card.type === 'attack' ? 'var(--card-attack)'
+            : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
+          return (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 12,
+            }}>
+              <span style={{ fontSize: 13, color: 'var(--accent-green)', fontWeight: 'bold' }}>
+                Card upgraded:
+              </span>
+              <div
+                style={{
+                  width: 140,
+                  padding: 14,
+                  background: 'var(--bg-card)',
+                  border: `2px solid ${borderColor}`,
+                  borderRadius: 'var(--radius-md)',
+                  textAlign: 'center',
+                  cursor: 'default',
+                  transition: 'all var(--transition-fast)',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.boxShadow = 'none';
+                  setPreview(null);
+                }}
+              >
+                <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
+                <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}</div>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11 }}>
+                  <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
+                  <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {eventOutcome.cardRemoved && (() => {
           const card = eventOutcome.cardRemoved!;
           const borderColor = card.type === 'attack' ? 'var(--card-attack)'

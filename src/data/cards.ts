@@ -335,6 +335,7 @@ export const cards: Record<string, CardDef> = {
     effects: { damage: 24 },
     upgradedEffects: { damage: 32 },
     upgradedDescription: 'Deal 32 damage. Exhaust.',
+    upgradedCost: 2,
     icon: '💥',
   },
   overclock: {
@@ -391,6 +392,7 @@ export const cards: Record<string, CardDef> = {
     effects: { damage: 8, times: 4, selfDamage: 5 },
     upgradedEffects: { damage: 10, times: 4, selfDamage: 5 },
     upgradedDescription: 'Deal 10 damage x4. Self-damage 5. Exhaust.',
+    upgradedCost: 2,
     icon: '☠️',
   },
   honeypot: {
@@ -525,6 +527,7 @@ export const cards: Record<string, CardDef> = {
     effects: { damage: 25 },
     upgradedEffects: { damage: 32 },
     upgradedDescription: 'Deal 32 damage.',
+    upgradedCost: 2,
     icon: '🌊',
   },
   standup_meeting: {
@@ -581,6 +584,7 @@ export const cards: Record<string, CardDef> = {
     effects: { damage: 24 },
     upgradedEffects: { damage: 32 },
     upgradedDescription: 'Deal 32 damage.',
+    upgradedCost: 2,
     icon: '🔧',
   },
   budget_approval: {
@@ -601,6 +605,7 @@ export const cards: Record<string, CardDef> = {
     effects: { applyToSelf: { strength: 3, dexterity: 3, networking: 1 }, exhaustRandom: 2 },
     upgradedEffects: { applyToSelf: { strength: 4, dexterity: 4, networking: 1 }, exhaustRandom: 2 },
     upgradedDescription: 'Gain 4 Strength, 4 Dexterity, 1 Networking. Exhaust 2 random cards.',
+    upgradedCost: 2,
     icon: '👑',
   },
   architecture_review: {
@@ -619,6 +624,7 @@ export const cards: Record<string, CardDef> = {
     effects: { applyToSelf: { hustleCulture: 2 } },
     upgradedEffects: { applyToSelf: { hustleCulture: 2 }, energy: 1 },
     upgradedDescription: 'Gain 1 energy. Gain 2 energy each turn.',
+    upgradedCost: 2,
     icon: '📉',
   },
   clean_architecture: {
@@ -811,6 +817,7 @@ export const cards: Record<string, CardDef> = {
     effects: { applyToSelf: { strength: 2, dexterity: 2 } },
     upgradedEffects: { applyToSelf: { strength: 3, dexterity: 3 } },
     upgradedDescription: 'Gain 3 Strength AND 3 Dexterity.',
+    upgradedCost: 2,
     icon: '📈',
   },
   system_prompt: {
@@ -838,6 +845,7 @@ export const cards: Record<string, CardDef> = {
     effects: { applyToSelf: { strength: 3, dexterity: 2, networking: 1 } },
     upgradedEffects: { applyToSelf: { strength: 4, dexterity: 3, networking: 1 } },
     upgradedDescription: 'Gain 4 Strength, 3 Dexterity, 1 Networking.',
+    upgradedCost: 2,
     icon: '🤖',
   },
 

@@ -66,6 +66,7 @@ export interface CardDef {
   upgraded?: boolean;
   upgradedEffects?: CardEffect;
   upgradedDescription?: string;
+  upgradedCost?: number;
   icon: string;
   // New fields
   class?: CardClass;       // undefined = neutral
@@ -207,6 +208,7 @@ export interface EventChoice {
     stress?: number;
     addCard?: string;
     removeRandomCard?: boolean;
+    upgradeRandomCard?: boolean;
     addItem?: string;
     message: string;
   };
@@ -292,6 +294,7 @@ export interface GameState {
     message: string;
     cardAdded?: CardInstance;
     cardRemoved?: CardInstance;
+    cardUpgraded?: CardInstance;
   } | null;
 
   // Actions

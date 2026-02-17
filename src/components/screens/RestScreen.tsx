@@ -79,6 +79,7 @@ export const RestScreen: React.FC = () => {
                       ...card,
                       name: card.name + '+',
                       upgraded: true,
+                      cost: card.upgradedCost ?? card.cost,
                       effects: card.upgradedEffects ?? card.effects,
                       description: card.upgradedDescription ?? card.description,
                     };

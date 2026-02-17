@@ -515,6 +515,9 @@ export const useGameStore = create<GameState>()(
         if (!card || card.upgraded) return;
 
         card.upgraded = true;
+        if (card.upgradedCost !== undefined) {
+          card.cost = card.upgradedCost;
+        }
         if (card.upgradedEffects) {
           card.effects = card.upgradedEffects;
         }
@@ -581,10 +584,25 @@ export const useGameStore = create<GameState>()(
           s.run.stress = Math.max(0, Math.min(s.run.maxStress, s.run.stress + outcome.stress));
         }
 
+        let cardUpgraded: any = undefined;
+        if (outcome.upgradeRandomCard) {
+          const upgradable = s.run.deck.filter(c => !c.upgraded);
+          if (upgradable.length > 0) {
+            const card = upgradable[Math.floor(Math.random() * upgradable.length)];
+            card.upgraded = true;
+            if (card.upgradedCost !== undefined) card.cost = card.upgradedCost;
+            if (card.upgradedEffects) card.effects = card.upgradedEffects;
+            if (card.upgradedDescription) card.description = card.upgradedDescription;
+            card.name = card.name + '+';
+            cardUpgraded = { ...card };
+          }
+        }
+
         s.eventOutcome = {
           message: outcome.message,
           cardAdded: cardAdded,
           cardRemoved: cardRemoved,
+          cardUpgraded: cardUpgraded,
         };
       });
     },

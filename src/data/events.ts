@@ -98,6 +98,170 @@ export const events: EventDef[] = [
     ],
   },
   // ═══════════════════════════════════════════════════════════════
+  // NEUTRAL — Risk/Reward Events
+  // ═══════════════════════════════════════════════════════════════
+  {
+    id: 'whiteboard_interview',
+    title: 'The Whiteboard Interview',
+    description: 'An interviewer slides a dry-erase marker across the table. "Reverse a binary tree. On the whiteboard. Now." The marker smells like fear.',
+    icon: '📋',
+    choices: [
+      {
+        text: 'Solve it perfectly (Upgrade random card, lose 12 HP)',
+        outcome: { upgradeRandomCard: true, hp: -12, message: 'You nailed it. The interviewer slow-clapped. Your brain is smoking.' },
+      },
+      {
+        text: 'Brute force it (Gain random common, lose 5 HP)',
+        outcome: { addCard: 'random_common', hp: -5, message: 'O(n³) but it works. "We\'ll be in touch." (They won\'t.)' },
+      },
+      {
+        text: 'Refuse to whiteboard (+30 gold, gain 15 stress)',
+        outcome: { gold: 30, stress: 15, message: '"I don\'t perform under artificial pressure." You stormed out and freelanced instead.' },
+      },
+    ],
+  },
+  {
+    id: 'recruiter_dm',
+    title: 'The Recruiter\'s DM',
+    description: '"Hi! I came across your profile and I think you\'d be a GREAT fit for an exciting opportunity!" The message has 47 exclamation marks.',
+    icon: '💬',
+    choices: [
+      {
+        text: 'Take the call (Upgrade random card, gain 10 stress)',
+        outcome: { upgradeRandomCard: true, stress: 10, message: 'The call lasted 90 minutes. You learned something. Your ear is numb.' },
+      },
+      {
+        text: 'Counter with salary demands (+50 gold, lose 8 HP)',
+        outcome: { gold: 50, hp: -8, message: '"I require $500k base, unlimited PTO, and a company pony." They... agreed?' },
+      },
+      {
+        text: 'Mark as spam (Remove random card, reduce 10 stress)',
+        outcome: { removeRandomCard: true, stress: -10, message: 'Blocked. Reported. Filtered. Inner peace achieved.' },
+      },
+    ],
+  },
+  {
+    id: 'oss_maintainer',
+    title: 'The Open Source Maintainer',
+    description: 'A haggard developer approaches. Dark circles. 2,000 open issues. "Please... just one PR review..." Their project has 50k stars and 0 sponsors.',
+    icon: '🌟',
+    choices: [
+      {
+        text: 'Accept the project (Upgrade random card, gain 20 stress)',
+        outcome: { upgradeRandomCard: true, stress: 20, message: 'You\'re now maintaining a critical dependency for 40% of npm. Congrats?' },
+      },
+      {
+        text: 'Donate to them (Lose 35 gold, heal 25 HP, reduce 15 stress)',
+        outcome: { gold: -35, hp: 25, stress: -15, message: 'They cried. You cried. Open source is beautiful and terrible.' },
+      },
+      {
+        text: 'Ghost them (Gain 10 stress)',
+        outcome: { stress: 10, message: 'You walked away. The guilt follows. Their GitHub Sponsors page haunts your dreams.' },
+      },
+    ],
+  },
+  {
+    id: 'performance_review',
+    title: 'The Performance Review',
+    description: 'Your manager opens a spreadsheet with 47 KPIs. "Let\'s discuss your impact this quarter." The room smells like corporate despair.',
+    icon: '📊',
+    choices: [
+      {
+        text: 'Exceed expectations (Upgrade random card, lose 15 HP)',
+        outcome: { upgradeRandomCard: true, hp: -15, message: 'You presented a 30-slide deck on your "impact." You got a 3% raise. Worth it?' },
+      },
+      {
+        text: 'Meets expectations (+20 gold, gain 10 stress)',
+        outcome: { gold: 20, stress: 10, message: '"Solid performance." The most lukewarm compliment in corporate history.' },
+      },
+      {
+        text: 'Self-review: "I\'m a rockstar" (Heal 20 HP, gain 15 stress)',
+        outcome: { hp: 20, stress: 15, message: 'You wrote 500 words about how amazing you are. Your manager sighed audibly.' },
+      },
+    ],
+  },
+  {
+    id: 'salary_negotiation',
+    title: 'The Salary Negotiation',
+    description: 'HR sends the offer letter. The number is... underwhelming. Your rent costs more than their monthly offer. Time to negotiate.',
+    icon: '💰',
+    choices: [
+      {
+        text: 'Counter aggressively (+60 gold, lose 15 HP)',
+        outcome: { gold: 60, hp: -15, message: '"I have competing offers." You don\'t. But they don\'t know that. It worked.' },
+      },
+      {
+        text: 'Accept gracefully (+25 gold, gain 15 stress)',
+        outcome: { gold: 25, stress: 15, message: 'You signed immediately. The recruiter looked surprised. "Usually people negotiate..."' },
+      },
+      {
+        text: 'Leak the offer on Blind (Remove random card, +40 gold)',
+        outcome: { removeRandomCard: true, gold: 40, message: 'Anonymous post went viral. HR panicked. Everyone got raises. You got fired.' },
+      },
+    ],
+  },
+  {
+    id: 'vendor_pitch',
+    title: 'The Vendor Pitch',
+    description: 'A vendor corners you at a conference. Their slides have 800 buzzwords. "AI-powered blockchain-native cloud-synergized solutions." They won\'t stop.',
+    icon: '📢',
+    choices: [
+      {
+        text: 'Endure the full pitch (Gain random uncommon, gain 20 stress)',
+        outcome: { addCard: 'random_uncommon', stress: 20, message: 'It was 90 minutes. You learned nothing. But the free t-shirt had a useful technique on it.' },
+      },
+      {
+        text: 'Steal their free swag (+30 gold)',
+        outcome: { gold: 30, message: 'You grabbed 5 branded water bottles and a stress ball. "That\'s not really how this—" Too late.' },
+      },
+      {
+        text: 'Flip the table (Lose 10 HP, reduce 20 stress)',
+        outcome: { hp: -10, stress: -20, message: 'You literally flipped their demo table. Security escorted you out. Worth it.' },
+      },
+    ],
+  },
+  {
+    id: 'imposter_spiral',
+    title: 'The Imposter Syndrome Spiral',
+    description: 'You\'re staring at your own code and you can\'t remember writing it. It\'s... actually good? "I definitely didn\'t write this. Did I? Am I real?"',
+    icon: '🎭',
+    choices: [
+      {
+        text: 'Confront your fears (Upgrade random card, lose 10 HP, gain 10 stress)',
+        outcome: { upgradeRandomCard: true, hp: -10, stress: 10, message: 'You accepted that you\'re competent. It was the hardest thing you\'ve ever done.' },
+      },
+      {
+        text: 'Fake it till you make it (+25 gold)',
+        outcome: { gold: 25, message: '"Absolutely, I architected that entire system." (You copy-pasted from Stack Overflow.)' },
+      },
+      {
+        text: 'Have a breakdown (Lose 20 HP, reduce 25 stress)',
+        outcome: { hp: -20, stress: -25, message: 'You cried in the bathroom for 30 minutes. Honestly? You feel so much better now.' },
+      },
+    ],
+  },
+  {
+    id: 'unpaid_internship',
+    title: 'The Unpaid Internship',
+    description: '"It\'s a great learning opportunity!" The posting requires 5 years of experience, a PhD, and offers $0/hr plus "exposure."',
+    icon: '🎓',
+    choices: [
+      {
+        text: 'Take it for experience (Upgrade random card, lose 30 gold)',
+        outcome: { upgradeRandomCard: true, gold: -30, message: 'You learned a lot. You also learned what ramen tastes like for breakfast, lunch, and dinner.' },
+      },
+      {
+        text: 'Demand payment (+40 gold)',
+        outcome: { gold: 40, message: '"My time has value." They were so shocked they actually paid you.' },
+      },
+      {
+        text: 'Report to labor board (Remove random card, heal 15 HP)',
+        outcome: { removeRandomCard: true, hp: 15, message: 'Justice was served. The company now pays minimum wage. Progress.' },
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════════════
   // FRONTEND DEV — themed events
   // ═══════════════════════════════════════════════════════════════
   {
@@ -185,6 +349,28 @@ export const events: EventDef[] = [
     ],
   },
 
+  {
+    id: 'bundle_size_crisis',
+    title: 'The Bundle Size Crisis',
+    description: 'Your production build is 47MB. The CDN is crying. Lighthouse score: 3. Your PM is asking why the site takes 40 seconds to load on mobile.',
+    icon: '📦',
+    class: 'frontend',
+    choices: [
+      {
+        text: 'Tree-shake everything (Upgrade random card, lose 8 HP)',
+        outcome: { upgradeRandomCard: true, hp: -8, message: 'You removed 200 unused imports. Bundle dropped to 2MB. You dropped to the floor.' },
+      },
+      {
+        text: 'Just lazy-load it (+20 gold, gain 10 stress)',
+        outcome: { gold: 20, stress: 10, message: 'React.lazy() and a prayer. The waterfall chart looks like Niagara Falls.' },
+      },
+      {
+        text: 'Ship it anyway (Gain random common, gain 15 stress)',
+        outcome: { addCard: 'random_common', stress: 15, message: '"Users have good internet, right?" Narrator: They did not.' },
+      },
+    ],
+  },
+
   // ═══════════════════════════════════════════════════════════════
   // BACKEND DEV — themed events
   // ═══════════════════════════════════════════════════════════════
@@ -265,6 +451,28 @@ export const events: EventDef[] = [
       {
         text: 'Report it to management',
         outcome: { gold: 15, message: 'Management gave you a $15 gift card for "doing the right thing." Wow.' },
+      },
+    ],
+  },
+
+  {
+    id: 'n_plus_one_query',
+    title: 'The N+1 Query',
+    description: 'Your ORM is firing 10,000 queries for a single page load. The DBA is sending you threatening emails. The database CPU is at 99%.',
+    icon: '🔍',
+    class: 'backend',
+    choices: [
+      {
+        text: 'Optimize with joins (Upgrade random card, lose 10 HP)',
+        outcome: { upgradeRandomCard: true, hp: -10, message: 'You wrote a 47-line JOIN query. It works. You don\'t understand it anymore.' },
+      },
+      {
+        text: 'Add a cache layer (+25 gold, gain 10 stress)',
+        outcome: { gold: 25, stress: 10, message: 'Redis fixes everything. Until the cache invalidation bugs start.' },
+      },
+      {
+        text: '"It works on my machine" (Heal 15 HP, gain 20 stress)',
+        outcome: { hp: 15, stress: 20, message: 'You closed the ticket as "Cannot Reproduce." The DBA knows where you sit.' },
       },
     ],
   },
@@ -357,6 +565,28 @@ export const events: EventDef[] = [
     ],
   },
 
+  {
+    id: 'microservices_debate',
+    title: 'The Microservices Debate',
+    description: 'A heated Slack thread erupts. 47 engineers. 47 opinions. "Should we split the monolith?" The CTO is watching. Everyone is wrong.',
+    icon: '🏗️',
+    class: 'architect',
+    choices: [
+      {
+        text: 'Embrace microservices (Upgrade random card, lose 12 HP, gain 10 stress)',
+        outcome: { upgradeRandomCard: true, hp: -12, stress: 10, message: 'You split the monolith into 200 services. Kubernetes is your only friend now.' },
+      },
+      {
+        text: 'Defend the monolith (+30 gold, reduce 10 stress)',
+        outcome: { gold: 30, stress: -10, message: '"Monoliths are underrated." The CTO nodded. The Slack thread died. Peace.' },
+      },
+      {
+        text: 'Suggest modular monolith (Remove random card, heal 10 HP)',
+        outcome: { removeRandomCard: true, hp: 10, message: 'The centrist option. Nobody loves it. Nobody hates it. It ships on time.' },
+      },
+    ],
+  },
+
   // ═══════════════════════════════════════════════════════════════
   // AI ENGINEER — themed events
   // ═══════════════════════════════════════════════════════════════
@@ -441,6 +671,27 @@ export const events: EventDef[] = [
       {
         text: 'Steal the GPU while everyone\'s distracted (Gain Safety Filter relic)',
         outcome: { addItem: 'safety_filter', stress: 15, message: 'You now own an H100. The guilt is immense but the inference speed is incredible.' },
+      },
+    ],
+  },
+  {
+    id: 'benchmark_controversy',
+    title: 'The Benchmark Controversy',
+    description: 'Your model tops every leaderboard. Twitter is suspicious. "Show us the eval suite." Someone found your test set leaked into training data.',
+    icon: '📈',
+    class: 'ai_engineer',
+    choices: [
+      {
+        text: 'Redo benchmarks properly (Upgrade random card, lose 10 HP)',
+        outcome: { upgradeRandomCard: true, hp: -10, message: 'Clean benchmarks. Model dropped 5 spots. But your integrity went up 100 spots.' },
+      },
+      {
+        text: 'Double down on results (+35 gold, gain 15 stress)',
+        outcome: { gold: 35, stress: 15, message: '"The benchmarks are valid." You published a blog post. The replies are... heated.' },
+      },
+      {
+        text: 'Open-source eval suite (Remove random card, reduce 15 stress)',
+        outcome: { removeRandomCard: true, stress: -15, message: 'Full transparency. The community rebuilt the eval. Your model is still good. Relief.' },
       },
     ],
   },
