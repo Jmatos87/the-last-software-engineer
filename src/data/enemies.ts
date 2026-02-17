@@ -184,12 +184,18 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 78,
     icon: '📱',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"Time to go VIRAL."' },
+    ],
     moves: [
+      // Phase 1: Soft harassment (indices 0-2)
       { name: 'Viral Post', type: 'attack', damage: 10, icon: '📢', quip: '"Agree? 👇 Like & repost."' },
       { name: 'Humble Brag', type: 'debuff', applyToTarget: { cringe: 2 }, icon: '😬', quip: '"I turned down 47 offers this week."' },
-      { name: '#Blessed', type: 'attack', damage: 8, icon: '🙏', quip: '"Grateful for my 12th promotion."' },
       { name: 'Engagement Farming', type: 'attack_defend', damage: 7, block: 6, applyToSelf: { regen: 3 }, icon: '🌱', quip: '"I cried at my standing desk today."' },
-      { name: 'Personal Brand', type: 'debuff', applyToTarget: { cringe: 2, weak: 1 }, icon: '🤳', quip: '"My morning routine starts at 4 AM."' },
+      // Phase 2: Influencer rage mode (indices 3-5)
+      { name: 'Personal Brand', type: 'buff', applyToSelf: { strength: 3 }, icon: '🤳', quip: '"I\'m building an EMPIRE."' },
+      { name: 'Influencer Barrage', type: 'attack', damage: 5, times: 3, icon: '📱', quip: '"Like. Share. SUBSCRIBE."' },
+      { name: 'Thought Leader Slam', type: 'attack', damage: 14, stressDamage: 6, icon: '💡', quip: '"I posted about hustle culture at 4 AM."' },
     ],
   },
 
@@ -228,12 +234,18 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 73,
     icon: '✉️',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 2 }, quip: '"INITIATING BATCH REJECTION PROTOCOL."' },
+    ],
     moves: [
+      // Phase 1: Standard rejection flow (indices 0-2)
       { name: 'Demoralize', type: 'debuff', applyToTarget: { strength: -1 }, icon: '😞', quip: '"Thank you for your interest."' },
       { name: 'Form Rejection', type: 'attack', damage: 10, stressDamage: 5, icon: '✉️', quip: '"Dear [CANDIDATE_NAME]..."' },
-      { name: 'We\'ll Keep You On File', type: 'stress_attack', stressDamage: 8, icon: '📁', quip: '"(We won\'t.)"' },
       { name: 'Not A Good Fit', type: 'attack', damage: 16, icon: '❌', quip: '"We\'re looking for a unicorn."' },
-      { name: 'File This Away', type: 'discard', discardCount: 1, stressDamage: 3, icon: '🗄️', quip: '"Your application has been archived."' },
+      // Phase 2: Automated rejection machine (indices 3-5)
+      { name: 'Auto-Reject Mode', type: 'buff', applyToSelf: { strength: 3 }, icon: '⚙️', quip: '"PROCESSING 10,000 APPLICATIONS..."' },
+      { name: 'Rejection Cascade', type: 'attack', damage: 6, times: 3, icon: '✉️', quip: '"Rejected. Rejected. Rejected."' },
+      { name: 'Mass Rejection', type: 'attack', damage: 18, stressDamage: 8, icon: '❌', quip: '"Your entire career has been archived."' },
     ],
   },
 
@@ -247,17 +259,21 @@ export const enemies: Record<string, EnemyDef> = {
     isBoss: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 2 }, quip: '"Gloves are off. Let\'s talk comp."' },
+      { hpPercent: 25, moveStartIndex: 7, onEnter: { strength: 3 }, quip: '"This interview is OVER."' },
     ],
     moves: [
       // Phase 1: soft questions (indices 0-2)
       { name: 'Tell Me About Yourself', type: 'attack', damage: 8, icon: '🎤', quip: '"Keep it under 30 seconds."' },
       { name: 'Why This Company?', type: 'attack', damage: 10, icon: '🏢', quip: '"Wrong answer."' },
       { name: 'Greatest Weakness?', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '😓', quip: '"Don\'t say perfectionism."' },
-      // Phase 2: aggressive (indices 3-5)
+      // Phase 2: aggressive (indices 3-6)
       { name: 'Where Do You See Yourself?', type: 'attack', damage: 14, icon: '🔮', quip: '"In 5 years. Be specific."' },
       { name: 'Salary Expectations?', type: 'attack', damage: 16, stressDamage: 6, icon: '💵', quip: '"What\'s your current comp?"' },
       { name: 'We\'ll Be In Touch', type: 'attack', damage: 20, stressDamage: 10, icon: '☎️', quip: '"(Narrator: They weren\'t.)"' },
       { name: 'Benefits Bait', type: 'attack', damage: 12, stressDamage: 5, icon: '🎣', quip: '"We have unlimited PTO! (Don\'t use it.)"' },
+      // Phase 3: final stand (indices 7-8)
+      { name: 'No More Questions', type: 'buff', applyToSelf: { strength: 3 }, icon: '🔥', quip: '"I\'ve heard ENOUGH."' },
+      { name: 'REJECTED', type: 'attack', damage: 24, stressDamage: 10, icon: '❌', quip: '"We went with another candidate. Forever."' },
     ],
   },
 
@@ -269,6 +285,7 @@ export const enemies: Record<string, EnemyDef> = {
     isBoss: true,
     phases: [
       { hpPercent: 60, moveStartIndex: 4, onEnter: { strength: 3 }, quip: '"THIS ISN\'T EVEN MY FINAL FORM."' },
+      { hpPercent: 25, moveStartIndex: 8, onEnter: { strength: 4 }, quip: '"CRITICAL FAILURE IMMINENT."' },
     ],
     moves: [
       // Phase 1: scans + discards (indices 0-3)
@@ -281,6 +298,9 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Maximum Overdrive', type: 'attack', damage: 18, icon: '💥', quip: '"REJECT. REJECT. REJECT."' },
       { name: 'Total Rejection', type: 'attack', damage: 14, times: 2, icon: '❌', quip: '"Application status: OBLITERATED."' },
       { name: 'System Crash', type: 'attack', damage: 26, stressDamage: 8, icon: '💀', quip: '"Fatal error: career not found."' },
+      // Phase 3: final stand (indices 8-9)
+      { name: 'TOTAL SYSTEM FAILURE', type: 'buff', applyToSelf: { strength: 4 }, icon: '⚠️', quip: '"ALL SYSTEMS: OVERDRIVE."' },
+      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
     ],
   },
 
@@ -293,6 +313,7 @@ export const enemies: Record<string, EnemyDef> = {
     hideIntent: true,
     phases: [
       { hpPercent: 40, moveStartIndex: 3, onEnter: { strength: 2 }, quip: '"You\'ll never hear from us again."' },
+      { hpPercent: 25, moveStartIndex: 6, onEnter: { strength: 3 }, quip: '"You\'ll never hear from ANYONE again."' },
     ],
     moves: [
       // Phase 1: eerie (indices 0-2)
@@ -303,6 +324,9 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Spectral Slash', type: 'attack', damage: 15, icon: '💫', quip: '"I was never even real."' },
       { name: 'Maybe Next Time', type: 'debuff', applyToTarget: { weak: 2, ghosted: 2 }, icon: '💨', quip: '"We\'ll definitely reach out soon!"' },
       { name: 'Full Ghosting', type: 'attack', damage: 21, stressDamage: 8, icon: '☠️', quip: '"The position has been filled... forever."' },
+      // Phase 3: final stand (indices 6-7)
+      { name: 'Eternal Silence', type: 'buff', applyToSelf: { strength: 3 }, icon: '🕳️', quip: '"The void is permanent."' },
+      { name: 'Final Ghosting', type: 'attack', damage: 24, stressDamage: 12, icon: '☠️', quip: '"You never existed to us."' },
     ],
   },
 
@@ -476,12 +500,19 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 133,
     icon: '🧓',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 4, onEnter: { strength: 3 }, quip: '"You call yourself a SENIOR?"' },
+    ],
     moves: [
+      // Phase 1: Interrogation (indices 0-3)
       { name: 'Explain Your Process', type: 'attack', damage: 10, stressDamage: 5, icon: '🔬', quip: '"Walk me through every decision."' },
       { name: 'Code Review', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 1 }, icon: '👀', quip: '"I see you used var. In 2026."' },
       { name: 'Deep Dive', type: 'attack', damage: 14, icon: '🤿', quip: '"Let\'s go three levels deeper."' },
       { name: 'Years of Experience', type: 'buff', applyToSelf: { strength: 3 }, icon: '📅', quip: '"I\'ve been doing this since Perl."' },
-      { name: 'Code Purge', type: 'exhaust', exhaustCount: 1, stressDamage: 3, icon: '🧹', quip: '"This doesn\'t meet our standards."' },
+      // Phase 2: Gloves off (indices 4-6)
+      { name: '"I\'ve Seen Everything"', type: 'buff', applyToSelf: { strength: 3 }, icon: '📅', quip: '"I\'ve been doing this since before you were born."' },
+      { name: 'Pop Quiz', type: 'attack', damage: 8, times: 2, icon: '❓', quip: '"What\'s the time complexity? NOW."' },
+      { name: 'Code Review: FAILED', type: 'attack', damage: 16, stressDamage: 5, icon: '🧹', quip: '"This code is an embarrassment."' },
     ],
   },
 
@@ -491,12 +522,19 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 123,
     icon: '🐉',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 4, onEnter: { strength: 3 }, quip: '"For every answer, THREE more questions."' },
+    ],
     moves: [
+      // Phase 1: Standard whiteboard hell (indices 0-3)
       { name: 'Follow-Up Question', type: 'attack', damage: 9, icon: '❓', quip: '"But what about concurrency?"' },
       { name: 'Multi-Part Problem', type: 'attack', damage: 7, times: 2, icon: '📝', quip: '"Part A... and Part B."' },
       { name: 'Whiteboard Barrage', type: 'attack', damage: 12, stressDamage: 4, icon: '📊', quip: '"Now diagram the entire system."' },
       { name: 'Grow Heads', type: 'buff', applyToSelf: { strength: 3 }, icon: '🐲', quip: '"One more follow-up question..."' },
-      { name: 'Erase Board', type: 'discard', discardCount: 2, icon: '🧽', quip: '"Start over. From scratch."' },
+      // Phase 2: Hydra unleashed (indices 4-6)
+      { name: 'Hydra Awakens', type: 'buff', applyToSelf: { strength: 3 }, icon: '🐲', quip: '"The whiteboard is INFINITE."' },
+      { name: 'Infinite Follow-Ups', type: 'attack', damage: 5, times: 4, icon: '❓', quip: '"Part C, D, E, F..."' },
+      { name: 'Erase Everything', type: 'attack', damage: 16, stressDamage: 5, icon: '🧽', quip: '"Start over. From the BEGINNING."' },
     ],
   },
 
@@ -506,12 +544,18 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 118,
     icon: '🚪',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 4 }, quip: '"COMPLIANCE MODE ACTIVATED."' },
+    ],
     moves: [
+      // Phase 1: Bureaucratic wall (indices 0-2)
       { name: 'Bureaucracy Wall', type: 'defend', block: 15, icon: '🧱', quip: '"Fill out form HR-7B first."' },
       { name: 'Red Tape', type: 'stress_attack', stressDamage: 8, icon: '📎', quip: '"That requires three approvals."' },
       { name: 'Policy Enforcement', type: 'attack_defend', damage: 10, block: 8, icon: '📋', quip: '"Per section 4, subsection C..."' },
-      { name: 'Access Denied', type: 'attack', damage: 14, stressDamage: 5, icon: '🚫', quip: '"You don\'t have clearance."' },
-      { name: 'Forms in Triplicate', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '📝', quip: '"Fill out form HR-42B. In triplicate."' },
+      // Phase 2: Gatekeeper goes offensive (indices 3-5)
+      { name: 'Policy Overhaul', type: 'buff', applyToSelf: { strength: 3 }, icon: '📋', quip: '"New policy: ZERO TOLERANCE."' },
+      { name: 'Compliance Hammer', type: 'attack', damage: 16, icon: '🔨', quip: '"Non-compliant resources will be PURGED."' },
+      { name: 'Access Permanently Denied', type: 'attack', damage: 20, stressDamage: 8, icon: '🚫', quip: '"Your badge has been DEACTIVATED."' },
     ],
   },
 
@@ -555,6 +599,7 @@ export const enemies: Record<string, EnemyDef> = {
     isBoss: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3, dexterity: 1 }, quip: '"The panel has reached a consensus."' },
+      { hpPercent: 25, moveStartIndex: 6, onEnter: { strength: 4 }, quip: '"The panel is UNANIMOUS."' },
     ],
     moves: [
       // Phase 1 (indices 0-2)
@@ -565,6 +610,10 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Cross-Examination', type: 'attack', damage: 14, stressDamage: 5, icon: '⚔️', quip: '"That contradicts what you said."' },
       { name: 'Group Deliberation', type: 'defend', block: 15, icon: '🤔', quip: '"We need to align internally."' },
       { name: 'Final Verdict', type: 'attack', damage: 26, stressDamage: 10, icon: '⚖️', quip: '"The panel has decided."' },
+      // Phase 3: final stand (indices 6-8)
+      { name: 'Panel Frenzy', type: 'buff', applyToSelf: { strength: 4 }, icon: '🔥', quip: '"We\'re ALL against you now."' },
+      { name: 'Cross-Examination Barrage', type: 'attack', damage: 10, times: 3, icon: '⚔️', quip: '"Answer. Answer. ANSWER."' },
+      { name: 'Unanimous Rejection', type: 'attack', damage: 28, stressDamage: 12, icon: '⚖️', quip: '"Motion to reject. ALL in favor."' },
     ],
   },
 
@@ -576,6 +625,7 @@ export const enemies: Record<string, EnemyDef> = {
     isBoss: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 4, onEnter: { strength: 2 }, quip: '"Time is running out..."' },
+      { hpPercent: 25, moveStartIndex: 7, onEnter: { strength: 4 }, quip: '"COMPILATION: FAILED."' },
     ],
     moves: [
       // Phase 1 (indices 0-3)
@@ -587,6 +637,9 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Stack Overflow', type: 'attack', damage: 14, stressDamage: 6, icon: '📚', quip: '"Maximum call stack exceeded."' },
       { name: 'Segfault', type: 'attack', damage: 18, icon: '💀', quip: '"Core dumped. So did your career."' },
       { name: 'TIME\'S UP!', type: 'attack', damage: 30, stressDamage: 14, icon: '⏰', quip: '"Pencils down. Step away."' },
+      // Phase 3: final stand (indices 7-8)
+      { name: 'Total Compile Failure', type: 'buff', applyToSelf: { strength: 4 }, icon: '🔴', quip: '"9,999 ERRORS FOUND."' },
+      { name: 'FAILED', type: 'attack', damage: 32, stressDamage: 14, icon: '💀', quip: '"Interview status: TERMINATED."' },
     ],
   },
 
@@ -598,6 +651,7 @@ export const enemies: Record<string, EnemyDef> = {
     isBoss: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 4, onEnter: { strength: 4 }, quip: '"Now the real interview begins."' },
+      { hpPercent: 25, moveStartIndex: 8, onEnter: { strength: 5 }, quip: '"You\'re DONE here."' },
     ],
     moves: [
       // Phase 1: "casual chat" (indices 0-3)
@@ -610,6 +664,9 @@ export const enemies: Record<string, EnemyDef> = {
       { name: 'Architecture Review', type: 'attack', damage: 16, icon: '🏗️', quip: '"This doesn\'t scale."' },
       { name: 'Scale Question', type: 'attack', damage: 14, stressDamage: 6, icon: '📊', quip: '"What if we have a billion users?"' },
       { name: 'Executive Decision', type: 'attack', damage: 30, stressDamage: 12, icon: '⚡', quip: '"I\'ve seen enough."' },
+      // Phase 3: final stand (indices 8-9)
+      { name: 'You\'re Fired', type: 'buff', applyToSelf: { strength: 5 }, icon: '🔥', quip: '"Pack your things."' },
+      { name: 'Severance Denied', type: 'attack', damage: 34, stressDamage: 15, icon: '☠️', quip: '"And you owe US money."' },
     ],
   },
 
@@ -783,11 +840,18 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 160,
     icon: '🎩',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 4 }, quip: '"The board demands RESULTS. NOW."' },
+    ],
     moves: [
+      // Phase 1: Board politics (indices 0-2)
       { name: 'Executive Order', type: 'attack', damage: 16, icon: '📜', quip: '"This came from the top."' },
       { name: 'Quarterly Review', type: 'attack_defend', damage: 12, block: 14, icon: '📊', quip: '"Numbers are down. Your fault."' },
-      { name: 'Shareholder Pressure', type: 'buff', applyToSelf: { strength: 2 }, icon: '📈', quip: '"The shareholders demand growth!"' },
-      { name: 'Board Decision', type: 'attack', damage: 22, stressDamage: 6, icon: '⚡', quip: '"The board has spoken."' },
+      { name: 'Shareholder Pressure', type: 'buff', applyToSelf: { strength: 3 }, icon: '📈', quip: '"The shareholders demand growth!"' },
+      // Phase 2: Hostile board (indices 3-5)
+      { name: 'Emergency Board Meeting', type: 'buff', applyToSelf: { strength: 4 }, icon: '🔥', quip: '"This is a CRISIS."' },
+      { name: 'Board Decision', type: 'attack', damage: 22, stressDamage: 8, icon: '⚡', quip: '"The board has spoken."' },
+      { name: 'Hostile Acquisition', type: 'attack', damage: 12, times: 2, stressDamage: 6, icon: '☠️', quip: '"We\'re taking EVERYTHING."' },
     ],
   },
 
@@ -797,11 +861,18 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 150,
     icon: '⛓️',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 4 }, quip: '"You\'ll NEVER leave."' },
+    ],
     moves: [
+      // Phase 1: Resource drain (indices 0-2)
       { name: 'Vest Schedule', type: 'exhaust', exhaustCount: 2, stressDamage: 5, icon: '📅', quip: '"Your cliff is in 11 months."' },
       { name: 'Retention Hit', type: 'attack', damage: 15, icon: '⛓️', quip: '"You can\'t afford to leave."' },
       { name: 'Stock Lock', type: 'exhaust', exhaustCount: 2, icon: '🔒', quip: '"90-day exercise window. Good luck."' },
+      // Phase 2: Golden fury (indices 3-5)
+      { name: 'Unvested Fury', type: 'buff', applyToSelf: { strength: 4 }, icon: '💎', quip: '"Your equity is WORTHLESS."' },
       { name: 'Golden Slam', type: 'attack', damage: 20, stressDamage: 5, icon: '💰', quip: '"Trapped by your own success!"' },
+      { name: 'Market Crash', type: 'attack', damage: 10, times: 2, icon: '📉', quip: '"Portfolio value: ZERO."' },
     ],
   },
 
@@ -811,11 +882,18 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 140,
     icon: '🌀',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"EVERYTHING must go."' },
+    ],
     moves: [
+      // Phase 1: Corporate chaos (indices 0-2)
       { name: 'Shuffle Teams', type: 'discard', discardCount: 3, icon: '🔀', quip: '"Your team no longer exists."' },
       { name: 'New Manager', type: 'attack', damage: 14, stressDamage: 5, icon: '👤', quip: '"Meet your 4th manager this year."' },
       { name: 'Restructure', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '🌀', quip: '"Your role has been \'realigned.\'"' },
-      { name: 'Layoff Wave', type: 'attack', damage: 20, stressDamage: 8, icon: '🌊', quip: '"Efficiency optimization in progress."' },
+      // Phase 2: Scorched earth (indices 3-5)
+      { name: 'Scorched Earth', type: 'buff', applyToSelf: { strength: 4 }, icon: '🔥', quip: '"Burn the org chart."' },
+      { name: 'Mass Layoff', type: 'attack', damage: 20, icon: '🌊', quip: '"Efficiency optimization complete."' },
+      { name: 'Reorg Slam', type: 'attack', damage: 10, times: 2, stressDamage: 6, icon: '💥', quip: '"Your role has been ELIMINATED."' },
     ],
   },
 
@@ -839,10 +917,17 @@ export const enemies: Record<string, EnemyDef> = {
     hp: 130,
     icon: '📉',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"Your 30 days are UP."' },
+    ],
     moves: [
+      // Phase 1: Performance warning (indices 0-2)
       { name: 'Performance Review', type: 'debuff', applyToTarget: { strength: -1, dexterity: -1 }, icon: '📉', quip: '"Meets expectations. Barely."' },
       { name: 'Improvement Plan', type: 'stress_attack', stressDamage: 10, icon: '📋', quip: '"You have 30 days."' },
       { name: 'Final Warning', type: 'attack', damage: 16, stressDamage: 6, icon: '⚠️', quip: '"This is your last chance."' },
+      // Phase 2: Termination mode (indices 3-5)
+      { name: 'Clock Is Ticking', type: 'buff', applyToSelf: { strength: 3 }, icon: '⏰', quip: '"Tick. Tock."' },
+      { name: 'Last Chance', type: 'attack', damage: 20, icon: '⚠️', quip: '"This is it."' },
       { name: 'Terminated', type: 'attack', damage: 25, stressDamage: 12, icon: '🚪', quip: '"Security will escort you out."' },
     ],
   },
@@ -856,8 +941,8 @@ export const enemies: Record<string, EnemyDef> = {
     icon: '👥',
     isBoss: true,
     phases: [
-      { hpPercent: 60, moveStartIndex: 3, onEnter: { strength: 2 }, quip: '"The committee is getting serious."' },
-      { hpPercent: 30, moveStartIndex: 5, onEnter: { strength: 3 }, quip: '"FINAL DELIBERATION."' },
+      { hpPercent: 60, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"The committee is getting serious."' },
+      { hpPercent: 30, moveStartIndex: 5, onEnter: { strength: 5 }, quip: '"FINAL DELIBERATION."' },
     ],
     moves: [
       // Phase 1 (indices 0-2)
@@ -867,9 +952,10 @@ export const enemies: Record<string, EnemyDef> = {
       // Phase 2 (indices 3-4)
       { name: 'Budget Discussion', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '💰', quip: '"Headcount is frozen. Mostly."' },
       { name: 'Counter-Counter Offer', type: 'attack', damage: 20, stressDamage: 8, icon: '⚖️', quip: '"We counter your counter. Again."' },
-      // Phase 3 (indices 5-6)
+      // Phase 3 (indices 5-7)
       { name: 'Unanimous Decision', type: 'buff', applyToSelf: { strength: 2 }, icon: '📈', quip: '"The committee is aligned."' },
-      { name: 'Committee Slam', type: 'attack', damage: 26, icon: '💥', quip: '"Motion to reject. All in favor?"' },
+      { name: 'Committee Slam', type: 'attack', damage: 32, icon: '💥', quip: '"Motion to reject. All in favor?"' },
+      { name: 'Offer Rescinded', type: 'attack', damage: 28, stressDamage: 10, icon: '📄', quip: '"The offer has been WITHDRAWN."' },
     ],
   },
 
@@ -880,8 +966,8 @@ export const enemies: Record<string, EnemyDef> = {
     icon: '🏆',
     isBoss: true,
     phases: [
-      { hpPercent: 60, moveStartIndex: 3, onEnter: { strength: 2 }, quip: '"Enough pleasantries."' },
-      { hpPercent: 30, moveStartIndex: 5, onEnter: { strength: 3 }, quip: '"I AM the company."' },
+      { hpPercent: 60, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"Enough pleasantries."' },
+      { hpPercent: 30, moveStartIndex: 5, onEnter: { strength: 5 }, quip: '"I AM the company."' },
     ],
     moves: [
       // Phase 1: "Vision" (indices 0-2)
@@ -891,10 +977,11 @@ export const enemies: Record<string, EnemyDef> = {
       // Phase 2: "Execution" (indices 3-4)
       { name: 'Execute!', type: 'attack', damage: 18, icon: '⚡', quip: '"Ship it or I ship you out."' },
       { name: 'Disruption', type: 'attack', damage: 16, stressDamage: 8, icon: '💥', quip: '"We disrupted the disruptors."' },
-      // Phase 3: "Hostile" (indices 5-7)
+      // Phase 3: "Hostile" (indices 5-8)
       { name: 'Move Fast Break Things', type: 'attack', damage: 22, icon: '🔥', quip: '"Including your career!"' },
       { name: 'Golden Parachute', type: 'buff', applyToSelf: { strength: 3 }, icon: '🪂', quip: '"I have a $50M exit package."' },
-      { name: 'Hostile Takeover', type: 'attack', damage: 28, stressDamage: 14, icon: '☠️', quip: '"Bow before the brand."' },
+      { name: 'Hostile Takeover', type: 'attack', damage: 34, stressDamage: 14, icon: '☠️', quip: '"Bow before the brand."' },
+      { name: 'Scorched Earth', type: 'attack', damage: 26, stressDamage: 10, icon: '🔥', quip: '"If I can\'t have it, NO ONE can."' },
     ],
   },
 
@@ -905,8 +992,8 @@ export const enemies: Record<string, EnemyDef> = {
     icon: '🎭',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 2 }, quip: '"The doubt is spreading..."' },
-      { hpPercent: 25, moveStartIndex: 5, onEnter: { strength: 2 }, quip: '"COMPLETE MELTDOWN IMMINENT."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { strength: 3 }, quip: '"The doubt is spreading..."' },
+      { hpPercent: 25, moveStartIndex: 5, onEnter: { strength: 5 }, quip: '"COMPLETE MELTDOWN IMMINENT."' },
     ],
     moves: [
       // Phase 1 (indices 0-2)
@@ -916,9 +1003,10 @@ export const enemies: Record<string, EnemyDef> = {
       // Phase 2 (indices 3-4)
       { name: 'They\'ll Find Out', type: 'attack', damage: 12, stressDamage: 10, icon: '😱', quip: '"Day one. They\'ll know."' },
       { name: 'Crushing Anxiety', type: 'stress_attack', stressDamage: 18, icon: '💀', quip: '"You can\'t even breathe right."' },
-      // Phase 3 (indices 5-6)
+      // Phase 3 (indices 5-7)
       { name: 'Identity Crisis', type: 'debuff', applyToTarget: { weak: 3, vulnerable: 3, strength: -1 }, icon: '🪞', quip: '"Who even are you anymore?"' },
-      { name: 'Complete Meltdown', type: 'attack', damage: 18, stressDamage: 25, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
+      { name: 'Complete Meltdown', type: 'attack', damage: 26, stressDamage: 30, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
+      { name: 'You Never Belonged', type: 'attack', damage: 22, stressDamage: 15, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
     ],
   },
 };
