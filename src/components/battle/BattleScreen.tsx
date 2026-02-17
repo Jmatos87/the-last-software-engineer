@@ -145,7 +145,7 @@ export const BattleScreen: React.FC = () => {
           const next = { ...prev };
           delete next[eid];
           return next;
-        }), 1500);
+        }), 3500);
       }
       await new Promise(r => setTimeout(r, 600));
       setAttackingEnemyId(null);

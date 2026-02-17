@@ -19,10 +19,32 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
   return undefined;
 }
 
+const SAVE_KEY = 'tlse-save';
+
+function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ screen: state.screen, run: state.run }));
+  } catch { /* quota exceeded — silently fail */ }
+}
+
+function clearSave() {
+  try { localStorage.removeItem(SAVE_KEY); } catch { /* ignore */ }
+}
+
+function loadGame(): { screen: import('../types').Screen; run: import('../types').RunState } | null {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
+
+const savedGame = loadGame();
+
 export const useGameStore = create<GameState>()(
   immer((set, get) => ({
-    screen: 'CHARACTER_SELECT',
-    run: null,
+    screen: savedGame?.screen ?? 'CHARACTER_SELECT',
+    run: savedGame?.run ?? null,
     battle: null,
     pendingRewards: null,
     pendingEvent: null,
@@ -58,6 +80,7 @@ export const useGameStore = create<GameState>()(
     },
 
     startRun: () => {
+      clearSave();
       set(state => {
         state.screen = 'MAP';
       });
@@ -128,6 +151,10 @@ export const useGameStore = create<GameState>()(
           set(s => { s.screen = 'SHOP'; });
           break;
       }
+
+      // Save game state after node selection
+      const updated = get();
+      saveGame({ screen: updated.screen, run: updated.run });
     },
 
     startBattle: (enemyDefs: EnemyDef[]) => {
@@ -414,6 +441,12 @@ export const useGameStore = create<GameState>()(
           s.screen = 'MAP';
         }
       });
+      const afterPick = get();
+      if (afterPick.screen === 'MAP') {
+        saveGame({ screen: afterPick.screen, run: afterPick.run });
+      } else if (afterPick.screen === 'VICTORY') {
+        clearSave();
+      }
     },
 
     claimArtifact: (itemId: string) => {
@@ -454,6 +487,12 @@ export const useGameStore = create<GameState>()(
           s.screen = 'MAP';
         }
       });
+      const afterSkip = get();
+      if (afterSkip.screen === 'MAP') {
+        saveGame({ screen: afterSkip.screen, run: afterSkip.run });
+      } else if (afterSkip.screen === 'VICTORY') {
+        clearSave();
+      }
     },
 
     rest: () => {
@@ -465,6 +504,8 @@ export const useGameStore = create<GameState>()(
         s.run.stress = Math.max(0, s.run.stress - stressHeal);
         s.screen = 'MAP';
       });
+      const updated = get();
+      saveGame({ screen: updated.screen, run: updated.run });
     },
 
     upgradeCard: (cardInstanceId: string) => {
@@ -554,6 +595,8 @@ export const useGameStore = create<GameState>()(
         s.eventOutcome = null;
         s.screen = 'MAP';
       });
+      const updated = get();
+      saveGame({ screen: updated.screen, run: updated.run });
     },
 
     buyCard: (cardId: string) => {
@@ -603,17 +646,22 @@ export const useGameStore = create<GameState>()(
 
     returnToMap: () => {
       set(s => { s.screen = 'MAP'; });
+      const updated = get();
+      saveGame({ screen: updated.screen, run: updated.run });
     },
 
     gameOver: () => {
+      clearSave();
       set(s => { s.screen = 'GAME_OVER'; });
     },
 
     victory: () => {
+      clearSave();
       set(s => { s.screen = 'VICTORY'; });
     },
 
     restart: () => {
+      clearSave();
       set(s => {
         s.screen = 'CHARACTER_SELECT';
         s.run = null;

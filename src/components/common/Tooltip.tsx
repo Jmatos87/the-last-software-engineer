@@ -4,18 +4,24 @@ interface TooltipProps {
   text?: string;
   content?: React.ReactNode;
   children: React.ReactNode;
+  position?: 'above' | 'below';
 }
 
-export const Tooltip: React.FC<TooltipProps> = ({ text, content, children }) => {
-  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+export const Tooltip: React.FC<TooltipProps> = ({ text, content, children, position = 'above' }) => {
+  const [pos, setPos] = useState<{ x: number; y: number; below: boolean } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   const show = useCallback(() => {
     if (ref.current) {
       const rect = ref.current.getBoundingClientRect();
-      setPos({ x: rect.left + rect.width / 2, y: rect.top });
+      const useBelow = position === 'below' || rect.top < 80;
+      setPos({
+        x: rect.left + rect.width / 2,
+        y: useBelow ? rect.bottom : rect.top,
+        below: useBelow,
+      });
     }
-  }, []);
+  }, [position]);
 
   const hide = useCallback(() => setPos(null), []);
 
@@ -32,8 +38,8 @@ export const Tooltip: React.FC<TooltipProps> = ({ text, content, children }) => 
           position: 'fixed',
           left: pos.x,
           top: pos.y,
-          transform: 'translate(-50%, -100%)',
-          marginTop: -8,
+          transform: pos.below ? 'translate(-50%, 0)' : 'translate(-50%, -100%)',
+          marginTop: pos.below ? 8 : -8,
           padding: '6px 10px',
           background: 'var(--bg-secondary)',
           border: '1px solid var(--border-color)',

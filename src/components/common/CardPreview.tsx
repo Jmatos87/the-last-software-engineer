@@ -5,9 +5,10 @@ interface CardPreviewProps {
   card: CardDef | CardInstance;
   x: number;
   y: number;
+  label?: string;
 }
 
-export const CardPreview: React.FC<CardPreviewProps> = ({ card, x, y }) => {
+export const CardPreview: React.FC<CardPreviewProps> = ({ card, x, y, label }) => {
   const borderColor = card.type === 'curse' ? 'var(--accent-purple)'
     : card.type === 'attack' ? 'var(--card-attack)'
     : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
@@ -37,6 +38,19 @@ export const CardPreview: React.FC<CardPreviewProps> = ({ card, x, y }) => {
         pointerEvents: 'none',
       }}
     >
+      {label && (
+        <div style={{
+          textAlign: 'center',
+          fontSize: 11,
+          fontWeight: 'bold',
+          color: 'var(--text-secondary)',
+          marginBottom: 4,
+          textTransform: 'uppercase',
+          letterSpacing: 1,
+        }}>
+          {label}
+        </div>
+      )}
       <div
         style={{
           width: previewWidth,

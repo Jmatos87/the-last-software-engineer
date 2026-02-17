@@ -6,7 +6,7 @@ import type { CardDef } from '../../types';
 export const RestScreen: React.FC = () => {
   const { run, rest, upgradeCard } = useGameStore();
   const [mode, setMode] = useState<'choose' | 'upgrade'>('choose');
-  const [preview, setPreview] = useState<{ card: CardDef; x: number; y: number } | null>(null);
+  const [preview, setPreview] = useState<{ card: CardDef; upgraded: CardDef; x: number; y: number } | null>(null);
 
   if (!run) return null;
 
@@ -52,7 +52,10 @@ export const RestScreen: React.FC = () => {
             Choose a card to upgrade:
           </h3>
           {preview && (
-            <CardPreview card={preview.card} x={preview.x} y={preview.y} />
+            <>
+              <CardPreview card={preview.card} x={preview.x - 130} y={preview.y} label="Current" />
+              <CardPreview card={preview.upgraded} x={preview.x + 130} y={preview.y} label="Upgraded" />
+            </>
           )}
           <div style={{
             display: 'flex',
@@ -72,7 +75,14 @@ export const RestScreen: React.FC = () => {
                   onClick={() => upgradeCard(card.instanceId)}
                   onMouseEnter={e => {
                     const rect = e.currentTarget.getBoundingClientRect();
-                    setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                    const upgraded = {
+                      ...card,
+                      name: card.name + '+',
+                      upgraded: true,
+                      effects: card.upgradedEffects ?? card.effects,
+                      description: card.upgradedDescription ?? card.description,
+                    };
+                    setPreview({ card, upgraded, x: rect.left + rect.width / 2, y: rect.top });
                     e.currentTarget.style.borderColor = 'var(--accent-green)';
                   }}
                   onMouseLeave={e => {
