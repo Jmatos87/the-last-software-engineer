@@ -3,6 +3,7 @@ import { useDraggable } from '@dnd-kit/core';
 import type { CardInstance, StatusEffect, ItemDef } from '../../types';
 import { useGameStore } from '../../store/gameStore';
 import { calculateDamage, calculateBlock, calculateCopium } from '../../utils/battleEngine';
+import { useMobile } from '../../hooks/useMobile';
 
 function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[]) {
   const effects = card.upgraded && card.upgradedEffects ? card.upgradedEffects : card.effects;
@@ -121,6 +122,7 @@ interface CardComponentProps {
 }
 
 export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, onClick, style }) => {
+  const { compact } = useMobile();
   const isCurse = card.type === 'curse';
   const battle = useGameStore(s => s.battle);
   const items = useGameStore(s => s.run?.items ?? []);
@@ -150,15 +152,15 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
       {...attributes}
       onClick={onClick}
       style={{
-        width: 120,
-        minHeight: 160,
+        width: compact ? 80 : 120,
+        minHeight: compact ? 100 : 160,
         background: isDragging ? 'var(--bg-card-hover)' : 'var(--bg-card)',
         border: `2px solid ${borderColor}`,
         borderRadius: 'var(--radius-md)',
-        padding: 10,
+        padding: compact ? 6 : 10,
         display: 'flex',
         flexDirection: 'column',
-        gap: 4,
+        gap: compact ? 2 : 4,
         cursor: disabled || isCurse ? 'not-allowed' : 'grab',
         opacity: disabled ? 0.5 : isCurse ? 0.7 : isDragging ? 0.8 : 1,
         transform: transformStyle,
@@ -176,32 +178,34 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
         alignItems: 'center',
       }}>
         <div style={{
-          width: 24,
-          height: 24,
+          width: compact ? 18 : 24,
+          height: compact ? 18 : 24,
           borderRadius: '50%',
           background: 'var(--energy-color)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 14,
+          fontSize: compact ? 10 : 14,
           fontWeight: 'bold',
           color: '#000',
         }}>
           {card.cost}
         </div>
-        <span style={{ fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-          {card.type}
-        </span>
+        {!compact && (
+          <span style={{ fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+            {card.type}
+          </span>
+        )}
       </div>
 
       {/* Icon */}
-      <div style={{ fontSize: 28, textAlign: 'center', margin: '4px 0' }}>
+      <div style={{ fontSize: compact ? 18 : 28, textAlign: 'center', margin: compact ? '2px 0' : '4px 0' }}>
         {card.icon}
       </div>
 
       {/* Name */}
       <div style={{
-        fontSize: 11,
+        fontSize: compact ? 9 : 11,
         fontWeight: 'bold',
         textAlign: 'center',
         color: card.upgraded ? 'var(--accent-green)' : 'var(--text-primary)',
@@ -209,32 +213,34 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
         {card.name}
       </div>
 
-      {/* Description (truncated) */}
-      <div style={{
-        fontSize: 9,
-        color: 'var(--text-secondary)',
-        textAlign: 'center',
-        lineHeight: 1.3,
-        maxHeight: '2.6em',
-        overflow: 'hidden',
-        display: '-webkit-box',
-        WebkitLineClamp: 2,
-        WebkitBoxOrient: 'vertical',
-      }}>
-        {dynamicDescription}
-      </div>
+      {/* Description (hidden on compact) */}
+      {!compact && (
+        <div style={{
+          fontSize: 9,
+          color: 'var(--text-secondary)',
+          textAlign: 'center',
+          lineHeight: 1.3,
+          maxHeight: '2.6em',
+          overflow: 'hidden',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+        }}>
+          {dynamicDescription}
+        </div>
+      )}
 
       {/* Keywords & Target */}
       <div style={{
-        fontSize: 9,
+        fontSize: compact ? 8 : 9,
         color: 'var(--text-muted)',
         textAlign: 'center',
         display: 'flex',
-        gap: 4,
+        gap: compact ? 2 : 4,
         justifyContent: 'center',
         flexWrap: 'wrap',
       }}>
-        {card.target === 'enemy' ? '🎯 Target' : card.target === 'self' ? '🙋 Self' : '🌍 All'}
+        {card.target === 'enemy' ? '🎯' : card.target === 'self' ? '🙋' : '🌍'}
         {(card.exhaust || card.type === 'power') && (
           <span style={{ color: 'var(--accent-purple, #a855f7)' }}>Exhaust</span>
         )}
@@ -248,34 +254,37 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
 
 // Simplified version for drag overlay
 export const CardOverlay: React.FC<{ card: CardInstance }> = ({ card }) => {
+  const { compact } = useMobile();
   const borderColor = card.type === 'attack' ? 'var(--card-attack)'
     : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
 
   return (
     <div style={{
-      width: 120,
-      minHeight: 160,
+      width: compact ? 80 : 120,
+      minHeight: compact ? 100 : 160,
       background: 'var(--bg-card-hover)',
       border: `2px solid ${borderColor}`,
       borderRadius: 'var(--radius-md)',
-      padding: 10,
+      padding: compact ? 6 : 10,
       display: 'flex',
       flexDirection: 'column',
-      gap: 4,
+      gap: compact ? 2 : 4,
       boxShadow: '0 10px 40px rgba(0,0,0,0.6)',
       transform: 'rotate(3deg) scale(1.05)',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{
-          width: 24, height: 24, borderRadius: '50%',
+          width: compact ? 18 : 24, height: compact ? 18 : 24, borderRadius: '50%',
           background: 'var(--energy-color)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 14, fontWeight: 'bold', color: '#000',
+          fontSize: compact ? 10 : 14, fontWeight: 'bold', color: '#000',
         }}>{card.cost}</div>
       </div>
-      <div style={{ fontSize: 28, textAlign: 'center' }}>{card.icon}</div>
-      <div style={{ fontSize: 11, fontWeight: 'bold', textAlign: 'center' }}>{card.name}</div>
-      <div style={{ fontSize: 10, color: 'var(--text-secondary)', textAlign: 'center' }}>{card.description}</div>
+      <div style={{ fontSize: compact ? 18 : 28, textAlign: 'center' }}>{card.icon}</div>
+      <div style={{ fontSize: compact ? 9 : 11, fontWeight: 'bold', textAlign: 'center' }}>{card.name}</div>
+      {!compact && (
+        <div style={{ fontSize: 10, color: 'var(--text-secondary)', textAlign: 'center' }}>{card.description}</div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core';
+import { DndContext, DragOverlay, useDroppable, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useGameStore } from '../../store/gameStore';
 import type { CardInstance, EnemyInstance } from '../../types';
@@ -11,6 +11,7 @@ import { EnergyOrb } from '../common/EnergyOrb';
 import { StatusEffects } from '../common/StatusEffects';
 import { CardPreview } from '../common/CardPreview';
 import { TopBar } from '../common/TopBar';
+import { useMobile } from '../../hooks/useMobile';
 
 const PlayerStatusPanel: React.FC = () => {
   const run = useGameStore(s => s.run);
@@ -57,6 +58,10 @@ const PlayerStatusPanel: React.FC = () => {
 
 export const BattleScreen: React.FC = () => {
   const { run, battle, playCard, endTurn, useConsumable } = useGameStore();
+  const { compact } = useMobile();
+  const mouseSensor = useSensor(MouseSensor);
+  const touchSensor = useSensor(TouchSensor, { activationConstraint: { delay: 150, tolerance: 5 } });
+  const sensors = useSensors(mouseSensor, touchSensor);
   const [draggedCard, setDraggedCard] = useState<CardInstance | null>(null);
   const [preview, setPreview] = useState<{ card: CardInstance; x: number; y: number } | null>(null);
   const [heroAnim, setHeroAnim] = useState<'' | 'animate-shake' | 'animate-stress'>('');
@@ -189,7 +194,7 @@ export const BattleScreen: React.FC = () => {
   };
 
   return (
-    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div style={{
         height: '100%',
         display: 'flex',
@@ -205,8 +210,8 @@ export const BattleScreen: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 80,
-          padding: '0 40px',
+          gap: compact ? 24 : 80,
+          padding: compact ? '0 12px' : '0 40px',
           position: 'relative',
         }}>
           {/* Player side */}
@@ -216,7 +221,7 @@ export const BattleScreen: React.FC = () => {
             alignItems: 'center',
             gap: 8,
           }}>
-            <div className={heroAnim} style={{ fontSize: 56 }}>{run.character.icon}</div>
+            <div className={heroAnim} style={{ fontSize: compact ? 32 : 56 }}>{run.character.icon}</div>
             <PlayerStatusPanel />
             <ConsumableBar
               onTargetEnemy={(cId) => setTargetingConsumableId(cId)}
@@ -226,7 +231,7 @@ export const BattleScreen: React.FC = () => {
 
           {/* VS divider */}
           <div style={{
-            fontSize: 24,
+            fontSize: compact ? 16 : 24,
             color: 'var(--text-muted)',
             fontWeight: 'bold',
           }}>
@@ -286,34 +291,34 @@ export const BattleScreen: React.FC = () => {
         <div style={{
           background: 'var(--bg-secondary)',
           borderTop: '1px solid var(--border-color)',
-          padding: '12px 16px',
+          padding: compact ? '6px 8px' : '12px 16px',
           display: 'flex',
           alignItems: 'center',
-          gap: 12,
+          gap: compact ? 6 : 12,
         }}>
           {/* Draw pile */}
           <div style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 4,
-            minWidth: 50,
+            gap: compact ? 2 : 4,
+            minWidth: compact ? 34 : 50,
           }}>
             <div style={{
-              width: 40,
-              height: 50,
+              width: compact ? 28 : 40,
+              height: compact ? 36 : 50,
               background: 'var(--bg-card)',
               border: '1px solid var(--accent-blue)',
               borderRadius: 'var(--radius-sm)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 14,
+              fontSize: compact ? 11 : 14,
               fontWeight: 'bold',
             }}>
               {battle.drawPile.length}
             </div>
-            <span style={{ fontSize: 9, color: 'var(--text-muted)' }}>DRAW</span>
+            <span style={{ fontSize: compact ? 7 : 9, color: 'var(--text-muted)' }}>DRAW</span>
           </div>
 
           {/* Energy orb */}
@@ -331,11 +336,11 @@ export const BattleScreen: React.FC = () => {
             {battle.hand.map(card => (
               <div
                 key={card.instanceId}
-                onMouseEnter={e => {
+                onMouseEnter={compact ? undefined : e => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
                 }}
-                onMouseLeave={() => setPreview(null)}
+                onMouseLeave={compact ? undefined : () => setPreview(null)}
               >
                 <CardComponent
                   card={card}
@@ -355,7 +360,7 @@ export const BattleScreen: React.FC = () => {
             className="danger"
             onClick={handleEndTurn}
             disabled={enemyTurnPlaying || battleWon}
-            style={{ padding: '12px 20px', fontSize: 14, whiteSpace: 'nowrap', opacity: (enemyTurnPlaying || battleWon) ? 0.5 : 1 }}
+            style={{ padding: compact ? '6px 12px' : '12px 20px', fontSize: compact ? 11 : 14, whiteSpace: 'nowrap', opacity: (enemyTurnPlaying || battleWon) ? 0.5 : 1 }}
           >
             {battleWon ? 'Victory!' : enemyTurnPlaying ? 'Enemy Turn...' : 'End Turn'}
           </button>
@@ -365,24 +370,24 @@ export const BattleScreen: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 4,
-            minWidth: 50,
+            gap: compact ? 2 : 4,
+            minWidth: compact ? 34 : 50,
           }}>
             <div style={{
-              width: 40,
-              height: 50,
+              width: compact ? 28 : 40,
+              height: compact ? 36 : 50,
               background: 'var(--bg-card)',
               border: '1px solid var(--accent-red)',
               borderRadius: 'var(--radius-sm)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 14,
+              fontSize: compact ? 11 : 14,
               fontWeight: 'bold',
             }}>
               {battle.discardPile.length}
             </div>
-            <span style={{ fontSize: 9, color: 'var(--text-muted)' }}>DISCARD</span>
+            <span style={{ fontSize: compact ? 7 : 9, color: 'var(--text-muted)' }}>DISCARD</span>
           </div>
         </div>
       </div>

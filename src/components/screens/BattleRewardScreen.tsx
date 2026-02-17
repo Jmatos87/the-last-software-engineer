@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { CardPreview } from '../common/CardPreview';
+import { useMobile } from '../../hooks/useMobile';
 import type { CardDef, ItemDef } from '../../types';
 
 export const BattleRewardScreen: React.FC = () => {
+  const { compact } = useMobile();
   const { pendingRewards, pickRewardCard, skipRewardCards, claimArtifact, pickRewardConsumable, skipRewardConsumable, run } = useGameStore();
   const [preview, setPreview] = useState<{ card: CardDef; x: number; y: number } | null>(null);
   const [artifactClaimed, setArtifactClaimed] = useState(false);
@@ -52,9 +54,10 @@ export const BattleRewardScreen: React.FC = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      gap: 24,
-      padding: 32,
+      justifyContent: compact ? 'flex-start' : 'center',
+      gap: compact ? 12 : 24,
+      padding: compact ? 16 : 32,
+      overflow: compact ? 'auto' : undefined,
     }} className="animate-fade-in">
       {pendingRewards.gold === 0 && pendingRewards.cardChoices.length === 0 && !hasArtifacts ? (
         <h2 style={{ fontSize: 24, color: 'var(--text-muted)' }}>&#128123; Ghosted...</h2>
@@ -168,8 +171,8 @@ export const BattleRewardScreen: React.FC = () => {
                       setConsumableClaimed(true);
                     }}
                     style={{
-                      width: 150,
-                      padding: 14,
+                      width: compact ? 100 : 150,
+                      padding: compact ? 8 : 14,
                       background: 'var(--bg-card)',
                       border: `2px solid ${rarityColor}`,
                       borderRadius: 'var(--radius-md)',
@@ -220,8 +223,8 @@ export const BattleRewardScreen: React.FC = () => {
                   key={card.id}
                   onClick={() => pickRewardCard(card.id)}
                   style={{
-                    width: 140,
-                    padding: 14,
+                    width: compact ? 100 : 140,
+                    padding: compact ? 8 : 14,
                     background: 'var(--bg-card)',
                     border: `2px solid ${borderColor}`,
                     borderRadius: 'var(--radius-md)',
@@ -229,13 +232,13 @@ export const BattleRewardScreen: React.FC = () => {
                     transition: 'all var(--transition-fast)',
                     textAlign: 'center',
                   }}
-                  onMouseEnter={e => {
+                  onMouseEnter={compact ? undefined : e => {
                     e.currentTarget.style.transform = 'translateY(-4px)';
                     e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
                     const rect = e.currentTarget.getBoundingClientRect();
                     setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
                   }}
-                  onMouseLeave={e => {
+                  onMouseLeave={compact ? undefined : e => {
                     e.currentTarget.style.transform = 'none';
                     e.currentTarget.style.boxShadow = 'none';
                     setPreview(null);

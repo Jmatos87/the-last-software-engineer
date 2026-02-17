@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { CardPreview } from '../common/CardPreview';
+import { useMobile } from '../../hooks/useMobile';
 import type { CardInstance } from '../../types';
 
 export const EventScreen: React.FC = () => {
+  const { compact } = useMobile();
   const pendingEvent = useGameStore(s => s.pendingEvent);
   const eventOutcome = useGameStore(s => s.eventOutcome);
   const makeEventChoice = useGameStore(s => s.makeEventChoice);
@@ -23,13 +25,14 @@ export const EventScreen: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: 24,
-        padding: 32,
+        justifyContent: compact ? 'flex-start' : 'center',
+        gap: compact ? 12 : 24,
+        padding: compact ? 16 : 32,
         maxWidth: 700,
         margin: '0 auto',
+        overflow: compact ? 'auto' : undefined,
       }} className="animate-fade-in">
-        <div style={{ fontSize: 64 }}>{pendingEvent.icon}</div>
+        <div style={{ fontSize: compact ? 36 : 64 }}>{pendingEvent.icon}</div>
         <h2 style={{ fontSize: 22, color: 'var(--accent-yellow)' }}>{pendingEvent.title}</h2>
         <p style={{
           color: 'var(--accent-red)',
@@ -83,17 +86,18 @@ export const EventScreen: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: 24,
-        padding: 32,
+        justifyContent: compact ? 'flex-start' : 'center',
+        gap: compact ? 12 : 24,
+        padding: compact ? 16 : 32,
         maxWidth: 600,
         margin: '0 auto',
+        overflow: compact ? 'auto' : undefined,
       }} className="animate-fade-in">
-        <div style={{ fontSize: 64 }}>{pendingEvent.icon}</div>
-        <h2 style={{ fontSize: 22, color: 'var(--accent-yellow)' }}>{pendingEvent.title}</h2>
+        <div style={{ fontSize: compact ? 36 : 64 }}>{pendingEvent.icon}</div>
+        <h2 style={{ fontSize: compact ? 16 : 22, color: 'var(--accent-yellow)' }}>{pendingEvent.title}</h2>
         <p style={{
           color: 'var(--text-secondary)',
-          fontSize: 16,
+          fontSize: compact ? 13 : 16,
           lineHeight: 1.6,
           textAlign: 'center',
         }}>
@@ -334,13 +338,14 @@ export const EventScreen: React.FC = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      gap: 24,
-      padding: 32,
+      justifyContent: compact ? 'flex-start' : 'center',
+      gap: compact ? 12 : 24,
+      padding: compact ? 16 : 32,
       maxWidth: 600,
       margin: '0 auto',
+      overflow: compact ? 'auto' : undefined,
     }} className="animate-fade-in">
-      <div style={{ fontSize: 64 }}>{pendingEvent.icon}</div>
+      <div style={{ fontSize: compact ? 36 : 64 }}>{pendingEvent.icon}</div>
       <h2 style={{ fontSize: 22, color: 'var(--accent-yellow)' }}>{pendingEvent.title}</h2>
       <p style={{
         color: 'var(--text-secondary)',

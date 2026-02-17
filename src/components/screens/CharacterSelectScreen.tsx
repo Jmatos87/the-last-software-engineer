@@ -4,9 +4,11 @@ import { characters } from '../../data/characters';
 import { getCardDef } from '../../data/cards';
 import { getStarterRelic } from '../../data/items';
 import { CardPreview } from '../common/CardPreview';
+import { useMobile } from '../../hooks/useMobile';
 import type { CardDef } from '../../types';
 
 export const CharacterSelectScreen: React.FC = () => {
+  const { compact } = useMobile();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [preview, setPreview] = useState<{ card: CardDef; x: number; y: number } | null>(null);
   const { selectCharacter, startRun, run } = useGameStore();
@@ -26,27 +28,28 @@ export const CharacterSelectScreen: React.FC = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      gap: 32,
-      padding: 32,
+      justifyContent: compact ? 'flex-start' : 'center',
+      gap: compact ? 12 : 32,
+      padding: compact ? 12 : 32,
+      overflow: compact ? 'auto' : undefined,
     }} className="animate-fade-in">
       <div style={{ textAlign: 'center' }}>
-        <h1 style={{ fontSize: 28, color: 'var(--accent-cyan)', marginBottom: 8 }}>
+        <h1 style={{ fontSize: compact ? 18 : 28, color: 'var(--accent-cyan)', marginBottom: compact ? 4 : 8 }}>
           {'>'} The Last Software Engineer _
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: compact ? 11 : 14 }}>
           Choose your class to begin
         </p>
       </div>
 
-      <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', gap: compact ? 10 : 20, flexWrap: 'wrap', justifyContent: 'center' }}>
         {characters.map(char => (
           <div
             key={char.id}
             onClick={() => handleSelect(char.id)}
             style={{
-              width: 200,
-              padding: 20,
+              width: compact ? 140 : 200,
+              padding: compact ? 10 : 20,
               background: selectedId === char.id ? 'var(--bg-card-hover)' : 'var(--bg-card)',
               border: `2px solid ${selectedId === char.id ? 'var(--accent-blue)' : 'var(--border-color)'}`,
               borderRadius: 'var(--radius-lg)',
@@ -56,7 +59,7 @@ export const CharacterSelectScreen: React.FC = () => {
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: 48, marginBottom: 8 }}>{char.icon}</div>
+            <div style={{ fontSize: compact ? 28 : 48, marginBottom: compact ? 4 : 8 }}>{char.icon}</div>
             <h3 style={{ fontSize: 16, marginBottom: 4 }}>{char.name}</h3>
             <p style={{ fontSize: 11, color: 'var(--accent-purple)', marginBottom: 8 }}>{char.title}</p>
             {char.available ? (
@@ -103,8 +106,8 @@ export const CharacterSelectScreen: React.FC = () => {
           background: 'var(--bg-secondary)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-lg)',
-          padding: 20,
-          maxWidth: 600,
+          padding: compact ? 12 : 20,
+          maxWidth: compact ? 500 : 600,
           width: '100%',
         }}>
           {(() => {
@@ -169,7 +172,7 @@ export const CharacterSelectScreen: React.FC = () => {
             className="primary"
             onClick={startRun}
             disabled={!run}
-            style={{ marginTop: 16, width: '100%', padding: 12, fontSize: 16 }}
+            style={{ marginTop: compact ? 10 : 16, width: '100%', padding: compact ? 8 : 12, fontSize: compact ? 13 : 16 }}
           >
             {'>'} Start Run _
           </button>

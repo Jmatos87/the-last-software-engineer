@@ -1,7 +1,9 @@
 import React from 'react';
 import { useGameStore } from '../../store/gameStore';
+import { useMobile } from '../../hooks/useMobile';
 
 export const VictoryScreen: React.FC = () => {
+  const { compact } = useMobile();
   const { run, restart } = useGameStore();
 
   return (
@@ -11,12 +13,12 @@ export const VictoryScreen: React.FC = () => {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 24,
-      padding: 32,
+      gap: compact ? 12 : 24,
+      padding: compact ? 16 : 32,
     }} className="animate-fade-in">
-      <div style={{ fontSize: 64 }}>🏆</div>
+      <div style={{ fontSize: compact ? 36 : 64 }}>🏆</div>
       <h1 style={{
-        fontSize: 32,
+        fontSize: compact ? 22 : 32,
         background: 'linear-gradient(135deg, var(--accent-yellow), var(--accent-orange))',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',

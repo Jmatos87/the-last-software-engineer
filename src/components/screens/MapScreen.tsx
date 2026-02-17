@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import type { MapNode, NodeType } from '../../types';
 import { TopBar } from '../common/TopBar';
+import { useMobile } from '../../hooks/useMobile';
 
 const nodeIcons: Record<NodeType, string> = {
   battle: '⚔️',
@@ -23,11 +24,18 @@ const nodeColors: Record<NodeType, string> = {
 
 export const MapScreen: React.FC = () => {
   const { run, navigateToNode } = useGameStore();
+  const { compact } = useMobile();
   if (!run) return null;
 
   const mapRef = useRef<HTMLDivElement>(null);
 
   const { map } = run;
+  const spacing = compact ? 80 : 120;
+  const centerX = compact ? 180 : 250;
+  const rowH = compact ? 65 : 100;
+  const nodeR = compact ? 16 : 22;
+  const glowR = compact ? 22 : 28;
+  const svgW = compact ? 360 : 500;
 
   // Scroll to bottom on mount so the player sees their starting position
   useEffect(() => {
@@ -56,7 +64,6 @@ export const MapScreen: React.FC = () => {
   const getNodePosition = (node: MapNode, nodesInRow: MapNode[]) => {
     const idx = nodesInRow.indexOf(node);
     const total = nodesInRow.length;
-    const spacing = 120;
     const offset = -(total - 1) * spacing / 2;
     return offset + idx * spacing;
   };
@@ -78,11 +85,11 @@ export const MapScreen: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: '20px 0',
+        padding: compact ? '8px 0' : '20px 0',
       }}>
         <svg
-          width="500"
-          height={rows.length * 100 + 40}
+          width={svgW}
+          height={rows.length * rowH + 40}
           style={{ overflow: 'visible' }}
         >
           {/* Draw connections first */}
@@ -92,10 +99,10 @@ export const MapScreen: React.FC = () => {
               if (!target) return null;
               const fromRow = rows[node.row] || [];
               const toRow = rows[target.row] || [];
-              const x1 = 250 + getNodePosition(node, fromRow);
-              const y1 = (rows.length - 1 - node.row) * 100 + 40;
-              const x2 = 250 + getNodePosition(target, toRow);
-              const y2 = (rows.length - 1 - target.row) * 100 + 40;
+              const x1 = centerX + getNodePosition(node, fromRow);
+              const y1 = (rows.length - 1 - node.row) * rowH + 40;
+              const x2 = centerX + getNodePosition(target, toRow);
+              const y2 = (rows.length - 1 - target.row) * rowH + 40;
               const visited = node.visited && target.visited;
               return (
                 <line
@@ -113,8 +120,8 @@ export const MapScreen: React.FC = () => {
           {/* Draw nodes */}
           {rows.map((rowNodes) =>
             rowNodes.map(node => {
-              const x = 250 + getNodePosition(node, rowNodes);
-              const y = (rows.length - 1 - node.row) * 100 + 40;
+              const x = centerX + getNodePosition(node, rowNodes);
+              const y = (rows.length - 1 - node.row) * rowH + 40;
               const reachable = isReachable(node);
               const current = map.currentNodeId === node.id;
               const color = nodeColors[node.type];
@@ -127,13 +134,13 @@ export const MapScreen: React.FC = () => {
                 >
                   {/* Glow for reachable */}
                   {reachable && (
-                    <circle cx={x} cy={y} r={28} fill="none" stroke={color} strokeWidth={2} opacity={0.5}>
-                      <animate attributeName="r" values="28;32;28" dur="2s" repeatCount="indefinite" />
+                    <circle cx={x} cy={y} r={glowR} fill="none" stroke={color} strokeWidth={2} opacity={0.5}>
+                      <animate attributeName="r" values={`${glowR};${glowR + 4};${glowR}`} dur="2s" repeatCount="indefinite" />
                       <animate attributeName="opacity" values="0.5;0.2;0.5" dur="2s" repeatCount="indefinite" />
                     </circle>
                   )}
                   <circle
-                    cx={x} cy={y} r={22}
+                    cx={x} cy={y} r={nodeR}
                     fill={node.visited ? 'var(--bg-secondary)' : current ? color : 'var(--bg-card)'}
                     stroke={reachable ? color : node.visited ? 'var(--text-muted)' : 'var(--border-color)'}
                     strokeWidth={reachable || current ? 2 : 1}
@@ -143,16 +150,16 @@ export const MapScreen: React.FC = () => {
                     x={x} y={y + 1}
                     textAnchor="middle"
                     dominantBaseline="middle"
-                    fontSize={node.type === 'boss' ? 20 : 16}
+                    fontSize={compact ? (node.type === 'boss' ? 16 : 12) : (node.type === 'boss' ? 20 : 16)}
                     style={{ pointerEvents: 'none' }}
                   >
                     {nodeIcons[node.type]}
                   </text>
                   {/* Label below */}
                   <text
-                    x={x} y={y + 36}
+                    x={x} y={y + (compact ? 26 : 36)}
                     textAnchor="middle"
-                    fontSize={9}
+                    fontSize={compact ? 7 : 9}
                     fill="var(--text-muted)"
                     style={{ pointerEvents: 'none' }}
                   >

@@ -222,3 +222,13 @@ button.success {
   0%, 100% { box-shadow: none; }
   50% { box-shadow: 0 0 8px rgba(74, 158, 255, 0.15); }
 }
+
+/* Mobile landscape */
+@media (max-height: 600px) {
+  body { font-size: 12px; }
+  button { padding: 4px 10px; font-size: 12px; }
+  button.primary, button.danger, button.success { padding: 4px 10px; font-size: 12px; }
+  .consumable-slot { width: 28px; height: 28px; border-radius: 14px; }
+  .consumable-slot.filled span { font-size: 14px !important; }
+  ::-webkit-scrollbar { width: 4px; }
+}

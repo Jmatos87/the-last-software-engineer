@@ -5,6 +5,7 @@ import { calculateDamage, calculateStressDamage } from '../../utils/battleEngine
 import { HpBar } from '../common/HpBar';
 import { StatusEffects } from '../common/StatusEffects';
 import { Tooltip } from '../common/Tooltip';
+import { useMobile } from '../../hooks/useMobile';
 
 interface EnemyDisplayProps {
   enemy: EnemyInstance;
@@ -17,6 +18,7 @@ interface EnemyDisplayProps {
 }
 
 export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, playerStatusEffects, isAttacking, isDying, isFleeing, speechBubble }) => {
+  const { compact } = useMobile();
   const { setNodeRef, isOver } = useDroppable({
     id: `enemy-${enemy.instanceId}`,
     data: { enemyInstanceId: enemy.instanceId },
@@ -142,25 +144,25 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: 6,
-        padding: 12,
+        gap: compact ? 3 : 6,
+        padding: compact ? 6 : 12,
         background: isOver ? 'rgba(248, 113, 113, 0.1)' : 'transparent',
         border: `2px solid ${isOver ? 'var(--accent-red)' : isTargeted ? 'var(--accent-yellow)' : 'transparent'}`,
         borderRadius: 'var(--radius-lg)',
         transition: 'all var(--transition-fast)',
-        minWidth: 100,
+        minWidth: compact ? 70 : 100,
       }}
     >
       {/* Speech bubble placeholder — fixed height so layout doesn't shift */}
-      <div style={{ minHeight: 32, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+      <div style={{ minHeight: compact ? 20 : 32, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
         {speechBubble && (
           <div className="animate-speech-bubble" style={{
             position: 'relative',
             background: 'var(--bg-card)',
             border: '1px solid var(--accent-yellow)',
             borderRadius: 'var(--radius-md)',
-            padding: '4px 10px',
-            fontSize: 11,
+            padding: compact ? '2px 6px' : '4px 10px',
+            fontSize: compact ? 9 : 11,
             color: 'var(--text-primary)',
             fontStyle: 'italic',
             maxWidth: 160,
@@ -186,7 +188,9 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
 
       {/* Enemy icon */}
       <div style={{
-        fontSize: enemy.isBoss ? 64 : enemy.isElite ? 52 : 44,
+        fontSize: compact
+          ? (enemy.isBoss ? 40 : enemy.isElite ? 34 : 28)
+          : (enemy.isBoss ? 64 : enemy.isElite ? 52 : 44),
         lineHeight: 1,
         filter: shaking ? 'brightness(2)' : 'none',
         transition: 'filter 0.2s',
@@ -196,7 +200,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
 
       {/* Name */}
       <div style={{
-        fontSize: 12,
+        fontSize: compact ? 10 : 12,
         fontWeight: 'bold',
         color: enemy.isBoss ? 'var(--accent-orange)' : enemy.isElite ? 'var(--accent-purple)' : 'var(--text-primary)',
       }}>
@@ -217,7 +221,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
       )}
 
       {/* HP bar */}
-      <div style={{ width: 100 }}>
+      <div style={{ width: compact ? 70 : 100 }}>
         <HpBar current={enemy.currentHp} max={enemy.maxHp} height={8} />
       </div>
 
@@ -231,7 +235,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
           background: 'var(--bg-card)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-sm)',
-          fontSize: 13,
+          fontSize: compact ? 11 : 13,
           color: 'var(--text-muted)',
           fontStyle: 'italic',
         }}>
@@ -240,11 +244,11 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
       ) : (
         <Tooltip text={intentTooltip}>
           <div style={{
-            padding: '4px 8px',
+            padding: compact ? '2px 6px' : '4px 8px',
             background: 'var(--bg-card)',
             border: '1px solid var(--border-color)',
             borderRadius: 'var(--radius-sm)',
-            fontSize: 12,
+            fontSize: compact ? 10 : 12,
             display: 'flex',
             alignItems: 'center',
             gap: 4,

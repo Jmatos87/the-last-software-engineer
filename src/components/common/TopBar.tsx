@@ -2,41 +2,43 @@ import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { HpBar } from './HpBar';
 import { Tooltip } from './Tooltip';
+import { useMobile } from '../../hooks/useMobile';
 
 export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
   const run = useGameStore(s => s.run);
   const restart = useGameStore(s => s.restart);
+  const { compact } = useMobile();
   const [showQuitModal, setShowQuitModal] = useState(false);
   if (!run) return null;
 
   return (
     <div style={{
-      padding: '8px 16px',
+      padding: compact ? '4px 8px' : '8px 16px',
       display: 'flex',
       alignItems: 'center',
-      gap: 16,
+      gap: compact ? 8 : 16,
       background: 'var(--bg-secondary)',
       borderBottom: '1px solid var(--border-color)',
       flexShrink: 0,
     }}>
       {/* Character */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ fontSize: 20 }}>{run.character.icon}</span>
-        <span style={{ fontSize: 13, fontWeight: 'bold' }}>{run.character.name}</span>
+      <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 4 : 8 }}>
+        <span style={{ fontSize: compact ? 14 : 20 }}>{run.character.icon}</span>
+        <span style={{ fontSize: compact ? 11 : 13, fontWeight: 'bold' }}>{run.character.name}</span>
       </div>
 
       {/* HP bar */}
-      <div style={{ width: 120 }}>
-        <HpBar current={run.hp} max={run.maxHp} height={10} label="HP" />
+      <div style={{ width: compact ? 80 : 120 }}>
+        <HpBar current={run.hp} max={run.maxHp} height={compact ? 8 : 10} label="HP" />
       </div>
 
       {/* Stress bar */}
-      <div style={{ width: 100 }}>
-        <HpBar current={run.stress} max={run.maxStress} height={10} color="var(--accent-purple)" label="STRESS" />
+      <div style={{ width: compact ? 70 : 100 }}>
+        <HpBar current={run.stress} max={run.maxStress} height={compact ? 8 : 10} color="var(--accent-purple)" label="STRESS" />
       </div>
 
       {/* Stats */}
-      <div style={{ display: 'flex', gap: 12, fontSize: 13, alignItems: 'center' }}>
+      <div style={{ display: 'flex', gap: compact ? 6 : 12, fontSize: compact ? 10 : 13, alignItems: 'center' }}>
         <span style={{ color: 'var(--gold-color)' }}>💰 {run.gold}</span>
         <span style={{ color: 'var(--accent-purple)' }}>Act {run.act}</span>
         <span style={{ color: 'var(--text-secondary)' }}>📦 {run.deck.length}</span>
@@ -44,7 +46,7 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
 
       {/* Relics */}
       {run.items.length > 0 && (
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginLeft: 4 }}>
+        <div style={{ display: 'flex', gap: compact ? 4 : 6, alignItems: 'center', marginLeft: 4 }}>
           {run.items.map(item => (
             <Tooltip key={item.id} content={
               <div style={{ textAlign: 'left' }}>
@@ -56,7 +58,7 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
                 </div>
               </div>
             }>
-              <span style={{ fontSize: 18, cursor: 'help' }}>{item.icon}</span>
+              <span style={{ fontSize: compact ? 13 : 18, cursor: 'help' }}>{item.icon}</span>
             </Tooltip>
           ))}
         </div>
@@ -97,8 +99,8 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
         onClick={() => setShowQuitModal(true)}
         style={{
           marginLeft: extra ? 8 : 'auto',
-          padding: '4px 10px',
-          fontSize: 11,
+          padding: compact ? '2px 6px' : '4px 10px',
+          fontSize: compact ? 9 : 11,
           background: 'transparent',
           border: '1px solid var(--border-color)',
           color: 'var(--text-secondary)',

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useGameStore } from '../../store/gameStore';
 import { CardPreview } from '../common/CardPreview';
+import { useMobile } from '../../hooks/useMobile';
 import type { CardDef } from '../../types';
 
 export const RestScreen: React.FC = () => {
+  const { compact } = useMobile();
   const { run, rest, upgradeCard, train, reflectRemoveCard } = useGameStore();
   const [mode, setMode] = useState<'choose' | 'upgrade' | 'reflect'>('choose');
   const [preview, setPreview] = useState<{ card: CardDef; upgraded: CardDef; x: number; y: number } | null>(null);
@@ -19,12 +21,13 @@ export const RestScreen: React.FC = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center',
-      gap: 24,
-      padding: 32,
+      justifyContent: compact ? 'flex-start' : 'center',
+      gap: compact ? 12 : 24,
+      padding: compact ? 16 : 32,
+      overflow: compact ? 'auto' : undefined,
     }} className="animate-fade-in">
-      <div style={{ fontSize: 64 }}>🔥</div>
-      <h2 style={{ fontSize: 24, color: 'var(--accent-orange)' }}>Rest Site</h2>
+      <div style={{ fontSize: compact ? 36 : 64 }}>🔥</div>
+      <h2 style={{ fontSize: compact ? 18 : 24, color: 'var(--accent-orange)' }}>Rest Site</h2>
       <p style={{ color: 'var(--text-secondary)' }}>
         HP: {run.hp}/{run.maxHp}
       </p>
@@ -34,21 +37,21 @@ export const RestScreen: React.FC = () => {
           <button
             onClick={rest}
             className="success"
-            style={{ padding: '16px 32px', fontSize: 16 }}
+            style={{ padding: compact ? '10px 20px' : '16px 32px', fontSize: compact ? 13 : 16 }}
           >
             😴 Rest (Heal {healAmount} HP)
           </button>
           <button
             onClick={() => setMode('upgrade')}
             disabled={upgradableCards.length === 0}
-            style={{ padding: '16px 32px', fontSize: 16 }}
+            style={{ padding: compact ? '10px 20px' : '16px 32px', fontSize: compact ? 13 : 16 }}
           >
             ⬆️ Upgrade a Card
           </button>
           {run.act >= 2 && (
             <button
               onClick={train}
-              style={{ padding: '16px 32px', fontSize: 16 }}
+              style={{ padding: compact ? '10px 20px' : '16px 32px', fontSize: compact ? 13 : 16 }}
             >
               🏋️ Train (Gain Card)
             </button>
@@ -57,7 +60,7 @@ export const RestScreen: React.FC = () => {
             <button
               onClick={() => setMode('reflect')}
               disabled={run.deck.length <= 1}
-              style={{ padding: '16px 32px', fontSize: 16 }}
+              style={{ padding: compact ? '10px 20px' : '16px 32px', fontSize: compact ? 13 : 16 }}
             >
               🧘 Reflect (Remove Card)
             </button>

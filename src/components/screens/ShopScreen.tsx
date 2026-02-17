@@ -4,9 +4,11 @@ import { cards } from '../../data/cards';
 import { getShopItems } from '../../data/items';
 import { getShopConsumables } from '../../data/consumables';
 import { CardPreview } from '../common/CardPreview';
+import { useMobile } from '../../hooks/useMobile';
 import type { CardDef, CardInstance } from '../../types';
 
 export const ShopScreen: React.FC = () => {
+  const { compact } = useMobile();
   const { run, buyCard, buyItem, buyConsumable, removeCard, returnToMap } = useGameStore();
   const [removeMode, setRemoveMode] = useState(false);
   const [preview, setPreview] = useState<{ card: CardDef | CardInstance; x: number; y: number } | null>(null);
@@ -47,7 +49,7 @@ export const ShopScreen: React.FC = () => {
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      padding: 24,
+      padding: compact ? 12 : 24,
       overflow: 'auto',
     }} className="animate-fade-in">
       <div style={{
@@ -81,8 +83,8 @@ export const ShopScreen: React.FC = () => {
               }}
               onMouseLeave={() => setPreview(null)}
               style={{
-                width: 130,
-                padding: 12,
+                width: compact ? 100 : 130,
+                padding: compact ? 8 : 12,
                 background: 'var(--bg-card)',
                 border: `1px solid ${borderColor}`,
                 borderRadius: 'var(--radius-md)',
@@ -113,8 +115,8 @@ export const ShopScreen: React.FC = () => {
               key={item.id}
               onClick={() => canAfford && !owned && buyItem(item.id)}
               style={{
-                width: 140,
-                padding: 12,
+                width: compact ? 100 : 140,
+                padding: compact ? 8 : 12,
                 background: 'var(--bg-card)',
                 border: '1px solid var(--border-color)',
                 borderRadius: 'var(--radius-md)',
@@ -147,8 +149,8 @@ export const ShopScreen: React.FC = () => {
               key={c.id}
               onClick={() => canAfford && !slotsFull && buyConsumable(c.id)}
               style={{
-                width: 140,
-                padding: 12,
+                width: compact ? 100 : 140,
+                padding: compact ? 8 : 12,
                 background: 'var(--bg-card)',
                 border: `1px solid ${rarityColor}`,
                 borderRadius: 'var(--radius-md)',

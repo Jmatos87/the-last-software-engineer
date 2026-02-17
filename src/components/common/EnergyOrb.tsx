@@ -1,4 +1,5 @@
 import React from 'react';
+import { useMobile } from '../../hooks/useMobile';
 
 interface EnergyOrbProps {
   current: number;
@@ -6,10 +7,12 @@ interface EnergyOrbProps {
 }
 
 export const EnergyOrb: React.FC<EnergyOrbProps> = ({ current, max }) => {
+  const { compact } = useMobile();
+  const size = compact ? 36 : 56;
   return (
     <div style={{
-      width: 56,
-      height: 56,
+      width: size,
+      height: size,
       borderRadius: '50%',
       background: 'radial-gradient(circle at 30% 30%, #fde68a, #d97706, #92400e)',
       display: 'flex',
@@ -18,7 +21,7 @@ export const EnergyOrb: React.FC<EnergyOrbProps> = ({ current, max }) => {
       border: '2px solid var(--energy-color)',
       boxShadow: '0 0 15px rgba(251, 191, 36, 0.4)',
       fontWeight: 'bold',
-      fontSize: 20,
+      fontSize: compact ? 14 : 20,
       color: '#fff',
       textShadow: '0 1px 3px rgba(0,0,0,0.5)',
       flexShrink: 0,

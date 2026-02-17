@@ -1,5 +1,6 @@
 import React from 'react';
 import type { CardDef, CardInstance } from '../../types';
+import { useMobile } from '../../hooks/useMobile';
 
 interface CardPreviewProps {
   card: CardDef | CardInstance;
@@ -9,6 +10,8 @@ interface CardPreviewProps {
 }
 
 export const CardPreview: React.FC<CardPreviewProps> = ({ card, x, y, label }) => {
+  const { compact } = useMobile();
+  if (compact) return null;
   const borderColor = card.type === 'curse' ? 'var(--accent-purple)'
     : card.type === 'attack' ? 'var(--card-attack)'
     : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
