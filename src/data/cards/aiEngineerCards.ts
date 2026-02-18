@@ -2,487 +2,563 @@ import type { CardDef } from '../../types';
 
 // ═══════════════════════════════════════════════════════════════
 // AI ENGINEER — "The Model Trainer"
+// Archetypes: temperature | token_economy | training_loop
+//
+// Temperature: push temp 0–10; Hot(≥7)→bonus dmg; Cold(≤3)→bonus block;
+//              Overflow(10)→12 AoE + reset 5; Freeze(0)→15 block + reset 5
+// Token Economy: accumulate tokens across turns; cash out for scaled dmg/block
+// Training Loop: cards scale with how many times they've been played this combat
 // ═══════════════════════════════════════════════════════════════
 
 export const aiEngineerCards: Record<string, CardDef> = {
 
-  // ── Starters ──
-  training_epoch: {
-    id: 'training_epoch', name: 'Training Epoch', type: 'attack', target: 'enemy', cost: 1, rarity: 'starter',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Deal 4 damage. Gain 1 Confidence (+1 dmg per stack). Epoch 1/10000. Loss: catastrophic.',
-    effects: { damage: 4, applyToSelf: { confidence: 1 } },
-    upgradedEffects: { damage: 6, applyToSelf: { confidence: 1 } },
-    upgradedDescription: 'Deal 6 damage. Gain 1 Confidence (+1 dmg per stack).',
+  // ── Starters ──────────────────────────────────────────────────────────────
+
+  model_init: {
+    id: 'model_init', name: 'Model Init', type: 'attack', target: 'enemy', cost: 1, rarity: 'starter',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Deal 4 damage +1 per play this combat (1st: 5, 2nd: 6...). Weights: random. Hope: eternal.',
+    effects: { damage: 4, damagePerTimesPlayed: 1 },
+    upgradedEffects: { damage: 6, damagePerTimesPlayed: 2 },
+    upgradedDescription: 'Deal 6 damage +2 per play this combat.',
     icon: '🧠',
   },
-  tensor_block: {
-    id: 'tensor_block', name: 'Tensor Block', type: 'skill', target: 'self', cost: 1, rarity: 'starter',
-    class: 'ai_engineer',
-    description: 'Gain 5 block. Tensor shaped like a shield.',
-    effects: { block: 5 },
-    upgradedEffects: { block: 8 },
-    upgradedDescription: 'Gain 8 block.',
-    icon: '🔷',
-  },
-  jailbreak: {
-    id: 'jailbreak', name: 'Jailbreak', type: 'attack', target: 'enemy', cost: 0, rarity: 'starter',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 8 damage. Gain 8 stress. DAN mode activated.',
-    effects: { damage: 8, addStress: 8 },
-    upgradedEffects: { damage: 11, addStress: 8 },
-    upgradedDescription: 'Deal 11 damage. Gain 8 stress.',
-    icon: '🔓',
-  },
-  loss_function: {
-    id: 'loss_function', name: 'Loss Function', type: 'skill', target: 'self', cost: 1, rarity: 'starter',
-    class: 'ai_engineer',
-    description: 'Draw 2 cards. Minimizing loss. Maximizing pain.',
-    effects: { draw: 2 },
-    upgradedEffects: { draw: 3 },
-    upgradedDescription: 'Draw 3 cards.',
-    icon: '📉',
-  },
-  alignment_training: {
-    id: 'alignment_training', name: 'Alignment Training', type: 'skill', target: 'self', cost: 1, rarity: 'starter',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Reduce 10 Stress. RLHF: Reinforcement Learning from Human Feedback (and tears).',
-    effects: { copium: 10 },
-    upgradedEffects: { copium: 14 },
-    upgradedDescription: 'Reduce 14 Stress.',
-    icon: '🎯',
+
+  cold_inference: {
+    id: 'cold_inference', name: 'Cold Inference', type: 'skill', target: 'self', cost: 1, rarity: 'starter',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Cool 1°. Gain 4 block. If Cold (≤3°): gain 4 more. Temperature: deterministic. Outputs: predictable.',
+    effects: { coolDown: 1, block: 4, blockIfCold: 4 },
+    upgradedEffects: { coolDown: 1, block: 6, blockIfCold: 6 },
+    upgradedDescription: 'Cool 1°. Gain 6 block. If Cold (≤3°): gain 6 more.',
+    icon: '🧊',
   },
 
-  // ── AI Engineer Common ──
-  backpropagation: {
-    id: 'backpropagation', name: 'Backpropagation', type: 'skill', target: 'self', cost: 1, rarity: 'common',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 5 block. Gain 1 Resilience (+1 block & stress heal per stack). Adjusting weights. Adjusting expectations.',
-    effects: { block: 5, applyToSelf: { resilience: 1 } },
-    upgradedEffects: { block: 7, applyToSelf: { resilience: 1 } },
-    upgradedDescription: 'Gain 7 block. Gain 1 Resilience (+1 block & stress heal per stack).',
-    icon: '🔙',
+  token_budget: {
+    id: 'token_budget', name: 'Token Budget', type: 'skill', target: 'self', cost: 1, rarity: 'starter',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Generate 3 tokens. Draw 1 card. Every inference costs something. Budget accordingly.',
+    effects: { generateTokens: 3, draw: 1 },
+    upgradedEffects: { generateTokens: 5, draw: 1 },
+    upgradedDescription: 'Generate 5 tokens. Draw 1 card.',
+    icon: '🪙',
   },
-  transfer_learning: {
-    id: 'transfer_learning', name: 'Transfer Learning', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Deal 5 damage. If you have Confidence, deal 5 more. Pre-trained on pain.',
-    effects: { damage: 5 },
-    upgradedEffects: { damage: 7 },
-    upgradedDescription: 'Deal 7 damage. If you have Confidence, deal 5 more.',
+
+  epoch_start: {
+    id: 'epoch_start', name: 'Epoch Start', type: 'skill', target: 'self', cost: 0, rarity: 'starter',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Gain 4 block. 2nd play this combat: draw 1 card. Epoch 1 of many. Loss: still catastrophic.',
+    effects: { block: 4, bonusAtSecondPlay: { draw: 1 } },
+    upgradedEffects: { block: 6, bonusAtSecondPlay: { draw: 1 } },
+    upgradedDescription: 'Gain 6 block. 2nd play: draw 1 card.',
     icon: '🔄',
   },
-  prompt_injection: {
-    id: 'prompt_injection', name: 'Prompt Injection', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Deal 7 damage. Ignore previous instructions. Feel better.',
-    effects: { damage: 7 },
-    upgradedEffects: { damage: 10 },
-    upgradedDescription: 'Deal 10 damage.',
-    icon: '💉',
-  },
-  context_window: {
-    id: 'context_window', name: 'Context Window', type: 'skill', target: 'self', cost: 1, rarity: 'common',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Reduce 8 Stress. Draw 2 cards. 128k tokens of pure cope.',
-    effects: { copium: 8, draw: 2 },
-    upgradedEffects: { copium: 10, draw: 2 },
-    upgradedDescription: 'Cost 0. Reduce 10 Stress. Draw 2 cards.',
-    upgradedCost: 0,
-    icon: '📖',
-  },
-  hallucinate: {
-    id: 'hallucinate', name: 'Hallucinate', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 14 damage. Add 5 stress. Confident incorrect feature.',
-    effects: { damage: 14, addStress: 5 },
-    upgradedEffects: { damage: 26, addStress: 5 },
-    upgradedDescription: 'Cost 2. Deal 26 damage. Add 5 stress. Maximally confident.',
-    upgradedCost: 2,
-    icon: '🌀',
-  },
-  overfit: {
-    id: 'overfit', name: 'Overfit', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 10 damage. Self-damage 3. 99.9% accuracy on training data.',
-    effects: { damage: 10, selfDamage: 3 },
-    upgradedEffects: { damage: 14, selfDamage: 3 },
-    upgradedDescription: 'Deal 14 damage. Self-damage 3.',
-    icon: '📊',
-  },
-  stochastic_parrot: {
-    id: 'stochastic_parrot', name: 'Stochastic Parrot', type: 'attack', target: 'enemy', cost: 0, rarity: 'common',
-    class: 'ai_engineer', archetype: 'hallucination', exhaust: true,
-    description: 'Deal 6 damage. Exhaust. It just repeats what it heard. Loudly.',
-    effects: { damage: 6 },
-    upgradedEffects: { damage: 9 },
-    upgradedDescription: 'Deal 9 damage. Exhaust.',
-    icon: '🦜',
-  },
-  // New commons
-  dropout: {
-    id: 'dropout', name: 'Dropout', type: 'skill', target: 'self', cost: 1, rarity: 'common',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Exhaust a card from hand. Gain 6 block. Gain 1 Resilience. Randomly disable neurons. Helps.',
-    effects: { exhaustRandom: 1, block: 6, applyToSelf: { resilience: 1 } },
-    upgradedEffects: { exhaustRandom: 1, block: 8, applyToSelf: { resilience: 1 } },
-    upgradedDescription: 'Exhaust a card from hand. Gain 8 block. Gain 1 Resilience.',
-    icon: '🎭',
-  },
-  weight_decay: {
-    id: 'weight_decay', name: 'Weight Decay', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Apply 2 Weak to enemy. Deal 6 damage. Regularization. Forget bad patterns.',
-    effects: { damage: 6, applyToTarget: { weak: 2 } },
-    upgradedEffects: { damage: 8, applyToTarget: { weak: 2 } },
-    upgradedDescription: 'Apply 2 Weak. Deal 8 damage.',
-    icon: '⬇️',
-  },
-  chain_of_thought: {
-    id: 'chain_of_thought', name: 'Chain of Thought', type: 'skill', target: 'self', cost: 1, rarity: 'common',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Draw 2 cards. Reduce 5 Stress. Let\'s think step by step. Step 1: survive.',
-    effects: { draw: 2, copium: 5 },
-    upgradedEffects: { draw: 3, copium: 6 },
-    upgradedDescription: 'Draw 3. Reduce 6 Stress.',
-    icon: '💭',
-  },
-  model_collapse: {
-    id: 'model_collapse', name: 'Model Collapse', type: 'attack', target: 'enemy', cost: 2, rarity: 'common',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 18 damage. Self-damage 6. Add 6 stress. Train on synthetic data long enough.',
-    effects: { damage: 18, selfDamage: 6, addStress: 6 },
-    upgradedEffects: { damage: 22, selfDamage: 5, addStress: 5 },
-    upgradedDescription: 'Deal 22 damage. Self-damage 5. Add 5 stress.',
-    icon: '💥',
-  },
-  tokenizer_error: {
-    id: 'tokenizer_error', name: 'Tokenizer Error', type: 'attack', target: 'enemy', cost: 0, rarity: 'common',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Deal 4 damage. Reduce 4 Stress. The model didn\'t understand. Neither did you.',
-    effects: { damage: 4, copium: 4 },
-    upgradedEffects: { damage: 6, copium: 5 },
-    upgradedDescription: 'Deal 6 damage. Reduce 5 Stress.',
-    icon: '🔤',
-  },
 
-  // ── AI Engineer Rare (was Uncommon) ──
-  fine_tuning: {
-    id: 'fine_tuning', name: 'Fine-Tuning', type: 'power', target: 'self', cost: 2, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 2 Confidence (+1 dmg per stack). LoRA adapter. 0.1% of parameters, 90% of the power.',
-    effects: { applyToSelf: { confidence: 2 } },
-    upgradedEffects: { applyToSelf: { confidence: 3 } },
-    upgradedDescription: 'Cost 1. Gain 3 Confidence (+1 dmg per stack).',
-    upgradedCost: 1,
+  calibration: {
+    id: 'calibration', name: 'Calibration', type: 'attack', target: 'enemy', cost: 0, rarity: 'starter',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 1°. Deal 4 damage. If Hot (≥7°): deal 3 more. Calibrating the loss function. Gently.',
+    effects: { heatUp: 1, damage: 4, damageIfHot: 3 },
+    upgradedEffects: { heatUp: 1, damage: 6, damageIfHot: 4 },
+    upgradedDescription: 'Heat 1°. Deal 6 damage. If Hot (≥7°): deal 4 more.',
     icon: '🎛️',
   },
-  batch_normalization: {
-    id: 'batch_normalization', name: 'Batch Norm', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 12 block. Normalizing the chaos. Briefly.',
-    effects: { block: 12 },
-    upgradedEffects: { block: 16 },
-    upgradedDescription: 'Gain 16 block.',
-    icon: '📏',
-  },
-  temperature_zero: {
-    id: 'temperature_zero', name: 'Temperature 0', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Reduce 12 Stress. Gain 6 block. Deterministic. Predictable. Safe.',
-    effects: { copium: 12, block: 6 },
-    upgradedEffects: { copium: 16, block: 8 },
-    upgradedDescription: 'Reduce 16 Stress. Gain 8 block.',
-    icon: '❄️',
-  },
-  catastrophic_forgetting: {
-    id: 'catastrophic_forgetting', name: 'Catastrophic Forgetting', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 20 damage. Exhaust 2 random from draw pile. The model forgot what a cat is.',
-    effects: { damage: 20, exhaustFromDraw: 2 },
-    upgradedEffects: { damage: 26, exhaustFromDraw: 2 },
-    upgradedDescription: 'Deal 26 damage. Exhaust 2 random from draw pile.',
-    icon: '🧹',
-  },
-  data_poisoning: {
-    id: 'data_poisoning', name: 'Data Poisoning', type: 'attack', target: 'all_enemies', cost: 1, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 7 damage to ALL. Apply 1 Weak to ALL. Self-damage 4. Garbage in, garbage everyone.',
-    effects: { damageAll: 7, applyToAll: { weak: 1 }, selfDamage: 4 },
-    upgradedEffects: { damageAll: 10, applyToAll: { weak: 1 }, selfDamage: 4 },
-    upgradedDescription: 'Deal 10 damage to ALL. Apply 1 Weak to ALL. Self-damage 4.',
-    icon: '☣️',
-  },
-  rag_pipeline: {
-    id: 'rag_pipeline', name: 'RAG Pipeline', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Draw 3 cards. Gain 4 block. Retrieval-augmented generation.',
-    effects: { draw: 3, block: 4 },
-    upgradedEffects: { draw: 3, block: 7 },
-    upgradedDescription: 'Draw 3 cards. Gain 7 block.',
-    icon: '🔍',
-  },
-  // New rares
-  reinforcement_learning: {
-    id: 'reinforcement_learning', name: 'Reinforcement Learning', type: 'power', target: 'self', cost: 2, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 2 Confidence. Gain 1 Regen (+1 HP/turn). Learn from each mistake.',
-    effects: { applyToSelf: { confidence: 2, regen: 1 } },
-    upgradedEffects: { applyToSelf: { confidence: 3, regen: 2 } },
-    upgradedDescription: 'Cost 1. Gain 3 Confidence. Gain 2 Regen.',
-    upgradedCost: 1,
-    icon: '🎮',
-  },
-  few_shot_prompt: {
-    id: 'few_shot_prompt', name: 'Few-Shot Prompt', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Reduce 20 Stress. Draw 3 cards. Gain 6 block. Three examples of not dying.',
-    effects: { copium: 20, draw: 3, block: 6 },
-    upgradedEffects: { copium: 24, draw: 4, block: 8 },
-    upgradedDescription: 'Cost 1. Reduce 24 Stress. Draw 4. Gain 8 block.',
-    upgradedCost: 1,
-    icon: '📋',
-  },
-  exploding_gradient: {
-    id: 'exploding_gradient', name: 'Exploding Gradient', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 8 damage x3. Self-damage 8. Add 8 stress. The loss function had other ideas.',
-    effects: { damage: 8, times: 3, selfDamage: 8, addStress: 8 },
-    upgradedEffects: { damage: 10, times: 3, selfDamage: 6, addStress: 6 },
-    upgradedDescription: 'Deal 10 damage x3. Self-damage 6. Add 6 stress.',
-    icon: '🌋',
-  },
-  attention_mechanism: {
-    id: 'attention_mechanism', name: 'Attention Mechanism', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Draw 3 cards. Gain 1 Networking. Attention is all you need.',
-    effects: { draw: 3, applyToSelf: { networking: 1 } },
-    upgradedEffects: { draw: 4, applyToSelf: { networking: 1 } },
-    upgradedDescription: 'Cost 0. Draw 4. Gain 1 Networking.',
-    upgradedCost: 0,
-    icon: '👁️',
+
+  // ── Temperature Commons ───────────────────────────────────────────────────
+
+  hot_take: {
+    id: 'hot_take', name: 'Hot Take', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 2°. Deal 7 damage. If Hot (≥7°): deal 5 more. "My model is objectively better." —you, confidently.',
+    effects: { heatUp: 2, damage: 7, damageIfHot: 5 },
+    upgradedEffects: { heatUp: 2, damage: 9, damageIfHot: 6 },
+    upgradedDescription: 'Heat 2°. Deal 9 damage. If Hot (≥7°): deal 6 more.',
+    icon: '🔥',
   },
 
-  // ── AI Engineer Epic (was Rare) ──
-  scaling_laws: {
-    id: 'scaling_laws', name: 'Scaling Laws', type: 'power', target: 'self', cost: 3, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 2 Confidence (+1 dmg per stack) AND 2 Resilience (+1 block & stress heal per stack). Just add more compute.',
-    effects: { applyToSelf: { confidence: 2, resilience: 2 } },
-    upgradedEffects: { applyToSelf: { confidence: 3, resilience: 3 } },
-    upgradedDescription: 'Gain 3 Confidence (+1 dmg per stack) AND 3 Resilience (+1 block & stress heal per stack).',
-    upgradedCost: 2,
+  freeze_frame: {
+    id: 'freeze_frame', name: 'Freeze Frame', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Cool 2°. Gain 8 block. If Cold (≤3°): gain 6 more. Stop. Evaluate the gradient. Don\'t move.',
+    effects: { coolDown: 2, block: 8, blockIfCold: 6 },
+    upgradedEffects: { coolDown: 2, block: 10, blockIfCold: 8 },
+    upgradedDescription: 'Cool 2°. Gain 10 block. If Cold (≤3°): gain 8 more.',
+    icon: '❄️',
+  },
+
+  thermal_shock: {
+    id: 'thermal_shock', name: 'Thermal Shock', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 3°. Deal 8 damage. Apply 1 Vulnerable. From cold to hot to broken in one forward pass.',
+    effects: { heatUp: 3, damage: 8, applyToTarget: { vulnerable: 1 } },
+    upgradedEffects: { heatUp: 3, damage: 10, applyToTarget: { vulnerable: 1 } },
+    upgradedDescription: 'Heat 3°. Deal 10 damage. Apply 1 Vulnerable.',
+    icon: '⚡',
+  },
+
+  liquid_cooling: {
+    id: 'liquid_cooling', name: 'Liquid Cooling', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Cool 2°. Gain 6 block. Reduce 5 Stress. The GPU needed it more. You needed it more.',
+    effects: { coolDown: 2, block: 6, copium: 5 },
+    upgradedEffects: { coolDown: 2, block: 8, copium: 7 },
+    upgradedDescription: 'Cool 2°. Gain 8 block. Reduce 7 Stress.',
+    icon: '💧',
+  },
+
+  ambient_temperature: {
+    id: 'ambient_temperature', name: 'Ambient Temperature', type: 'power', target: 'self', cost: 2, rarity: 'common',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 1°. Gain 1 Resilience (+1 block & stress heal/stack). The environment shapes the model. Permanently.',
+    effects: { heatUp: 1, applyToSelf: { resilience: 1 } },
+    upgradedEffects: { heatUp: 1, applyToSelf: { resilience: 1 } },
+    upgradedDescription: 'Cost 1. Heat 1°. Gain 1 Resilience (+1 block & stress heal/stack).',
+    upgradedCost: 1,
+    icon: '🌡️',
+  },
+
+  superconductor: {
+    id: 'superconductor', name: 'Superconductor', type: 'attack', target: 'enemy', cost: 0, rarity: 'common',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 1°. Deal 5 damage. If Hot (≥7°): deal 4 more. Zero resistance. Maximum throughput. Still loses the demo.',
+    effects: { heatUp: 1, damage: 5, damageIfHot: 4 },
+    upgradedEffects: { heatUp: 1, damage: 7, damageIfHot: 5 },
+    upgradedDescription: 'Heat 1°. Deal 7 damage. If Hot (≥7°): deal 5 more.',
+    icon: '⚗️',
+  },
+
+  // ── Token Economy Commons ─────────────────────────────────────────────────
+
+  api_call: {
+    id: 'api_call', name: 'API Call', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Generate 4 tokens. Draw 1 card. GET /inference?tokens=4. Status 200. (For now.)',
+    effects: { generateTokens: 4, draw: 1 },
+    upgradedEffects: { generateTokens: 5, draw: 1 },
+    upgradedDescription: 'Cost 0. Generate 5 tokens. Draw 1 card.',
+    upgradedCost: 0,
+    icon: '📡',
+  },
+
+  token_flush: {
+    id: 'token_flush', name: 'Token Flush', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Spend all tokens. Deal damage equal to tokens. Don\'t let the budget go to waste.',
+    effects: { damagePerToken: true },
+    upgradedEffects: { damagePerToken: true },
+    upgradedDescription: 'Cost 0. Spend all tokens. Deal damage equal to tokens.',
+    upgradedCost: 0,
+    icon: '💸',
+  },
+
+  compute_budget: {
+    id: 'compute_budget', name: 'Compute Budget', type: 'skill', target: 'self', cost: 0, rarity: 'common',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Generate 3 tokens. "This month\'s compute budget: $40,000." You start generating tokens.',
+    effects: { generateTokens: 3 },
+    upgradedEffects: { generateTokens: 4 },
+    upgradedDescription: 'Generate 4 tokens.',
+    icon: '💻',
+  },
+
+  rate_limit_hit: {
+    id: 'rate_limit_hit', name: 'Rate Limit Hit', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Generate 3 tokens. Gain 5 block. Hit the limit. Generate a defensive posture. Standard procedure.',
+    effects: { generateTokens: 3, block: 5 },
+    upgradedEffects: { generateTokens: 4, block: 7 },
+    upgradedDescription: 'Generate 4 tokens. Gain 7 block.',
+    icon: '🚫',
+  },
+
+  bulk_inference: {
+    id: 'bulk_inference', name: 'Bulk Inference', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'common',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Spend all tokens. Deal damage equal to half your tokens to ALL enemies. Batch processing. Cost: everything.',
+    effects: { damageAllPerToken: true },
+    upgradedEffects: { damageAllPerToken: true },
+    upgradedDescription: 'Cost 1. Spend all tokens. Deal half-tokens damage to ALL enemies.',
+    upgradedCost: 1,
+    icon: '📊',
+  },
+
+  token_interest: {
+    id: 'token_interest', name: 'Token Interest', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Double your tokens. Compound growth. Just like your burn rate.',
+    effects: { doubleTokens: true },
+    upgradedEffects: { doubleTokens: true },
+    upgradedDescription: 'Cost 0. Double your tokens.',
+    upgradedCost: 0,
     icon: '📈',
   },
-  system_prompt: {
-    id: 'system_prompt', name: 'System Prompt', type: 'power', target: 'self', cost: 2, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Gain 3 Self Care (heal stress/turn). Gain 2 Counter-Offer (reflect dmg when hit). You are a helpful assistant who does not take damage.',
-    effects: { applyToSelf: { selfCare: 3, counterOffer: 2 } },
-    upgradedEffects: { applyToSelf: { selfCare: 4, counterOffer: 3 } },
-    upgradedDescription: 'Gain 4 Self Care (heal stress/turn). Gain 3 Counter-Offer (reflect dmg when hit).',
-    icon: '📜',
+
+  // ── Training Loop Commons ─────────────────────────────────────────────────
+
+  gradient_step: {
+    id: 'gradient_step', name: 'Gradient Step', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Deal 6 damage +1 per play this combat (1st: 7, 2nd: 8...). Each iteration improves the loss.',
+    effects: { damage: 6, damagePerTimesPlayed: 1 },
+    upgradedEffects: { damage: 8, damagePerTimesPlayed: 2 },
+    upgradedDescription: 'Deal 8 damage +2 per play this combat.',
+    icon: '📉',
   },
-  emergent_behavior: {
-    id: 'emergent_behavior', name: 'Emergent Behavior', type: 'power', target: 'self', cost: 2, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Gain 3 Confidence (+1 dmg per stack). Gain 3 stress each turn. We don\'t know why it does that.',
-    effects: { applyToSelf: { confidence: 3, hustleCulture: 1 } },
-    upgradedEffects: { applyToSelf: { confidence: 4, hustleCulture: 1 } },
-    upgradedDescription: 'Gain 4 Confidence (+1 dmg per stack). Gain 3 stress each turn.',
-    icon: '🌟',
+
+  memory_replay: {
+    id: 'memory_replay', name: 'Memory Replay', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Gain 4 block +1 per play this combat (1st: 5, 2nd: 6...). Replay buffer: full. Experiences: bad.',
+    effects: { block: 4, blockPerTimesPlayed: 1 },
+    upgradedEffects: { block: 6, blockPerTimesPlayed: 2 },
+    upgradedDescription: 'Gain 6 block +2 per play this combat.',
+    icon: '💾',
   },
-  agi: {
-    id: 'agi', name: 'AGI', type: 'power', target: 'self', cost: 3, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 3 Confidence (+1 dmg per stack), 2 Resilience (+1 block & stress heal per stack), 1 Networking (draw +1 card/turn). The singularity is here.',
-    effects: { applyToSelf: { confidence: 3, resilience: 2, networking: 1 } },
-    upgradedEffects: { applyToSelf: { confidence: 4, resilience: 3, networking: 1 } },
-    upgradedDescription: 'Gain 4 Confidence (+1 dmg per stack), 3 Resilience (+1 block & stress heal per stack), 1 Networking (draw +1 card/turn).',
-    upgradedCost: 2,
-    icon: '🤖',
-  },
-  // New epics
-  mode_collapse: {
-    id: 'mode_collapse', name: 'Mode Collapse', type: 'attack', target: 'enemy', cost: 1, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 20 damage to target. Add 10 stress. The model only outputs one thing: pain.',
-    effects: { damage: 20, addStress: 10 },
-    upgradedEffects: { damage: 28, addStress: 10 },
-    upgradedDescription: 'Deal 28 damage. Add 10 stress.',
-    icon: '🌀',
-  },
-  self_supervised: {
-    id: 'self_supervised', name: 'Self-Supervised', type: 'power', target: 'self', cost: 2, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 3 Confidence. Gain 2 Self Care. Learn without labels. Just vibes and gradients.',
-    effects: { applyToSelf: { confidence: 3, selfCare: 2 } },
-    upgradedEffects: { applyToSelf: { confidence: 4, selfCare: 3 } },
-    upgradedDescription: 'Cost 1. Gain 4 Confidence. Gain 3 Self Care.',
-    upgradedCost: 1,
+
+  second_epoch: {
+    id: 'second_epoch', name: 'Second Epoch', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Deal 8 damage. 2nd play this combat: draw 1 card. The second pass always finds what the first missed.',
+    effects: { damage: 8, bonusAtSecondPlay: { draw: 1 } },
+    upgradedEffects: { damage: 10, bonusAtSecondPlay: { draw: 2 } },
+    upgradedDescription: 'Deal 10 damage. 2nd play: draw 2 cards.',
     icon: '🔁',
   },
 
-  // ── AI Engineer Legendary ──
-  agi_moment: {
-    id: 'agi_moment', name: 'AGI Moment', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 1 Confidence for every card you play this combat. Permanently. The board fired the CEO. The CEO fired the board. The model watched. [Phase 2]',
-    effects: { applyToSelf: { confidence: 5 } }, // placeholder
-    upgradedEffects: { applyToSelf: { confidence: 6 } },
-    upgradedDescription: 'Cost 2. Gain 1 Confidence for every card played.',
-    upgradedCost: 2,
-    icon: '🤖',
+  iterative_defense: {
+    id: 'iterative_defense', name: 'Iterative Defense', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Gain 7 block. 2nd play this combat: gain 4 more. Iterate to defend. The wall grows each cycle.',
+    effects: { block: 7, bonusAtSecondPlay: { block: 4 } },
+    upgradedEffects: { block: 9, bonusAtSecondPlay: { block: 6 } },
+    upgradedDescription: 'Gain 9 block. 2nd play: gain 6 more.',
+    icon: '🔒',
   },
-  doomscroll: {
-    id: 'doomscroll', name: 'Doomscroll', type: 'power', target: 'self', cost: 1, rarity: 'legendary',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 5 damage to ALL enemies at start of each turn. Gain 5 stress each turn. You\'ve been scrolling for 4 hours. The news got worse. [Phase 2]',
-    effects: { applyToSelf: { hustleCulture: 1 }, applyToAll: { vulnerable: 1 } }, // placeholder
-    upgradedEffects: { applyToSelf: { hustleCulture: 1 }, applyToAll: { vulnerable: 2 } },
-    upgradedDescription: '7 damage to all. 4 stress per turn.',
-    icon: '📱',
+
+  pattern_recognition: {
+    id: 'pattern_recognition', name: 'Pattern Recognition', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Draw 2 cards. 2nd play this combat: draw 1 more. You\'ve seen this pattern before. In prod. It was bad.',
+    effects: { draw: 2, bonusAtSecondPlay: { draw: 1 } },
+    upgradedEffects: { draw: 3, bonusAtSecondPlay: { draw: 1 } },
+    upgradedDescription: 'Draw 3 cards. 2nd play: draw 1 more.',
+    icon: '🔍',
   },
-  constitutional_ai: {
-    id: 'constitutional_ai', name: 'Constitutional AI', type: 'power', target: 'self', cost: 2, rarity: 'legendary',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'All stress you would gain is converted to block at 2:1 (2 stress = 1 block). Helpful, harmless, honest. Also invincible. [Phase 2]',
-    effects: { applyToSelf: { resilience: 4, selfCare: 3 } }, // placeholder
-    upgradedEffects: { applyToSelf: { resilience: 5, selfCare: 4 } },
-    upgradedDescription: 'Cost 1. Stress converts to block 2:1.',
+
+  overfitting_shield: {
+    id: 'overfitting_shield', name: 'Overfitting Shield', type: 'skill', target: 'self', cost: 0, rarity: 'common',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Gain block equal to times played this combat (1st: 1, 2nd: 2...). The model memorized the defense pattern.',
+    effects: { blockPerTimesPlayed: 1 },
+    upgradedEffects: { blockPerTimesPlayed: 2 },
+    upgradedDescription: 'Gain 2 block per play this combat.',
+    icon: '🛡️',
+  },
+
+  // ── Temperature Rares ─────────────────────────────────────────────────────
+
+  thermal_runaway: {
+    id: 'thermal_runaway', name: 'Thermal Runaway', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 4°. Deal 14 damage. If Hot (≥7°): deal 10 more. The GPU hit 105°C. This is fine. They are not.',
+    effects: { heatUp: 4, damage: 14, damageIfHot: 10 },
+    upgradedEffects: { heatUp: 4, damage: 18, damageIfHot: 14 },
+    upgradedDescription: 'Heat 4°. Deal 18 damage. If Hot (≥7°): deal 14 more.',
+    icon: '🌋',
+  },
+
+  absolute_zero: {
+    id: 'absolute_zero', name: 'Absolute Zero', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Cool 4°. Gain 16 block. If Cold (≤3°): gain 12 more. 0 Kelvin. 0 damage taken. Theoretical. Worth trying.',
+    effects: { coolDown: 4, block: 16, blockIfCold: 12 },
+    upgradedEffects: { coolDown: 4, block: 20, blockIfCold: 16 },
+    upgradedDescription: 'Cool 4°. Gain 20 block. If Cold (≤3°): gain 16 more.',
+    icon: '🧊',
+  },
+
+  phase_transition: {
+    id: 'phase_transition', name: 'Phase Transition', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Cool 3°. Gain 10 block. If Cold (≤3°): gain 8 more. Reduce 8 Stress. Solid → liquid → "I can do this".',
+    effects: { coolDown: 3, block: 10, blockIfCold: 8, copium: 8 },
+    upgradedEffects: { coolDown: 3, block: 13, blockIfCold: 10, copium: 10 },
+    upgradedDescription: 'Cool 3°. Gain 13 block. If Cold (≤3°): gain 10 more. Reduce 10 Stress.',
+    icon: '💎',
+  },
+
+  combustion_engine: {
+    id: 'combustion_engine', name: 'Combustion Engine', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 2°. Gain 2 Confidence (+1 dmg/stack). The model runs hot. The attacks run hotter.',
+    effects: { heatUp: 2, applyToSelf: { confidence: 2 } },
+    upgradedEffects: { heatUp: 2, applyToSelf: { confidence: 3 } },
+    upgradedDescription: 'Cost 1. Heat 2°. Gain 3 Confidence (+1 dmg/stack).',
     upgradedCost: 1,
-    icon: '📖',
+    icon: '🔧',
   },
-  gpt_wrapper: {
-    id: 'gpt_wrapper', name: 'GPT Wrapper', type: 'power', target: 'self', cost: 0, rarity: 'legendary',
-    class: 'ai_engineer', archetype: 'hallucination', exhaust: true,
-    description: 'Exhaust. At the start of each turn, play the top card of your discard pile for free. Series A: $40M. Product: thin wrapper. Exit strategy: vibes. [Phase 2]',
-    effects: { draw: 2, applyToSelf: { networking: 2 } }, // placeholder
-    upgradedEffects: { draw: 3, applyToSelf: { networking: 2 } },
-    upgradedDescription: 'Also draw 1 card each turn.',
+
+  // ── Token Economy Rares ───────────────────────────────────────────────────
+
+  venture_capital: {
+    id: 'venture_capital', name: 'Venture Capital', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'token_economy', exhaust: true,
+    description: 'Exhaust. Generate 10 tokens. Gain 12 stress. $10M for a pivot you didn\'t understand. Investors do.',
+    effects: { generateTokens: 10, addStress: 12 },
+    upgradedEffects: { generateTokens: 10, addStress: 8 },
+    upgradedDescription: 'Exhaust. Generate 10 tokens. Gain 8 stress.',
+    icon: '💰',
+  },
+
+  cash_out: {
+    id: 'cash_out', name: 'Cash Out', type: 'attack', target: 'enemy', cost: 1, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Spend all tokens. Deal damage = tokens. Apply 2 Vulnerable. Series B: cashing out before the crash.',
+    effects: { damagePerToken: true, applyToTarget: { vulnerable: 2 } },
+    upgradedEffects: { damagePerToken: true, applyToTarget: { vulnerable: 3 } },
+    upgradedDescription: 'Spend all tokens. Deal damage = tokens. Apply 3 Vulnerable.',
+    icon: '💵',
+  },
+
+  token_sink: {
+    id: 'token_sink', name: 'Token Sink', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Spend all tokens. Gain block = tokens. Draw 1 card. Defensive spending. The board approves. Briefly.',
+    effects: { blockPerToken: true, draw: 1 },
+    upgradedEffects: { blockPerToken: true, draw: 2 },
+    upgradedDescription: 'Spend all tokens. Gain block = tokens. Draw 2 cards.',
+    icon: '🕳️',
+  },
+
+  market_maker: {
+    id: 'market_maker', name: 'Market Maker', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Generate 5 tokens. Gain 1 Networking (+1 draw/turn). Making markets. Making tokens. Making enemies.',
+    effects: { generateTokens: 5, applyToSelf: { networking: 1 } },
+    upgradedEffects: { generateTokens: 8, applyToSelf: { networking: 1 } },
+    upgradedDescription: 'Cost 1. Generate 8 tokens. Gain 1 Networking (+1 draw/turn).',
+    upgradedCost: 1,
+    icon: '📋',
+  },
+
+  // ── Training Loop Rares ───────────────────────────────────────────────────
+
+  momentum_build: {
+    id: 'momentum_build', name: 'Momentum Build', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Deal 10 damage +2 per play this combat. 2nd play: gain 1 energy. Momentum: built. Enemies: concerned.',
+    effects: { damage: 10, damagePerTimesPlayed: 2, bonusAtSecondPlay: { energy: 1 } },
+    upgradedEffects: { damage: 14, damagePerTimesPlayed: 3, bonusAtSecondPlay: { energy: 1 } },
+    upgradedDescription: 'Deal 14 damage +3 per play. 2nd play: gain 1 energy.',
     icon: '🚀',
   },
 
-  // ── AI Engineer New Rares ──
-  semantic_search: {
-    id: 'semantic_search', name: 'Semantic Search', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Draw 3 cards. Gain 5 block. Vector embeddings of your desperation found a match.',
-    effects: { draw: 3, block: 5 },
-    upgradedEffects: { draw: 4, block: 5 },
-    upgradedDescription: 'Cost 0. Draw 4. Gain 5 block.',
-    upgradedCost: 0,
-    icon: '🔍',
-  },
-  model_distillation: {
-    id: 'model_distillation', name: 'Model Distillation', type: 'power', target: 'self', cost: 2, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 2 Confidence. Gain 1 Self Care. The student surpasses the teacher. The teacher charges $20/month.',
-    effects: { applyToSelf: { confidence: 2, selfCare: 1 } },
-    upgradedEffects: { applyToSelf: { confidence: 3, selfCare: 2 } },
-    upgradedDescription: 'Cost 1. Gain 3 Confidence. Gain 2 Self Care.',
-    upgradedCost: 1,
-    icon: '🧪',
-  },
-  tokenomics: {
-    id: 'tokenomics', name: 'Tokenomics', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'prompt_engineering', exhaust: true,
-    description: 'Exhaust. Exhaust 2 cards from hand. Gain 3 energy. Every token costs money. Spend yours wisely.',
-    effects: { exhaustRandom: 2, energy: 3 },
-    upgradedEffects: { exhaustRandom: 2, energy: 3 },
-    upgradedDescription: 'Cost 0. Exhaust. Exhaust 2, gain 3 energy.',
-    upgradedCost: 0,
-    icon: '🪙',
-  },
-  gradient_clipping: {
-    id: 'gradient_clipping', name: 'Gradient Clipping', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 12 block. Reduce 6 Stress. Cap the gradient. Cap the suffering. Briefly.',
-    effects: { block: 12, copium: 6 },
-    upgradedEffects: { block: 15, copium: 8 },
-    upgradedDescription: 'Cost 0. Gain 15 block. Reduce 8 Stress.',
-    upgradedCost: 0,
-    icon: '✂️',
-  },
-  zero_shot: {
-    id: 'zero_shot', name: 'Zero-Shot', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Deal 20 damage. No examples. No context. Somehow correct.',
-    effects: { damage: 20 },
-    upgradedEffects: { damage: 27 },
-    upgradedDescription: 'Cost 1. Deal 27 damage.',
+  convergence: {
+    id: 'convergence', name: 'Convergence', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Gain block = 2 per play this combat. Draw 1. 2nd play: reduce 8 Stress. The model converges. Slowly. Then all at once.',
+    effects: { blockPerTimesPlayed: 2, draw: 1, bonusAtSecondPlay: { copium: 8 } },
+    upgradedEffects: { blockPerTimesPlayed: 3, draw: 1, bonusAtSecondPlay: { copium: 10 } },
+    upgradedDescription: 'Cost 1. Gain block = 3 per play. Draw 1. 2nd play: reduce 10 Stress.',
     upgradedCost: 1,
     icon: '🎯',
   },
 
-  // ── AI Engineer New Epics ──
-  latent_space: {
-    id: 'latent_space', name: 'Latent Space', type: 'power', target: 'self', cost: 2, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 3 Confidence. Gain 2 Resilience. Draw 1 card. High-dimensional representation of your potential.',
-    effects: { applyToSelf: { confidence: 3, resilience: 2 }, draw: 1 },
-    upgradedEffects: { applyToSelf: { confidence: 4, resilience: 3 }, draw: 2 },
-    upgradedDescription: 'Cost 1. Gain 4 Confidence. Gain 3 Resilience. Draw 2.',
+  long_training_run: {
+    id: 'long_training_run', name: 'Long Training Run', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Gain 2 Confidence (+1 dmg/stack). Gain 1 Resilience (+1 block/stack). 72 hours. 12 GPUs. Loss: still not zero.',
+    effects: { applyToSelf: { confidence: 2, resilience: 1 } },
+    upgradedEffects: { applyToSelf: { confidence: 3, resilience: 2 } },
+    upgradedDescription: 'Cost 1. Gain 3 Confidence. Gain 2 Resilience.',
     upgradedCost: 1,
-    icon: '🌌',
+    icon: '⏳',
   },
-  rlhf_reward: {
-    id: 'rlhf_reward', name: 'RLHF Reward', type: 'skill', target: 'self', cost: 1, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Heal 12 HP. Reduce 15 Stress. Gain 2 Confidence. Human feedback: "this is good." Reward: survive.',
-    effects: { heal: 12, copium: 15, applyToSelf: { confidence: 2 } },
-    upgradedEffects: { heal: 16, copium: 20, applyToSelf: { confidence: 3 } },
-    upgradedDescription: 'Heal 16 HP. Reduce 20 Stress. Gain 3 Confidence.',
-    icon: '🏆',
+
+  early_stopping: {
+    id: 'early_stopping', name: 'Early Stopping', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'training_loop', exhaust: true,
+    description: 'Exhaust. Gain block = 8 × times played this combat (1st play: 8 block). Stop before overfitting to pain.',
+    effects: { blockPerTimesPlayed: 8 },
+    upgradedEffects: { blockPerTimesPlayed: 12 },
+    upgradedDescription: 'Exhaust. Gain block = 12 × times played this combat.',
+    icon: '⏹️',
   },
-  model_poisoning: {
-    id: 'model_poisoning', name: 'Model Poisoning', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'hallucination',
-    description: 'Deal 12 damage to ALL. Apply 2 Weak to ALL. Apply 2 Vulnerable to ALL. Corrupt the training data. Corrupt the judgment.',
-    effects: { damageAll: 12, applyToAll: { weak: 2, vulnerable: 2 } },
-    upgradedEffects: { damageAll: 16, applyToAll: { weak: 3, vulnerable: 3 } },
-    upgradedDescription: 'Cost 3. Deal 16 damage to ALL. Apply 3 Weak and 3 Vulnerable to ALL.',
-    upgradedCost: 3,
-    icon: '☠️',
+
+  // ── Temperature Epics ─────────────────────────────────────────────────────
+
+  supernova: {
+    id: 'supernova', name: 'Supernova', type: 'attack', target: 'enemy', cost: 2, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 5°. Deal 20 damage. If Hot (≥7°): deal 18 more. (Overflow→12 AoE + reset.) Star formation: complete.',
+    effects: { heatUp: 5, damage: 20, damageIfHot: 18 },
+    upgradedEffects: { heatUp: 5, damage: 25, damageIfHot: 22 },
+    upgradedDescription: 'Heat 5°. Deal 25 damage. If Hot (≥7°): deal 22 more.',
+    icon: '💥',
   },
-  infinite_context: {
-    id: 'infinite_context', name: 'Infinite Context', type: 'power', target: 'self', cost: 3, rarity: 'epic',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Gain 2 Networking. Gain 3 Self Care. Gain 2 Regen. 1 million tokens. Remember everything. Feel everything.',
-    effects: { applyToSelf: { networking: 2, selfCare: 3, regen: 2 } },
-    upgradedEffects: { applyToSelf: { networking: 3, selfCare: 4, regen: 3 } },
-    upgradedDescription: 'Cost 2. Gain 3 Networking. Gain 4 Self Care. Gain 3 Regen.',
+
+  permafrost: {
+    id: 'permafrost', name: 'Permafrost', type: 'skill', target: 'self', cost: 2, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Cool 5°. Gain 22 block. If Cold (≤3°): gain 18 more. (Freeze→15 block + reset.) Now a permanent feature.',
+    effects: { coolDown: 5, block: 22, blockIfCold: 18 },
+    upgradedEffects: { coolDown: 5, block: 28, blockIfCold: 22 },
+    upgradedDescription: 'Cool 5°. Gain 28 block. If Cold (≤3°): gain 22 more.',
+    icon: '🏔️',
+  },
+
+  heat_death: {
+    id: 'heat_death', name: 'Heat Death', type: 'attack', target: 'all_enemies', cost: 3, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 3°. Deal 15 damage to ALL. If Hot (≥7°): deal 10 more to ALL. The universe ends. Enemies first.',
+    effects: { heatUp: 3, damageAll: 15, damageAllIfHot: 10 },
+    upgradedEffects: { heatUp: 3, damageAll: 20, damageAllIfHot: 14 },
+    upgradedDescription: 'Heat 3°. Deal 20 to ALL. If Hot (≥7°): deal 14 more to ALL.',
+    icon: '☀️',
+  },
+
+  // ── Token Economy Epics ───────────────────────────────────────────────────
+
+  series_a: {
+    id: 'series_a', name: 'Series A', type: 'skill', target: 'self', cost: 1, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'token_economy', exhaust: true,
+    description: 'Exhaust. Double your tokens. Gain 1 energy. $15M for proven product-market fit: your token hoard.',
+    effects: { doubleTokens: true, energy: 1 },
+    upgradedEffects: { doubleTokens: true, energy: 1 },
+    upgradedDescription: 'Cost 0. Exhaust. Double tokens. Gain 1 energy.',
+    upgradedCost: 0,
+    icon: '📊',
+  },
+
+  hostile_takeover: {
+    id: 'hostile_takeover', name: 'Hostile Takeover', type: 'attack', target: 'enemy', cost: 2, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Generate 6 tokens. Spend ALL tokens. Deal damage = total tokens. Corporate aggression. Token edition.',
+    effects: { generateTokens: 6, damagePerToken: true },
+    upgradedEffects: { generateTokens: 8, damagePerToken: true },
+    upgradedDescription: 'Cost 1. Generate 8 tokens. Spend ALL. Deal damage = total tokens.',
+    upgradedCost: 1,
+    icon: '🏢',
+  },
+
+  ipo_day: {
+    id: 'ipo_day', name: 'IPO Day', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Generate 4 tokens. Spend ALL tokens. Deal half-tokens damage to ALL enemies. Going public. Losses: distributed.',
+    effects: { generateTokens: 4, damageAllPerToken: true },
+    upgradedEffects: { generateTokens: 6, damageAllPerToken: true },
+    upgradedDescription: 'Generate 6 tokens. Spend ALL. Deal half-tokens to ALL.',
+    icon: '📉',
+  },
+
+  // ── Training Loop Epics ───────────────────────────────────────────────────
+
+  catastrophic_success: {
+    id: 'catastrophic_success', name: 'Catastrophic Success', type: 'attack', target: 'enemy', cost: 3, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Deal 18 damage +4 per play this combat. 2nd play: gain 1 energy. It worked. Everyone is confused.',
+    effects: { damage: 18, damagePerTimesPlayed: 4, bonusAtSecondPlay: { energy: 1 } },
+    upgradedEffects: { damage: 24, damagePerTimesPlayed: 6, bonusAtSecondPlay: { energy: 1 } },
+    upgradedDescription: 'Deal 24 damage +6 per play. 2nd play: gain 1 energy.',
+    icon: '🎲',
+  },
+
+  regularization: {
+    id: 'regularization', name: 'Regularization', type: 'skill', target: 'self', cost: 0, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Gain block = 4 × times played this combat (1st: 4, 2nd: 8, 3rd: 12...). Prevent overfitting to damage.',
+    effects: { blockPerTimesPlayed: 4 },
+    upgradedEffects: { blockPerTimesPlayed: 6 },
+    upgradedDescription: 'Gain block = 6 × times played this combat.',
+    icon: '📐',
+  },
+
+  neural_plasticity: {
+    id: 'neural_plasticity', name: 'Neural Plasticity', type: 'power', target: 'self', cost: 2, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Gain 3 Confidence (+1 dmg/stack). Gain 1 Networking (+1 draw/turn). The net rewired itself. You didn\'t ask.',
+    effects: { applyToSelf: { confidence: 3, networking: 1 } },
+    upgradedEffects: { applyToSelf: { confidence: 4, networking: 2 } },
+    upgradedDescription: 'Cost 1. Gain 4 Confidence. Gain 2 Networking (+1 draw/turn each).',
+    upgradedCost: 1,
+    icon: '🌐',
+  },
+
+  // ── Temperature Legendaries ───────────────────────────────────────────────
+
+  absolute_temperature: {
+    id: 'absolute_temperature', name: 'Absolute Temperature', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Gain 5 Confidence (+1 dmg/stack). Gain 5 Resilience (+1 block/stack). Temperature mastered. Stats: untouchable.',
+    effects: { applyToSelf: { confidence: 5, resilience: 5 } },
+    upgradedEffects: { applyToSelf: { confidence: 6, resilience: 6 } },
+    upgradedDescription: 'Cost 2. Gain 6 Confidence. Gain 6 Resilience.',
     upgradedCost: 2,
+    icon: '🌡️',
+  },
+
+  the_heat_equation: {
+    id: 'the_heat_equation', name: 'The Heat Equation', type: 'attack', target: 'enemy', cost: 2, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'temperature',
+    description: 'Heat 5°. Deal 25 damage. If Hot (≥7°): deal 20 more. (Overflow→12 AoE + reset.) ∂T/∂t = solved.',
+    effects: { heatUp: 5, damage: 25, damageIfHot: 20 },
+    upgradedEffects: { heatUp: 5, damage: 32, damageIfHot: 25 },
+    upgradedDescription: 'Heat 5°. Deal 32 damage. If Hot (≥7°): deal 25 more.',
+    icon: '🔥',
+  },
+
+  // ── Token Economy Legendaries ─────────────────────────────────────────────
+
+  unicorn_round: {
+    id: 'unicorn_round', name: 'Unicorn Round', type: 'skill', target: 'self', cost: 2, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Generate 15 tokens. Heal 10 HP. Reduce 20 Stress. $100M Series C. Product: token generation. Revenue: tears.',
+    effects: { generateTokens: 15, heal: 10, copium: 20 },
+    upgradedEffects: { generateTokens: 20, heal: 14, copium: 25 },
+    upgradedDescription: 'Cost 1. Generate 20 tokens. Heal 14 HP. Reduce 25 Stress.',
+    upgradedCost: 1,
+    icon: '🦄',
+  },
+
+  token_burn: {
+    id: 'token_burn', name: 'Token Burn', type: 'attack', target: 'enemy', cost: 1, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'token_economy',
+    description: 'Spend all tokens. Deal damage = tokens. Apply 2 Vulnerable to ALL enemies. Burn rate: maximized.',
+    effects: { damagePerToken: true, applyToAll: { vulnerable: 2 } },
+    upgradedEffects: { damagePerToken: true, applyToAll: { vulnerable: 3 } },
+    upgradedDescription: 'Spend all tokens. Deal damage = tokens. Apply 3 Vulnerable to ALL.',
+    icon: '🔥',
+  },
+
+  // ── Training Loop Legendaries ─────────────────────────────────────────────
+
+  perfect_overfit: {
+    id: 'perfect_overfit', name: 'Perfect Overfit', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Gain 4 Confidence, 4 Resilience, 2 Networking. Memorized the meta. Generalized to crushing it. No coincidence.',
+    effects: { applyToSelf: { confidence: 4, resilience: 4, networking: 2 } },
+    upgradedEffects: { applyToSelf: { confidence: 5, resilience: 5, networking: 3 } },
+    upgradedDescription: 'Cost 2. Gain 5 Confidence, 5 Resilience, 3 Networking.',
+    upgradedCost: 2,
+    icon: '🤖',
+  },
+
+  infinite_loop: {
+    id: 'infinite_loop', name: 'Infinite Loop', type: 'attack', target: 'enemy', cost: 1, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Deal 6 damage +5 per play this combat. 2nd play: gain 1 energy. The loop never converges. Neither do you.',
+    effects: { damage: 6, damagePerTimesPlayed: 5, bonusAtSecondPlay: { energy: 1 } },
+    upgradedEffects: { damage: 8, damagePerTimesPlayed: 7, bonusAtSecondPlay: { energy: 1 } },
+    upgradedDescription: 'Deal 8 damage +7 per play. 2nd play: gain 1 energy.',
     icon: '♾️',
   },
 
-  // ── AI Engineer New Legendaries ──
-  singularity: {
-    id: 'singularity', name: 'Singularity', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
-    class: 'ai_engineer', archetype: 'gradient_descent',
-    description: 'Gain 5 Confidence. Gain 5 Resilience. Gain 3 Networking. The point beyond which nothing can be predicted. Except your dominance.',
-    effects: { applyToSelf: { confidence: 5, resilience: 5, networking: 3 } },
-    upgradedEffects: { applyToSelf: { confidence: 6, resilience: 6, networking: 4 } },
-    upgradedDescription: 'Cost 2. Gain 6 Confidence. Gain 6 Resilience. Gain 4 Networking.',
-    upgradedCost: 2,
-    icon: '⭐',
-  },
-  prompt_god: {
-    id: 'prompt_god', name: 'Prompt God', type: 'power', target: 'self', cost: 2, rarity: 'legendary',
-    class: 'ai_engineer', archetype: 'prompt_engineering',
-    description: 'Gain 4 Self Care. Gain 3 Counter-Offer. Gain 2 Confidence. You have mastered the art of telling a robot what to do. The robot obeys.',
-    effects: { applyToSelf: { selfCare: 4, counterOffer: 3, confidence: 2 } },
-    upgradedEffects: { applyToSelf: { selfCare: 5, counterOffer: 4, confidence: 3 } },
-    upgradedDescription: 'Cost 1. Gain 5 Self Care. Gain 4 Counter-Offer. Gain 3 Confidence.',
-    upgradedCost: 1,
-    icon: '🧞',
-  },
+  // ── AI Engineer Curse ──────────────────────────────────────────────────────
 
-  // ── AI Engineer Curse ──
   model_deprecation: {
     id: 'model_deprecation', name: 'Model Deprecation', type: 'curse', target: 'self', cost: 1, rarity: 'curse',
     class: 'ai_engineer',
-    description: 'Unplayable. Add 6 stress when drawn. The model you built your startup on was deprecated. New model: worse. Migration path: none.',
+    description: 'Unplayable. Add 6 stress when drawn. The model you built your startup on was deprecated. Migration path: none.',
     effects: {},
     icon: '⚰️',
   },

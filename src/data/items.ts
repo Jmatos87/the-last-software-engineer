@@ -12,9 +12,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'production_server', name: 'Production Server', icon: '🖥️',
-    description: 'Start of combat: gain 2 Confidence (+1 attack damage per stack). Running since 2016. Nobody dares touch it.',
+    description: 'Start of combat: gain 1 Confidence (+1 attack damage per stack). Running since 2016. Nobody dares touch it.',
     rarity: 'starter', class: 'backend', isStarter: true,
-    effect: { startBattleConfidence: 2 },
+    effect: { startBattleConfidence: 1 },
   },
   {
     id: 'whiteboard_marker', name: 'Whiteboard Marker', icon: '🖊️',
@@ -87,9 +87,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'waf_rules', name: 'WAF Rules', icon: '🛡️',
-    description: 'Start combat with 5 Counter-Offer (reflect damage when hit).',
+    description: 'Start combat with 4 Counter-Offer (reflect damage when hit).',
     rarity: 'rare', class: 'backend',
-    effect: { counterOfferStart: 5 },
+    effect: { counterOfferStart: 4 },
   },
   {
     id: 'redis_cache', name: 'Redis Cache', icon: '🔴',

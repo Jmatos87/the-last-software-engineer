@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { BattleState, EnemyDef, EnemyInstance, RunState, CardInstance } from '../types';
+import type { BattleState, Deployment, EnemyDef, EnemyInstance, RunState, CardInstance } from '../types';
 import { createCardInstance, shuffleDeck, drawCards } from '../utils/deckUtils';
 import { cards, getCardDef } from '../data/cards';
 import {
@@ -125,11 +125,16 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: Batt
       killCount: 0,
       totalEnemies: enemies.length,
       goldEarned: 0,
+      deployments: [],
       powersPlayedThisCombat: 0,
       cardsPlayedThisTurn: 0,
       firstAttackPlayedThisTurn: false,
       firstSkillPlayedThisTurn: false,
       firstPowerPlayedThisCombat: false,
+      nextCardCostZero: false,
+      temperature: 5,
+      tokens: 0,
+      cardPlayCounts: {},
     },
     hpAdjust,
     stressAdjust,
@@ -159,6 +164,11 @@ export function executePlayCard(
     }
   }
 
+  // fast_refresh / event_bubbling: next card played this turn costs 0
+  if (battle.nextCardCostZero) {
+    effectiveCost = 0;
+  }
+
   if (effectiveCost > battle.energy) return { battle, stressReduction: 0, hpChange: 0, stressChange: 0, goldChange: 0 };
 
   const newBattle = {
@@ -177,6 +187,11 @@ export function executePlayCard(
   newBattle.energy -= effectiveCost;
   newBattle.hand.splice(cardIndex, 1);
   newBattle.cardsPlayedThisTurn = (battle.cardsPlayedThisTurn || 0) + 1;
+
+  // Step 1 — Training Loop tracking (must be FIRST so playCount is current when effects resolve)
+  const prevPlayCount = (newBattle.cardPlayCounts || {})[card.id] || 0;
+  newBattle.cardPlayCounts = { ...(newBattle.cardPlayCounts || {}), [card.id]: prevPlayCount + 1 };
+  const currentPlayCount = newBattle.cardPlayCounts[card.id];
 
   const effects = card.effects;
   const hitTimes = effects.times || 1;
@@ -225,6 +240,43 @@ export function executePlayCard(
     }
   }
 
+  // Deal damage equal to current block to target (block_and_load, etc.)
+  if (effects.damageEqualToBlock && targetInstanceId) {
+    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+    if (enemyIdx !== -1) {
+      const blockAmt = Math.max(1, battle.playerBlock || 0);
+      const dmg = calculateDamage(blockAmt, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+      newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+    }
+  }
+
+  // Deal damage equal to current block to ALL enemies (fortress_strike, dom_nuke)
+  if (effects.damageAllEqualToBlock) {
+    const blockAmt = Math.max(1, battle.playerBlock || 0);
+    newBattle.enemies = newBattle.enemies.map(enemy => {
+      const dmg = calculateDamage(blockAmt, battle.playerStatusEffects, enemy.statusEffects, run.items);
+      return applyDamageToEnemy(enemy, dmg);
+    });
+  }
+
+  // Step 3 — Temperature conditional bonuses (damageIfHot, damageAllIfHot, blockIfCold)
+  if (effects.damageIfHot && (battle.temperature ?? 5) >= 7 && targetInstanceId) {
+    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+    if (enemyIdx !== -1) {
+      const dmg = calculateDamage(effects.damageIfHot, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+      newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+    }
+  }
+  if (effects.damageAllIfHot && (battle.temperature ?? 5) >= 7) {
+    newBattle.enemies = newBattle.enemies.map(e => {
+      const dmg = calculateDamage(effects.damageAllIfHot!, battle.playerStatusEffects, e.statusEffects, run.items);
+      return applyDamageToEnemy(e, dmg);
+    });
+  }
+  if (effects.blockIfCold && (battle.temperature ?? 5) <= 3) {
+    newBattle.playerBlock = (newBattle.playerBlock || 0) + effects.blockIfCold;
+  }
+
   // Apply damage to all enemies
   if (effects.damageAll) {
     newBattle.enemies = newBattle.enemies.map(enemy => {
@@ -260,6 +312,63 @@ export function executePlayCard(
   if (effects.bonusBlockIfCounterOffer && (newBattle.playerStatusEffects.counterOffer || 0) > 0) {
     const bonusBlock = calculateBlock(effects.bonusBlockIfCounterOffer, battle.playerStatusEffects, run.items);
     newBattle.playerBlock = (newBattle.playerBlock || 0) + bonusBlock;
+  }
+
+  // Clear block after all block-to-damage conversions resolve (dom_nuke)
+  if (effects.clearBlock) {
+    newBattle.playerBlock = 0;
+  }
+
+  // Consume nextCardCostZero flag (fast_refresh / event_bubbling)
+  if (battle.nextCardCostZero) {
+    newBattle.nextCardCostZero = false;
+  }
+
+  // Step 2 — Temperature heatUp/coolDown
+  if (effects.heatUp) {
+    const next = (newBattle.temperature ?? 5) + effects.heatUp;
+    if (next >= 10) {
+      // Overflow: deal 12 AoE, reset to 5
+      newBattle.enemies = newBattle.enemies.map(e =>
+        applyDamageToEnemy(e, calculateDamage(12, battle.playerStatusEffects, e.statusEffects, run.items)));
+      newBattle.temperature = 5;
+    } else {
+      newBattle.temperature = next;
+    }
+  }
+  if (effects.coolDown) {
+    const next = (newBattle.temperature ?? 5) - effects.coolDown;
+    if (next <= 0) {
+      // Freeze: gain 15 block, reset to 5
+      newBattle.playerBlock = (newBattle.playerBlock || 0) + 15;
+      newBattle.temperature = 5;
+    } else {
+      newBattle.temperature = next;
+    }
+  }
+
+  // Deal N × cardsPlayedThisTurn to target (batched_update, component_did_mount)
+  if (effects.damagePerCardPlayed && targetInstanceId) {
+    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+    if (enemyIdx !== -1) {
+      const totalDmg = effects.damagePerCardPlayed * newBattle.cardsPlayedThisTurn;
+      const dmg = calculateDamage(totalDmg, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+      newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+    }
+  }
+
+  // Deal N × cardsPlayedThisTurn to ALL enemies (production_build, full_rerender)
+  if (effects.damageAllPerCardPlayed) {
+    const totalDmg = effects.damageAllPerCardPlayed * newBattle.cardsPlayedThisTurn;
+    newBattle.enemies = newBattle.enemies.map(enemy => {
+      const dmg = calculateDamage(totalDmg, battle.playerStatusEffects, enemy.statusEffects, run.items);
+      return applyDamageToEnemy(enemy, dmg);
+    });
+  }
+
+  // Set nextCardCostZero flag (fast_refresh / event_bubbling)
+  if (effects.nextCardCostZero) {
+    newBattle.nextCardCostZero = true;
   }
 
   // Apply copium — directly reduces stress
@@ -345,6 +454,79 @@ export function executePlayCard(
   // Gain gold
   if (effects.gainGold) {
     goldChange += effects.gainGold;
+  }
+
+  // Step 4 — Token Economy effects
+  if (effects.generateTokens) {
+    newBattle.tokens = (newBattle.tokens ?? 0) + effects.generateTokens;
+  }
+  if (effects.doubleTokens) {
+    newBattle.tokens = (newBattle.tokens ?? 0) * 2;
+  }
+  if (effects.damagePerToken && targetInstanceId && (newBattle.tokens ?? 0) > 0) {
+    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+    if (enemyIdx !== -1) {
+      const dmg = calculateDamage(newBattle.tokens!, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+      newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+      newBattle.tokens = 0;
+    }
+  }
+  if (effects.blockPerToken && (newBattle.tokens ?? 0) > 0) {
+    newBattle.playerBlock = (newBattle.playerBlock || 0) + newBattle.tokens!;
+    newBattle.tokens = 0;
+  }
+  if (effects.damageAllPerToken && (newBattle.tokens ?? 0) > 0) {
+    const tokenDmgBase = Math.floor(newBattle.tokens! * 0.5);
+    if (tokenDmgBase > 0) {
+      newBattle.enemies = newBattle.enemies.map(e => {
+        const dmg = calculateDamage(tokenDmgBase, battle.playerStatusEffects, e.statusEffects, run.items);
+        return applyDamageToEnemy(e, dmg);
+      });
+    }
+    newBattle.tokens = 0;
+  }
+
+  // Step 5 — Training Loop effects
+  if (effects.damagePerTimesPlayed && targetInstanceId) {
+    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+    if (enemyIdx !== -1) {
+      const bonus = effects.damagePerTimesPlayed * currentPlayCount;
+      if (bonus > 0) {
+        const dmg = calculateDamage(bonus, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+        newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+      }
+    }
+  }
+  if (effects.blockPerTimesPlayed) {
+    const bonus = effects.blockPerTimesPlayed * currentPlayCount;
+    if (bonus > 0) {
+      newBattle.playerBlock = (newBattle.playerBlock || 0) + calculateBlock(bonus, battle.playerStatusEffects, run.items);
+    }
+  }
+  if (effects.bonusAtSecondPlay && currentPlayCount >= 2) {
+    const bonus = effects.bonusAtSecondPlay;
+    if (bonus.damage && targetInstanceId) {
+      const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+      if (enemyIdx !== -1) {
+        const dmg = calculateDamage(bonus.damage, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+        newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+      }
+    }
+    if (bonus.block) {
+      newBattle.playerBlock = (newBattle.playerBlock || 0) + calculateBlock(bonus.block, battle.playerStatusEffects, run.items);
+    }
+    if (bonus.draw) {
+      const { drawn: bDrawn, newDrawPile: bDp, newDiscardPile: bDisc } = drawCards(newBattle.drawPile, newBattle.discardPile, bonus.draw);
+      newBattle.hand = [...newBattle.hand, ...bDrawn];
+      newBattle.drawPile = bDp;
+      newBattle.discardPile = bDisc;
+    }
+    if (bonus.copium) {
+      stressReduction += calculateCopium(bonus.copium, battle.playerStatusEffects, run.items);
+    }
+    if (bonus.energy) {
+      newBattle.energy += bonus.energy;
+    }
   }
 
   // Exhaust random cards from hand
@@ -507,6 +689,33 @@ export function executePlayCard(
     }
   } else {
     newBattle.discardPile = [...newBattle.discardPile, card];
+  }
+
+  // Deploy a service (Architect deployment cards)
+  if (effects.deploy) {
+    const deps = [...(newBattle.deployments || [])];
+    if (deps.length >= 3) deps.shift(); // oldest slot replaced when full
+    deps.push({
+      name: effects.deploy.name,
+      icon: effects.deploy.icon,
+      turnsLeft: effects.deploy.turns,
+      attackPerTurn: effects.deploy.attackPerTurn,
+      blockPerTurn: effects.deploy.blockPerTurn,
+      poisonPerTurn: effects.deploy.poisonPerTurn,
+    });
+    newBattle.deployments = deps;
+  }
+
+  // Deploy multiple services at once (outsource_everything)
+  if (effects.deployMultiple) {
+    const deps: Deployment[] = [];
+    for (const d of effects.deployMultiple) {
+      deps.push({
+        name: d.name, icon: d.icon, turnsLeft: d.turns,
+        attackPerTurn: d.attackPerTurn, blockPerTurn: d.blockPerTurn, poisonPerTurn: d.poisonPerTurn,
+      });
+    }
+    newBattle.deployments = deps.slice(0, 3); // fill all 3 slots, replacing anything existing
   }
 
   // Remove dead enemies and track kills + gold earned
@@ -952,6 +1161,35 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
     ? mergeStatusEffects(battle.playerStatusEffects, turnStartStatusMerge)
     : battle.playerStatusEffects;
 
+  // Process active deployments — they fire at the start of the player's turn
+  let deploymentBlock = 0;
+  let postDeployEnemies = battle.enemies.map(e => ({ ...e, statusEffects: { ...e.statusEffects } }));
+  const activeDeployments: Deployment[] = [];
+
+  for (const dep of (battle.deployments || [])) {
+    if (dep.blockPerTurn) {
+      deploymentBlock += dep.blockPerTurn;
+    }
+    if (dep.attackPerTurn && postDeployEnemies.length > 0) {
+      const idx = Math.floor(Math.random() * postDeployEnemies.length);
+      const dmg = calculateDamage(dep.attackPerTurn, mergedStatus, postDeployEnemies[idx].statusEffects, run.items);
+      postDeployEnemies[idx] = applyDamageToEnemy(postDeployEnemies[idx], dmg);
+    }
+    if (dep.poisonPerTurn && postDeployEnemies.length > 0) {
+      const idx = Math.floor(Math.random() * postDeployEnemies.length);
+      postDeployEnemies[idx] = {
+        ...postDeployEnemies[idx],
+        statusEffects: mergeStatusEffects(postDeployEnemies[idx].statusEffects, { poison: dep.poisonPerTurn }),
+      };
+    }
+    const remaining = dep.turnsLeft - 1;
+    if (remaining > 0) {
+      activeDeployments.push({ ...dep, turnsLeft: remaining });
+    }
+  }
+  // Remove enemies killed by deployments
+  postDeployEnemies = postDeployEnemies.filter(e => e.currentHp > 0);
+
   return {
     battle: {
       ...battle,
@@ -960,12 +1198,18 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       discardPile: newDiscardPile,
       exhaustPile: newExhaust,
       energy: battle.maxEnergy + hustleEnergy,
-      playerBlock: newBlock + blockBonus,
+      playerBlock: newBlock + blockBonus + deploymentBlock,
       playerStatusEffects: mergedStatus,
+      enemies: postDeployEnemies,
+      deployments: activeDeployments,
       turn: battle.turn + 1,
       cardsPlayedThisTurn: 0,
       firstAttackPlayedThisTurn: false,
       firstSkillPlayedThisTurn: false,
+      nextCardCostZero: false,
+      temperature: battle.temperature ?? 5,
+      tokens: battle.tokens ?? 0,
+      cardPlayCounts: battle.cardPlayCounts ?? {},
     },
     stressChange,
     hpChange,

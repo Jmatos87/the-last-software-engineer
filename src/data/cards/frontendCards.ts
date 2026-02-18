@@ -120,6 +120,16 @@ export const frontendCards: Record<string, CardDef> = {
     upgradedDescription: 'Deal 11 damage to ALL. Apply 1 Vulnerable to ALL.',
     icon: '🎯',
   },
+  block_and_load: {
+    id: 'block_and_load', name: 'Block and Load', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'frontend', archetype: 'fortress',
+    description: 'Deal damage equal to your current block. Your defense is a weapon.',
+    effects: { damageEqualToBlock: true },
+    upgradedEffects: { damageEqualToBlock: true, applyToTarget: { vulnerable: 2 } },
+    upgradedDescription: 'Deal damage equal to your current block. Apply 2 Vulnerable.',
+    icon: '🧱',
+  },
+
   // New commons
   shadow_dom: {
     id: 'shadow_dom', name: 'Shadow DOM', type: 'skill', target: 'self', cost: 1, rarity: 'common',
@@ -349,10 +359,10 @@ export const frontendCards: Record<string, CardDef> = {
   dom_nuke: {
     id: 'dom_nuke', name: 'DOM Nuke', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'legendary',
     class: 'frontend', archetype: 'dom',
-    description: 'Deal damage equal to your current block to ALL enemies. Your block becomes 0. document.body.innerHTML = \'\'. [Phase 2]',
-    effects: { damageAll: 20 }, // placeholder fixed value
-    upgradedEffects: { damageAll: 24 },
-    upgradedDescription: 'Cost 1. Deal damage equal to current block to ALL enemies.',
+    description: 'Deal damage equal to your current block to ALL enemies. Your block becomes 0. document.body.innerHTML = \'\'.',
+    effects: { damageAllEqualToBlock: true, clearBlock: true },
+    upgradedEffects: { damageAllEqualToBlock: true, clearBlock: true, applyToAll: { vulnerable: 3 } },
+    upgradedDescription: 'Cost 1. Deal damage equal to block to ALL. Apply 3 Vulnerable. Block → 0.',
     upgradedCost: 1,
     icon: '💥',
   },
@@ -418,6 +428,17 @@ export const frontendCards: Record<string, CardDef> = {
     icon: '📊',
   },
 
+  fortress_strike: {
+    id: 'fortress_strike', name: 'Fortress Strike', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'epic',
+    class: 'frontend', archetype: 'fortress',
+    description: 'Deal damage equal to your current block to ALL enemies. Walls hurt.',
+    effects: { damageAllEqualToBlock: true },
+    upgradedEffects: { damageAllEqualToBlock: true, applyToAll: { vulnerable: 2 } },
+    upgradedDescription: 'Cost 1. Deal damage equal to block to ALL. Apply 2 Vulnerable to ALL.',
+    upgradedCost: 1,
+    icon: '🏰',
+  },
+
   // ── Frontend New Epics ──
   framework_fatigue: {
     id: 'framework_fatigue', name: 'Framework Fatigue', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'epic',
@@ -457,6 +478,84 @@ export const frontendCards: Record<string, CardDef> = {
     upgradedEffects: { shuffleDiscardToDraw: true, draw: 5, block: 10 },
     upgradedDescription: 'Exhaust. Shuffle discard into draw. Draw 5. Gain 10 block.',
     icon: '🔍',
+  },
+
+  // ── Frontend Combo Path ──
+  fast_refresh: {
+    id: 'fast_refresh', name: 'Fast Refresh', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'frontend', archetype: 'combo',
+    description: 'Draw 1. Your next card this turn costs 0. Changes applied instantly. Bugs applied faster.',
+    effects: { draw: 1, nextCardCostZero: true },
+    upgradedEffects: { draw: 2, nextCardCostZero: true },
+    upgradedDescription: 'Draw 2. Your next card this turn costs 0.',
+    icon: '⚡',
+  },
+  batched_update: {
+    id: 'batched_update', name: 'Batched Update', type: 'attack', target: 'enemy', cost: 0, rarity: 'common',
+    class: 'frontend', archetype: 'combo',
+    description: 'Deal 2 damage per card played this turn. React 18 batches everything. Even your pain.',
+    effects: { damagePerCardPlayed: 2 },
+    upgradedEffects: { damagePerCardPlayed: 3 },
+    upgradedDescription: 'Deal 3 damage per card played this turn.',
+    icon: '📦',
+  },
+  prop_drilling: {
+    id: 'prop_drilling', name: 'Prop Drilling', type: 'attack', target: 'enemy', cost: 0, rarity: 'common',
+    class: 'frontend', archetype: 'combo',
+    description: 'Deal 5 damage. Draw 1. Passing data through 7 component layers. Somehow works.',
+    effects: { damage: 5, draw: 1 },
+    upgradedEffects: { damage: 8, draw: 1 },
+    upgradedDescription: 'Deal 8 damage. Draw 1.',
+    icon: '🔩',
+  },
+  component_did_mount: {
+    id: 'component_did_mount', name: 'componentDidMount', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
+    class: 'frontend', archetype: 'combo',
+    description: 'Deal 5 damage per card played this turn. Runs after every render. EVERY render.',
+    effects: { damagePerCardPlayed: 5 },
+    upgradedEffects: { damagePerCardPlayed: 7 },
+    upgradedDescription: 'Deal 7 damage per card played this turn.',
+    icon: '🔄',
+  },
+  event_bubbling: {
+    id: 'event_bubbling', name: 'Event Bubbling', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    class: 'frontend', archetype: 'combo',
+    description: 'Draw 2. Your next card this turn costs 0. Events bubble up. Your attacks chain down.',
+    effects: { draw: 2, nextCardCostZero: true },
+    upgradedEffects: { draw: 3, nextCardCostZero: true },
+    upgradedDescription: 'Cost 0. Draw 3. Your next card this turn costs 0.',
+    upgradedCost: 0,
+    icon: '🫧',
+  },
+  production_build: {
+    id: 'production_build', name: 'npm run build:prod', type: 'attack', target: 'all_enemies', cost: 3, rarity: 'epic',
+    class: 'frontend', archetype: 'combo',
+    description: 'Deal 4 damage per card played this turn to ALL enemies. Takes 4 minutes. Worth it.',
+    effects: { damageAllPerCardPlayed: 4 },
+    upgradedEffects: { damageAllPerCardPlayed: 6 },
+    upgradedDescription: 'Cost 2. Deal 6 damage per card played this turn to ALL enemies.',
+    upgradedCost: 2,
+    icon: '🔨',
+  },
+  promise_all: {
+    id: 'promise_all', name: 'Promise.all()', type: 'skill', target: 'self', cost: 2, rarity: 'epic',
+    class: 'frontend', archetype: 'combo',
+    description: 'Draw 3. Gain 2 Energy. Promise.all([attack, attack, attack]).then(win).',
+    effects: { draw: 3, energy: 2 },
+    upgradedEffects: { draw: 4, energy: 2 },
+    upgradedDescription: 'Cost 1. Draw 4. Gain 2 Energy.',
+    upgradedCost: 1,
+    icon: '🤝',
+  },
+  full_rerender: {
+    id: 'full_rerender', name: 'Full Re-render', type: 'attack', target: 'all_enemies', cost: 3, rarity: 'legendary',
+    class: 'frontend', archetype: 'combo', exhaust: true,
+    description: 'Deal 10 damage per card played this turn to ALL enemies. Exhaust. Props changed. Everything re-renders. Nothing survives.',
+    effects: { damageAllPerCardPlayed: 10 },
+    upgradedEffects: { damageAllPerCardPlayed: 14 },
+    upgradedDescription: 'Cost 2. Deal 14 damage per card played this turn to ALL enemies. Exhaust.',
+    upgradedCost: 2,
+    icon: '🔥',
   },
 
   // ── Frontend New Legendaries ──

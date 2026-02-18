@@ -39,10 +39,10 @@ const ACT_STRUCTURE = [
 
 // ─── Archetype detection ──────────────────────────────────────────────────────
 type Archetype =
-  | 'fortress' | 'dom' | 'reactive'
+  | 'fortress' | 'dom' | 'reactive' | 'combo'
   | 'rate_limiter' | 'brute_force' | 'query_optimizer'
   | 'design_patterns' | 'scope_creep' | 'tech_spec'
-  | 'gradient_descent' | 'hallucination' | 'prompt_engineering'
+  | 'temperature' | 'token_economy' | 'training_loop'
   | 'neutral';
 
 function detectArchetype(deck: CardInstance[]): Archetype {
@@ -84,6 +84,10 @@ interface ScoreContext {
   incomingStress: number;
   canSurviveWithoutBlock: boolean;
   targetId?: string;
+  // AI Engineer mechanic state
+  temperature: number;
+  tokens: number;
+  cardPlayCounts: Record<string, number>;
 }
 
 // Estimate total incoming damage from enemy intents (HP damage only)
@@ -215,6 +219,19 @@ function scoreCard(card: CardInstance, ctx: ScoreContext): { score: number; targ
       break;
     }
 
+    // ── combo: chain 0-cost cards → explode with cardsPlayedThisTurn scalers ──
+    case 'combo': {
+      const played = battle.cardsPlayedThisTurn || 0;
+      // Cheap setup cards early in turn; scalers late when count is high
+      if (fx.nextCardCostZero) score += 30 + (played < 3 ? 15 : 0);  // great early
+      if (fx.draw) score += fx.draw * 8;
+      if (fx.energy) score += fx.energy * 12;
+      if (fx.damagePerCardPlayed) score += fx.damagePerCardPlayed * played * 1.5 + (played >= 3 ? 20 : 0);
+      if (fx.damageAllPerCardPlayed) score += fx.damageAllPerCardPlayed * played * 2 + (played >= 4 ? 30 : 0);
+      if (card.cost === 0) score += 20;  // 0-cost cards are chain links
+      break;
+    }
+
     // ── rate_limiter: stack counterOffer first, then conditional block ──────────
     case 'rate_limiter': {
       if (fx.applyToSelf?.counterOffer) score += 35;
@@ -282,42 +299,73 @@ function scoreCard(card: CardInstance, ctx: ScoreContext): { score: number; targ
       break;
     }
 
-    // ── gradient_descent: balance attack/defense, prefer buff-attached cards ────
-    case 'gradient_descent': {
-      if (card.type === 'attack' && fx.applyToSelf?.confidence) score += 20;
-      if (card.type === 'skill' && fx.applyToSelf?.resilience) score += 20;
-      // At high HP, slightly prefer confidence; at low HP, prefer resilience
-      if (aggression > 0.6 && fx.applyToSelf?.confidence) score += 10;
-      if (aggression < 0.4 && fx.applyToSelf?.resilience) score += 10;
+    // ── temperature: push toward extremes; cash hot/cold bonuses; overflow/freeze ─
+    case 'temperature': {
+      const temp = ctx.temperature ?? 5;
+      const isHot = temp >= 7;
+      const isCold = temp <= 3;
+      // Push toward extremes — reward heatUp/coolDown
+      if (fx.heatUp) {
+        const nextTemp = temp + fx.heatUp;
+        if (nextTemp >= 10) score += 25; // overflow imminent = bonus!
+        else score += fx.heatUp * 5;
+        if (isHot) score += 10; // already hot, heatUp cards are premium
+      }
+      if (fx.coolDown) {
+        const nextTemp = temp - fx.coolDown;
+        if (nextTemp <= 0) score += 25; // freeze imminent = bonus!
+        else score += fx.coolDown * 5;
+        if (isCold) score += 10; // already cold, coolDown cards are premium
+      }
+      // Reward conditional bonuses when condition is met
+      if (fx.damageIfHot && isHot) score += fx.damageIfHot * 1.5;
+      if (fx.damageAllIfHot && isHot) score += fx.damageAllIfHot * 2;
+      if (fx.blockIfCold && isCold) score += fx.blockIfCold * 1.2;
       break;
     }
 
-    // ── hallucination: maximize damage, manage stress with copium ───────────────
-    case 'hallucination': {
-      // Use stress-adding cards aggressively when stress is low, back off when high
-      if (fx.addStress) {
-        if (stressPct < 0.35) score += 20;         // safe to be reckless
-        else if (stressPct < 0.55) score += 0;      // neutral
-        else score -= 25;                            // too risky
+    // ── token_economy: generate when low; flush when primed or threatened ────────
+    case 'token_economy': {
+      const tokens = ctx.tokens ?? 0;
+      if (fx.generateTokens) {
+        score += tokens < 12 ? fx.generateTokens * 5 : fx.generateTokens * 2;
       }
-      if (fx.selfDamage) {
-        if (hpPct > 0.6) score += 10;
-        else score -= 10;
+      if (fx.doubleTokens) {
+        score += tokens > 0 ? tokens * 3 : 5; // doubling 0 is useless
       }
-      if (fx.damage && fx.damage >= 12) score += 20; // reward big hits
-      // Copium becomes critical when stressed
-      if (fx.copium && stressPct > 0.50) score += 40;
-      if (fx.copium && stressPct > 0.70) score += 30; // extra urgent
+      if (fx.damagePerToken) {
+        if (tokens >= 10) score += tokens * 2;
+        else if (tokens >= 5) score += tokens * 1.5;
+        else score -= 10; // don't flush low token counts
+      }
+      if (fx.blockPerToken) {
+        if (tokens >= 8 && !ctx.canSurviveWithoutBlock) score += tokens * 2;
+        else if (tokens >= 6) score += tokens;
+        else score -= 5;
+      }
+      if (fx.damageAllPerToken) {
+        if (tokens >= 10) score += tokens * 1.5;
+        else if (tokens >= 6) score += tokens;
+        else score -= 5;
+      }
       break;
     }
 
-    // ── prompt_engineering: copium/draw to stay alive, attacks when clear ────────
-    case 'prompt_engineering': {
-      if (fx.copium) {
-        score += 15 + stressPct * 45; // scales from +15 to +60 as stress rises
+    // ── training_loop: reward plays that scale with repetition ──────────────────
+    case 'training_loop': {
+      const playCount = (ctx.cardPlayCounts ?? {})[card.id] || 0;
+      // Cards that scale with play count — prioritize replaying them
+      if (fx.damagePerTimesPlayed) {
+        score += fx.damagePerTimesPlayed * (playCount + 1) * 2;
       }
-      if (fx.draw) score += fx.draw * 8;
-      if (card.type === 'attack' && stressPct < 0.40) score += 10; // punish when safe
+      if (fx.blockPerTimesPlayed) {
+        score += fx.blockPerTimesPlayed * (playCount + 1) * 1.5;
+      }
+      // Bonus-at-second-play cards get big reward on 2nd+ play
+      if (fx.bonusAtSecondPlay) {
+        if (playCount >= 1) score += 30; // 2nd play bonus active!
+        else score += 10; // first play still sets up the bonus
+      }
       break;
     }
 
@@ -386,7 +434,9 @@ function simulateBattle(run: RunState, enemyDefs: EnemyDef[]): BattleResult {
 
     // ── Player turn ────────────────────────────────────────────────────────────
     let played = true;
-    while (played && battle.energy > 0 && battle.enemies.length > 0) {
+    let playsThisTurn = 0;
+    const MAX_PLAYS_PER_TURN = 60; // guard against infinite energy-draw loops (e.g. promise_all)
+    while (played && battle.energy > 0 && battle.enemies.length > 0 && playsThisTurn < MAX_PLAYS_PER_TURN) {
       played = false;
 
       const hpPct     = hp / run.maxHp;
@@ -403,6 +453,9 @@ function simulateBattle(run: RunState, enemyDefs: EnemyDef[]): BattleResult {
         hasCounterOffer, playerConfidence, playerResilience,
         incomingDamage: incoming, incomingStress,
         canSurviveWithoutBlock: canSurvive,
+        temperature: battle.temperature ?? 5,
+        tokens: battle.tokens ?? 0,
+        cardPlayCounts: battle.cardPlayCounts ?? {},
       };
 
       type Scored = { card: CardInstance; score: number; targetId?: string };
@@ -427,6 +480,7 @@ function simulateBattle(run: RunState, enemyDefs: EnemyDef[]): BattleResult {
       gold   += result.goldChange;
       liveRun = { ...liveRun, hp, stress };
       played  = true;
+      playsThisTurn++;
     }
 
     if (battle.enemies.length === 0) break;
@@ -515,8 +569,10 @@ function pickRewardCard(
   act: number,
   encounterType: 'normal' | 'elite' | 'boss',
   charClass: string,
+  targetArchetype: Archetype | null = null,
 ): CardDef {
-  const archetype = detectArchetype(deck);
+  // Use targetArchetype if set (build intent), otherwise detect from deck
+  const archetype = targetArchetype ?? detectArchetype(deck);
   const offers = getRewardCards(3, undefined, charClass, act, encounterType);
   if (!offers.length) {
     // Fallback: pull random from full class pool
@@ -584,6 +640,12 @@ function scoreRelic(relic: ItemDef, run: RunState, archetype: Archetype): number
       if (fx.extraDraw)             score += 22;
       if (fx.cardsPlayedEnergy)     score += 18;
       break;
+    case 'combo':
+      if (fx.extraDraw)             score += 25;
+      if (fx.extraEnergy)           score += 20;
+      if (fx.cardsPlayedEnergy)     score += 30;
+      if (fx.bonusDamage)           score += 15;
+      break;
     case 'rate_limiter':
       if (fx.counterOfferStart)     score += 38;
       if (fx.bonusBlock)            score += 15;
@@ -612,18 +674,25 @@ function scoreRelic(relic: ItemDef, run: RunState, archetype: Archetype): number
       if (fx.exhaustGainEnergy)     score += 28;
       if (fx.exhaustDrawCard)       score += 22;
       break;
-    case 'gradient_descent':
-      if (fx.confidenceIfHasConfidence) score += 22;
-      if (fx.startCombatActConfidence)  score += 28;
+    case 'temperature':
+      // More energy = more heatUp/coolDown cards playable; bonus damage synergizes when hot
+      if (fx.extraEnergy)           score += 20;
+      if (fx.bonusDamage)           score += 15;
+      if (fx.startBattleConfidence) score += 18;
+      if (fx.startBattleResilience) score += 18;
       break;
-    case 'hallucination':
-      if (fx.selfDamageHalved)      score += 38;
-      if (fx.stressGainHalved)      score += 32;
-      if (fx.selfDamageReflect)     score += 22;
+    case 'token_economy':
+      // Energy helps play more token generators; draw finds generators/flush cards faster
+      if (fx.extraEnergy)           score += 18;
+      if (fx.extraDraw)             score += 15;
+      if (fx.extraGold)             score += 5;
       break;
-    case 'prompt_engineering':
-      if (fx.bonusCopium)           score += 35;
+    case 'training_loop':
+      // Draw = play cards more = more loop iterations; energy enables more plays per turn
       if (fx.extraDraw)             score += 22;
+      if (fx.extraEnergy)           score += 20;
+      if (fx.startBattleConfidence) score += 18;
+      if (fx.startBattleResilience) score += 15;
       break;
     default:
       break;
@@ -871,6 +940,12 @@ function simulateRun(char: CharacterDef): RunResult {
     : 'ai_engineer';
 
   let run = makeRun(char, starterCards, starterRelic ? [starterRelic] : []);
+
+  // For frontend, randomly assign a target archetype so 50% of runs pursue combo
+  const targetArchetype: Archetype | null = charClass === 'frontend' && Math.random() < 0.5
+    ? 'combo'
+    : null;
+
   const archetypePlayed = detectArchetype(run.deck);
 
   let floors = 0, totalTurns = 0;
@@ -879,7 +954,7 @@ function simulateRun(char: CharacterDef): RunResult {
 
   const earlyExit = (deathCause: 'hp' | 'stress' | undefined, deathAt: string): RunResult => ({
     won: false, floorsCleared: floors, deathCause, deathAt,
-    hpAtBoss, hpAfterBoss, totalTurns, archetypePlayed,
+    hpAtBoss, hpAfterBoss, totalTurns, archetypePlayed: detectArchetype(run.deck),
     relicsAcquired: run.items.length - initialRelicCount,
   });
 
@@ -908,7 +983,7 @@ function simulateRun(char: CharacterDef): RunResult {
       const deckSize = run.deck.length;
       const takeRate = deckSize >= 19 ? 0 : deckSize >= 16 ? 0.35 : 0.65;
       if (Math.random() < takeRate) {
-        run = { ...run, deck: [...run.deck, createCardInstance(pickRewardCard(run.deck, act, 'normal', charClass))] };
+        run = { ...run, deck: [...run.deck, createCardInstance(pickRewardCard(run.deck, act, 'normal', charClass, targetArchetype))] };
       }
     }
 
@@ -931,7 +1006,7 @@ function simulateRun(char: CharacterDef): RunResult {
       if (run.stress >= run.maxStress) return earlyExit('stress', `a${act}_elite`);
 
       // Elite reward: 3 offers with guaranteed rare, pick best
-      run = { ...run, deck: [...run.deck, createCardInstance(pickRewardCard(run.deck, act, 'elite', charClass))] };
+      run = { ...run, deck: [...run.deck, createCardInstance(pickRewardCard(run.deck, act, 'elite', charClass, targetArchetype))] };
 
       // 40% chance of a relic reward (choose best of 3, apply extraHp immediately)
       if (Math.random() < 0.40) {
@@ -968,7 +1043,7 @@ function simulateRun(char: CharacterDef): RunResult {
 
       // Boss: FULL HP restore (no stress penalty), card (guaranteed epic), relic pick (best of 3)
       run = { ...run, hp: run.maxHp };
-      run = { ...run, deck: [...run.deck, createCardInstance(pickRewardCard(run.deck, act, 'boss', charClass))] };
+      run = { ...run, deck: [...run.deck, createCardInstance(pickRewardCard(run.deck, act, 'boss', charClass, targetArchetype))] };
 
       const ownedIds     = run.items.map(i => i.id);
       const relicOptions = getRewardArtifact(ownedIds, 3, char.id);
@@ -981,7 +1056,7 @@ function simulateRun(char: CharacterDef): RunResult {
 
   return {
     won: true, floorsCleared: floors,
-    hpAtBoss, hpAfterBoss, totalTurns, archetypePlayed,
+    hpAtBoss, hpAfterBoss, totalTurns, archetypePlayed: detectArchetype(run.deck),
     relicsAcquired: run.items.length - initialRelicCount,
   };
 }

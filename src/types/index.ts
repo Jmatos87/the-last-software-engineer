@@ -96,6 +96,54 @@ export interface CardEffect {
   vulnerableDoubleHit?: boolean;    // deal damage again if target is vulnerable
   discardAfterDraw?: number;        // discard N cards from hand after drawing
   bonusBlockIfCounterOffer?: number; // gain extra block if player has Counter-Offer
+  damageEqualToBlock?: boolean;     // deal damage equal to current block to target
+  damageAllEqualToBlock?: boolean;  // deal damage equal to current block to ALL enemies
+  clearBlock?: boolean;             // set player block to 0 after all effects resolve
+  damagePerCardPlayed?: number;     // deal N × cardsPlayedThisTurn to target (combo path)
+  damageAllPerCardPlayed?: number;  // deal N × cardsPlayedThisTurn to ALL enemies (combo path)
+  nextCardCostZero?: boolean;       // next card played this turn costs 0 (Fast Refresh)
+  deploy?: {                        // summon a deployment that acts every turn
+    name: string;
+    icon: string;
+    turns: number;
+    attackPerTurn?: number;
+    blockPerTurn?: number;
+    poisonPerTurn?: number;
+  };
+  deployMultiple?: Array<{          // summon multiple deployments at once (legendary)
+    name: string;
+    icon: string;
+    turns: number;
+    attackPerTurn?: number;
+    blockPerTurn?: number;
+    poisonPerTurn?: number;
+  }>;
+  // Temperature mechanic (AI Engineer)
+  heatUp?: number;                  // increase temperature by N (overflow at 10: AoE + reset to 5)
+  coolDown?: number;                // decrease temperature by N (freeze at 0: big block + reset to 5)
+  damageIfHot?: number;             // bonus damage to target if temp ≥ 7
+  blockIfCold?: number;             // bonus block if temp ≤ 3
+  damageAllIfHot?: number;          // bonus damage to ALL enemies if temp ≥ 7
+  // Token Economy mechanic (AI Engineer)
+  generateTokens?: number;          // add N tokens (persist across turns)
+  doubleTokens?: boolean;           // tokens × 2
+  damagePerToken?: boolean;         // deal damage = tokens to target, tokens → 0
+  blockPerToken?: boolean;          // gain block = tokens, tokens → 0
+  damageAllPerToken?: boolean;      // deal floor(tokens × 0.5) to ALL enemies, tokens → 0
+  // Training Loop mechanic (AI Engineer)
+  damagePerTimesPlayed?: number;    // deal N × playCount bonus damage to target
+  blockPerTimesPlayed?: number;     // gain N × playCount bonus block
+  bonusAtSecondPlay?: { damage?: number; block?: number; draw?: number; copium?: number; energy?: number };
+}
+
+// ── Deployments ──
+export interface Deployment {
+  name: string;
+  icon: string;
+  turnsLeft: number;
+  attackPerTurn?: number;
+  blockPerTurn?: number;
+  poisonPerTurn?: number;
 }
 
 export interface CardDef {
@@ -321,12 +369,18 @@ export interface BattleState {
   killCount: number;
   totalEnemies: number;
   goldEarned: number;
+  deployments: Deployment[];
   // New tracking
   powersPlayedThisCombat: number;
   cardsPlayedThisTurn: number;
   firstAttackPlayedThisTurn: boolean;
   firstSkillPlayedThisTurn: boolean;
   firstPowerPlayedThisCombat: boolean;
+  nextCardCostZero: boolean;
+  // AI Engineer mechanics
+  temperature: number;              // 0–10, starts at 5; overflow ≥10 → AoE; freeze ≤0 → block
+  tokens: number;                   // token economy accumulator, persists across turns
+  cardPlayCounts: Record<string, number>; // times each card.id played this combat
 }
 
 // ── Run ──

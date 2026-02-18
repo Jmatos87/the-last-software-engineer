@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { DndContext, DragOverlay, useDroppable, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useGameStore } from '../../store/gameStore';
-import type { CardInstance, EnemyInstance } from '../../types';
+import type { CardInstance, Deployment, EnemyInstance } from '../../types';
 import { CardComponent, CardOverlay } from './CardComponent';
 import { EnemyDisplay } from './EnemyDisplay';
 import { ConsumableBar } from './ConsumableBar';
@@ -12,6 +12,38 @@ import { StatusEffects } from '../common/StatusEffects';
 import { CardPreview } from '../common/CardPreview';
 import { TopBar } from '../common/TopBar';
 import { useMobile } from '../../hooks/useMobile';
+
+const DeploymentPanel: React.FC<{ deployments: Deployment[] }> = ({ deployments }) => {
+  if (deployments.length === 0) return null;
+  return (
+    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
+      {deployments.map((dep, i) => {
+        const parts: string[] = [];
+        if (dep.attackPerTurn) parts.push(`⚔️${dep.attackPerTurn}`);
+        if (dep.blockPerTurn) parts.push(`🛡️${dep.blockPerTurn}`);
+        if (dep.poisonPerTurn) parts.push(`☠️${dep.poisonPerTurn}`);
+        return (
+          <div key={i} style={{
+            background: 'rgba(74,158,255,0.1)',
+            border: '1px solid rgba(74,158,255,0.4)',
+            borderRadius: 6,
+            padding: '3px 7px',
+            fontSize: 11,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 1,
+            minWidth: 56,
+          }}>
+            <span>{dep.icon} {dep.name}</span>
+            <span style={{ color: 'var(--text-muted)' }}>{parts.join(' ')}</span>
+            <span style={{ color: 'var(--accent-green)', fontWeight: 'bold' }}>{dep.turnsLeft}t left</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 const PlayerStatusPanel: React.FC = () => {
   const run = useGameStore(s => s.run);
@@ -223,10 +255,75 @@ export const BattleScreen: React.FC = () => {
           }}>
             <div className={heroAnim} style={{ fontSize: compact ? 32 : 56 }}>{run.character.icon}</div>
             <PlayerStatusPanel />
+            {run.character.id === 'ai_engineer' && battle && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
+                {/* Temperature gauge */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                  <span style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: 1 }}>TEMPERATURE</span>
+                  <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    {Array.from({ length: 11 }, (_, i) => {
+                      const isCold = i <= 3;
+                      const isHot = i >= 7;
+                      const color = isCold ? '#60a5fa' : isHot ? '#f87171' : '#4ade80';
+                      const isActive = i === (battle.temperature ?? 5);
+                      return (
+                        <div key={i} style={{
+                          width: compact ? 6 : 8,
+                          height: compact ? 12 : 16,
+                          borderRadius: 2,
+                          background: isActive ? color : 'transparent',
+                          border: `1px solid ${color}`,
+                          opacity: isActive ? 1 : 0.3,
+                          transition: 'all 0.2s',
+                        }} />
+                      );
+                    })}
+                  </div>
+                  <span style={{
+                    fontSize: 9,
+                    fontWeight: 'bold',
+                    color: (battle.temperature ?? 5) <= 3 ? '#60a5fa' : (battle.temperature ?? 5) >= 7 ? '#f87171' : '#4ade80',
+                  }}>
+                    {(battle.temperature ?? 5) <= 3 ? '❄️ COLD' : (battle.temperature ?? 5) >= 7 ? '🔥 HOT' : `🌡️ ${battle.temperature ?? 5}`}
+                  </span>
+                </div>
+                {/* Token counter */}
+                {(battle.tokens ?? 0) > 0 && (
+                  <div style={{
+                    background: 'rgba(245,158,11,0.15)',
+                    border: '1px solid rgba(245,158,11,0.5)',
+                    borderRadius: 6,
+                    padding: '2px 8px',
+                    fontSize: compact ? 10 : 12,
+                    color: '#f59e0b',
+                    fontWeight: 'bold',
+                  }}>
+                    🪙 {battle.tokens} TOKENS
+                  </div>
+                )}
+              </div>
+            )}
             <ConsumableBar
               onTargetEnemy={(cId) => setTargetingConsumableId(cId)}
               disabled={enemyTurnPlaying || battleWon}
             />
+            {battle.deployments?.length > 0 && (
+              <DeploymentPanel deployments={battle.deployments} />
+            )}
+            {battle.nextCardCostZero && (
+              <div style={{
+                background: 'rgba(251,191,36,0.15)',
+                border: '1px solid rgba(251,191,36,0.5)',
+                borderRadius: 6,
+                padding: '3px 10px',
+                fontSize: 11,
+                color: '#fbbf24',
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}>
+                ⚡ Next card is FREE
+              </div>
+            )}
           </div>
 
           {/* VS divider */}
