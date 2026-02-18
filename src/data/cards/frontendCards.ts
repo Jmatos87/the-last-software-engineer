@@ -59,8 +59,9 @@ export const frontendCards: Record<string, CardDef> = {
     class: 'frontend', archetype: 'reactive',
     description: 'Deal 9 damage. fn(fn(fn(fn(pain)))).',
     effects: { damage: 9 },
-    upgradedEffects: { damage: 12 },
-    upgradedDescription: 'Deal 12 damage.',
+    upgradedEffects: { damage: 20 },
+    upgradedDescription: 'Cost 2. Deal 20 damage. The nesting goes deeper.',
+    upgradedCost: 2,
     icon: '🔁',
   },
   promise_chain: {
@@ -142,7 +143,8 @@ export const frontendCards: Record<string, CardDef> = {
     description: 'Gain 5 block. Draw 1 card. Only fires when you\'ve stopped panicking. (300ms delay)',
     effects: { block: 5, draw: 1 },
     upgradedEffects: { block: 7, draw: 1 },
-    upgradedDescription: 'Gain 7 block. Draw 1 card.',
+    upgradedDescription: 'Cost 0. Gain 7 block. Draw 1 card.',
+    upgradedCost: 0,
     icon: '⏱️',
   },
   media_query: {
@@ -207,7 +209,8 @@ export const frontendCards: Record<string, CardDef> = {
     description: 'Gain 16 block. Like the real DOM but no crying.',
     effects: { block: 16 },
     upgradedEffects: { block: 20 },
-    upgradedDescription: 'Gain 20 block.',
+    upgradedDescription: 'Cost 1. Gain 20 block.',
+    upgradedCost: 1,
     icon: '🌳',
   },
   cascade_delete: {
@@ -226,7 +229,8 @@ export const frontendCards: Record<string, CardDef> = {
     description: 'Draw 2 cards. Gain 6 block. Suspended and resumed as needed.',
     effects: { draw: 2, block: 6 },
     upgradedEffects: { draw: 3, block: 7 },
-    upgradedDescription: 'Draw 3 cards. Gain 7 block.',
+    upgradedDescription: 'Cost 0. Draw 3 cards. Gain 7 block.',
+    upgradedCost: 0,
     icon: '⚡',
   },
   memoize: {
@@ -253,7 +257,8 @@ export const frontendCards: Record<string, CardDef> = {
     description: 'Gain 2 Resilience (+1 block & stress per stack). 60fps suffering.',
     effects: { applyToSelf: { resilience: 2 } },
     upgradedEffects: { applyToSelf: { resilience: 3 } },
-    upgradedDescription: 'Gain 3 Resilience.',
+    upgradedDescription: 'Cost 0. Gain 3 Resilience.',
+    upgradedCost: 0,
     icon: '🎞️',
   },
 

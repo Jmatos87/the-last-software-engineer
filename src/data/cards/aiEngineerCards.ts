@@ -87,7 +87,8 @@ export const aiEngineerCards: Record<string, CardDef> = {
     description: 'Reduce 8 Stress. Draw 2 cards. 128k tokens of pure cope.',
     effects: { copium: 8, draw: 2 },
     upgradedEffects: { copium: 10, draw: 2 },
-    upgradedDescription: 'Reduce 10 Stress. Draw 2 cards.',
+    upgradedDescription: 'Cost 0. Reduce 10 Stress. Draw 2 cards.',
+    upgradedCost: 0,
     icon: '📖',
   },
   hallucinate: {
@@ -95,8 +96,9 @@ export const aiEngineerCards: Record<string, CardDef> = {
     class: 'ai_engineer', archetype: 'hallucination',
     description: 'Deal 14 damage. Add 5 stress. Confident incorrect feature.',
     effects: { damage: 14, addStress: 5 },
-    upgradedEffects: { damage: 18, addStress: 5 },
-    upgradedDescription: 'Deal 18 damage. Add 5 stress.',
+    upgradedEffects: { damage: 26, addStress: 5 },
+    upgradedDescription: 'Cost 2. Deal 26 damage. Add 5 stress. Maximally confident.',
+    upgradedCost: 2,
     icon: '🌀',
   },
   overfit: {
@@ -171,7 +173,8 @@ export const aiEngineerCards: Record<string, CardDef> = {
     description: 'Gain 2 Confidence (+1 dmg per stack). LoRA adapter. 0.1% of parameters, 90% of the power.',
     effects: { applyToSelf: { confidence: 2 } },
     upgradedEffects: { applyToSelf: { confidence: 3 } },
-    upgradedDescription: 'Gain 3 Confidence (+1 dmg per stack).',
+    upgradedDescription: 'Cost 1. Gain 3 Confidence (+1 dmg per stack).',
+    upgradedCost: 1,
     icon: '🎛️',
   },
   batch_normalization: {
@@ -226,7 +229,8 @@ export const aiEngineerCards: Record<string, CardDef> = {
     description: 'Gain 2 Confidence. Gain 1 Regen (+1 HP/turn). Learn from each mistake.',
     effects: { applyToSelf: { confidence: 2, regen: 1 } },
     upgradedEffects: { applyToSelf: { confidence: 3, regen: 2 } },
-    upgradedDescription: 'Gain 3 Confidence. Gain 2 Regen.',
+    upgradedDescription: 'Cost 1. Gain 3 Confidence. Gain 2 Regen.',
+    upgradedCost: 1,
     icon: '🎮',
   },
   few_shot_prompt: {
@@ -254,7 +258,8 @@ export const aiEngineerCards: Record<string, CardDef> = {
     description: 'Draw 3 cards. Gain 1 Networking. Attention is all you need.',
     effects: { draw: 3, applyToSelf: { networking: 1 } },
     upgradedEffects: { draw: 4, applyToSelf: { networking: 1 } },
-    upgradedDescription: 'Draw 4. Gain 1 Networking.',
+    upgradedDescription: 'Cost 0. Draw 4. Gain 1 Networking.',
+    upgradedCost: 0,
     icon: '👁️',
   },
 

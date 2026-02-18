@@ -38,7 +38,8 @@ export const neutralCards: Record<string, CardDef> = {
     description: 'Reduce 8 Stress. WHY HAVEN\'T THEY EMAILED BACK.',
     effects: { copium: 8 },
     upgradedEffects: { copium: 11 },
-    upgradedDescription: 'Reduce 11 Stress.',
+    upgradedDescription: 'Cost 0. Reduce 11 Stress.',
+    upgradedCost: 0,
     icon: '🌬️',
   },
   meditation: {
@@ -46,7 +47,8 @@ export const neutralCards: Record<string, CardDef> = {
     description: 'Reduce 6 Stress. Draw 1 card. Namaste. LinkedIn is not.',
     effects: { copium: 6, draw: 1 },
     upgradedEffects: { copium: 8, draw: 1 },
-    upgradedDescription: 'Reduce 8 Stress. Draw 1 card.',
+    upgradedDescription: 'Cost 0. Reduce 8 Stress. Draw 1 card.',
+    upgradedCost: 0,
     icon: '🧘',
   },
   git_stash: {
@@ -97,8 +99,9 @@ export const neutralCards: Record<string, CardDef> = {
     id: 'pair_programming', name: 'Pair Programming', type: 'attack', target: 'enemy', cost: 1, rarity: 'rare',
     description: 'Deal 6 damage x2. Two people, twice the pain.',
     effects: { damage: 6, times: 2 },
-    upgradedEffects: { damage: 8, times: 2 },
-    upgradedDescription: 'Deal 8 damage x2.',
+    upgradedEffects: { damage: 14, times: 2 },
+    upgradedDescription: 'Cost 2. Deal 14 damage x2. Four people. Infinite opinions.',
+    upgradedCost: 2,
     icon: '👥',
   },
   sprint_planning: {
@@ -106,7 +109,8 @@ export const neutralCards: Record<string, CardDef> = {
     description: 'Gain 1 energy. Draw 1 card. 45-minute meeting for 10-minute task.',
     effects: { energy: 1, draw: 1 },
     upgradedEffects: { energy: 1, draw: 2 },
-    upgradedDescription: 'Gain 1 energy. Draw 2 cards.',
+    upgradedDescription: 'Cost 0. Gain 1 energy. Draw 2 cards.',
+    upgradedCost: 0,
     icon: '📋',
   },
   work_life_balance: {

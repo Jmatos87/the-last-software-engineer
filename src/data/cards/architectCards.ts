@@ -60,7 +60,8 @@ export const architectCards: Record<string, CardDef> = {
     description: 'Gain 1 Confidence (+1 dmg per stack), 1 Resilience (+1 block & stress heal per stack). It creates objects. The objects are pain.',
     effects: { applyToSelf: { confidence: 1, resilience: 1 } },
     upgradedEffects: { applyToSelf: { confidence: 2, resilience: 1 } },
-    upgradedDescription: 'Gain 2 Confidence (+1 dmg per stack), 1 Resilience (+1 block & stress heal per stack).',
+    upgradedDescription: 'Cost 0. Gain 2 Confidence, 1 Resilience.',
+    upgradedCost: 0,
     icon: '🏭',
   },
   dependency_hell: {
@@ -68,8 +69,9 @@ export const architectCards: Record<string, CardDef> = {
     class: 'architect', archetype: 'design_patterns',
     description: 'Deal 7 damage. npm ls --all showed 4,000 packages.',
     effects: { damage: 7 },
-    upgradedEffects: { damage: 10 },
-    upgradedDescription: 'Deal 10 damage.',
+    upgradedEffects: { damage: 18 },
+    upgradedDescription: 'Cost 2. Deal 18 damage. 4,000 packages. One crash.',
+    upgradedCost: 2,
     icon: '🔗',
   },
   proof_of_concept: {
@@ -134,7 +136,8 @@ export const architectCards: Record<string, CardDef> = {
     description: 'Deal 4 damage. Draw 1 card. Let someone else handle it.',
     effects: { damage: 4, draw: 1 },
     upgradedEffects: { damage: 6, draw: 1 },
-    upgradedDescription: 'Deal 6 damage. Draw 1.',
+    upgradedDescription: 'Cost 0. Deal 6 damage. Draw 1.',
+    upgradedCost: 0,
     icon: '📤',
   },
   sprint_velocity: {
@@ -143,7 +146,8 @@ export const architectCards: Record<string, CardDef> = {
     description: 'Gain 8 block. Gain 2 energy. This sprint you committed to 40 story points.',
     effects: { block: 8, energy: 2 },
     upgradedEffects: { block: 11, energy: 2 },
-    upgradedDescription: 'Gain 11 block. Gain 2 energy.',
+    upgradedDescription: 'Cost 1. Gain 11 block. Gain 2 energy.',
+    upgradedCost: 1,
     icon: '💨',
   },
   api_contract: {
@@ -172,7 +176,8 @@ export const architectCards: Record<string, CardDef> = {
     description: 'Gain 1 Networking (draw +1 card/turn). Everything watches everything.',
     effects: { applyToSelf: { networking: 1 } },
     upgradedEffects: { applyToSelf: { networking: 2 } },
-    upgradedDescription: 'Gain 2 Networking (draw +1 card/turn).',
+    upgradedDescription: 'Cost 0. Gain 2 Networking (draw +1 card/turn).',
+    upgradedCost: 0,
     icon: '👁️',
   },
   abstract_factory: {
@@ -341,13 +346,13 @@ export const architectCards: Record<string, CardDef> = {
     icon: '💰',
   },
   solid_principles: {
-    id: 'solid_principles', name: 'SOLID Principles', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
+    id: 'solid_principles', name: 'SOLID Principles', type: 'power', target: 'self', cost: 4, rarity: 'legendary',
     class: 'architect', archetype: 'design_patterns',
     description: 'Gain 5 Confidence, 5 Resilience, 2 Networking, 2 Self Care. Single responsibility: winning. Uncle Bob wept.',
     effects: { applyToSelf: { confidence: 5, resilience: 5, networking: 2, selfCare: 2 } },
     upgradedEffects: { applyToSelf: { confidence: 6, resilience: 6, networking: 3, selfCare: 3 } },
-    upgradedDescription: 'Cost 2. Gain 6 Confidence, 6 Resilience, 3 Networking, 3 Self Care.',
-    upgradedCost: 2,
+    upgradedDescription: 'Cost 3. Gain 6 Confidence, 6 Resilience, 3 Networking, 3 Self Care.',
+    upgradedCost: 3,
     icon: '🏛️',
   },
   rubber_duck_oracle: {
