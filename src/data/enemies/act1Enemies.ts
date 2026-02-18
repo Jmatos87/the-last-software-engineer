@@ -178,7 +178,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
   unpaid_take_home: {
     id: 'unpaid_take_home',
     name: 'Unpaid Take-Home Assignment',
-    hp: 68,
+    hp: 55,
     gold: 76,
     icon: '💸',
     isElite: true,
@@ -199,7 +199,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
   linkedin_influencer: {
     id: 'linkedin_influencer',
     name: 'LinkedIn Influencer',
-    hp: 64,
+    hp: 52,
     gold: 70,
     icon: '📱',
     isElite: true,
@@ -221,7 +221,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
   applicant_tracking_golem: {
     id: 'applicant_tracking_golem',
     name: 'Applicant Tracking Golem',
-    hp: 72,
+    hp: 58,
     gold: 82,
     icon: '⚙️',
     isElite: true,
@@ -242,7 +242,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
   networking_event: {
     id: 'networking_event',
     name: 'The Networking Event',
-    hp: 65,
+    hp: 52,
     gold: 72,
     icon: '🍸',
     isElite: true,
@@ -257,7 +257,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
   automated_rejection: {
     id: 'automated_rejection',
     name: 'Automated Rejection Letter',
-    hp: 60,
+    hp: 48,
     gold: 65,
     icon: '✉️',
     isElite: true,
@@ -281,7 +281,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
   hr_phone_screen: {
     id: 'hr_phone_screen',
     name: 'HR Phone Screen',
-    hp: 160,
+    hp: 130,
     gold: 120,
     icon: '📞',
     isBoss: true,
@@ -300,15 +300,15 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'We\'ll Be In Touch', type: 'attack', damage: 20, stressDamage: 10, icon: '☎️', quip: '"(Narrator: They weren\'t.)"' },
       { name: 'Benefits Bait', type: 'attack', damage: 12, stressDamage: 5, icon: '🎣', quip: '"We have unlimited PTO! (Don\'t use it.)"' },
       // Phase 3: pure DPS race — no more buff turns (indices 7-8)
-      { name: 'Benefits Bait', type: 'attack', damage: 8, stressDamage: 3, icon: '🎣', quip: '"Last chance. Take the offer or get nothing."' },
-      { name: 'REJECTED', type: 'attack', damage: 16, stressDamage: 7, icon: '❌', quip: '"We went with another candidate. Forever."' },
+      { name: 'Benefits Bait', type: 'attack', damage: 6, stressDamage: 3, icon: '🎣', quip: '"Last chance. Take the offer or get nothing."' },
+      { name: 'REJECTED', type: 'attack', damage: 13, stressDamage: 6, icon: '❌', quip: '"We went with another candidate. Forever."' },
     ],
   },
 
   ats_final_form: {
     id: 'ats_final_form',
     name: 'The ATS Final Form',
-    hp: 178,
+    hp: 145,
     gold: 130,
     icon: '🏗️',
     isBoss: true,
@@ -328,15 +328,15 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Total Rejection', type: 'attack', damage: 14, times: 2, icon: '❌', quip: '"Application status: OBLITERATED."' },
       { name: 'System Crash', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Fatal error: career not found."' },
       // Phase 3: pure DPS race — buff folded into onEnter (indices 8-9)
-      { name: 'System Crash', type: 'attack', damage: 15, stressDamage: 4, icon: '💀', quip: '"Rebooting... to destroy you faster."' },
-      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 22, stressDamage: 7, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
+      { name: 'System Crash', type: 'attack', damage: 12, stressDamage: 3, icon: '💀', quip: '"Rebooting... to destroy you faster."' },
+      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 18, stressDamage: 6, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
     ],
   },
 
   ghosting_phantom: {
     id: 'ghosting_phantom',
     name: 'The Ghosting Phantom',
-    hp: 142,
+    hp: 115,
     gold: 110,
     icon: '👻',
     isBoss: true,
@@ -356,7 +356,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Full Ghosting', type: 'attack', damage: 26, stressDamage: 10, icon: '☠️', quip: '"The position has been filled... forever."' },
       // Phase 3: final stand (indices 6-7)
       { name: 'Eternal Silence', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🕳️', quip: '"The void is permanent."' },
-      { name: 'Final Ghosting', type: 'attack', damage: 18, stressDamage: 8, icon: '☠️', quip: '"You never existed to us."' },
+      { name: 'Final Ghosting', type: 'attack', damage: 14, stressDamage: 6, icon: '☠️', quip: '"You never existed to us."' },
     ],
   },
 };

@@ -181,7 +181,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   board_member: {
     id: 'board_member',
     name: 'Board Member',
-    hp: 188,
+    hp: 150,
     gold: 150,
     icon: '🎩',
     isElite: true,
@@ -203,7 +203,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   golden_handcuffs: {
     id: 'golden_handcuffs',
     name: 'Golden Handcuffs',
-    hp: 178,
+    hp: 143,
     gold: 140,
     icon: '⛓️',
     isElite: true,
@@ -225,7 +225,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   the_reorg: {
     id: 'the_reorg',
     name: 'The Reorg',
-    hp: 168,
+    hp: 135,
     gold: 130,
     icon: '🌀',
     isElite: true,
@@ -247,7 +247,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   technical_debt_golem: {
     id: 'technical_debt_golem',
     name: 'Technical Debt Golem',
-    hp: 198,
+    hp: 158,
     gold: 160,
     icon: '🗿',
     isElite: true,
@@ -267,7 +267,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   the_pip: {
     id: 'the_pip',
     name: 'The PIP',
-    hp: 160,
+    hp: 128,
     gold: 120,
     icon: '📉',
     isElite: true,
@@ -282,7 +282,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
       // Phase 2: Termination mode (indices 3-5)
       { name: 'Clock Is Ticking', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⏰', quip: '"Tick. Tock."' },
       { name: 'Last Chance', type: 'attack', damage: 28, icon: '⚠️', quip: '"This is it."' },
-      { name: 'Terminated', type: 'attack', damage: 34, stressDamage: 18, icon: '🚪', quip: '"Security will escort you out."' },
+      { name: 'Terminated', type: 'attack', damage: 26, stressDamage: 14, icon: '🚪', quip: '"Security will escort you out."' },
     ],
   },
 
@@ -291,7 +291,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   offer_committee: {
     id: 'offer_committee',
     name: 'Offer Committee',
-    hp: 328,
+    hp: 264,
     gold: 240,
     icon: '👥',
     isBoss: true,
@@ -308,16 +308,16 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'Budget Discussion', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '💰', quip: '"Headcount is frozen. Mostly."' },
       { name: 'Counter-Counter Offer', type: 'attack', damage: 20, stressDamage: 8, icon: '⚖️', quip: '"We counter your counter. Again."' },
       // Phase 3: pure DPS race — buff folded into onEnter (indices 5-7)
-      { name: 'Counter-Counter Offer', type: 'attack', damage: 24, stressDamage: 10, icon: '⚖️', quip: '"Counter. Counter. COUNTER."' },
-      { name: 'Committee Slam', type: 'attack', damage: 44, icon: '💥', quip: '"Motion to reject. All in favor?"' },
-      { name: 'Offer Rescinded', type: 'attack', damage: 38, stressDamage: 14, icon: '📄', quip: '"The offer has been WITHDRAWN."' },
+      { name: 'Counter-Counter Offer', type: 'attack', damage: 19, stressDamage: 8, icon: '⚖️', quip: '"Counter. Counter. COUNTER."' },
+      { name: 'Committee Slam', type: 'attack', damage: 35, icon: '💥', quip: '"Motion to reject. All in favor?"' },
+      { name: 'Offer Rescinded', type: 'attack', damage: 30, stressDamage: 11, icon: '📄', quip: '"The offer has been WITHDRAWN."' },
     ],
   },
 
   the_ceo: {
     id: 'the_ceo',
     name: 'The CEO',
-    hp: 312,
+    hp: 250,
     gold: 230,
     icon: '🏆',
     isBoss: true,
@@ -334,17 +334,17 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'Execute!', type: 'attack', damage: 18, icon: '⚡', quip: '"Ship it or I ship you out."' },
       { name: 'Disruption', type: 'attack', damage: 20, stressDamage: 10, icon: '💥', quip: '"We disrupted the disruptors."' },
       // Phase 3: "Hostile" — reordered for attacks-last cycling (indices 5-8)
-      { name: 'Disruption', type: 'attack', damage: 20, stressDamage: 10, icon: '💥', quip: '"Disrupt EVERYTHING."' },
+      { name: 'Disruption', type: 'attack', damage: 16, stressDamage: 8, icon: '💥', quip: '"Disrupt EVERYTHING."' },
       { name: 'Golden Parachute', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🪂', quip: '"I have a $50M exit package."' },
-      { name: 'Move Fast Break Things', type: 'attack', damage: 30, icon: '🔥', quip: '"Including your career!"' },
-      { name: 'Hostile Takeover', type: 'attack', damage: 44, stressDamage: 18, icon: '☠️', quip: '"Bow before the brand."' },
+      { name: 'Move Fast Break Things', type: 'attack', damage: 24, icon: '🔥', quip: '"Including your career!"' },
+      { name: 'Hostile Takeover', type: 'attack', damage: 35, stressDamage: 14, icon: '☠️', quip: '"Bow before the brand."' },
     ],
   },
 
   imposter_syndrome_final: {
     id: 'imposter_syndrome_final',
     name: 'Imposter Syndrome (Final Form)',
-    hp: 278,
+    hp: 222,
     gold: 220,
     icon: '🎭',
     isBoss: true,
@@ -362,8 +362,8 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'Crushing Anxiety', type: 'stress_attack', stressDamage: 18, icon: '💀', quip: '"You can\'t even breathe right."' },
       // Phase 3 (indices 5-7)
       { name: 'Identity Crisis', type: 'debuff', applyToTarget: { weak: 3, vulnerable: 3, confidence: -3 }, icon: '🪞', quip: '"Who even are you anymore?"' },
-      { name: 'Complete Meltdown', type: 'attack', damage: 32, stressDamage: 34, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
-      { name: 'You Never Belonged', type: 'attack', damage: 28, stressDamage: 18, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
+      { name: 'Complete Meltdown', type: 'attack', damage: 25, stressDamage: 27, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
+      { name: 'You Never Belonged', type: 'attack', damage: 22, stressDamage: 14, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
     ],
   },
 };

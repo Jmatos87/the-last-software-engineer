@@ -6,15 +6,15 @@ export const items: ItemDef[] = [
   // ═══════════════════════════════════════════════════════════════
   {
     id: 'node_modules', name: 'node_modules', icon: '📦',
-    description: 'Start of combat: add a random 0-cost Frontend card to hand. 4.2 GB of dependencies.',
+    description: 'Start of combat: gain 1 Confidence and add a random 0-cost Frontend card to hand. 4.2 GB of dependencies.',
     rarity: 'starter', class: 'frontend', isStarter: true,
-    effect: { addRandomCardStart: true },
+    effect: { addRandomCardStart: true, startBattleConfidence: 1 },
   },
   {
     id: 'production_server', name: 'Production Server', icon: '🖥️',
-    description: 'Start of combat: gain 1 Confidence (+1 attack damage). Running since 2016. Nobody dares touch it.',
+    description: 'Start of combat: gain 2 Confidence (+1 attack damage per stack). Running since 2016. Nobody dares touch it.',
     rarity: 'starter', class: 'backend', isStarter: true,
-    effect: { startBattleConfidence: 1 },
+    effect: { startBattleConfidence: 2 },
   },
   {
     id: 'whiteboard_marker', name: 'Whiteboard Marker', icon: '🖊️',
@@ -34,15 +34,15 @@ export const items: ItemDef[] = [
   // ═══════════════════════════════════════════════════════════════
   {
     id: 'webpack_bundle', name: 'Webpack Bundle', icon: '📦',
-    description: 'Gain 2 block whenever you draw outside draw phase. (Simplified: +2 block on skills)',
+    description: 'Gain 3 block whenever you draw outside draw phase. (Simplified: +3 block on skills)',
     rarity: 'common', class: 'frontend',
-    effect: { bonusBlock: 2 },
+    effect: { bonusBlock: 3 },
   },
   {
     id: 'chrome_devtools', name: 'Chrome DevTools', icon: '🔍',
-    description: 'First skill each turn gives +3 block.',
+    description: 'First skill each turn gives +5 block.',
     rarity: 'rare', class: 'frontend',
-    effect: { firstSkillBlock: 3 },
+    effect: { firstSkillBlock: 5 },
   },
   {
     id: 'safari_bug_report', name: 'Safari Bug Report', icon: '🐛',
@@ -58,9 +58,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'tailwind_config', name: 'Tailwind Config', icon: '🎨',
-    description: '+1 Resilience (+1 block from cards) at start of combat. Block from cards +2.',
+    description: 'Start of combat: gain 1 Confidence and 1 Resilience. Block from cards +2.',
     rarity: 'epic', class: 'frontend',
-    effect: { startBattleResilience: 1, bonusBlock: 2 },
+    effect: { startBattleConfidence: 1, startBattleResilience: 1, bonusBlock: 2 },
   },
   // New epic relics — Frontend
   {
@@ -81,15 +81,15 @@ export const items: ItemDef[] = [
   // ═══════════════════════════════════════════════════════════════
   {
     id: 'load_balancer', name: 'Load Balancer', icon: '⚖️',
-    description: 'Multi-hit attacks deal +1 damage per hit.',
+    description: 'Multi-hit attacks deal +2 damage per hit.',
     rarity: 'common', class: 'backend',
-    effect: { multiHitBonus: 1 },
+    effect: { multiHitBonus: 2 },
   },
   {
     id: 'waf_rules', name: 'WAF Rules', icon: '🛡️',
-    description: 'Start combat with 3 Counter-Offer.',
+    description: 'Start combat with 5 Counter-Offer (reflect damage when hit).',
     rarity: 'rare', class: 'backend',
-    effect: { counterOfferStart: 3 },
+    effect: { counterOfferStart: 5 },
   },
   {
     id: 'redis_cache', name: 'Redis Cache', icon: '🔴',
@@ -252,9 +252,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'gaming_mouse', name: 'Gaming Mouse',
-    description: 'Deal 2 extra damage with attacks.',
+    description: 'Deal 3 extra damage with attacks.',
     rarity: 'rare', icon: '🖱️',
-    effect: { bonusDamage: 2 },
+    effect: { bonusDamage: 3 },
   },
   {
     id: 'standing_desk', name: 'Standing Desk',

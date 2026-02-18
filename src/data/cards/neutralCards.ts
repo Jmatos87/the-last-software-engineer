@@ -19,10 +19,10 @@ export const neutralCards: Record<string, CardDef> = {
   // ── Neutral Common ──
   stack_overflow: {
     id: 'stack_overflow', name: 'Stack Overflow', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
-    description: 'Deal 9 damage. Copied the top answer.',
-    effects: { damage: 9 },
-    upgradedEffects: { damage: 12 },
-    upgradedDescription: 'Deal 12 damage.',
+    description: 'Deal 10 damage. Copied the top answer.',
+    effects: { damage: 10 },
+    upgradedEffects: { damage: 14 },
+    upgradedDescription: 'Deal 14 damage.',
     icon: '📚',
   },
   rubber_duck: {
@@ -175,10 +175,11 @@ export const neutralCards: Record<string, CardDef> = {
   },
   networking_event: {
     id: 'networking_event', name: 'Networking Event', type: 'power', target: 'self', cost: 1, rarity: 'epic',
-    description: 'Gain 1 Networking. Let\'s grab coffee!',
-    effects: { applyToSelf: { networking: 1 } },
-    upgradedEffects: { applyToSelf: { networking: 2 } },
-    upgradedDescription: 'Gain 2 Networking.',
+    description: 'Gain 2 Networking (+1 card drawn/turn per stack). Let\'s grab coffee!',
+    effects: { applyToSelf: { networking: 2 } },
+    upgradedEffects: { applyToSelf: { networking: 3 } },
+    upgradedDescription: 'Cost 0. Gain 3 Networking.',
+    upgradedCost: 0,
     icon: '🤝',
   },
   emergency_fund: {
