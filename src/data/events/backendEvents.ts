@@ -106,4 +106,46 @@ export const backendEvents: EventDef[] = [
       },
     ],
   },
+  {
+    id: 'gdpr_request',
+    title: 'The GDPR Request',
+    description: 'The email arrived from a user who knows exactly what their rights are. Subject line: "Data Subject Access Request — Article 15 GDPR." The body is five sentences, three of which are legal citations. The signature links to a professional profile that lists "digital rights advocate" as a current role. You have thirty days to comply. You have noted the thirty days. You have also noted that your data infrastructure was not designed with this use case in mind.\n\nThe user\'s data exists across four databases, two S3 buckets, three third-party analytics integrations, and one logging system that your DevOps lead describes as "legacy but stable, don\'t touch it." The analytics integrations have their own GDPR terms. Two of them technically own a copy of the data under their ToS. The legal team has sent the ticket back to Engineering with the note "y\'all handle this."\n\nThe thirty-day clock is ticking. The data is scattered. The user knows their rights. You are learning yours.',
+    icon: '🔏',
+    class: 'backend',
+    choices: [
+      {
+        text: 'Comply fully (Remove chosen card, heal 15 HP, reduce 20 stress)',
+        outcome: { removeChosenCard: 1, hp: 15, stress: -20, message: 'You built a data aggregation pipeline over four days that pulled from every data source, deduplicated, anonymized third-party references, and produced a clean JSON export. You sent it within the deadline with a cover letter explaining the data categories included. The user replied: "This is the most thorough DSAR response I have ever received." You added the pipeline to the internal tooling docs. Your data infrastructure is now something you understand completely. The card you shed was dead weight — complexity you\'d been maintaining for the wrong reasons.' },
+      },
+      {
+        text: 'Partially comply (+25 gold, gain 15 stress)',
+        outcome: { gold: 25, stress: 15, message: 'You exported what was easy to export — the primary database records, the user table, the transaction history. You technically satisfied the request in the narrow legal sense. The analytics integrations were excluded with a footnote citing their own compliance status. The user accepted it without follow-up. Legal was satisfied. You received a spot bonus for "rapid turnaround." The stress is a permanent background process running the probability of them requesting a follow-up.' },
+      },
+      {
+        text: 'Document the "complexity" (+40 gold, gain 30 stress)',
+        outcome: { gold: 40, stress: 30, message: 'You responded with a 20-page document describing your data architecture\'s distributed nature, the compliance posture of each third-party integration, and a timeline for "phased data portability improvements." Legal loved it. The user\'s advocate did not. They escalated to the data protection authority. The DPA found the response technically sufficient and administratively troubling. You received no fine. You received a recommendation to implement a proper DSAR pipeline. The stress of the next DSAR request starts now.' },
+      },
+    ],
+  },
+  {
+    id: 'disk_space_emergency',
+    title: 'The Disk Space Emergency',
+    description: 'The alert fires at 6:47 AM. Disk usage: 98%. The threshold was 90% before the alert escalates. The alert has been at 91% for three weeks. The alert at 91% was acknowledged. Nobody actioned the acknowledgment. Now it is 98% and the database is beginning to refuse writes, which the users are experiencing as an error message that says "Something went wrong. Please try again." They are trying again. It is not helping.\n\nYou SSH in. You run df -h. You run du -sh /* to find the culprit. The culprit is logs. It is always logs. There are 847 GB of application logs dating back to 2021. The log rotation policy was configured and then, at some point, not configured. The exact date of the not-configuring is visible in git blame and you recognize the committer\'s name because it is your name.\n\nYou have four options: fast, right, cheap, or clever. You cannot have more than one of these at once.',
+    icon: '💾',
+    class: 'backend',
+    choices: [
+      {
+        text: 'Delete and fix root cause (Upgrade random card, lose 8 HP)',
+        outcome: { upgradeRandomCard: true, hp: -8, message: 'You deleted the logs from 2021-2022 (exported to cold storage first, you\'re not a monster), fixed the log rotation policy, set up a monitoring alert for log volume specifically, and added a runbook entry for the next time this happens. The disk went from 98% to 34%. The database resumed writes. You wrote a postmortem that was two paragraphs and actually useful. The card upgrade represents what you learned about your own infrastructure by being forced to understand it under pressure.' },
+      },
+      {
+        text: 'Buy emergency cloud storage (Heal 10 HP, lose 40 gold)',
+        outcome: { hp: 10, gold: -40, message: 'You spun up a 2TB EBS volume, mounted it, and pointed the log directory at it within twenty minutes. The immediate crisis resolved. The logs are still growing. The rotation policy is still broken. The new volume will hit 90% in approximately six weeks. You set a calendar reminder for five weeks from now. The $40 is the monthly cost, which you expensed. The HP recovery is relief — temporary, priced, and absolutely worth it in the moment.' },
+      },
+      {
+        text: 'Archive to S3 and call it solved (+20 gold, gain 15 stress)',
+        outcome: { gold: 20, stress: 15, message: 'You wrote a script that compressed and archived logs older than 30 days to S3 Glacier. You set it to run on cron. You set the cron to run monthly. The disk usage dropped to 61%. You marked the incident resolved. The script ran correctly for two months. On month three, the cron server was rotated as part of infrastructure updates and the cron entry did not transfer. The logs are accumulating. You will remember this stress at 6:47 AM in approximately four months.' },
+      },
+    ],
+  },
 ];

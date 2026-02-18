@@ -110,4 +110,46 @@ export const aiEngineerEvents: EventDef[] = [
       },
     ],
   },
+  {
+    id: 'model_off_script',
+    title: 'The Unexpected Inference',
+    description: 'The model was supposed to classify support tickets into seven categories. It has been doing this reliably for six weeks. Today, ticket #49,271 arrived. The ticket said: "When will the product ship?" The model classified it as Category 3 (billing inquiry) which is wrong — it should be Category 5 (product inquiry) — but that is not the interesting part. The interesting part is the explanation field, which you added for debugging and which only you read, which says: "User appears emotionally invested. Recommend priority routing and empathetic response framing."\n\nThe model does not have instructions to do this. You did not train it to do this. The fine-tuning dataset did not contain examples of this. You have checked. You are checking again now. The explanation is still there. It is accurate. The user\'s follow-up ticket has a tone that would benefit from exactly the routing and framing the model described.\n\nYou are holding a very interesting mystery and a deadline and a model that may have developed opinions about customer service.',
+    icon: '🤯',
+    class: 'ai_engineer',
+    choices: [
+      {
+        text: 'Investigate deeply (+1 epic card, lose 10 HP, gain 10 stress)',
+        outcome: { addCard: 'random_epic', hp: -10, stress: 10, message: 'You spent four days on it. You found it: a cluster of training examples from a customer service fine-tune dataset that had leaked cross-contamination from an empathy training corpus during preprocessing. The model had learned to pattern-match emotional signals from that contamination and apply it outside of classification. It was not sentience. It was not magic. It was a preprocessing artifact doing something beautiful by accident. You documented it. You improved the preprocessing pipeline. You also added the behavior intentionally to the next version. The epic card is what you learned.' },
+      },
+      {
+        text: 'Document and escalate (+1 rare card, reduce 10 stress)',
+        outcome: { addCard: 'random_rare', stress: -10, message: 'You wrote a clear incident report: what happened, what it produced, why it was unexpected, what the risk profile was. You escalated to ML safety and product. The response was "fascinating, let\'s monitor it." The behavior hasn\'t recurred. The rare card is the methodology you developed — a way to catch and evaluate emergent classification behaviors in production before they cause problems. Turning a mystery into a process is underrated.' },
+      },
+      {
+        text: 'Delete the logs (+35 gold, gain 15 stress)',
+        outcome: { gold: 35, stress: 15, message: 'You cleared the explanation logs. Ticket #49,271 was re-classified to Category 5 manually. The incident was not documented. Three weeks later a product manager asked if the model "had any sentiment analysis capabilities" because they\'d heard something secondhand. You said no. The model continues to classify support tickets. The explanation field now only contains category labels. Whatever was happening in there — the beautiful, inexplicable thing — you will never know.' },
+      },
+    ],
+  },
+  {
+    id: 'compute_apocalypse',
+    title: 'The Compute Bill',
+    description: 'The AWS cost alert threshold was set at $10,000. The alert fired. You acknowledged it. You did not pause the training run because the run was "almost done" — a phrase that means different things depending on the loss curve, and your loss curve was still descending, which is the kind of thing that makes it hard to stop. The next alert fired at $20,000. It is now $47,000 and the run is 94% complete.\n\nYour manager has called. The finance team has emailed. The CFO, who has never emailed you before and whose name you recognize from the about page, has sent a brief message. The brief message says: "Can you help me understand the compute spend this week?" You can help them understand it. You are not certain they will understand it in the way you need them to.\n\nThe loss is still descending. Slowly. The model at 94% is probably not meaningfully different from the model at 100%. You have never been able to prove this and now is not the time to start.',
+    icon: '☁️',
+    class: 'ai_engineer',
+    choices: [
+      {
+        text: 'Let it finish (+1 epic card, lose 40 gold)',
+        outcome: { addCard: 'random_epic', gold: -40, message: 'You let it run. The final model is measurably better on three benchmarks. You presented this to the CFO. The CFO said "okay, but next time we set a hard stop." You said yes. There will not be a next time at this scale without a formal approval process, which you drafted and got approved. The $40 is your personal contribution to the cost overrun, offered symbolically and accepted awkwardly. The epic card is the model. It was worth it. Once.' },
+      },
+      {
+        text: 'Kill the job (+40 gold, gain 20 stress)',
+        outcome: { gold: 40, stress: 20, message: 'You stopped the run at 94% and saved the checkpoint. The 94% model performs within 0.8% of your baseline estimate for the completed version. You wrote a postmortem. You published the checkpoint. You received a cost-savings bonus for "responsible resource management." You have been thinking about the 6% for three weeks now. The 6% is probably nothing. Probably. You will keep thinking about it.' },
+      },
+      {
+        text: 'Blame the cloud provider (+25 gold, gain 10 stress)',
+        outcome: { gold: 25, stress: 10, message: 'You filed a support ticket claiming "unexpected autoscaling behavior" had contributed to the overage. The support team investigated and found no autoscaling anomaly. They did, however, apply a $25 promotional credit as a goodwill gesture. You accepted the credit. The training run cost what it cost. The support team\'s findings are in a ticket you have archived. The incident was marked "resolved - user education." The stress is proportional to your awareness of what "user education" means.' },
+      },
+    ],
+  },
 ];

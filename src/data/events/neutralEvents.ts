@@ -264,4 +264,108 @@ export const neutralEvents: EventDef[] = [
       },
     ],
   },
+  {
+    id: 'mysterious_usb',
+    title: 'The USB Drive',
+    description: 'You found it in the parking lot, nestled against the rear tire of a Tesla like it was waiting for you specifically. Black. No label. A sticker of a duck on the back, which raises more questions than it answers. The duck is wearing sunglasses. The duck seems confident.\n\nYou work in tech. You know exactly what this could be. A penetration tester\'s drop drive. A disgruntled employee\'s manifesto. A collection of someone\'s vacation photos. Encrypted ransomware configured to detonate on insertion. You have held this USB for four minutes and you are still in the parking lot.\n\nIT Security sent a company-wide email six months ago that said "never insert unknown USB devices." You remember the email. The email is still in your inbox, starred. The duck continues to exude confidence.',
+    icon: '🦆',
+    choices: [
+      {
+        text: 'Plug it in carefully (+1 rare card, lose 8 HP)',
+        outcome: { addCard: 'random_rare', hp: -8, message: 'You isolated a VM, disabled networking, and booted from a known-good OS before inserting anything. Inside: a cryptographically signed collection of technical notes, cheat sheets, and optimized algorithms from an engineer who clearly knew what they were doing. The duck sticker made sense in retrospect. The knowledge is real. The VM is quarantined forever as a precaution.' },
+      },
+      {
+        text: 'Plug it in recklessly (+1 epic card, lose 20 HP, gain 15 stress)',
+        outcome: { addCard: 'random_epic', hp: -20, stress: 15, message: 'You plugged it straight into your laptop like a person who has never received a cybersecurity training email. The drive contained something powerful — a full toolkit from a very talented, very paranoid engineer who wanted to anonymously share their work. It also contained a script that logged your hostname to a pastebin. The epic card is worth it. Probably. The stress is merited.' },
+      },
+      {
+        text: 'Give it to IT (+20 gold, remove chosen card)',
+        outcome: { gold: 20, removeChosenCard: 1, message: 'You submitted the drive through the proper channels with a written incident report. IT forensics found it was a legitimate lost-and-found situation — a contractor\'s work drive left behind after a site visit. The contractor was grateful. Your manager sent a Slack message praising your "security-first mindset." You received a $20 gift card. You also cleaned one unnecessary card from your deck while feeling good about yourself.' },
+      },
+      {
+        text: 'Leave it in the parking lot',
+        outcome: { message: 'You put the drive back exactly where you found it. The duck stared at you as you walked away. You got into your car. You drove to work. You thought about the duck for the rest of the day. The drive was probably fine. Probably. The duck\'s confidence was not earned by you.' },
+      },
+    ],
+  },
+  {
+    id: 'exit_interview',
+    title: 'The Exit Interview',
+    description: 'HR has scheduled thirty minutes. The calendar invite says "Offboarding Conversation (Confidential)" and the description says "This is a safe space to share your feedback." The person conducting the interview has a form. The form has checkboxes. One checkbox says "Management" and another says "Compensation" and another says "Work-Life Balance." There is a free-text box at the bottom labeled "Additional Comments." The box is small.\n\nYou know things. You have seen things. You have a document called "things I cannot say in Slack" that you have been adding to for fourteen months. The document is eleven pages. You could say these things now. The form says it\'s confidential. HR works for the company. These two facts are in tension.\n\nThe interviewer asks how your experience was "overall." The word "overall" is doing enormous lifting. You have thirty minutes. The eleven-page document is closed but you remember everything in it.',
+    icon: '🚪',
+    choices: [
+      {
+        text: 'Stay diplomatic (+50 gold, remove chosen card)',
+        outcome: { gold: 50, removeChosenCard: 1, message: '"Overall positive. Great team, learned a lot, excited about my next opportunity." The interviewer nodded and checked boxes. Your reference is secured. Your severance arrived on time. A card you\'ve been carrying — a habit, a compromise, something you did their way — leaves your deck. The money is real. The peace of mind is real. Not everything needs to be said out loud to be true.' },
+      },
+      {
+        text: 'Tell the whole truth (Upgrade random card, +40 gold, gain 20 stress)',
+        outcome: { upgradeRandomCard: true, gold: 40, stress: 20, message: 'You opened the eleven-page document metaphorically and went through it. You were specific. You were measured. You were accurate. The interviewer stopped checking boxes halfway through and started taking notes. Two things you said became action items. One of those items was already in a Jira backlog. The card you kept is upgraded — what you learned there is yours to keep. The stress is the cost of honesty in institutions.' },
+      },
+      {
+        text: 'Burn it down (+1 epic card, lose 15 HP, reduce 25 stress)',
+        outcome: { addCard: 'random_epic', hp: -15, stress: -25, message: 'You handed them the document. Printed. You walked them through it. All eleven pages. You named names (professionally). You cited dates. You had receipts — not metaphorically, you had the Slack exports. The interviewer called their manager. Their manager called Legal. The meeting ran ninety minutes. Three things changed at that company within sixty days. You don\'t work there anymore so you\'ll never know which three. The epic card is a souvenir of the day you stopped managing other people\'s feelings about your experience.' },
+      },
+    ],
+  },
+  {
+    id: 'legendary_engineer',
+    title: 'The Legendary Engineer',
+    description: 'They don\'t have a title. Their LinkedIn says "currently: thinking." They wrote something foundational — not famous-foundational, not textbook-foundational, but the kind of thing that twelve people who build the tools you use every day cite in their own foundational work. You\'ve been in the industry four years. You know who this person is the way you know the name of the mountain that was there before the city.\n\nThey are in the break room making tea. You know this because you also wanted tea. You are now making tea slightly slower than normal, hoping to stretch the window of proximity to something extraordinary. They seem unbothered by their own significance, which is the most frightening thing about them.\n\nThey glance at your laptop screen. They look at you. They say: "What are you working on?" — and the question lands with the weight of someone who actually wants to know.',
+    icon: '🧙',
+    choices: [
+      {
+        text: 'Show them your deck (Remove card, upgrade card, +1 epic card)',
+        outcome: { removeRandomCard: true, upgradeRandomCard: true, addCard: 'random_epic', message: 'You walked them through your approach. They listened with the stillness of someone who has already been wrong about everything once and learned from it. They asked two questions. The questions pointed at exactly the two weakest parts of your design. You fixed both. They suggested an approach you hadn\'t considered. What remained after the conversation was cleaner, stranger, and more powerful than what you brought in. The tea went cold. Neither of you noticed.' },
+      },
+      {
+        text: 'Ask for one piece of advice (+1 rare card)',
+        outcome: { addCard: 'random_rare', message: '"What should I be working on?" They thought about this for a long time — long enough that you wondered if they\'d forgotten the question. Then: "The thing you keep deferring because it seems too hard. That\'s usually the one." You thought about the thing you keep deferring. You went back to your desk. You started working on it. The card is a direct result of that conversation.' },
+      },
+      {
+        text: 'Challenge them to a debate (+40 gold, gain 15 stress)',
+        outcome: { gold: 40, stress: 15, message: 'You disagreed with something they published in 2018. You told them this. You cited your reasons. They listened. They did not get defensive — which you had been prepared for — they engaged. They found two holes in your argument and one hole in their own original position. You argued for an hour. Afterward they said "good talk" and left. Someone had been watching the whole time and approached you afterward. They offered you a consulting gig based on what they\'d overheard. The gold is theirs. The stress is the cost of being taken seriously.' },
+      },
+    ],
+  },
+  {
+    id: 'startup_equity',
+    title: 'The Vesting Cliff',
+    description: 'The email arrived at 10:48 AM with the subject line "Exciting News — Acquisition Announcement." The company you joined three years ago for "competitive salary and meaningful equity" has been acquired. The acquiring company is a name you know. The deal is a number you cannot say out loud in public without your voice doing something involuntary.\n\nYour equity vested in full at the cliff. The cliff was four years. You are at three years and two months. There is a clause in the acquisition agreement about accelerated vesting for employees with more than three years of tenure. Your lawyer (you got a lawyer, finally, after the third time someone sent you a document that said "sign here") says the clause is ambiguous.\n\nThe ambiguity is between you and a number that would change the kind of choices you get to make for the next decade. HR has scheduled a call for Thursday. Thursday is in two days.',
+    icon: '💎',
+    choices: [
+      {
+        text: 'Accept the standard payout (+80 gold)',
+        outcome: { gold: 80, message: 'You signed the paperwork. The payout was not the number that would have changed everything but it was a number that changed some things. You paid off your laptop. You bought a good chair. You took two weeks off. You thought about what you were building next. The equity clause remained ambiguous. You decided ambiguous was fine. Some things are better resolved than maximized.' },
+      },
+      {
+        text: 'Negotiate aggressively (+60 gold, lose 10 HP)',
+        outcome: { gold: 60, hp: -10, message: 'You lawyered up. Your lawyer sent a letter. Their lawyers sent a letter. There were three calls. There was a counter-offer. You counter-countered. The final number was between what you asked for and what they offered, which is where negotiations always end when both sides have competent representation. You got more than the standard payout and less than the theoretical maximum. The HP cost is the two weeks of stress-eating during the negotiation. Worth it, probably.' },
+      },
+      {
+        text: 'Share the windfall with the team (Remove chosen card, heal 25 HP, reduce 30 stress)',
+        outcome: { removeChosenCard: 1, hp: 25, stress: -30, message: 'You took the standard payout and split a portion of your own proceeds among the junior engineers on your team who\'d been there less than a year and whose equity was worth nothing. You didn\'t tell anyone outside the team. The engineers knew. One of them cried, which made you also almost cry. Something heavy left your deck — a card that represented playing it safe for yourself when you could play it differently. The HP and stress recovery were a surprise. Apparently doing good things for other people is medicinal.' },
+      },
+    ],
+  },
+  {
+    id: 'stack_ranking',
+    title: 'The Stack Ranking',
+    description: 'The company introduced performance stack ranking. The announcement came on a Tuesday at 4 PM in a document titled "Evolving Our Culture of Excellence," which is the kind of title that means something has gotten worse. The bottom 10% will receive "performance improvement plans." The bottom 5% will receive "transition support," which HR will never explain further but which everyone understands.\n\nYou are, by your own estimate, solidly in the top 40%. You have the performance reviews to prove it. You have the project outcomes. You have a paper trail that a reasonable person would call a career. None of this changes the fact that the ranking is forced — if everyone performs at the 90th percentile, someone still ends up in the bottom 10% by definition. You have noticed this. Your manager has noticed this. Your manager has said nothing about it because your manager is also being ranked.\n\nA colleague pulls you aside. They are organizing. The word "organize" arrives with weight.',
+    icon: '📊',
+    choices: [
+      {
+        text: 'Volunteer to rank others (+40 gold, gain 20 stress)',
+        outcome: { gold: 40, stress: 20, message: 'You joined the calibration committee. You received access to everyone\'s performance data. You approached the task with integrity — you pushed back on political ranking, you cited evidence, you advocated for engineers who\'d been systematically overlooked. You also had to rank people you respected below people you didn\'t. The gold is the bonus you received for being seen as a "trusted voice." The stress is knowing what you know about your colleagues\' numbers. You will carry it.' },
+      },
+      {
+        text: 'Fight your own ranking (Upgrade random card, lose 10 HP, gain 10 stress)',
+        outcome: { upgradeRandomCard: true, hp: -10, stress: 10, message: 'You submitted a twelve-page rebuttal package to HR. Impact metrics. Testimonials from external stakeholders. A before-and-after comparison of two systems you owned. Your manager said they\'d never seen someone do this. Your ranking improved. One person above you in the stack had their score reconsidered. They found out it was you who challenged them. The work relationship survived. The trust didn\'t fully.' },
+      },
+      {
+        text: 'Organize against the system (Remove chosen card, reduce 20 stress, +25 gold)',
+        outcome: { removeChosenCard: 1, stress: -20, gold: 25, message: 'You attended the organizing meeting. You helped draft the open letter. Forty-three engineers signed it, which was eleven more than you expected. The letter cited research on forced ranking\'s effects on collaboration and retention. HR called it "feedback." Three months later the ranking methodology was "refined" — it still exists but the bottom threshold was removed. You claim partial credit. You\'ll never know how much. A card representing something you\'d been carrying for the wrong reasons left your deck.' },
+      },
+    ],
+  },
 ];

@@ -174,4 +174,65 @@ export const consumableEvents: EventDef[] = [
       },
     ],
   },
+  {
+    id: 'abandoned_catering',
+    title: 'The Abandoned Catering',
+    description: 'The all-hands ended forty minutes ago. The catering remains. You know this because someone posted in #random: "hey there\'s like 800 sandwiches and 3 sheet cakes in the 4th floor conference room and nobody is eating them." Eleven people added the 👀 emoji. Two people added the 🏃 emoji. You are on the 4th floor.\n\nThe spread is impressive. It was ordered for 200 people and 60 attended because the all-hands conflicted with a sprint planning that nobody had the political will to reschedule. There are untouched trays of sandwiches — the good kind, the ones with real deli meat and those small toothpick flags — and what appears to be an entire tiered chocolate cake with "Q3 EXCELLENCE" written on it in fondant letters.\n\nExcellence is available. The question is what you do with it.',
+    icon: '🥪',
+    choices: [
+      {
+        text: 'Share the bounty in Slack (+1 common consumable, +20 gold)',
+        outcome: { addConsumable: 'random_common', gold: 20, message: 'You posted in #general with a photo and floor directions. Fifty-three people responded. The conference room emptied in eleven minutes. You are credited in two people\'s Slack bios as "the one who found the sandwiches." The gold is the $20 Amazon gift card you received for "community building" from someone on the culture team who witnessed the stampede. The consumable is what you grabbed before the crowd arrived.' },
+      },
+      {
+        text: 'Eat your fill (Heal 20 HP, reduce 10 stress)',
+        outcome: { hp: 20, stress: -10, message: 'You ate two sandwiches, one scone, and a slice of Q3 Excellence. You took a second slice for later, wrapped in a napkin with "MINE" written on it, which is not professional behavior but is effective behavior. The HP and stress recovery are the direct physiological effects of sitting quietly with excellent food while everyone else is in meetings. You felt like you won something, which you did. You won lunch.' },
+      },
+      {
+        text: 'Harvest the premium supplies (+1 rare consumable)',
+        outcome: { addConsumable: 'random_rare', message: 'You were not interested in the sandwiches. You were interested in the catering supplies — the insulated bags, the stainless serving trays, the 96-pack of premium sparkling water tucked under the table that the catering company had forgotten to collect. You requisitioned them for "engineering team events" in a quick Slack to facilities who said "sure whatever." The rare consumable represents what you\'ve been quietly stockpiling for the right moment.' },
+      },
+    ],
+  },
+  {
+    id: 'oncall_handoff',
+    title: 'The On-Call Handoff',
+    description: 'Your on-call week ended at 9 AM. You survived it. Four incidents, one P1, one memorable 3 AM database query that you fixed by adding a single index and felt disproportionately triumphant about. The rotation has handed off to your colleague. They are now wearing the pager. You are free.\n\nExcept. The outgoing on-call kit — the bag of equipment, the laminated runbook, the USB loaded with diagnostic scripts that your predecessor\'s predecessor built in 2019 and nobody has updated since — was left in the server room by the engineer before you, who forgot to pass it on. It\'s sitting on a shelf next to a decommissioned server labeled "PROD-OLD-2" and a sticky note that says "this still runs something."\n\nThe kit has things in it. The things might be useful. The next on-call rotation starts Monday.',
+    icon: '📟',
+    class: 'backend',
+    choices: [
+      {
+        text: 'Take what you need (+1 rare consumable)',
+        outcome: { addConsumable: 'random_rare', message: 'You went through the kit. The USB had seventeen scripts, three of which were actually useful, one of which was a complete database backup utility that you had been manually doing by hand for two years. You extracted the scripts, updated them, put them in the team\'s shared tooling repo, and took one consumable from the kit as payment for your labor. The kit is better now. You are better now. The on-call rotation is yours to own.' },
+      },
+      {
+        text: 'Leave something, take something (+1 common consumable, upgrade random card)',
+        outcome: { addConsumable: 'random_common', upgradeRandomCard: true, message: 'You added your own incident runbook — the one you wrote at 3 AM during the P1, clear-headed in the way that only fear produces — to the kit. You took the diagnostic USB. You updated the sticky note to say "this still runs something (payments service, do not touch until Dec)." The next on-call engineer will be slightly less lost than you were. The card upgrade represents your runbook making one of your own plays more effective.' },
+      },
+      {
+        text: 'Leave it intact for the next person (+25 gold, heal 10 HP)',
+        outcome: { gold: 25, hp: 10, message: 'You found the kit, confirmed its contents, labeled it clearly, and emailed the on-call rotation list with its location and an inventory. Professional. Thorough. You received a "thank you so much" reply from the engineer starting Monday who had been anxious about the missing kit for three days. Your manager noticed the email and gave you a spot bonus for "cross-functional ownership." The HP is the recovery from a week of being available at all hours. You earned it.' },
+      },
+    ],
+  },
+  {
+    id: 'beta_access',
+    title: 'The Beta Program',
+    description: 'An email arrived from a company you respect. Subject: "We\'d love your feedback — exclusive beta access." The body explains that they\'ve been watching your public contributions (the blog posts, the conference talk, the GitHub repo with 300 stars that you built in one weekend and forgot about) and they think you\'d be a valuable tester for a product that isn\'t announced yet. There\'s an NDA linked in the email. The NDA is two pages, which in NDA terms means it\'s almost nothing.\n\nThe product is in the description that follows the NDA link: a development tool that solves a problem you have personally complained about in public at least three times. The beta is invite-only. The invite has a referral slot — you can bring one other person into the program. One person.\n\nYou have colleagues who would each individually benefit more than you. You also have colleagues who would use the referral slot for leverage, not learning. The choice of who to bring says something about you.',
+    icon: '🎟️',
+    choices: [
+      {
+        text: 'Use it immediately (+1 rare consumable)',
+        outcome: { addConsumable: 'random_rare', message: 'You signed the NDA and dove in alone. The tool is as good as described — maybe better. You found three bugs in the first week, filed detailed reports, and became one of the more active beta participants. The company expanded your access level based on the quality of your feedback. The rare consumable represents something you extracted from the beta that makes your practice more capable. You never did figure out who to give the referral to. You probably should have given it to Maya.' },
+      },
+      {
+        text: 'Share with a colleague (+1 common consumable, +15 gold)',
+        outcome: { addConsumable: 'random_common', gold: 15, message: 'You gave the referral to the engineer who had complained about this exact problem most recently in your team\'s Slack. They signed up within the hour. You worked through the beta together, comparing notes, finding issues faster than either of you would have alone. The company asked you both to do a joint case study. The case study paid a $15 speaker honorarium. The consumable is what you kept for yourself from the collaboration.' },
+      },
+      {
+        text: 'Sell the beta slot (+35 gold)',
+        outcome: { gold: 35, message: 'You posted discreetly in a developer community: "Beta access slot available, looking for committed testers." Three people replied within an hour. You selected the most enthusiastic one, transferred the referral, and received $35 via Venmo described as "coffee money" which it clearly was not. The beta is being tested by someone else. The product launched six months later. You saw the launch announcement and thought about the $35 and whether that was the right trade. It was probably not. It was definitely $35.' },
+      },
+    ],
+  },
 ];

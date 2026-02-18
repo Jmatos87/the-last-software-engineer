@@ -110,4 +110,46 @@ export const frontendEvents: EventDef[] = [
       },
     ],
   },
+  {
+    id: 'framework_migration',
+    title: 'The Great Migration',
+    description: 'The codebase is 6 years old. The framework it was built on released a major version 14 months ago with "breaking changes" that turned out to be foundational — not like "rename this prop" breaking, like "your mental model of rendering is incorrect" breaking. The migration guide is 47 pages. Page 12 contains the phrase "this may require rethinking how your application manages state" delivered with the casual confidence of someone who did not write the application in question.\n\nYou have been putting this off. The feature velocity argument worked for a while. Then the security patch argument worked for a while. Now you are on a dependency that hasn\'t received updates since 2023 and the changelog on the new version has three separate security fixes that apply to you. The technical debt has become technical urgency.\n\nThe migration will touch 847 files. Your estimate to management was "a couple sprints." This was not accurate. You knew this when you said it.',
+    icon: '🏗️',
+    class: 'frontend',
+    choices: [
+      {
+        text: 'Migrate properly (Remove 2 chosen cards, +1 epic card, lose 10 HP)',
+        outcome: { removeChosenCard: 2, addCard: 'random_epic', hp: -10, message: 'You did it properly. Feature flags, incremental rollout, codemods where they worked and manual rewrites where they didn\'t. You deleted 12,000 lines of code that had been carried forward through two previous migrations like cursed luggage. The codebase is now the kind of thing you can explain to a new engineer in one conversation. Two cards that represented your old patterns left your deck. What replaced them is significantly more powerful.' },
+      },
+      {
+        text: 'Migrate the easy parts (Upgrade random card, gain 15 stress)',
+        outcome: { upgradeRandomCard: true, stress: 15, message: 'You migrated the routes, the components, the config — everything that the codemods handled cleanly. You left the state management, the custom hooks, and three legacy modules that "still work fine" on the old version. You now have a codebase that runs on two major versions simultaneously. The official documentation does not address this architecture by name. The unofficial name for it is "a problem for future you." Future you has already been briefed.' },
+      },
+      {
+        text: 'Close as "won\'t fix" (+35 gold, gain 15 stress)',
+        outcome: { gold: 35, stress: 15, message: 'You wrote a technical document arguing that the migration ROI was negative given current sprint priorities and proposed a "strategic defer" to Q3. It was approved. You received a spot bonus for the "clear-eyed prioritization." The dependency is still unpatched. The security fixes still apply to you. Q3 arrived. You wrote a new document. The stress compounds quarterly, like the debt it describes.' },
+      },
+    ],
+  },
+  {
+    id: 'accessibility_audit',
+    title: 'The Accessibility Audit',
+    description: 'The audit report arrived as a PDF. The PDF is 34 pages. Page 1 is the executive summary. The executive summary says "critical issues identified" in bold red text, which feels ironic given the context. Page 2 begins the list of violations. There are 73 violations. Violation 4 is "missing alt text on 247 images." Violation 11 is "form inputs not associated with labels." Violation 23 is "color contrast ratio 1.9:1 on primary call-to-action button." The WCAG requirement for that ratio is 4.5:1. You chose that color. You thought it looked clean.\n\nThe legal team forwarded the report with a subject line that says "FYI — flagging" in the kind of tone that means "this is now your responsibility and we want it documented that we told you." The flagging is documented. It is now your responsibility.\n\nA screen reader user sent the company an email. The email was polite. The email described what it was like to use your product with assistive technology. You read the email twice. You then looked at the 73 violations differently.',
+    icon: '♿',
+    class: 'frontend',
+    choices: [
+      {
+        text: 'Fix everything properly (Upgrade random card, remove chosen card, lose 8 HP)',
+        outcome: { upgradeRandomCard: true, removeChosenCard: 1, hp: -8, message: 'You fixed all 73 violations. You hired an accessibility consultant for a day to review the fixes. You added automated a11y tests to the CI pipeline that would catch regressions. You replied to the screen reader user with the changes and asked for their feedback. They tested it. They said "much better, thank you." Those three words were the most direct feedback you\'ve received in two years of shipping features. A card that represented your old approach to "good enough" left your deck. What remains is more refined.' },
+      },
+      {
+        text: 'Hire a consultant (+1 rare card, lose 30 gold)',
+        outcome: { addCard: 'random_rare', gold: -30, message: 'You brought in an accessibility specialist for a two-week engagement. They fixed the critical issues, established a remediation plan for the rest, and left you with a testing framework and a training document for the team. The fixes are real. The knowledge transfer is real. The card represents what you absorbed from watching a genuine expert work. The $30 is the consultant\'s retainer. Both were worth it.' },
+      },
+      {
+        text: 'Add aria-labels everywhere (+20 gold, gain 15 stress)',
+        outcome: { gold: 20, stress: 15, message: 'You added aria-labels. To everything. Buttons that already had text content. Images that already had alt text. Divs that should have been buttons but were divs with click handlers because someone in 2020 was in a hurry. The automated checker now shows zero violations. The manual screen reader test reveals a user experience best described as "technically compliant." The audit is closed. The gold was the bonus for "rapid remediation." The stress is knowing you know the difference between compliance and accessibility.' },
+      },
+    ],
+  },
 ];

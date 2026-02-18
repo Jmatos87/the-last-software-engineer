@@ -110,4 +110,46 @@ export const architectEvents: EventDef[] = [
       },
     ],
   },
+  {
+    id: 'viral_rfc',
+    title: 'The Viral RFC',
+    description: 'You wrote an internal RFC eight months ago proposing a new approach to service contract versioning. It was clear, well-reasoned, and referenced three papers from industry practitioners. The proposal committee said "interesting, let\'s table it for now." You tabled it. It sat in Confluence.\n\nSomehow it leaked. Not your doing — someone shared a screenshot of the key diagram in a tech Slack community, and within 72 hours engineers at four other companies had replied with variations of "we\'ve been trying to articulate this exact thing for months." A newsletter mentioned it. A podcast mentioned it. You are now receiving LinkedIn connection requests at a rate that your inbox was not designed to handle.\n\nYour company knows it was yours. They have opinions about what should happen next. So does the industry. These opinions are in direct conflict.',
+    icon: '📡',
+    class: 'architect',
+    choices: [
+      {
+        text: 'Publish it (+1 epic card, gain 15 stress)',
+        outcome: { addCard: 'random_epic', stress: 15, message: 'You cleaned it up, added implementation examples, and published it with your name on it. The blog post got 40,000 views in a week. You were invited to speak at two conferences. Your company initially called it an "unauthorized disclosure" and then, once the response was clearly positive, called it an "example of our thought leadership culture." You now have a reputation that precedes you. The stress is maintaining it.' },
+      },
+      {
+        text: 'Keep it internal, sell consulting (+40 gold, upgrade random card)',
+        outcome: { gold: 40, upgradeRandomCard: true, message: 'You declined the public exposure and instead offered the full RFC — implementation guide, worked examples, the failure modes section that didn\'t make it into the original — as a consulting engagement. Three companies hired you for afternoon calls. Each call was $40 of the company\'s consulting budget which they routed through your employer. The RFC is still not public. The knowledge transferred. The card it informed in your own practice got sharper.' },
+      },
+      {
+        text: 'Open-source the implementation (Remove chosen card, +1 rare card, reduce 20 stress)',
+        outcome: { removeChosenCard: 1, addCard: 'random_rare', stress: -20, message: 'You published the RFC and an open-source implementation under your company\'s GitHub org (with legal\'s surprisingly quick approval, once they understood the PR value). The repo has 800 stars. Three companies have production adoptions. You removed a card from your deck that represented a pattern the RFC made obsolete — if you\'re going to argue a better way, you should use it. The stress reduction is the relief of saying the thing you meant in public.' },
+      },
+    ],
+  },
+  {
+    id: 'org_redesign',
+    title: 'The Org Redesign',
+    description: 'The VP sent a message on a Friday at 3 PM. The message says: "Would love to get your thinking on how we could restructure the eng org to better support our product goals. Free for a quick sync Monday?" You have been in this industry long enough to know that "quick sync" on this topic means "I want you to produce the document that will change everyone\'s reporting structure, titles, and team memberships, which I will then present as a leadership initiative."\n\nYou also know this: org design is real engineering. The structure of the teams determines the structure of the software they build. Conway\'s Law isn\'t a metaphor, it\'s a load-bearing principle. The current org has four teams that own overlapping domains, two people with the same title who perform different jobs, and one team whose charter has been "TBD" for seven months. Whoever designs the new structure is, functionally, writing the next two years of the company\'s architecture.\n\nMonday is in two days. The org has 43 people. The VP is waiting.',
+    icon: '🏢',
+    class: 'architect',
+    choices: [
+      {
+        text: 'Design something real (Upgrade random card, +1 relic, lose 15 HP)',
+        outcome: { upgradeRandomCard: true, addItem: 'circuit_breaker', hp: -15, message: 'You spent the weekend doing it right — interviewing team leads, mapping system dependencies against Conway\'s Law, identifying the four teams that should be two and the one team that should be three. Your proposal was 24 pages with an appendix. The VP presented it unchanged. The org shipped in Q2. The teams stopped arguing about ownership because the boundaries were designed to match the architecture. The relic is what you earned from being the person who makes systems hold together under pressure. The HP cost is what it took to care that much.' },
+      },
+      {
+        text: 'Propose something safe (+40 gold, gain 10 stress)',
+        outcome: { gold: 40, stress: 10, message: 'You proposed minor adjustments — renamed the TBD team, clarified two overlapping charters, suggested a quarterly cross-team sync ritual. Nothing structural. Nothing that would require difficult conversations about reporting lines. The VP approved it in eleven minutes. You received a "thank you for the thoughtful analysis" Slack and a spot bonus. The org problems remain. The org problems are now documented as "addressed." The stress is knowing the difference.' },
+      },
+      {
+        text: 'Refuse the assignment (Remove chosen card, reduce 20 stress)',
+        outcome: { removeChosenCard: 1, stress: -20, message: '"I don\'t think I\'m the right person for this. Org design should involve the people whose lives will change — I\'d recommend a working group with team lead representation and an external facilitator." The VP paused. The VP said "hm." A month later, a working group was formed. It did not include you. The design they produced was better than what you would have built alone, which proved your point. A card representing your tendency to carry other people\'s architecture problems left your deck.' },
+      },
+    ],
+  },
 ];
