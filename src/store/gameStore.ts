@@ -273,8 +273,8 @@ export const useGameStore = create<GameState>()(
         )?.type === 'boss';
 
         const kills = newBattle.killCount || 0;
-        const total = newBattle.totalEnemies || 1;
         const allGhosted = kills === 0;
+        const act = state.run.act;
 
         // Post-battle heal from items (only if you actually killed something)
         const healOnKill = kills > 0 ? state.run.items.reduce((sum, item) => sum + (item.effect.healOnKill || 0), 0) : 0;
@@ -284,22 +284,8 @@ export const useGameStore = create<GameState>()(
           n => n.id === state.run!.map.currentNodeId
         )?.type === 'battle') ? 15 : 0;
 
-        // Gold scaling by act
-        const act = state.run.act;
-        let baseGold: number, randRange: number;
-        if (isBoss) {
-          baseGold = act === 1 ? 50 : act === 2 ? 75 : 100;
-          randRange = act === 1 ? 20 : act === 2 ? 25 : 30;
-        } else if (isElite) {
-          baseGold = act === 1 ? 30 : act === 2 ? 40 : 50;
-          randRange = act === 1 ? 15 : act === 2 ? 20 : 25;
-        } else {
-          baseGold = act === 1 ? 15 : act === 2 ? 20 : 25;
-          randRange = act === 1 ? 10 : act === 2 ? 15 : 20;
-        }
-        const goldPerKill = Math.floor(baseGold / total);
         const extraGoldPercent = state.run.items.reduce((sum, item) => sum + (item.effect.extraGoldPercent || 0), 0);
-        const rawGold = allGhosted ? 0 : (goldPerKill * kills) + Math.floor(Math.random() * randRange) + extraGold + takeHomeBonus;
+        const rawGold = allGhosted ? 0 : (newBattle.goldEarned + extraGold + takeHomeBonus);
         const goldReward = extraGoldPercent > 0 ? Math.floor(rawGold * (1 + extraGoldPercent / 100)) : rawGold;
 
         // Determine artifact drops
@@ -403,29 +389,15 @@ export const useGameStore = create<GameState>()(
         )?.type === 'boss';
 
         const kills = afterEnemyTurn.killCount || 0;
-        const total = afterEnemyTurn.totalEnemies || 1;
         const allGhosted = kills === 0;
 
-        // Gold scaling by act
         const isElite = state.run.map.nodes.find(
           n => n.id === state.run!.map.currentNodeId
         )?.type === 'elite';
         const extraGold = state.run.items.reduce((sum, item) => sum + (item.effect.extraGold || 0), 0);
         const act2 = state.run.act;
-        let baseGold2: number, randRange2: number;
-        if (isBoss) {
-          baseGold2 = act2 === 1 ? 50 : act2 === 2 ? 75 : 100;
-          randRange2 = act2 === 1 ? 20 : act2 === 2 ? 25 : 30;
-        } else if (isElite) {
-          baseGold2 = act2 === 1 ? 30 : act2 === 2 ? 40 : 50;
-          randRange2 = act2 === 1 ? 15 : act2 === 2 ? 20 : 25;
-        } else {
-          baseGold2 = act2 === 1 ? 15 : act2 === 2 ? 20 : 25;
-          randRange2 = act2 === 1 ? 10 : act2 === 2 ? 15 : 20;
-        }
-        const goldPerKill = Math.floor(baseGold2 / total);
         const extraGoldPercent2 = state.run.items.reduce((sum, item) => sum + (item.effect.extraGoldPercent || 0), 0);
-        const rawGold2 = allGhosted ? 0 : (goldPerKill * kills) + Math.floor(Math.random() * randRange2) + extraGold;
+        const rawGold2 = allGhosted ? 0 : (afterEnemyTurn.goldEarned + extraGold);
         const goldReward = extraGoldPercent2 > 0 ? Math.floor(rawGold2 * (1 + extraGoldPercent2 / 100)) : rawGold2;
         const healOnKill = state.run.items.reduce((sum, item) => sum + (item.effect.healOnKill || 0), 0);
 
@@ -977,9 +949,10 @@ export const useGameStore = create<GameState>()(
           })) as any;
         }
 
-        // Remove dead enemies
-        const killed = s.battle.enemies.filter(e => e.currentHp <= 0).length;
-        s.battle.killCount = (s.battle.killCount || 0) + killed;
+        // Remove dead enemies and track gold earned
+        const deadFromConsumable = s.battle.enemies.filter(e => e.currentHp <= 0);
+        s.battle.killCount = (s.battle.killCount || 0) + deadFromConsumable.length;
+        s.battle.goldEarned = (s.battle.goldEarned || 0) + deadFromConsumable.reduce((sum, e) => sum + (e.gold || 0), 0);
         s.battle.enemies = s.battle.enemies.filter(e => e.currentHp > 0) as any;
       });
 

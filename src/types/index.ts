@@ -143,6 +143,7 @@ export interface EnemyDef {
   id: string;
   name: string;
   hp: number;
+  gold: number;
   moves: EnemyMove[];
   icon: string;
   isElite?: boolean;
@@ -298,6 +299,7 @@ export interface BattleState {
   playerStatusEffects: StatusEffect;
   killCount: number;
   totalEnemies: number;
+  goldEarned: number;
   // New tracking
   powersPlayedThisCombat: number;
   cardsPlayedThisTurn: number;

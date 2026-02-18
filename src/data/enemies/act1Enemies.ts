@@ -12,6 +12,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'resume_ats',
     name: 'Resume ATS Filter',
     hp: 30,
+    gold: 20,
     icon: '🤖',
     moves: [
       { name: 'Keyword Scan', type: 'attack', damage: 6, icon: '🔍', quip: '"Hmm... no blockchain?"' },
@@ -25,6 +26,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'legacy_ats',
     name: 'Legacy ATS',
     hp: 40,
+    gold: 26,
     icon: '🖨️',
     moves: [
       { name: 'Connection Lost', type: 'attack', damage: 8, icon: '📡', quip: '"Server circa 2003 says hi."' },
@@ -38,6 +40,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'ai_ats',
     name: 'AI-Powered ATS',
     hp: 26,
+    gold: 18,
     icon: '🧠',
     moves: [
       { name: 'Deep Scan', type: 'attack', damage: 7, icon: '🔬', quip: '"My neural net says no."' },
@@ -51,6 +54,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'recruiter_bot',
     name: 'Recruiter Bot',
     hp: 34,
+    gold: 22,
     icon: '🤳',
     moves: [
       { name: 'Cold Email', type: 'attack', damage: 5, icon: '📧', quip: '"Quick 15-min chat?"' },
@@ -64,6 +68,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'ghost_company',
     name: 'Ghost Company',
     hp: 18,
+    gold: 8,
     icon: '👻',
     hideIntent: true,
     moves: [
@@ -77,6 +82,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'take_home',
     name: 'Take-Home Assignment',
     hp: 36,
+    gold: 24,
     icon: '📝',
     moves: [
       { name: 'Requirements Doc', type: 'attack', damage: 6, icon: '📄', quip: '"Oh, and add auth too."' },
@@ -90,6 +96,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'cover_letter_shredder',
     name: 'Cover Letter Shredder',
     hp: 28,
+    gold: 20,
     icon: '✂️',
     moves: [
       { name: 'Shred!', type: 'exhaust', exhaustCount: 1, icon: '✂️', quip: '"Nobody reads these anyway."' },
@@ -102,6 +109,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'keyword_stuffer',
     name: 'Keyword Stuffer',
     hp: 24,
+    gold: 16,
     icon: '🔑',
     moves: [
       { name: 'SEO Boost', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '📈', quip: '"Leverage those core competencies!"' },
@@ -115,6 +123,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'job_board_troll',
     name: 'Job Board Troll',
     hp: 32,
+    gold: 22,
     icon: '🧌',
     moves: [
       { name: 'Overqualified!', type: 'debuff', applyToTarget: { resilience: -1 }, icon: '📜', quip: '"PhD for data entry? Pass."' },
@@ -128,6 +137,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'application_fee_scammer',
     name: 'Application Fee Scammer',
     hp: 20,
+    gold: 28,
     icon: '💰',
     moves: [
       { name: 'Processing Fee', type: 'gold_steal', goldSteal: 8, icon: '💸', quip: '"Small fee to apply. Totally legit."' },
@@ -140,6 +150,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'entry_level_5yrs',
     name: '"Entry Level" (5 Yrs Exp)',
     hp: 35,
+    gold: 24,
     icon: '📋',
     moves: [
       { name: 'Impossible Requirements', type: 'attack_defend', damage: 6, block: 4, icon: '📝', quip: '"10 years Swift. It\'s from 2014."' },
@@ -153,6 +164,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'linkedin_notification_swarm',
     name: 'LinkedIn Notification',
     hp: 16,
+    gold: 10,
     icon: '🔔',
     moves: [
       { name: 'Ping!', type: 'attack', damage: 4, stressDamage: 2, icon: '🔔', quip: '"Someone viewed your profile!"' },
@@ -167,6 +179,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'unpaid_take_home',
     name: 'Unpaid Take-Home Assignment',
     hp: 88,
+    gold: 76,
     icon: '💸',
     isElite: true,
     moves: [
@@ -182,6 +195,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'linkedin_influencer',
     name: 'LinkedIn Influencer',
     hp: 78,
+    gold: 70,
     icon: '📱',
     isElite: true,
     phases: [
@@ -203,6 +217,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'applicant_tracking_golem',
     name: 'Applicant Tracking Golem',
     hp: 95,
+    gold: 82,
     icon: '⚙️',
     isElite: true,
     moves: [
@@ -218,6 +233,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'networking_event',
     name: 'The Networking Event',
     hp: 82,
+    gold: 72,
     icon: '🍸',
     isElite: true,
     moves: [
@@ -232,6 +248,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'automated_rejection',
     name: 'Automated Rejection Letter',
     hp: 73,
+    gold: 65,
     icon: '✉️',
     isElite: true,
     phases: [
@@ -255,6 +272,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'hr_phone_screen',
     name: 'HR Phone Screen',
     hp: 163,
+    gold: 120,
     icon: '📞',
     isBoss: true,
     phases: [
@@ -281,6 +299,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'ats_final_form',
     name: 'The ATS Final Form',
     hp: 182,
+    gold: 130,
     icon: '🏗️',
     isBoss: true,
     phases: [
@@ -308,6 +327,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     id: 'ghosting_phantom',
     name: 'The Ghosting Phantom',
     hp: 143,
+    gold: 110,
     icon: '👻',
     isBoss: true,
     hideIntent: true,

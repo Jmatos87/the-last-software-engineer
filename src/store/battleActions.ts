@@ -124,6 +124,7 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: Batt
       playerStatusEffects,
       killCount: 0,
       totalEnemies: enemies.length,
+      goldEarned: 0,
       powersPlayedThisCombat: 0,
       cardsPlayedThisTurn: 0,
       firstAttackPlayedThisTurn: false,
@@ -431,9 +432,10 @@ export function executePlayCard(
     newBattle.discardPile = [...newBattle.discardPile, card];
   }
 
-  // Remove dead enemies and track kills
-  const killed = newBattle.enemies.filter(e => e.currentHp <= 0).length;
-  newBattle.killCount = (newBattle.killCount || 0) + killed;
+  // Remove dead enemies and track kills + gold earned
+  const deadEnemies = newBattle.enemies.filter(e => e.currentHp <= 0);
+  newBattle.killCount = (newBattle.killCount || 0) + deadEnemies.length;
+  newBattle.goldEarned = (newBattle.goldEarned || 0) + deadEnemies.reduce((sum, e) => sum + (e.gold || 0), 0);
   newBattle.enemies = newBattle.enemies.filter(e => e.currentHp > 0);
 
   return { battle: newBattle, stressReduction, hpChange, stressChange, goldChange };
@@ -758,10 +760,14 @@ export function executeEnemyTurn(
 
   // Count vanished vs killed (by counter-offer thorns) before filtering
   const enemiesVanished = enemiesToRemove.length;
-  const enemiesKilled = newBattle.enemies.filter(e =>
+  const killedEnemies = newBattle.enemies.filter(e =>
     e.currentHp <= 0 && !enemiesToRemove.includes(e.instanceId)
-  ).length;
-  newBattle.killCount = (newBattle.killCount || 0) + enemiesKilled;
+  );
+  newBattle.killCount = (newBattle.killCount || 0) + killedEnemies.length;
+  // Gold counts for any enemy whose HP hit 0 — if Ghost Company dies before fleeing, it pays out
+  newBattle.goldEarned = (newBattle.goldEarned || 0) + newBattle.enemies
+    .filter(e => e.currentHp <= 0)
+    .reduce((sum, e) => sum + (e.gold || 0), 0);
 
   // Remove vanished enemies (Ghost Company) and enemies killed by Counter-Offer
   newBattle.enemies = newBattle.enemies.filter(e =>
@@ -771,7 +777,7 @@ export function executeEnemyTurn(
   // Tick player status effects
   newBattle.playerStatusEffects = tickStatusEffects(newBattle.playerStatusEffects);
 
-  return { battle: newBattle, playerHp, playerStress, enemiesVanished, enemiesKilled, vanishedIds: enemiesToRemove, goldChange };
+  return { battle: newBattle, playerHp, playerStress, enemiesVanished, enemiesKilled: killedEnemies.length, vanishedIds: enemiesToRemove, goldChange };
 }
 
 export function startNewTurn(battle: BattleState, run: RunState): { battle: BattleState; stressChange: number; hpChange: number } {

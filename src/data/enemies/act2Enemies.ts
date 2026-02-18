@@ -12,6 +12,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'whiteboard_demon',
     name: 'Whiteboard Demon',
     hp: 53,
+    gold: 40,
     icon: '📊',
     moves: [
       { name: 'Solve in O(n)', type: 'attack', damage: 10, icon: '📊', quip: '"Now do it without extra space."' },
@@ -25,6 +26,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'leetcode_goblin',
     name: 'LeetCode Goblin',
     hp: 43,
+    gold: 34,
     icon: '👺',
     moves: [
       { name: 'Easy Problem', type: 'attack', damage: 6, icon: '🟢', quip: '"This one\'s a warmup."' },
@@ -38,6 +40,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'culture_fit_enforcer',
     name: 'Culture Fit Enforcer',
     hp: 48,
+    gold: 36,
     icon: '😊',
     moves: [
       { name: 'We\'re Like Family', type: 'stress_attack', stressDamage: 8, icon: '👨‍👩‍👧‍👦', quip: '"A dysfunctional one, but still!"' },
@@ -51,6 +54,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'behavioral_question_bot',
     name: 'Behavioral Question Bot',
     hp: 46,
+    gold: 36,
     icon: '🎭',
     moves: [
       { name: 'Tell Me About A Time...', type: 'debuff', applyToTarget: { weak: 2 }, icon: '🕐', quip: '"Use the STAR method, please."' },
@@ -64,6 +68,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'pair_programmer_enemy',
     name: 'The Pair Programmer',
     hp: 50,
+    gold: 38,
     icon: '👥',
     moves: [
       { name: 'Copy That', type: 'attack_defend', damage: 7, block: 7, icon: '📋', quip: '"I would\'ve used a reducer here."' },
@@ -77,6 +82,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'trivia_quizmaster',
     name: 'Trivia Quizmaster',
     hp: 38,
+    gold: 30,
     icon: '❓',
     moves: [
       { name: 'Pop Quiz!', type: 'attack', damage: 10, icon: '❓', quip: '"What\'s the max heap size in V8?"' },
@@ -90,6 +96,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'recruiter_middleman',
     name: 'Recruiter Middleman',
     hp: 44,
+    gold: 34,
     icon: '🤵',
     moves: [
       { name: 'Shield Candidates', type: 'buff_allies', applyToTarget: { resilience: 1 }, icon: '🛡️', quip: '"I\'ll prep you for the prep call."' },
@@ -103,6 +110,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'take_home_v2',
     name: 'Take-Home Project v2',
     hp: 56,
+    gold: 42,
     icon: '💻',
     moves: [
       { name: 'MVP Sprint', type: 'attack', damage: 8, icon: '🏃', quip: '"Ship it by Monday."' },
@@ -116,6 +124,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'the_lowballer',
     name: 'The Lowballer',
     hp: 42,
+    gold: 38,
     icon: '💵',
     moves: [
       { name: 'We Offer Exposure', type: 'gold_steal', goldSteal: 8, stressDamage: 4, icon: '💸', quip: '"Think of the experience!"' },
@@ -129,6 +138,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'zoom_fatigue',
     name: 'Zoom Fatigue',
     hp: 52,
+    gold: 38,
     icon: '😴',
     moves: [
       { name: 'Buffer...', type: 'exhaust', exhaustCount: 1, icon: '🔄', quip: '"Can everyone see my screen?"' },
@@ -142,6 +152,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'reference_checker',
     name: 'Reference Checker',
     hp: 40,
+    gold: 32,
     icon: '🔍',
     moves: [
       { name: 'Background Scan', type: 'attack', damage: 8, icon: '🔍', quip: '"Interesting GitHub history..."' },
@@ -155,6 +166,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'scheduling_nightmare',
     name: 'Scheduling Nightmare',
     hp: 48,
+    gold: 36,
     icon: '📅',
     moves: [
       { name: 'Reschedule', type: 'stress_attack', stressDamage: 6, icon: '📅', quip: '"Something came up. Next week?"' },
@@ -170,6 +182,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'senior_dev_interrogator',
     name: 'Senior Dev Interrogator',
     hp: 133,
+    gold: 110,
     icon: '🧓',
     isElite: true,
     phases: [
@@ -192,6 +205,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'whiteboard_hydra',
     name: 'The Whiteboard Hydra',
     hp: 123,
+    gold: 100,
     icon: '🐉',
     isElite: true,
     phases: [
@@ -214,6 +228,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'hr_gatekeeper',
     name: 'HR Gatekeeper',
     hp: 118,
+    gold: 95,
     icon: '🚪',
     isElite: true,
     phases: [
@@ -235,6 +250,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'the_algorithm',
     name: 'The Algorithm',
     hp: 145,
+    gold: 120,
     icon: '🧮',
     isElite: true,
     moves: [
@@ -250,6 +266,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'crunch_time_manager',
     name: 'Crunch Time Manager',
     hp: 128,
+    gold: 105,
     icon: '⏰',
     isElite: true,
     moves: [
@@ -267,6 +284,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'panel_interview_hydra',
     name: 'Panel Interview Hydra',
     hp: 258,
+    gold: 185,
     icon: '🐲',
     isBoss: true,
     phases: [
@@ -293,6 +311,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'live_coding_challenge',
     name: 'The Live Coding Challenge',
     hp: 238,
+    gold: 175,
     icon: '⌨️',
     isBoss: true,
     phases: [
@@ -319,6 +338,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     id: 'vp_of_engineering',
     name: 'The VP of Engineering',
     hp: 278,
+    gold: 195,
     icon: '👔',
     isBoss: true,
     phases: [
