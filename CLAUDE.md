@@ -48,6 +48,19 @@ npm run lint     # ESLint
 npm run preview  # Preview production build
 ```
 
+## Version & Save Management
+
+**Rule: bump `GAME_VERSION` on every commit+push.**
+
+`GAME_VERSION` lives at the top of `src/store/gameStore.ts` (e.g. `'1.2.0'`).
+
+Use **semver**:
+- **Patch** (1.2.0 → 1.2.1): bug fixes, balance tweaks, text changes
+- **Minor** (1.2.0 → 1.3.0): new cards, relics, enemies, events, features
+- **Major** (1.2.0 → 2.0.0): breaking save-structure changes, full act additions
+
+The version is stored in `localStorage` alongside the save. On load, if `data.version !== GAME_VERSION` the save is automatically cleared and the player starts fresh — no migration needed. Use migrations (as done previously) only when you explicitly want to preserve in-progress runs across a change.
+
 ## Project Structure
 ```
 src/

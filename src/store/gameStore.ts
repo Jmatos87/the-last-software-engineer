@@ -24,10 +24,11 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
+const GAME_VERSION = '1.2.0';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
-    localStorage.setItem(SAVE_KEY, JSON.stringify({ screen: state.screen, run: state.run }));
+    localStorage.setItem(SAVE_KEY, JSON.stringify({ version: GAME_VERSION, screen: state.screen, run: state.run }));
   } catch { /* quota exceeded — silently fail */ }
 }
 
@@ -40,6 +41,11 @@ function loadGame(): { screen: import('../types').Screen; run: import('../types'
     const raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return null;
     const data = JSON.parse(raw);
+    // Version check — clear save if version mismatch
+    if (data.version !== GAME_VERSION) {
+      clearSave();
+      return null;
+    }
     // Migrate old saves without consumable fields
     if (data.run && !data.run.consumables) {
       data.run.consumables = [];
