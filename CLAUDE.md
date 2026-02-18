@@ -3,6 +3,32 @@
 ## Project Overview
 A **Slay the Spire-style roguelike deck-building game** built as a single-page web app. The player selects a character, navigates a procedurally generated map, fights enemies with a card-based combat system, collects rewards, and progresses through acts. Satirical job-search / dev humor theme.
 
+## Game Design Philosophy
+
+### Inspirations
+All game mechanic changes must draw inspiration from these titles:
+- **Slay the Spire** — card synergies, relic interactions, act structure, rarity scaling
+- **Ring of Pain** — risk/reward loops, dangerous item tradeoffs, pre-fight threat assessment
+- **Monster Train 1 & 2** — unit stacking, faction synergies, boss escalation, late-game power spikes
+- **Inscryption** — asymmetric cards, sacrifice mechanics, cards with dark side effects, surprise rule-breaking
+- **Darkest Dungeon** — stress as a resource, punishing but fair difficulty, atmospheric dread, meaningful loss
+
+### Core Design Pillars
+
+**Risk & Reward** — Every fight must feel like a meaningful choice. Elites and bosses offer better loot at greater danger. Events can curse, bless, or trade. The player should constantly weigh upside vs. downside, never be on autopilot.
+
+**Outscaling Fantasy** — Builds should have a ceiling high enough that a well-constructed deck feels unstoppable by Act 3. Confidence stacking, multi-hit chains, exhaust synergies, power card snowballs — the player should be able to break the game if they find the right pieces.
+
+**Card Variety & Playstyle Breadth** — Each class targets multiple archetypes. No two runs should feel identical. Cards should enable niche combos, not just stat sticks. A large card pool (target ~180–210 cards) ensures variety across runs.
+
+**Event Design Spectrum** — Events exist on a spectrum:
+- **Cursed** — bad things happen, no upside (rare, dread-inducing)
+- **Risk/Reward** — explicit trade (HP for gold, card for relic, etc.) with transparent costs
+- **Mixed** — good outcome with a sting attached
+- **Windfall** — purely positive, but rare enough to feel like luck
+
+**Rarity & Progression Feel** — Common cards are expendable scaffolding. Rare cards define a build. Epic cards break rules. Legendary cards win runs. Each rarity tier should feel qualitatively different, not just numerically stronger.
+
 ## Tech Stack
 - **Framework:** React 19 + TypeScript 5.9
 - **Build tool:** Vite 7
