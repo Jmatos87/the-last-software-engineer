@@ -160,7 +160,7 @@ export const BattleRewardScreen: React.FC = () => {
           ) : (
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
               {pendingRewards.consumableChoices!.map(c => {
-                const rarityColor = c.rarity === 'rare' ? 'var(--accent-yellow)' : c.rarity === 'uncommon' ? 'var(--accent-blue)' : 'var(--text-secondary)';
+                const rarityColor = c.rarity === 'legendary' ? 'var(--accent-gold)' : c.rarity === 'epic' ? 'var(--accent-yellow)' : c.rarity === 'rare' ? 'var(--accent-blue)' : 'var(--text-secondary)';
                 return (
                   <div
                     key={c.id}
@@ -243,7 +243,7 @@ export const BattleRewardScreen: React.FC = () => {
                   <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}</div>
                   <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
                     <span style={{ color: 'var(--energy-color)' }}>&#9889;{card.cost}</span>
-                    <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
+                    <span style={{ color: card.rarity === 'legendary' ? 'var(--accent-gold)' : card.rarity === 'epic' ? 'var(--accent-yellow)' : card.rarity === 'rare' ? 'var(--accent-blue)' : 'var(--text-muted)' }}>{card.rarity}</span>
                   </div>
                   <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
                 </div>

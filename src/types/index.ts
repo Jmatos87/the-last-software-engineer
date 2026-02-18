@@ -1,19 +1,23 @@
 // ── Consumables ──
-export type ConsumableRarity = 'common' | 'uncommon' | 'rare';
+export type ConsumableRarity = 'common' | 'rare' | 'epic' | 'legendary';
 export type ConsumableTarget = 'self' | 'enemy' | 'all_enemies';
 
 export interface ConsumableEffect {
   damage?: number;
   damageAll?: number;
   heal?: number;
+  healFull?: boolean;
   block?: number;
   energy?: number;
   draw?: number;
   stressRelief?: number;
+  stressToZero?: boolean;
+  addStress?: number;
   applyToSelf?: StatusEffect;
   applyToTarget?: StatusEffect;
   applyToAll?: StatusEffect;
   goldGain?: number;
+  addEpicCardsToHand?: number;
 }
 
 export interface ConsumableDef {
@@ -45,7 +49,7 @@ export type Screen =
 // ── Cards ──
 export type CardType = 'attack' | 'skill' | 'power' | 'curse';
 export type CardTarget = 'enemy' | 'self' | 'all_enemies';
-export type CardRarity = 'starter' | 'common' | 'uncommon' | 'rare' | 'curse';
+export type CardRarity = 'starter' | 'common' | 'rare' | 'epic' | 'legendary' | 'curse';
 export type CardClass = 'frontend' | 'backend' | 'architect' | 'ai_engineer';
 
 export interface StatusEffect {
@@ -84,6 +88,10 @@ export interface CardEffect {
   gainGold?: number;         // gain gold in combat
   exhaustRandom?: number;    // exhaust random cards from hand
   exhaustFromDraw?: number;  // exhaust cards from draw pile
+  healFull?: boolean;        // heal HP to max
+  shuffleDiscardToDraw?: boolean;  // shuffle discard pile into draw pile
+  exhaustAllHand?: boolean;  // exhaust all cards in hand
+  damagePerCardExhausted?: number;  // deal N × (cards exhausted this play) damage to target
 }
 
 export interface CardDef {
@@ -238,6 +246,15 @@ export interface ItemDef {
     addRandomCardStart?: boolean;     // add random 0-cost class card at combat start
     firstPowerFree?: boolean;         // first power each combat costs 0
     exhaustGainEnergy?: boolean;      // gain 1 energy when exhaust
+    // New epic relic effects
+    skillBlockMultiplier?: number;    // multiply block from skills by N% (e.g. 150 = +50%)
+    surviveKillingBlow?: boolean;     // once per combat, survive killing blow with 1 HP
+    exhaustDrawCard?: boolean;        // draw 1 card whenever any card exhausted
+    firstNCardsFree?: number;         // first N cards in hand at combat start cost 0
+    confidenceThresholdDamage?: { threshold: number; damage: number }; // deal damage per N confidence stacks
+    confidenceAlsoReduceStress?: number;  // cards that grant confidence also reduce stress by N
+    startBattleBlockFromLastCombat?: boolean;  // start combat with block = cards played last combat
+    extraEnergyFirstTurn?: number;    // gain N extra energy on first turn only
   };
 }
 

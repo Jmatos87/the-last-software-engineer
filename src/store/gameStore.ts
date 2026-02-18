@@ -45,6 +45,33 @@ function loadGame(): { screen: import('../types').Screen; run: import('../types'
       data.run.consumables = [];
       data.run.maxConsumables = 3;
     }
+    // Migrate rarity rename: uncommon→rare, rare→epic
+    if (data.run) {
+      for (const card of data.run.deck || []) {
+        if (card.rarity === 'uncommon') card.rarity = 'rare';
+        else if (card.rarity === 'rare' && card.rarity !== 'epic') { /* already handled above if it was uncommon */ }
+      }
+      // Two-pass to handle old saves: uncommon→rare first, then old rare→epic
+      // We need to detect whether this was a pre-overhaul save
+      // Simple heuristic: if any card has rarity 'uncommon', it's a pre-overhaul save
+      const hasUncommon = (data.run.deck || []).some((c: any) => c.rarity === 'uncommon');
+      if (hasUncommon) {
+        for (const card of data.run.deck || []) {
+          if (card.rarity === 'rare') card.rarity = 'epic';
+          if (card.rarity === 'uncommon') card.rarity = 'rare';
+        }
+      }
+      // Migrate item rarities
+      for (const item of data.run.items || []) {
+        if (item.rarity === 'uncommon') item.rarity = 'rare';
+        else if (item.rarity === 'rare' && hasUncommon) item.rarity = 'epic';
+      }
+      // Migrate consumable rarities
+      for (const c of data.run.consumables || []) {
+        if (c.rarity === 'uncommon') c.rarity = 'rare';
+        else if (c.rarity === 'rare' && hasUncommon) c.rarity = 'epic';
+      }
+    }
     // Migrate strength→confidence, dexterity→resilience rename
     if (data.run) {
       const migrateEffects = (fx: Record<string, unknown> | undefined) => {
@@ -630,17 +657,18 @@ export const useGameStore = create<GameState>()(
           let cardDef;
           // Event card quality scaling by act
           let evtCardType = outcome.addCard;
-          if (evtCardType === 'random_common' && s.run.act >= 2) evtCardType = 'random_uncommon';
-          if (evtCardType === 'random_uncommon' && s.run.act >= 3 && Math.random() < 0.5) evtCardType = 'random_rare';
+          if (evtCardType === 'random_common' && s.run.act >= 2) evtCardType = 'random_rare';
+          if (evtCardType === 'random_rare' && s.run.act >= 3 && Math.random() < 0.5) evtCardType = 'random_epic';
+          if (evtCardType === 'random_uncommon') evtCardType = 'random_rare'; // migrate old event references
           if (evtCardType === 'random_common') {
             const commons = Object.values(cards).filter(c => c.rarity === 'common');
             cardDef = commons[Math.floor(Math.random() * commons.length)];
-          } else if (evtCardType === 'random_uncommon') {
-            const uncommons = Object.values(cards).filter(c => c.rarity === 'uncommon');
-            cardDef = uncommons[Math.floor(Math.random() * uncommons.length)];
           } else if (evtCardType === 'random_rare') {
             const rares = Object.values(cards).filter(c => c.rarity === 'rare');
             cardDef = rares[Math.floor(Math.random() * rares.length)];
+          } else if (evtCardType === 'random_epic') {
+            const epics = Object.values(cards).filter(c => c.rarity === 'epic');
+            cardDef = epics[Math.floor(Math.random() * epics.length)];
           } else {
             cardDef = cards[evtCardType];
           }
@@ -690,8 +718,9 @@ export const useGameStore = create<GameState>()(
           let cDef: import('../types').ConsumableDef | undefined;
           const cType = outcome.addConsumable;
           if (cType === 'random_common') cDef = getRandomConsumable('common');
-          else if (cType === 'random_uncommon') cDef = getRandomConsumable('uncommon');
+          else if (cType === 'random_uncommon') cDef = getRandomConsumable('rare'); // migrate old references
           else if (cType === 'random_rare') cDef = getRandomConsumable('rare');
+          else if (cType === 'random_epic') cDef = getRandomConsumable('epic');
           else if (cType === 'random_common_x2') {
             // Add 2 commons
             const c1 = getRandomConsumable('common');
@@ -705,12 +734,12 @@ export const useGameStore = create<GameState>()(
             }
             cDef = undefined; // Already handled
           } else if (cType === 'random_uncommon_x2') {
-            const c1 = getRandomConsumable('uncommon');
+            const c1 = getRandomConsumable('rare'); // migrate
             const inst1: ConsumableInstance = { ...c1, instanceId: uuidv4() };
             s.run.consumables.push(inst1 as any);
             consumableAdded = inst1;
             if (s.run.consumables.length < s.run.maxConsumables) {
-              const c2 = getRandomConsumable('uncommon');
+              const c2 = getRandomConsumable('rare');
               const inst2: ConsumableInstance = { ...c2, instanceId: uuidv4() };
               s.run.consumables.push(inst2 as any);
             }
@@ -761,7 +790,7 @@ export const useGameStore = create<GameState>()(
       const cardDef = cards[cardId];
       if (!cardDef) return;
 
-      const cost = cardDef.rarity === 'common' ? 50 : cardDef.rarity === 'uncommon' ? 75 : 150;
+      const cost = cardDef.rarity === 'common' ? 50 : cardDef.rarity === 'rare' ? 75 : cardDef.rarity === 'epic' ? 125 : cardDef.rarity === 'legendary' ? 200 : 50;
 
       set(s => {
         if (!s.run || s.run.gold < cost) return;
@@ -774,7 +803,7 @@ export const useGameStore = create<GameState>()(
       const item = items.find(i => i.id === itemId);
       if (!item) return;
 
-      const cost = item.rarity === 'common' ? 100 : item.rarity === 'uncommon' ? 150 : 250;
+      const cost = item.rarity === 'common' ? 100 : item.rarity === 'rare' ? 150 : item.rarity === 'epic' ? 225 : item.rarity === 'legendary' ? 350 : 100;
 
       set(s => {
         if (!s.run || s.run.gold < cost) return;
@@ -807,7 +836,7 @@ export const useGameStore = create<GameState>()(
         if (!s.run) return;
         const playerClass = getPlayerClass(s.run.character.id);
         const uncommons = Object.values(cards).filter((c: any) =>
-          c.rarity === 'uncommon' && c.class === playerClass
+          c.rarity === 'rare' && c.class === playerClass
         );
         if (uncommons.length > 0) {
           const pick = uncommons[Math.floor(Math.random() * uncommons.length)] as any;
@@ -986,7 +1015,7 @@ export const useGameStore = create<GameState>()(
     buyConsumable: (consumableId: string) => {
       const cDef = consumables[consumableId];
       if (!cDef) return;
-      const cost = cDef.rarity === 'common' ? 40 : cDef.rarity === 'uncommon' ? 65 : 120;
+      const cost = cDef.rarity === 'common' ? 40 : cDef.rarity === 'rare' ? 65 : cDef.rarity === 'epic' ? 100 : cDef.rarity === 'legendary' ? 160 : 40;
 
       set(s => {
         if (!s.run || s.run.gold < cost || s.run.consumables.length >= s.run.maxConsumables) return;

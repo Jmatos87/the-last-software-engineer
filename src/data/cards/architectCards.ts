@@ -118,10 +118,56 @@ export const architectCards: Record<string, CardDef> = {
     upgradedDescription: 'Gain 9 block. Draw 1.',
     icon: '🧍',
   },
+  // New commons
+  golden_path: {
+    id: 'golden_path', name: 'Golden Path', type: 'skill', target: 'self', cost: 0, rarity: 'common',
+    class: 'architect', archetype: 'tech_spec', exhaust: true,
+    description: 'Exhaust. Gain 2 energy. Draw 2 cards. The blessed architecture. Nobody uses it.',
+    effects: { energy: 2, draw: 2 },
+    upgradedEffects: { energy: 2, draw: 3 },
+    upgradedDescription: 'Exhaust. Gain 2 energy. Draw 3.',
+    icon: '✨',
+  },
+  delegation_pattern: {
+    id: 'delegation_pattern', name: 'Delegation Pattern', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'architect', archetype: 'design_patterns',
+    description: 'Deal 4 damage. Draw 1 card. Let someone else handle it.',
+    effects: { damage: 4, draw: 1 },
+    upgradedEffects: { damage: 6, draw: 1 },
+    upgradedDescription: 'Deal 6 damage. Draw 1.',
+    icon: '📤',
+  },
+  sprint_velocity: {
+    id: 'sprint_velocity', name: 'Sprint Velocity', type: 'skill', target: 'self', cost: 2, rarity: 'common',
+    class: 'architect', archetype: 'scope_creep',
+    description: 'Gain 8 block. Gain 2 energy. This sprint you committed to 40 story points.',
+    effects: { block: 8, energy: 2 },
+    upgradedEffects: { block: 11, energy: 2 },
+    upgradedDescription: 'Gain 11 block. Gain 2 energy.',
+    icon: '💨',
+  },
+  api_contract: {
+    id: 'api_contract', name: 'API Contract', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'architect', archetype: 'tech_spec',
+    description: 'Gain 8 block. Gain 1 Resilience. Both parties agreed to the SLA.',
+    effects: { block: 8, applyToSelf: { resilience: 1 } },
+    upgradedEffects: { block: 11, applyToSelf: { resilience: 1 } },
+    upgradedDescription: 'Gain 11 block. Gain 1 Resilience.',
+    icon: '📜',
+  },
+  pair_review: {
+    id: 'pair_review', name: 'Pair Review', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'architect',
+    description: 'Gain 6 block. Draw 1 card. \'LGTM.\' — your only reviewer.',
+    effects: { block: 6, draw: 1 },
+    upgradedEffects: { block: 8, draw: 1 },
+    upgradedDescription: 'Gain 8 block. Draw 1 card.',
+    icon: '👀',
+  },
 
-  // ── Architect Uncommon ──
+  // ── Architect Rare (was Uncommon) ──
   observer_pattern: {
-    id: 'observer_pattern', name: 'Observer Pattern', type: 'power', target: 'self', cost: 1, rarity: 'uncommon',
+    id: 'observer_pattern', name: 'Observer Pattern', type: 'power', target: 'self', cost: 1, rarity: 'rare',
     class: 'architect', archetype: 'design_patterns',
     description: 'Gain 1 Networking (draw +1 card/turn). Everything watches everything.',
     effects: { applyToSelf: { networking: 1 } },
@@ -130,7 +176,7 @@ export const architectCards: Record<string, CardDef> = {
     icon: '👁️',
   },
   abstract_factory: {
-    id: 'abstract_factory', name: 'Abstract Factory', type: 'power', target: 'self', cost: 2, rarity: 'uncommon',
+    id: 'abstract_factory', name: 'Abstract Factory', type: 'power', target: 'self', cost: 2, rarity: 'rare',
     class: 'architect', archetype: 'design_patterns',
     description: 'Gain 1 Networking (draw +1 card/turn). Gain 1 Self Care (heal stress/turn). Nobody knows what it does.',
     effects: { applyToSelf: { networking: 1, selfCare: 1 } },
@@ -139,7 +185,7 @@ export const architectCards: Record<string, CardDef> = {
     icon: '🏗️',
   },
   sprint_retrospective: {
-    id: 'sprint_retrospective', name: 'Retrospective', type: 'skill', target: 'self', cost: 1, rarity: 'uncommon',
+    id: 'sprint_retrospective', name: 'Retrospective', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
     class: 'architect', archetype: 'tech_spec',
     description: 'Exhaust a card from hand. Gain 8 block. Draw 2. What went well: nothing.',
     effects: { exhaustRandom: 1, block: 8, draw: 2 },
@@ -148,7 +194,7 @@ export const architectCards: Record<string, CardDef> = {
     icon: '🔍',
   },
   controlled_demolition: {
-    id: 'controlled_demolition', name: 'Controlled Demo', type: 'attack', target: 'all_enemies', cost: 1, rarity: 'uncommon',
+    id: 'controlled_demolition', name: 'Controlled Demo', type: 'attack', target: 'all_enemies', cost: 1, rarity: 'rare',
     class: 'architect', archetype: 'tech_spec',
     description: 'Exhaust 2 cards from hand. Deal 12 damage to ALL. Tear it all down.',
     effects: { exhaustRandom: 2, damageAll: 12 },
@@ -157,7 +203,7 @@ export const architectCards: Record<string, CardDef> = {
     icon: '💣',
   },
   over_engineering: {
-    id: 'over_engineering', name: 'Over-Engineering', type: 'attack', target: 'enemy', cost: 3, rarity: 'uncommon',
+    id: 'over_engineering', name: 'Over-Engineering', type: 'attack', target: 'enemy', cost: 3, rarity: 'rare',
     class: 'architect', archetype: 'scope_creep',
     description: 'Deal 24 damage. Handles edge cases that will never happen. Beautifully.',
     effects: { damage: 24 },
@@ -167,7 +213,7 @@ export const architectCards: Record<string, CardDef> = {
     icon: '🔧',
   },
   budget_approval: {
-    id: 'budget_approval', name: 'Budget Approval', type: 'power', target: 'self', cost: 1, rarity: 'uncommon',
+    id: 'budget_approval', name: 'Budget Approval', type: 'power', target: 'self', cost: 1, rarity: 'rare',
     class: 'architect', archetype: 'scope_creep',
     description: 'Gain 1 energy each turn. Gain 5 stress each turn. Terms and conditions apply.',
     effects: { applyToSelf: { hustleCulture: 1 } },
@@ -175,10 +221,48 @@ export const architectCards: Record<string, CardDef> = {
     upgradedDescription: 'Gain 1 energy. Gain 1 energy each turn. Gain 3 stress each turn.',
     icon: '💰',
   },
+  // New rares
+  event_sourcing: {
+    id: 'event_sourcing', name: 'Event Sourcing', type: 'power', target: 'self', cost: 1, rarity: 'rare',
+    class: 'architect', archetype: 'design_patterns',
+    description: 'Gain 1 Networking. Gain 1 Confidence. Every event matters. Especially this one.',
+    effects: { applyToSelf: { networking: 1, confidence: 1 } },
+    upgradedEffects: { applyToSelf: { networking: 2, confidence: 1 } },
+    upgradedDescription: 'Gain 2 Networking. Gain 1 Confidence.',
+    icon: '📡',
+  },
+  trunk_based_dev: {
+    id: 'trunk_based_dev', name: 'Trunk-Based Dev', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    class: 'architect', archetype: 'tech_spec',
+    description: 'Exhaust 2 from hand. Draw 3. Gain 8 block. Ship to main. Always.',
+    effects: { exhaustRandom: 2, draw: 3, block: 8 },
+    upgradedEffects: { exhaustRandom: 2, draw: 4, block: 10 },
+    upgradedDescription: 'Exhaust 2, draw 4, gain 10 block.',
+    icon: '🌲',
+  },
+  feature_flag: {
+    id: 'feature_flag', name: 'Feature Flag', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    class: 'architect', archetype: 'scope_creep',
+    description: 'Gain 2 energy. Add 5 stress. A/B testing your survival strategy.',
+    effects: { energy: 2, addStress: 5 },
+    upgradedEffects: { energy: 3, addStress: 5 },
+    upgradedDescription: 'Gain 3 energy. Add 5 stress.',
+    icon: '🚩',
+  },
+  chaos_engineering: {
+    id: 'chaos_engineering', name: 'Chaos Engineering', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
+    class: 'architect', archetype: 'scope_creep',
+    description: 'Exhaust 2 from draw pile. Deal 18 damage. Break the system on purpose.',
+    effects: { exhaustFromDraw: 2, damage: 18 },
+    upgradedEffects: { exhaustFromDraw: 2, damage: 24 },
+    upgradedDescription: 'Cost 1. Deal 24 damage.',
+    upgradedCost: 1,
+    icon: '🔥',
+  },
 
-  // ── Architect Rare ──
+  // ── Architect Epic (was Rare) ──
   god_object: {
-    id: 'god_object', name: 'God Object', type: 'power', target: 'self', cost: 3, rarity: 'rare',
+    id: 'god_object', name: 'God Object', type: 'power', target: 'self', cost: 3, rarity: 'epic',
     class: 'architect', archetype: 'design_patterns',
     description: 'Gain 3 Confidence (+1 dmg per stack), 3 Resilience (+1 block & stress heal per stack), 1 Networking (draw +1 card/turn). Exhaust 2 random cards. It should not exist.',
     effects: { applyToSelf: { confidence: 3, resilience: 3, networking: 1 }, exhaustRandom: 2 },
@@ -188,7 +272,7 @@ export const architectCards: Record<string, CardDef> = {
     icon: '👑',
   },
   architecture_review: {
-    id: 'architecture_review', name: 'Architecture Review', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    id: 'architecture_review', name: 'Architecture Review', type: 'power', target: 'self', cost: 2, rarity: 'epic',
     class: 'architect', archetype: 'tech_spec',
     description: 'Gain 2 Resilience (+1 block & stress heal per stack). Gain 1 Self Care (heal stress/turn). Everything is wrong but educational.',
     effects: { applyToSelf: { resilience: 2, selfCare: 1 } },
@@ -197,7 +281,7 @@ export const architectCards: Record<string, CardDef> = {
     icon: '🏛️',
   },
   technical_debt_interest: {
-    id: 'technical_debt_interest', name: 'Tech Debt Interest', type: 'power', target: 'self', cost: 3, rarity: 'rare',
+    id: 'technical_debt_interest', name: 'Tech Debt Interest', type: 'power', target: 'self', cost: 3, rarity: 'epic',
     class: 'architect', archetype: 'scope_creep',
     description: 'Gain 2 energy each turn. The interest payments are crushing.',
     effects: { applyToSelf: { hustleCulture: 2 } },
@@ -207,12 +291,72 @@ export const architectCards: Record<string, CardDef> = {
     icon: '📉',
   },
   clean_architecture: {
-    id: 'clean_architecture', name: 'Clean Architecture', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    id: 'clean_architecture', name: 'Clean Architecture', type: 'power', target: 'self', cost: 2, rarity: 'epic',
     class: 'architect', archetype: 'design_patterns',
     description: 'Gain 2 Confidence (+1 dmg per stack), 2 Resilience (+1 block & stress heal per stack). Uncle Bob would be proud.',
     effects: { applyToSelf: { confidence: 2, resilience: 2 } },
     upgradedEffects: { applyToSelf: { confidence: 3, resilience: 3 } },
     upgradedDescription: 'Gain 3 Confidence (+1 dmg per stack), 3 Resilience (+1 block & stress heal per stack).',
     icon: '✨',
+  },
+  // New epics
+  strangler_fig: {
+    id: 'strangler_fig', name: 'Strangler Fig', type: 'attack', target: 'enemy', cost: 2, rarity: 'epic',
+    class: 'architect', archetype: 'tech_spec',
+    description: 'Exhaust all cards in hand. Deal 8 damage per card exhausted to one enemy. Draw 3. Gradually replace the old system. From the outside.',
+    effects: { exhaustAllHand: true, damagePerCardExhausted: 8, draw: 3 },
+    upgradedEffects: { exhaustAllHand: true, damagePerCardExhausted: 10, draw: 3 },
+    upgradedDescription: 'Cost 1. Exhaust all cards in hand. Deal 10 damage per card. Draw 3.',
+    upgradedCost: 1,
+    icon: '🌿',
+  },
+  platform_team: {
+    id: 'platform_team', name: 'Platform Team', type: 'power', target: 'self', cost: 2, rarity: 'epic',
+    class: 'architect', archetype: 'design_patterns',
+    description: 'Gain 2 Confidence, 2 Resilience, 1 Networking. Draw 1 card. The team that makes teams possible.',
+    effects: { applyToSelf: { confidence: 2, resilience: 2, networking: 1 }, draw: 1 },
+    upgradedEffects: { applyToSelf: { confidence: 3, resilience: 3, networking: 2 }, draw: 1 },
+    upgradedDescription: 'Gain 3 Confidence, 3 Resilience, 2 Networking. Draw 1.',
+    icon: '🏢',
+  },
+
+  // ── Architect Legendary ──
+  the_big_rewrite: {
+    id: 'the_big_rewrite', name: 'The Big Rewrite', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
+    class: 'architect', archetype: 'tech_spec',
+    description: 'Exhaust all cards in hand. Draw 7 new cards from your deck. We\'ll redo it in Rust. Six months later.',
+    effects: { exhaustAllHand: true, draw: 7 },
+    upgradedEffects: { exhaustAllHand: true, draw: 7 },
+    upgradedDescription: 'Cost 2. Exhaust all cards in hand. Draw 7 new cards.',
+    upgradedCost: 2,
+    icon: '🔥',
+  },
+  infinite_money: {
+    id: 'infinite_money', name: 'Infinite Money', type: 'power', target: 'self', cost: 2, rarity: 'legendary',
+    class: 'architect', archetype: 'scope_creep',
+    description: 'Gain 2 energy per turn. Scale the team! Scale the compute! Scale the feelings! [Phase 2]',
+    effects: { applyToSelf: { hustleCulture: 2 }, energy: 1 }, // placeholder — hustleCulture approximates bonus energy
+    upgradedEffects: { applyToSelf: { hustleCulture: 3 }, energy: 2 },
+    upgradedDescription: 'Gain 2 energy. Gain 3 energy each turn.',
+    icon: '💰',
+  },
+  solid_principles: {
+    id: 'solid_principles', name: 'SOLID Principles', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
+    class: 'architect', archetype: 'design_patterns',
+    description: 'Gain 5 Confidence, 5 Resilience, 2 Networking, 2 Self Care. Single responsibility: winning. Uncle Bob wept.',
+    effects: { applyToSelf: { confidence: 5, resilience: 5, networking: 2, selfCare: 2 } },
+    upgradedEffects: { applyToSelf: { confidence: 6, resilience: 6, networking: 3, selfCare: 3 } },
+    upgradedDescription: 'Cost 2. Gain 6 Confidence, 6 Resilience, 3 Networking, 3 Self Care.',
+    upgradedCost: 2,
+    icon: '🏛️',
+  },
+  rubber_duck_oracle: {
+    id: 'rubber_duck_oracle', name: 'Rubber Duck Oracle', type: 'power', target: 'self', cost: 1, rarity: 'legendary',
+    class: 'architect', exhaust: true,
+    description: 'Exhaust. At the start of each turn, gain block equal to cards in hand × 3. You explained the bug to the duck. The duck explained it back. [Phase 2]',
+    effects: { applyToSelf: { resilience: 4 } }, // placeholder
+    upgradedEffects: { applyToSelf: { resilience: 5 } },
+    upgradedDescription: 'Block = cards in hand × 4.',
+    icon: '🦆',
   },
 };

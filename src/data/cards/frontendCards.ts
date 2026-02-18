@@ -117,10 +117,56 @@ export const frontendCards: Record<string, CardDef> = {
     upgradedDescription: 'Deal 6 damage to ALL. Apply 1 Vulnerable to ALL.',
     icon: '🎯',
   },
+  // New commons
+  shadow_dom: {
+    id: 'shadow_dom', name: 'Shadow DOM', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'frontend', archetype: 'fortress',
+    description: 'Gain 7 block. If you already have block, gain 3 more. Encapsulation. Sort of.',
+    effects: { block: 7 },
+    upgradedEffects: { block: 9 },
+    upgradedDescription: 'Gain 9 block. If you already have block, gain 4 more.',
+    icon: '🫧',
+  },
+  event_listener: {
+    id: 'event_listener', name: 'Event Listener', type: 'skill', target: 'self', cost: 0, rarity: 'common',
+    class: 'frontend', archetype: 'reactive',
+    description: 'Draw 1 card. Gain 2 block. On every event. Everywhere. Forever.',
+    effects: { draw: 1, block: 2 },
+    upgradedEffects: { draw: 1, block: 3 },
+    upgradedDescription: 'Draw 1 card. Gain 3 block.',
+    icon: '👂',
+  },
+  debounce: {
+    id: 'debounce', name: 'Debounce', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'frontend', archetype: 'reactive',
+    description: 'Gain 5 block. Draw 1 card. Only fires when you\'ve stopped panicking. (300ms delay)',
+    effects: { block: 5, draw: 1 },
+    upgradedEffects: { block: 7, draw: 1 },
+    upgradedDescription: 'Gain 7 block. Draw 1 card.',
+    icon: '⏱️',
+  },
+  media_query: {
+    id: 'media_query', name: 'Media Query', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'frontend', archetype: 'fortress',
+    description: 'Gain 8 block. Reduce 3 Stress. @media (max-despair: never).',
+    effects: { block: 8, copium: 3 },
+    upgradedEffects: { block: 11, copium: 4 },
+    upgradedDescription: 'Gain 11 block. Reduce 4 Stress.',
+    icon: '📱',
+  },
+  webpack_build: {
+    id: 'webpack_build', name: 'Webpack Build', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'common',
+    class: 'frontend', archetype: 'dom',
+    description: 'Deal 6 damage to ALL. Apply 2 Weak to ALL. Compiling suffering. ETA: 47 minutes.',
+    effects: { damageAll: 6, applyToAll: { weak: 2 } },
+    upgradedEffects: { damageAll: 9, applyToAll: { weak: 2 } },
+    upgradedDescription: 'Deal 9 damage to ALL. Apply 2 Weak to ALL.',
+    icon: '📦',
+  },
 
-  // ── Frontend Uncommon ──
+  // ── Frontend Rare (was Uncommon) ──
   async_await: {
-    id: 'async_await', name: 'Async/Await', type: 'skill', target: 'self', cost: 0, rarity: 'uncommon',
+    id: 'async_await', name: 'Async/Await', type: 'skill', target: 'self', cost: 0, rarity: 'rare',
     class: 'frontend', archetype: 'reactive', exhaust: true,
     description: 'Draw 3 cards. Exhaust. Syntactic sugar diabetes.',
     effects: { draw: 3 },
@@ -129,7 +175,7 @@ export const frontendCards: Record<string, CardDef> = {
     icon: '⏳',
   },
   useEffect_loop: {
-    id: 'useEffect_loop', name: 'useEffect Loop', type: 'attack', target: 'enemy', cost: 0, rarity: 'uncommon',
+    id: 'useEffect_loop', name: 'useEffect Loop', type: 'attack', target: 'enemy', cost: 0, rarity: 'rare',
     class: 'frontend', archetype: 'reactive',
     description: 'Deal 3 damage. (Scales with cards played this turn via confidence.) useEffect with no dependency array.',
     effects: { damage: 3 },
@@ -138,7 +184,7 @@ export const frontendCards: Record<string, CardDef> = {
     icon: '🔄',
   },
   hydration: {
-    id: 'hydration', name: 'Hydration', type: 'skill', target: 'self', cost: 1, rarity: 'uncommon',
+    id: 'hydration', name: 'Hydration', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
     class: 'frontend', archetype: 'reactive',
     description: 'Draw 3 cards, then discard 1. SSR hydration mismatch.',
     effects: { draw: 3 },
@@ -147,7 +193,7 @@ export const frontendCards: Record<string, CardDef> = {
     icon: '💧',
   },
   prototype_pollution: {
-    id: 'prototype_pollution', name: 'Prototype Pollution', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'uncommon',
+    id: 'prototype_pollution', name: 'Prototype Pollution', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'rare',
     class: 'frontend', archetype: 'dom',
     description: 'Deal 8 damage to ALL. Apply 1 Weak to ALL. Object.prototype.owned = true.',
     effects: { damageAll: 8, applyToAll: { weak: 1 } },
@@ -156,7 +202,7 @@ export const frontendCards: Record<string, CardDef> = {
     icon: '🧬',
   },
   virtual_dom: {
-    id: 'virtual_dom', name: 'Virtual DOM', type: 'skill', target: 'self', cost: 2, rarity: 'uncommon',
+    id: 'virtual_dom', name: 'Virtual DOM', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
     class: 'frontend', archetype: 'fortress',
     description: 'Gain 16 block. Like the real DOM but no crying.',
     effects: { block: 16 },
@@ -165,7 +211,7 @@ export const frontendCards: Record<string, CardDef> = {
     icon: '🌳',
   },
   cascade_delete: {
-    id: 'cascade_delete', name: 'Cascade Delete', type: 'attack', target: 'enemy', cost: 1, rarity: 'uncommon',
+    id: 'cascade_delete', name: 'Cascade Delete', type: 'attack', target: 'enemy', cost: 1, rarity: 'rare',
     class: 'frontend', archetype: 'dom',
     description: 'Deal 6 damage. Deal double to Vulnerable targets. CSS specificity meets DELETE FROM production.',
     effects: { damage: 6 },
@@ -173,10 +219,47 @@ export const frontendCards: Record<string, CardDef> = {
     upgradedDescription: 'Deal 8 damage. Deal double to Vulnerable targets.',
     icon: '🗑️',
   },
+  // New rares
+  concurrent_mode: {
+    id: 'concurrent_mode', name: 'Concurrent Mode', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    class: 'frontend', archetype: 'reactive',
+    description: 'Draw 2 cards. Gain 6 block. Suspended and resumed as needed.',
+    effects: { draw: 2, block: 6 },
+    upgradedEffects: { draw: 3, block: 7 },
+    upgradedDescription: 'Draw 3 cards. Gain 7 block.',
+    icon: '⚡',
+  },
+  memoize: {
+    id: 'memoize', name: 'Memoize', type: 'power', target: 'self', cost: 1, rarity: 'rare',
+    class: 'frontend', archetype: 'reactive',
+    description: 'Gain 2 Confidence. Gain 1 Self Care. The results are cached. Forever.',
+    effects: { applyToSelf: { confidence: 2, selfCare: 1 } },
+    upgradedEffects: { applyToSelf: { confidence: 3, selfCare: 1 } },
+    upgradedDescription: 'Gain 3 Confidence. Gain 1 Self Care.',
+    icon: '💾',
+  },
+  code_splitting: {
+    id: 'code_splitting', name: 'Code Splitting', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'frontend', archetype: 'reactive',
+    description: 'Exhaust 2 cards from hand. Draw 4 cards. Only load what you need.',
+    effects: { exhaustRandom: 2, draw: 4 },
+    upgradedEffects: { exhaustRandom: 2, draw: 5 },
+    upgradedDescription: 'Exhaust 2 cards from hand. Draw 5 cards.',
+    icon: '✂️',
+  },
+  requestAnimationFrame: {
+    id: 'requestAnimationFrame', name: 'requestAnimationFrame', type: 'power', target: 'self', cost: 1, rarity: 'rare',
+    class: 'frontend', archetype: 'fortress',
+    description: 'Gain 2 Resilience (+1 block & stress per stack). 60fps suffering.',
+    effects: { applyToSelf: { resilience: 2 } },
+    upgradedEffects: { applyToSelf: { resilience: 3 } },
+    upgradedDescription: 'Gain 3 Resilience.',
+    icon: '🎞️',
+  },
 
-  // ── Frontend Rare ──
+  // ── Frontend Epic (was Rare) ──
   hot_reload: {
-    id: 'hot_reload', name: 'Hot Reload', type: 'power', target: 'self', cost: 1, rarity: 'rare',
+    id: 'hot_reload', name: 'Hot Reload', type: 'power', target: 'self', cost: 1, rarity: 'epic',
     class: 'frontend', archetype: 'reactive',
     description: 'Gain 1 Networking (draw +1 card/turn). Save file. See changes. Repeat until 3 AM.',
     effects: { applyToSelf: { networking: 1 } },
@@ -185,7 +268,7 @@ export const frontendCards: Record<string, CardDef> = {
     icon: '🔥',
   },
   css_grid: {
-    id: 'css_grid', name: 'CSS Grid', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    id: 'css_grid', name: 'CSS Grid', type: 'power', target: 'self', cost: 2, rarity: 'epic',
     class: 'frontend', archetype: 'fortress',
     description: 'Gain 2 Resilience (+1 block & stress heal per stack). display: grid. Perfect layout.',
     effects: { applyToSelf: { resilience: 2 } },
@@ -194,7 +277,7 @@ export const frontendCards: Record<string, CardDef> = {
     icon: '📐',
   },
   nyancat_rainbow: {
-    id: 'nyancat_rainbow', name: 'Nyancat Rainbow', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'rare',
+    id: 'nyancat_rainbow', name: 'Nyancat Rainbow', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'epic',
     class: 'frontend', archetype: 'dom',
     description: 'Deal 12 damage to ALL. Apply 1 Vulnerable to ALL. RGB destruction.',
     effects: { damageAll: 12, applyToAll: { vulnerable: 1 } },
@@ -203,12 +286,74 @@ export const frontendCards: Record<string, CardDef> = {
     icon: '🌈',
   },
   z_index_9999: {
-    id: 'z_index_9999', name: 'z-index: 9999', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    id: 'z_index_9999', name: 'z-index: 9999', type: 'power', target: 'self', cost: 2, rarity: 'epic',
     class: 'frontend', archetype: 'fortress',
     description: 'Gain 8 Savings Account (retain block between turns). Nothing gets above you.',
     effects: { applyToSelf: { savingsAccount: 8 } },
     upgradedEffects: { applyToSelf: { savingsAccount: 12 } },
     upgradedDescription: 'Gain 12 Savings Account (retain block between turns).',
     icon: '🔝',
+  },
+  // New epics
+  time_travel_debug: {
+    id: 'time_travel_debug', name: 'Time Travel Debug', type: 'skill', target: 'self', cost: 0, rarity: 'epic',
+    class: 'frontend', archetype: 'reactive', exhaust: true,
+    description: 'Exhaust. Shuffle discard pile into draw pile. Draw 3 cards. Restore the timeline.',
+    effects: { shuffleDiscardToDraw: true, draw: 3 },
+    upgradedEffects: { shuffleDiscardToDraw: true, draw: 4 },
+    upgradedDescription: 'Exhaust. Shuffle discard pile into draw pile. Draw 4 cards.',
+    icon: '⏪',
+  },
+  pixel_perfect: {
+    id: 'pixel_perfect', name: 'Pixel Perfect', type: 'attack', target: 'all_enemies', cost: 3, rarity: 'epic',
+    class: 'frontend', archetype: 'dom',
+    description: 'Deal 12 damage to ALL. Apply 3 Vulnerable to ALL. Every pixel matters. This one most.',
+    effects: { damageAll: 12, applyToAll: { vulnerable: 3 } },
+    upgradedEffects: { damageAll: 16, applyToAll: { vulnerable: 3 } },
+    upgradedDescription: 'Deal 16 damage to ALL. Apply 3 Vulnerable to ALL.',
+    upgradedCost: 2,
+    icon: '🎯',
+  },
+
+  // ── Frontend Legendary ──
+  // Phase 2: the_component (startOfTurnPlayTopCard), block_fortress (blockRetained), dom_nuke (damageAllEqualsBlock), zero_bundle_size (onExhaustDrawAndEnergy)
+  the_component: {
+    id: 'the_component', name: 'The Component', type: 'power', target: 'self', cost: 2, rarity: 'legendary',
+    class: 'frontend', archetype: 'reactive',
+    description: 'At the start of each turn, play the top card of your draw pile for free. It renders itself. You are merely a prop. [Phase 2]',
+    effects: { applyToSelf: { networking: 2 } }, // placeholder until Phase 2
+    upgradedEffects: { applyToSelf: { networking: 3 } },
+    upgradedDescription: 'Cost 1. At the start of each turn, play the top card of your draw pile for free.',
+    upgradedCost: 1,
+    icon: '⚛️',
+  },
+  block_fortress: {
+    id: 'block_fortress', name: 'Block Fortress', type: 'power', target: 'self', cost: 2, rarity: 'legendary',
+    class: 'frontend', archetype: 'fortress',
+    description: 'Gain 4 Resilience. Block does not deplete between turns. Nothing can touch you. [Phase 2]',
+    effects: { applyToSelf: { resilience: 4 } }, // placeholder — resilience approximates the intent
+    upgradedEffects: { applyToSelf: { resilience: 6 } },
+    upgradedDescription: 'Cost 1. Gain 4 Resilience. Block does not deplete between turns.',
+    upgradedCost: 1,
+    icon: '🔝',
+  },
+  dom_nuke: {
+    id: 'dom_nuke', name: 'DOM Nuke', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'legendary',
+    class: 'frontend', archetype: 'dom',
+    description: 'Deal damage equal to your current block to ALL enemies. Your block becomes 0. document.body.innerHTML = \'\'. [Phase 2]',
+    effects: { damageAll: 20 }, // placeholder fixed value
+    upgradedEffects: { damageAll: 24 },
+    upgradedDescription: 'Cost 1. Deal damage equal to current block to ALL enemies.',
+    upgradedCost: 1,
+    icon: '💥',
+  },
+  zero_bundle_size: {
+    id: 'zero_bundle_size', name: 'Zero Bundle Size', type: 'power', target: 'self', cost: 0, rarity: 'legendary',
+    class: 'frontend', archetype: 'reactive', exhaust: true,
+    description: 'Exhaust. Gain 3 Networking. For the rest of combat, whenever you exhaust a card, draw 1 and gain 1 energy. Tree-shaking is a lifestyle. [Phase 2]',
+    effects: { applyToSelf: { networking: 3 } }, // placeholder — Phase 2 adds onExhaustDrawAndEnergy trigger
+    upgradedEffects: { applyToSelf: { networking: 4 } },
+    upgradedDescription: 'Exhaust. Gain 4 Networking. Draw 2 and gain 1 energy per exhaust.',
+    icon: '📦',
   },
 };

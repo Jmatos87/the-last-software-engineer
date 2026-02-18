@@ -5,26 +5,27 @@ export function getCardDef(id: string): CardDef {
   return cards[id];
 }
 
-export function getRewardCards(count: number, rarity?: 'common' | 'uncommon' | 'rare', playerClass?: string, act?: number, encounterType?: 'normal' | 'elite' | 'boss'): CardDef[] {
-  // Rarity weighting by act
+export function getRewardCards(count: number, rarity?: 'common' | 'rare' | 'epic' | 'legendary', playerClass?: string, act?: number, encounterType?: 'normal' | 'elite' | 'boss'): CardDef[] {
+  // Rarity weighting by act (4-tier system)
   const rarityWeights = act === 3
-    ? { common: 30, uncommon: 50, rare: 20 }
+    ? { common: 20, rare: 42, epic: 28, legendary: 10 }
     : act === 2
-    ? { common: 50, uncommon: 40, rare: 10 }
-    : { common: 70, uncommon: 25, rare: 5 };
+    ? { common: 40, rare: 38, epic: 17, legendary: 5 }
+    : { common: 65, rare: 27, epic: 7, legendary: 1 };
 
-  function pickRarity(): 'common' | 'uncommon' | 'rare' {
+  function pickRarity(): 'common' | 'rare' | 'epic' | 'legendary' {
     if (rarity) return rarity;
     const roll = Math.random() * 100;
-    if (roll < rarityWeights.rare) return 'rare';
-    if (roll < rarityWeights.rare + rarityWeights.uncommon) return 'uncommon';
+    if (roll < rarityWeights.legendary) return 'legendary';
+    if (roll < rarityWeights.legendary + rarityWeights.epic) return 'epic';
+    if (roll < rarityWeights.legendary + rarityWeights.epic + rarityWeights.rare) return 'rare';
     return 'common';
   }
 
   const allPool = Object.values(cards).filter(c => c.rarity !== 'starter' && c.rarity !== 'curse');
 
   // Class-gated: build weighted pool per rarity
-  function getPool(r: 'common' | 'uncommon' | 'rare'): CardDef[] {
+  function getPool(r: 'common' | 'rare' | 'epic' | 'legendary'): CardDef[] {
     const pool = allPool.filter(c => c.rarity === r);
     if (!playerClass) return pool;
     const classCards = pool.filter(c => c.class === playerClass);
@@ -38,16 +39,16 @@ export function getRewardCards(count: number, rarity?: 'common' | 'uncommon' | '
   const seen = new Set<string>();
   const result: CardDef[] = [];
 
-  // Elite guarantees at least 1 uncommon; Boss guarantees at least 1 rare
+  // Elite guarantees at least 1 rare; Boss guarantees at least 1 epic
   if (encounterType === 'boss' && !rarity) {
-    const rarePool = getPool('rare');
-    const shuffled = [...rarePool].sort(() => Math.random() - 0.5);
+    const epicPool = getPool('epic');
+    const shuffled = [...epicPool].sort(() => Math.random() - 0.5);
     for (const card of shuffled) {
       if (!seen.has(card.id)) { seen.add(card.id); result.push(card); break; }
     }
   } else if (encounterType === 'elite' && !rarity) {
-    const uncPool = getPool('uncommon');
-    const shuffled = [...uncPool].sort(() => Math.random() - 0.5);
+    const rarePool = getPool('rare');
+    const shuffled = [...rarePool].sort(() => Math.random() - 0.5);
     for (const card of shuffled) {
       if (!seen.has(card.id)) { seen.add(card.id); result.push(card); break; }
     }

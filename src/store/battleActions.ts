@@ -304,6 +304,11 @@ export function executePlayCard(
     stressChange += stressAdd;
   }
 
+  // Heal HP
+  if (effects.heal) {
+    hpChange += effects.heal;
+  }
+
   // Gain gold
   if (effects.gainGold) {
     goldChange += effects.gainGold;
@@ -327,6 +332,45 @@ export function executePlayCard(
       newBattle.exhaustPile = [...newBattle.exhaustPile, exhausted];
       triggerExhaustRelics(newBattle, run);
     }
+  }
+
+  // Exhaust all cards in hand (strangler_fig, the_big_rewrite, final_sprint)
+  let cardsExhaustedThisPlay = 0;
+  if (effects.exhaustAllHand) {
+    const handCopy = [...newBattle.hand];
+    newBattle.hand = [];
+    for (const c of handCopy) {
+      newBattle.exhaustPile = [...newBattle.exhaustPile, c];
+      cardsExhaustedThisPlay++;
+      triggerExhaustRelics(newBattle, run);
+    }
+  }
+
+  // Deal damage per card exhausted (strangler_fig, final_sprint)
+  if (effects.damagePerCardExhausted && cardsExhaustedThisPlay > 0 && targetInstanceId) {
+    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+    if (enemyIdx !== -1) {
+      const totalDmg = effects.damagePerCardExhausted * cardsExhaustedThisPlay;
+      const dmg = calculateDamage(totalDmg, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+      newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+    }
+  }
+
+  // Shuffle discard pile into draw pile (time_travel_debug, the_pivot)
+  if (effects.shuffleDiscardToDraw) {
+    const combined = [...newBattle.drawPile, ...newBattle.discardPile];
+    // Fisher-Yates shuffle
+    for (let i = combined.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [combined[i], combined[j]] = [combined[j], combined[i]];
+    }
+    newBattle.drawPile = combined;
+    newBattle.discardPile = [];
+  }
+
+  // Heal to full HP (the_offer)
+  if (effects.healFull) {
+    hpChange += run.maxHp - run.hp; // net heal to full
   }
 
   // Track power plays

@@ -33,13 +33,13 @@ export const ShopScreen: React.FC = () => {
   if (!run) return null;
 
   const getCardCost = (rarity: string) =>
-    rarity === 'common' ? 50 : rarity === 'uncommon' ? 75 : 150;
+    rarity === 'common' ? 50 : rarity === 'rare' ? 75 : rarity === 'epic' ? 125 : rarity === 'legendary' ? 200 : 75;
 
   const getItemCost = (rarity: string) =>
-    rarity === 'common' ? 100 : rarity === 'uncommon' ? 150 : 250;
+    rarity === 'common' ? 100 : rarity === 'rare' ? 150 : rarity === 'epic' ? 225 : rarity === 'legendary' ? 350 : 150;
 
   const getConsumableCost = (rarity: string) =>
-    rarity === 'common' ? 40 : rarity === 'uncommon' ? 65 : 120;
+    rarity === 'common' ? 40 : rarity === 'rare' ? 65 : rarity === 'epic' ? 100 : rarity === 'legendary' ? 160 : 65;
 
   return (
     <div style={{
@@ -135,7 +135,7 @@ export const ShopScreen: React.FC = () => {
           const cost = getConsumableCost(c.rarity);
           const canAfford = run.gold >= cost;
           const slotsFull = run.consumables.length >= run.maxConsumables;
-          const rarityColor = c.rarity === 'rare' ? 'var(--accent-yellow)' : c.rarity === 'uncommon' ? 'var(--accent-blue)' : 'var(--text-secondary)';
+          const rarityColor = c.rarity === 'legendary' ? 'var(--accent-gold)' : c.rarity === 'epic' ? 'var(--accent-yellow)' : c.rarity === 'rare' ? 'var(--accent-blue)' : 'var(--text-secondary)';
           return (
             <div
               key={c.id}

@@ -2,7 +2,7 @@ import type { ConsumableDef, ConsumableRarity } from '../types';
 
 export const consumables: Record<string, ConsumableDef> = {
   // ═══════════════════════════════════════
-  // COMMON (6)
+  // COMMON (9)
   // ═══════════════════════════════════════
   energy_drink: {
     id: 'energy_drink',
@@ -58,15 +58,43 @@ export const consumables: Record<string, ConsumableDef> = {
     target: 'enemy',
     effect: { applyToTarget: { weak: 2 } },
   },
+  // New common consumables
+  todo_list: {
+    id: 'todo_list',
+    name: 'TODO List',
+    description: 'Draw 2 cards. 47 items. None of them marked done.',
+    rarity: 'common',
+    icon: '📋',
+    target: 'self',
+    effect: { draw: 2 },
+  },
+  documentation: {
+    id: 'documentation',
+    name: 'Documentation',
+    description: 'Gain 12 block. Finally written. Already outdated.',
+    rarity: 'common',
+    icon: '📖',
+    target: 'self',
+    effect: { block: 12 },
+  },
+  hotfix_patch: {
+    id: 'hotfix_patch',
+    name: 'Hotfix Patch',
+    description: 'Heal 8 HP. Apply 2 Vulnerable to one enemy. Ship now, regret never.',
+    rarity: 'common',
+    icon: '🩹',
+    target: 'enemy',
+    effect: { heal: 8, applyToTarget: { vulnerable: 2 } },
+  },
 
   // ═══════════════════════════════════════
-  // UNCOMMON (6)
+  // RARE (9, was uncommon)
   // ═══════════════════════════════════════
   leetcode_grind: {
     id: 'leetcode_grind',
     name: 'LeetCode Grind Session',
     description: '+2 Confidence (+2 attack damage). You solved 50 mediums in one sitting.',
-    rarity: 'uncommon',
+    rarity: 'rare',
     icon: '💻',
     target: 'self',
     effect: { applyToSelf: { confidence: 2 } },
@@ -75,7 +103,7 @@ export const consumables: Record<string, ConsumableDef> = {
     id: 'kombucha',
     name: 'Artisanal Kombucha',
     description: 'Heal 20 HP + 2 Regen. Fermented by the office wellness committee.',
-    rarity: 'uncommon',
+    rarity: 'rare',
     icon: '🍵',
     target: 'self',
     effect: { heal: 20, applyToSelf: { regen: 2 } },
@@ -84,7 +112,7 @@ export const consumables: Record<string, ConsumableDef> = {
     id: 'duck_debugger',
     name: 'Rubber Duck Debugger',
     description: '8 Block + Draw 2. Explain the problem to the duck.',
-    rarity: 'uncommon',
+    rarity: 'rare',
     icon: '🦆',
     target: 'self',
     effect: { block: 8, draw: 2 },
@@ -93,7 +121,7 @@ export const consumables: Record<string, ConsumableDef> = {
     id: 'deploy_on_friday',
     name: 'Deploy on Friday',
     description: '10 damage to ALL enemies. Bold move. Let\'s see how it plays out.',
-    rarity: 'uncommon',
+    rarity: 'rare',
     icon: '🚀',
     target: 'all_enemies',
     effect: { damageAll: 10 },
@@ -102,7 +130,7 @@ export const consumables: Record<string, ConsumableDef> = {
     id: 'regex_grenade',
     name: 'Regex Grenade',
     description: '3 Vulnerable to ALL enemies. /.*kaboom.*/g',
-    rarity: 'uncommon',
+    rarity: 'rare',
     icon: '💣',
     target: 'all_enemies',
     effect: { applyToAll: { vulnerable: 3 } },
@@ -110,21 +138,49 @@ export const consumables: Record<string, ConsumableDef> = {
   linkedin_premium_potion: {
     id: 'linkedin_premium_potion',
     name: 'LinkedIn Premium Trial',
-    description: '+3 Networking. See who viewed your profile. Draw extra cards each turn.',
-    rarity: 'uncommon',
+    description: '+3 Networking. See who viewed your profile.',
+    rarity: 'rare',
     icon: '🌟',
     target: 'self',
     effect: { applyToSelf: { networking: 3 } },
   },
+  // New rare consumables
+  pair_session: {
+    id: 'pair_session',
+    name: 'Pair Programming Session',
+    description: 'Draw 3 cards. Gain 2 energy. Someone else\'s problem too, now.',
+    rarity: 'rare',
+    icon: '🧑‍💻',
+    target: 'self',
+    effect: { draw: 3, energy: 2 },
+  },
+  postmortem: {
+    id: 'postmortem',
+    name: 'Postmortem Report',
+    description: 'Heal 18 HP. Gain 20 block. Reduce 10 stress. Learn from failure.',
+    rarity: 'rare',
+    icon: '📊',
+    target: 'self',
+    effect: { heal: 18, block: 20, stressRelief: 10 },
+  },
+  api_key_consumable: {
+    id: 'api_key_consumable',
+    name: 'API Key',
+    description: '+3 Confidence. +1 Networking. The key to everything.',
+    rarity: 'rare',
+    icon: '🔑',
+    target: 'self',
+    effect: { applyToSelf: { confidence: 3, networking: 1 } },
+  },
 
   // ═══════════════════════════════════════
-  // RARE (3)
+  // EPIC (5, was rare)
   // ═══════════════════════════════════════
   resignation_letter: {
     id: 'resignation_letter',
     name: 'Resignation Letter',
     description: '40 damage to one enemy. "Dear Manager, I quit." — devastating.',
-    rarity: 'rare',
+    rarity: 'epic',
     icon: '📜',
     target: 'enemy',
     effect: { damage: 40 },
@@ -133,7 +189,7 @@ export const consumables: Record<string, ConsumableDef> = {
     id: 'severance_package',
     name: 'Severance Package',
     description: 'Heal 30 HP, +30 gold, -20 stress. The golden goodbye.',
-    rarity: 'rare',
+    rarity: 'epic',
     icon: '💼',
     target: 'self',
     effect: { heal: 30, goldGain: 30, stressRelief: 20 },
@@ -142,10 +198,51 @@ export const consumables: Record<string, ConsumableDef> = {
     id: 'infinite_loop',
     name: 'Infinite Loop',
     description: '15 damage + 2 Weak to ALL enemies. while(true) { obliterate(); }',
-    rarity: 'rare',
+    rarity: 'epic',
     icon: '♾️',
     target: 'all_enemies',
     effect: { damageAll: 15, applyToAll: { weak: 2 } },
+  },
+  // New epic consumables
+  production_access: {
+    id: 'production_access',
+    name: 'Production Access',
+    description: 'Deal 50 damage to one enemy. Add 10 stress. This is not dev.',
+    rarity: 'epic',
+    icon: '⚡',
+    target: 'enemy',
+    effect: { damage: 50, addStress: 10 },
+  },
+  all_hands_bomb: {
+    id: 'all_hands_bomb',
+    name: 'All-Hands Meeting',
+    description: 'Apply 4 Vulnerable + 4 Weak to ALL enemies. The CEO raised the bar.',
+    rarity: 'epic',
+    icon: '💣',
+    target: 'all_enemies',
+    effect: { applyToAll: { vulnerable: 4, weak: 4 } },
+  },
+
+  // ═══════════════════════════════════════
+  // LEGENDARY (2)
+  // ═══════════════════════════════════════
+  golden_ticket: {
+    id: 'golden_ticket',
+    name: 'Golden Ticket',
+    description: 'Gain 3 energy. Heal to full HP. Gain 50 gold. Reduce stress to 0. You got the offer.',
+    rarity: 'legendary',
+    icon: '🎫',
+    target: 'self',
+    effect: { energy: 3, healFull: true, goldGain: 50, stressToZero: true },
+  },
+  yc_acceptance: {
+    id: 'yc_acceptance',
+    name: 'YC Acceptance',
+    description: 'Add 2 random epic cards to your hand (playable this turn). Series A just closed.',
+    rarity: 'legendary',
+    icon: '🚀',
+    target: 'self',
+    effect: { addEpicCardsToHand: 2 },
   },
 };
 
@@ -154,33 +251,35 @@ export const consumables: Record<string, ConsumableDef> = {
 // ═══════════════════════════════════════
 
 const commonPool = Object.values(consumables).filter(c => c.rarity === 'common');
-const uncommonPool = Object.values(consumables).filter(c => c.rarity === 'uncommon');
 const rarePool = Object.values(consumables).filter(c => c.rarity === 'rare');
+const epicPool = Object.values(consumables).filter(c => c.rarity === 'epic');
+const legendaryPool = Object.values(consumables).filter(c => c.rarity === 'legendary');
 
 function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function pickByRarity(commonWeight: number, uncommonWeight: number, _rareWeight: number): ConsumableDef {
+function pickByRarity(commonWeight: number, rareWeight: number, epicWeight: number, _legendaryWeight: number): ConsumableDef {
   const roll = Math.random() * 100;
   if (roll < commonWeight) return pickRandom(commonPool);
-  if (roll < commonWeight + uncommonWeight) return pickRandom(uncommonPool);
-  return pickRandom(rarePool);
+  if (roll < commonWeight + rareWeight) return pickRandom(rarePool);
+  if (roll < commonWeight + rareWeight + epicWeight) return pickRandom(epicPool.length > 0 ? epicPool : rarePool);
+  return pickRandom(legendaryPool.length > 0 ? legendaryPool : epicPool);
 }
 
 /** Get a consumable drop weighted by act */
 export function getConsumableDrop(act: number): ConsumableDef {
   switch (act) {
-    case 1: return pickByRarity(70, 25, 5);
-    case 2: return pickByRarity(45, 40, 15);
-    case 3: return pickByRarity(25, 45, 30);
-    default: return pickByRarity(70, 25, 5);
+    case 1: return pickByRarity(65, 28, 6, 1);
+    case 2: return pickByRarity(40, 38, 17, 5);
+    case 3: return pickByRarity(15, 40, 33, 12);
+    default: return pickByRarity(65, 28, 6, 1);
   }
 }
 
-/** Get a random rare consumable (for boss drops) */
+/** Get a random epic consumable (for boss drops) */
 export function getRareConsumable(): ConsumableDef {
-  return pickRandom(rarePool);
+  return pickRandom(epicPool.length > 0 ? epicPool : rarePool);
 }
 
 /** Get consumables for shop display */
@@ -220,7 +319,8 @@ export function getConsumableDef(id: string): ConsumableDef | undefined {
 export function getRandomConsumable(rarity: ConsumableRarity): ConsumableDef {
   switch (rarity) {
     case 'common': return pickRandom(commonPool);
-    case 'uncommon': return pickRandom(uncommonPool);
     case 'rare': return pickRandom(rarePool);
+    case 'epic': return pickRandom(epicPool.length > 0 ? epicPool : rarePool);
+    case 'legendary': return pickRandom(legendaryPool.length > 0 ? legendaryPool : epicPool);
   }
 }

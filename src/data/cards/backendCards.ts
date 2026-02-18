@@ -117,10 +117,56 @@ export const backendCards: Record<string, CardDef> = {
     upgradedDescription: 'Deal 7 damage. If you have Confidence, deal 5 more.',
     icon: '⚡',
   },
+  // New commons
+  buffer_overflow: {
+    id: 'buffer_overflow', name: 'Buffer Overflow', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'backend', archetype: 'brute_force',
+    description: 'Deal 8 damage. Self-damage 3. Writes past the end of the array. Every. Time.',
+    effects: { damage: 8, selfDamage: 3 },
+    upgradedEffects: { damage: 11, selfDamage: 3 },
+    upgradedDescription: 'Deal 11 damage. Self-damage 3.',
+    icon: '💧',
+  },
+  tcp_timeout: {
+    id: 'tcp_timeout', name: 'TCP Timeout', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'backend', archetype: 'rate_limiter',
+    description: 'Gain 5 block. Gain 1 Counter-Offer. SYN... no reply. Classic.',
+    effects: { block: 5, applyToSelf: { counterOffer: 1 } },
+    upgradedEffects: { block: 8, applyToSelf: { counterOffer: 1 } },
+    upgradedDescription: 'Gain 8 block. Gain 1 Counter-Offer.',
+    icon: '⏰',
+  },
+  vacuum_analyze: {
+    id: 'vacuum_analyze', name: 'VACUUM ANALYZE', type: 'skill', target: 'self', cost: 0, rarity: 'common',
+    class: 'backend', archetype: 'query_optimizer', exhaust: true,
+    description: 'Exhaust. Gain 5 block. Draw 2 cards. Reclaiming dead tuples.',
+    effects: { block: 5, draw: 2 },
+    upgradedEffects: { block: 7, draw: 2 },
+    upgradedDescription: 'Exhaust. Gain 7 block. Draw 2.',
+    icon: '🧹',
+  },
+  fork_bomb: {
+    id: 'fork_bomb', name: 'Fork Bomb', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'backend', archetype: 'brute_force',
+    description: 'Deal 5 damage x2. :(){ :|:& };:',
+    effects: { damage: 5, times: 2 },
+    upgradedEffects: { damage: 6, times: 2 },
+    upgradedDescription: 'Deal 6 damage x2.',
+    icon: '💣',
+  },
+  http_patch: {
+    id: 'http_patch', name: 'HTTP PATCH', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'backend', archetype: 'rate_limiter',
+    description: 'Gain 7 block. Heal 3 HP. Partial update. The good kind.',
+    effects: { block: 7, heal: 3 },
+    upgradedEffects: { block: 9, heal: 4 },
+    upgradedDescription: 'Gain 9 block. Heal 4 HP.',
+    icon: '🩹',
+  },
 
-  // ── Backend Uncommon ──
+  // ── Backend Rare (was Uncommon) ──
   kernel_panic: {
-    id: 'kernel_panic', name: 'Kernel Panic', type: 'attack', target: 'enemy', cost: 3, rarity: 'uncommon',
+    id: 'kernel_panic', name: 'Kernel Panic', type: 'attack', target: 'enemy', cost: 3, rarity: 'rare',
     class: 'backend', archetype: 'brute_force', exhaust: true,
     description: 'Deal 24 damage. Exhaust. The system is YOU.',
     effects: { damage: 24 },
@@ -130,7 +176,7 @@ export const backendCards: Record<string, CardDef> = {
     icon: '💥',
   },
   overclock: {
-    id: 'overclock', name: 'Overclock', type: 'power', target: 'self', cost: 1, rarity: 'uncommon',
+    id: 'overclock', name: 'Overclock', type: 'power', target: 'self', cost: 1, rarity: 'rare',
     class: 'backend', archetype: 'brute_force',
     description: 'Gain 2 Confidence (+1 dmg per stack). CPU at 110%. The fans are screaming.',
     effects: { applyToSelf: { confidence: 2 } },
@@ -139,7 +185,7 @@ export const backendCards: Record<string, CardDef> = {
     icon: '⚡',
   },
   rate_limiter: {
-    id: 'rate_limiter', name: 'Rate Limiter', type: 'power', target: 'self', cost: 1, rarity: 'uncommon',
+    id: 'rate_limiter', name: 'Rate Limiter', type: 'power', target: 'self', cost: 1, rarity: 'rare',
     class: 'backend', archetype: 'rate_limiter',
     description: 'Gain 3 Counter-Offer (reflect dmg when hit). 429 Too Many Requests.',
     effects: { applyToSelf: { counterOffer: 3 } },
@@ -148,7 +194,7 @@ export const backendCards: Record<string, CardDef> = {
     icon: '🚧',
   },
   ddos_protection: {
-    id: 'ddos_protection', name: 'DDoS Protection', type: 'skill', target: 'self', cost: 2, rarity: 'uncommon',
+    id: 'ddos_protection', name: 'DDoS Protection', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
     class: 'backend', archetype: 'rate_limiter',
     description: 'Gain 12 block. Gain 2 Counter-Offer (reflect dmg when hit). Cloudflare premium.',
     effects: { block: 12, applyToSelf: { counterOffer: 2 } },
@@ -157,7 +203,7 @@ export const backendCards: Record<string, CardDef> = {
     icon: '🛡️',
   },
   index_optimization: {
-    id: 'index_optimization', name: 'Index Optimization', type: 'skill', target: 'self', cost: 0, rarity: 'uncommon',
+    id: 'index_optimization', name: 'Index Optimization', type: 'skill', target: 'self', cost: 0, rarity: 'rare',
     class: 'backend', archetype: 'query_optimizer', exhaust: true,
     description: 'Gain 2 energy. Exhaust. Query went from 30s to 0.01s.',
     effects: { energy: 2 },
@@ -166,7 +212,7 @@ export const backendCards: Record<string, CardDef> = {
     icon: '📊',
   },
   stored_procedure: {
-    id: 'stored_procedure', name: 'Stored Procedure', type: 'attack', target: 'enemy', cost: 2, rarity: 'uncommon',
+    id: 'stored_procedure', name: 'Stored Procedure', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
     class: 'backend', archetype: 'query_optimizer', exhaust: true,
     description: 'Deal 15 damage. Draw 1. Exhaust. In production since Oracle 8.',
     effects: { damage: 15, draw: 1 },
@@ -174,10 +220,47 @@ export const backendCards: Record<string, CardDef> = {
     upgradedDescription: 'Deal 20 damage. Draw 1. Exhaust.',
     icon: '🗄️',
   },
+  // New rares
+  confidence_boost: {
+    id: 'confidence_boost', name: 'Confidence Boost', type: 'power', target: 'self', cost: 1, rarity: 'rare',
+    class: 'backend', archetype: 'brute_force',
+    description: 'Gain 3 Confidence. Draw 2 cards. O(n log n) is acceptable. So is this.',
+    effects: { applyToSelf: { confidence: 3 }, draw: 2 },
+    upgradedEffects: { applyToSelf: { confidence: 4 }, draw: 2 },
+    upgradedDescription: 'Gain 4 Confidence. Draw 2.',
+    icon: '💪',
+  },
+  seg_fault: {
+    id: 'seg_fault', name: 'Segfault', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
+    class: 'backend', archetype: 'brute_force',
+    description: 'Deal 5 damage x4. Self-damage 3. Signal 11. Core dumped.',
+    effects: { damage: 5, times: 4, selfDamage: 3 },
+    upgradedEffects: { damage: 7, times: 4, selfDamage: 3 },
+    upgradedDescription: 'Deal 7 damage x4. Self-damage 3.',
+    icon: '💀',
+  },
+  connection_pool: {
+    id: 'connection_pool', name: 'Connection Pool', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    class: 'backend', archetype: 'rate_limiter',
+    description: 'Gain 3 Counter-Offer. Gain 2 Resilience. Pre-established suffering.',
+    effects: { applyToSelf: { counterOffer: 3, resilience: 2 } },
+    upgradedEffects: { applyToSelf: { counterOffer: 4, resilience: 3 } },
+    upgradedDescription: 'Gain 4 Counter-Offer. Gain 3 Resilience.',
+    icon: '🔌',
+  },
+  database_lock: {
+    id: 'database_lock', name: 'Database Lock', type: 'skill', target: 'enemy', cost: 2, rarity: 'rare',
+    class: 'backend', archetype: 'query_optimizer',
+    description: 'Gain 18 block. Apply 2 Weak to target. LOCK TABLE feelings NOWAIT.',
+    effects: { block: 18, applyToTarget: { weak: 2 } },
+    upgradedEffects: { block: 22, applyToTarget: { weak: 2 } },
+    upgradedDescription: 'Gain 22 block. Apply 2 Weak.',
+    icon: '🔒',
+  },
 
-  // ── Backend Rare ──
+  // ── Backend Epic (was Rare) ──
   sudo_rm_rf: {
-    id: 'sudo_rm_rf', name: 'sudo rm -rf', type: 'attack', target: 'enemy', cost: 3, rarity: 'rare',
+    id: 'sudo_rm_rf', name: 'sudo rm -rf', type: 'attack', target: 'enemy', cost: 3, rarity: 'epic',
     class: 'backend', archetype: 'brute_force', exhaust: true,
     description: 'Deal 8 damage x4. Self-damage 5. Exhaust. Great data loss.',
     effects: { damage: 8, times: 4, selfDamage: 5 },
@@ -187,7 +270,7 @@ export const backendCards: Record<string, CardDef> = {
     icon: '☠️',
   },
   honeypot: {
-    id: 'honeypot', name: 'Honeypot', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    id: 'honeypot', name: 'Honeypot', type: 'power', target: 'self', cost: 2, rarity: 'epic',
     class: 'backend', archetype: 'rate_limiter',
     description: 'Gain 2 Counter-Offer (reflect dmg when hit). Gain 2 Confidence (+1 dmg per stack). Come closer. I insist.',
     effects: { applyToSelf: { counterOffer: 2, confidence: 2 } },
@@ -196,7 +279,7 @@ export const backendCards: Record<string, CardDef> = {
     icon: '🍯',
   },
   cache_invalidation: {
-    id: 'cache_invalidation', name: 'Cache Invalidation', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    id: 'cache_invalidation', name: 'Cache Invalidation', type: 'power', target: 'self', cost: 2, rarity: 'epic',
     class: 'backend', archetype: 'query_optimizer',
     description: 'Whenever you exhaust a card, deal 5 damage to a random enemy. The two hardest problems.',
     effects: {},
@@ -205,12 +288,74 @@ export const backendCards: Record<string, CardDef> = {
     icon: '🔄',
   },
   microservices: {
-    id: 'microservices', name: 'Microservices', type: 'power', target: 'self', cost: 1, rarity: 'rare',
+    id: 'microservices', name: 'Microservices', type: 'power', target: 'self', cost: 1, rarity: 'epic',
     class: 'backend', archetype: 'brute_force',
     description: 'Gain 3 Confidence (+1 dmg per stack). No more monolith.',
     effects: { applyToSelf: { confidence: 3 } },
     upgradedEffects: { applyToSelf: { confidence: 4 } },
     upgradedDescription: 'Gain 4 Confidence (+1 dmg per stack).',
     icon: '🔀',
+  },
+  // New epics
+  infinite_scale: {
+    id: 'infinite_scale', name: 'Infinite Scale', type: 'power', target: 'self', cost: 2, rarity: 'epic',
+    class: 'backend', archetype: 'brute_force',
+    description: 'Gain 4 Confidence. Gain 2 Resilience. AWS bill not included.',
+    effects: { applyToSelf: { confidence: 4, resilience: 2 } },
+    upgradedEffects: { applyToSelf: { confidence: 5, resilience: 3 } },
+    upgradedDescription: 'Gain 5 Confidence. Gain 3 Resilience.',
+    upgradedCost: 1,
+    icon: '∞',
+  },
+  replication_factor: {
+    id: 'replication_factor', name: 'Replication Factor', type: 'skill', target: 'self', cost: 0, rarity: 'epic',
+    class: 'backend', archetype: 'query_optimizer', exhaust: true,
+    description: 'Exhaust. Exhaust 3 from draw pile. Draw 3 cards. Gain 6 block. Redundancy as strategy.',
+    effects: { exhaustFromDraw: 3, draw: 3, block: 6 },
+    upgradedEffects: { exhaustFromDraw: 3, draw: 4, block: 8 },
+    upgradedDescription: 'Exhaust. Exhaust 3 from draw pile. Draw 4 cards. Gain 8 block.',
+    icon: '🔄',
+  },
+
+  // ── Backend Legendary ──
+  sudo_mode: {
+    id: 'sudo_mode', name: 'Sudo Mode', type: 'power', target: 'self', cost: 1, rarity: 'legendary',
+    class: 'backend', archetype: 'brute_force',
+    description: 'Gain 5 Confidence. For the rest of combat, your attacks deal increased damage. sudo bash — the last command you\'ll ever need. [Phase 2]',
+    effects: { applyToSelf: { confidence: 5 } }, // placeholder
+    upgradedEffects: { applyToSelf: { confidence: 6 } },
+    upgradedDescription: 'Cost 0. Gain 6 Confidence.',
+    upgradedCost: 0,
+    icon: '👑',
+  },
+  the_monolith: {
+    id: 'the_monolith', name: 'The Monolith', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
+    class: 'backend', archetype: 'rate_limiter',
+    description: 'Gain 6 Counter-Offer. Gain 6 Resilience. Gain 6 Confidence. You are the stack. It does everything. It\'s fine. Don\'t touch it.',
+    effects: { applyToSelf: { counterOffer: 6, resilience: 6, confidence: 6 } },
+    upgradedEffects: { applyToSelf: { counterOffer: 8, resilience: 8, confidence: 8 } },
+    upgradedDescription: 'Cost 2. Gain 8 Counter-Offer. Gain 8 Resilience. Gain 8 Confidence.',
+    upgradedCost: 2,
+    icon: '🏗️',
+  },
+  rm_rf_reality: {
+    id: 'rm_rf_reality', name: 'rm -rf reality', type: 'attack', target: 'all_enemies', cost: 3, rarity: 'legendary',
+    class: 'backend', archetype: 'brute_force',
+    description: 'Deal 20 damage to ALL. Self-damage 8. Exhaust 3 from draw. sudo rm -rf /* — At least you won\'t have to clean up after.',
+    effects: { damageAll: 20, selfDamage: 8, exhaustFromDraw: 3 },
+    upgradedEffects: { damageAll: 28, selfDamage: 5, exhaustFromDraw: 3 },
+    upgradedDescription: 'Cost 2. Deal 28 damage to ALL. Self-damage 5. Exhaust 3 from draw.',
+    upgradedCost: 2,
+    icon: '☠️',
+  },
+  event_loop_god: {
+    id: 'event_loop_god', name: 'Event Loop God', type: 'power', target: 'self', cost: 2, rarity: 'legendary',
+    class: 'backend', archetype: 'query_optimizer',
+    description: 'Gain 3 Networking. Exhaust synergy doubled — each exhaust deals 6 damage to ALL and gains 3 block. The event loop is yours now. [Phase 2]',
+    effects: { applyToSelf: { networking: 3 } }, // placeholder
+    upgradedEffects: { applyToSelf: { networking: 4 } },
+    upgradedDescription: 'Cost 1. Gain 4 Networking.',
+    upgradedCost: 1,
+    icon: '⚙️',
   },
 };

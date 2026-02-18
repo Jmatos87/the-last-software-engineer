@@ -256,7 +256,7 @@ export const EventScreen: React.FC = () => {
 
         {eventOutcome.consumableAdded && (() => {
           const c = eventOutcome.consumableAdded!;
-          const rarityColor = c.rarity === 'rare' ? 'var(--accent-yellow)' : c.rarity === 'uncommon' ? 'var(--accent-blue)' : 'var(--text-secondary)';
+          const rarityColor = c.rarity === 'legendary' ? 'var(--accent-gold)' : c.rarity === 'epic' ? 'var(--accent-yellow)' : c.rarity === 'rare' ? 'var(--accent-blue)' : 'var(--text-secondary)';
           return (
             <div style={{
               display: 'flex',

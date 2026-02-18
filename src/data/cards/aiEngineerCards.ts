@@ -117,10 +117,56 @@ export const aiEngineerCards: Record<string, CardDef> = {
     upgradedDescription: 'Deal 9 damage. Exhaust.',
     icon: '🦜',
   },
+  // New commons
+  dropout: {
+    id: 'dropout', name: 'Dropout', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'gradient_descent',
+    description: 'Exhaust a card from hand. Gain 6 block. Gain 1 Resilience. Randomly disable neurons. Helps.',
+    effects: { exhaustRandom: 1, block: 6, applyToSelf: { resilience: 1 } },
+    upgradedEffects: { exhaustRandom: 1, block: 8, applyToSelf: { resilience: 1 } },
+    upgradedDescription: 'Exhaust a card from hand. Gain 8 block. Gain 1 Resilience.',
+    icon: '🎭',
+  },
+  weight_decay: {
+    id: 'weight_decay', name: 'Weight Decay', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'gradient_descent',
+    description: 'Apply 2 Weak to enemy. Deal 6 damage. Regularization. Forget bad patterns.',
+    effects: { damage: 6, applyToTarget: { weak: 2 } },
+    upgradedEffects: { damage: 8, applyToTarget: { weak: 2 } },
+    upgradedDescription: 'Apply 2 Weak. Deal 8 damage.',
+    icon: '⬇️',
+  },
+  chain_of_thought: {
+    id: 'chain_of_thought', name: 'Chain of Thought', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'ai_engineer', archetype: 'prompt_engineering',
+    description: 'Draw 2 cards. Reduce 5 Stress. Let\'s think step by step. Step 1: survive.',
+    effects: { draw: 2, copium: 5 },
+    upgradedEffects: { draw: 3, copium: 6 },
+    upgradedDescription: 'Draw 3. Reduce 6 Stress.',
+    icon: '💭',
+  },
+  model_collapse: {
+    id: 'model_collapse', name: 'Model Collapse', type: 'attack', target: 'enemy', cost: 2, rarity: 'common',
+    class: 'ai_engineer', archetype: 'hallucination',
+    description: 'Deal 18 damage. Self-damage 6. Add 6 stress. Train on synthetic data long enough.',
+    effects: { damage: 18, selfDamage: 6, addStress: 6 },
+    upgradedEffects: { damage: 22, selfDamage: 5, addStress: 5 },
+    upgradedDescription: 'Deal 22 damage. Self-damage 5. Add 5 stress.',
+    icon: '💥',
+  },
+  tokenizer_error: {
+    id: 'tokenizer_error', name: 'Tokenizer Error', type: 'attack', target: 'enemy', cost: 0, rarity: 'common',
+    class: 'ai_engineer', archetype: 'prompt_engineering',
+    description: 'Deal 4 damage. Reduce 4 Stress. The model didn\'t understand. Neither did you.',
+    effects: { damage: 4, copium: 4 },
+    upgradedEffects: { damage: 6, copium: 5 },
+    upgradedDescription: 'Deal 6 damage. Reduce 5 Stress.',
+    icon: '🔤',
+  },
 
-  // ── AI Engineer Uncommon ──
+  // ── AI Engineer Rare (was Uncommon) ──
   fine_tuning: {
-    id: 'fine_tuning', name: 'Fine-Tuning', type: 'power', target: 'self', cost: 2, rarity: 'uncommon',
+    id: 'fine_tuning', name: 'Fine-Tuning', type: 'power', target: 'self', cost: 2, rarity: 'rare',
     class: 'ai_engineer', archetype: 'gradient_descent',
     description: 'Gain 2 Confidence (+1 dmg per stack). LoRA adapter. 0.1% of parameters, 90% of the power.',
     effects: { applyToSelf: { confidence: 2 } },
@@ -129,7 +175,7 @@ export const aiEngineerCards: Record<string, CardDef> = {
     icon: '🎛️',
   },
   batch_normalization: {
-    id: 'batch_normalization', name: 'Batch Norm', type: 'skill', target: 'self', cost: 1, rarity: 'uncommon',
+    id: 'batch_normalization', name: 'Batch Norm', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
     class: 'ai_engineer', archetype: 'gradient_descent',
     description: 'Gain 12 block. Normalizing the chaos. Briefly.',
     effects: { block: 12 },
@@ -138,7 +184,7 @@ export const aiEngineerCards: Record<string, CardDef> = {
     icon: '📏',
   },
   temperature_zero: {
-    id: 'temperature_zero', name: 'Temperature 0', type: 'skill', target: 'self', cost: 1, rarity: 'uncommon',
+    id: 'temperature_zero', name: 'Temperature 0', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
     class: 'ai_engineer', archetype: 'prompt_engineering',
     description: 'Reduce 12 Stress. Gain 6 block. Deterministic. Predictable. Safe.',
     effects: { copium: 12, block: 6 },
@@ -147,7 +193,7 @@ export const aiEngineerCards: Record<string, CardDef> = {
     icon: '❄️',
   },
   catastrophic_forgetting: {
-    id: 'catastrophic_forgetting', name: 'Catastrophic Forgetting', type: 'attack', target: 'enemy', cost: 2, rarity: 'uncommon',
+    id: 'catastrophic_forgetting', name: 'Catastrophic Forgetting', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
     class: 'ai_engineer', archetype: 'hallucination',
     description: 'Deal 20 damage. Exhaust 2 random from draw pile. The model forgot what a cat is.',
     effects: { damage: 20, exhaustFromDraw: 2 },
@@ -156,7 +202,7 @@ export const aiEngineerCards: Record<string, CardDef> = {
     icon: '🧹',
   },
   data_poisoning: {
-    id: 'data_poisoning', name: 'Data Poisoning', type: 'attack', target: 'all_enemies', cost: 1, rarity: 'uncommon',
+    id: 'data_poisoning', name: 'Data Poisoning', type: 'attack', target: 'all_enemies', cost: 1, rarity: 'rare',
     class: 'ai_engineer', archetype: 'hallucination',
     description: 'Deal 7 damage to ALL. Apply 1 Weak to ALL. Self-damage 4. Garbage in, garbage everyone.',
     effects: { damageAll: 7, applyToAll: { weak: 1 }, selfDamage: 4 },
@@ -165,7 +211,7 @@ export const aiEngineerCards: Record<string, CardDef> = {
     icon: '☣️',
   },
   rag_pipeline: {
-    id: 'rag_pipeline', name: 'RAG Pipeline', type: 'skill', target: 'self', cost: 1, rarity: 'uncommon',
+    id: 'rag_pipeline', name: 'RAG Pipeline', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
     class: 'ai_engineer', archetype: 'prompt_engineering',
     description: 'Draw 3 cards. Gain 4 block. Retrieval-augmented generation.',
     effects: { draw: 3, block: 4 },
@@ -173,10 +219,48 @@ export const aiEngineerCards: Record<string, CardDef> = {
     upgradedDescription: 'Draw 3 cards. Gain 7 block.',
     icon: '🔍',
   },
+  // New rares
+  reinforcement_learning: {
+    id: 'reinforcement_learning', name: 'Reinforcement Learning', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'gradient_descent',
+    description: 'Gain 2 Confidence. Gain 1 Regen (+1 HP/turn). Learn from each mistake.',
+    effects: { applyToSelf: { confidence: 2, regen: 1 } },
+    upgradedEffects: { applyToSelf: { confidence: 3, regen: 2 } },
+    upgradedDescription: 'Gain 3 Confidence. Gain 2 Regen.',
+    icon: '🎮',
+  },
+  few_shot_prompt: {
+    id: 'few_shot_prompt', name: 'Few-Shot Prompt', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'prompt_engineering',
+    description: 'Reduce 20 Stress. Draw 3 cards. Gain 6 block. Three examples of not dying.',
+    effects: { copium: 20, draw: 3, block: 6 },
+    upgradedEffects: { copium: 24, draw: 4, block: 8 },
+    upgradedDescription: 'Cost 1. Reduce 24 Stress. Draw 4. Gain 8 block.',
+    upgradedCost: 1,
+    icon: '📋',
+  },
+  exploding_gradient: {
+    id: 'exploding_gradient', name: 'Exploding Gradient', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'hallucination',
+    description: 'Deal 8 damage x3. Self-damage 8. Add 8 stress. The loss function had other ideas.',
+    effects: { damage: 8, times: 3, selfDamage: 8, addStress: 8 },
+    upgradedEffects: { damage: 10, times: 3, selfDamage: 6, addStress: 6 },
+    upgradedDescription: 'Deal 10 damage x3. Self-damage 6. Add 6 stress.',
+    icon: '🌋',
+  },
+  attention_mechanism: {
+    id: 'attention_mechanism', name: 'Attention Mechanism', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    class: 'ai_engineer', archetype: 'prompt_engineering',
+    description: 'Draw 3 cards. Gain 1 Networking. Attention is all you need.',
+    effects: { draw: 3, applyToSelf: { networking: 1 } },
+    upgradedEffects: { draw: 4, applyToSelf: { networking: 1 } },
+    upgradedDescription: 'Draw 4. Gain 1 Networking.',
+    icon: '👁️',
+  },
 
-  // ── AI Engineer Rare ──
+  // ── AI Engineer Epic (was Rare) ──
   scaling_laws: {
-    id: 'scaling_laws', name: 'Scaling Laws', type: 'power', target: 'self', cost: 3, rarity: 'rare',
+    id: 'scaling_laws', name: 'Scaling Laws', type: 'power', target: 'self', cost: 3, rarity: 'epic',
     class: 'ai_engineer', archetype: 'gradient_descent',
     description: 'Gain 2 Confidence (+1 dmg per stack) AND 2 Resilience (+1 block & stress heal per stack). Just add more compute.',
     effects: { applyToSelf: { confidence: 2, resilience: 2 } },
@@ -186,7 +270,7 @@ export const aiEngineerCards: Record<string, CardDef> = {
     icon: '📈',
   },
   system_prompt: {
-    id: 'system_prompt', name: 'System Prompt', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    id: 'system_prompt', name: 'System Prompt', type: 'power', target: 'self', cost: 2, rarity: 'epic',
     class: 'ai_engineer', archetype: 'prompt_engineering',
     description: 'Gain 3 Self Care (heal stress/turn). Gain 2 Counter-Offer (reflect dmg when hit). You are a helpful assistant who does not take damage.',
     effects: { applyToSelf: { selfCare: 3, counterOffer: 2 } },
@@ -195,7 +279,7 @@ export const aiEngineerCards: Record<string, CardDef> = {
     icon: '📜',
   },
   emergent_behavior: {
-    id: 'emergent_behavior', name: 'Emergent Behavior', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+    id: 'emergent_behavior', name: 'Emergent Behavior', type: 'power', target: 'self', cost: 2, rarity: 'epic',
     class: 'ai_engineer', archetype: 'hallucination',
     description: 'Gain 3 Confidence (+1 dmg per stack). Gain 3 stress each turn. We don\'t know why it does that.',
     effects: { applyToSelf: { confidence: 3, hustleCulture: 1 } },
@@ -204,7 +288,7 @@ export const aiEngineerCards: Record<string, CardDef> = {
     icon: '🌟',
   },
   agi: {
-    id: 'agi', name: 'AGI', type: 'power', target: 'self', cost: 3, rarity: 'rare',
+    id: 'agi', name: 'AGI', type: 'power', target: 'self', cost: 3, rarity: 'epic',
     class: 'ai_engineer', archetype: 'gradient_descent',
     description: 'Gain 3 Confidence (+1 dmg per stack), 2 Resilience (+1 block & stress heal per stack), 1 Networking (draw +1 card/turn). The singularity is here.',
     effects: { applyToSelf: { confidence: 3, resilience: 2, networking: 1 } },
@@ -212,5 +296,65 @@ export const aiEngineerCards: Record<string, CardDef> = {
     upgradedDescription: 'Gain 4 Confidence (+1 dmg per stack), 3 Resilience (+1 block & stress heal per stack), 1 Networking (draw +1 card/turn).',
     upgradedCost: 2,
     icon: '🤖',
+  },
+  // New epics
+  mode_collapse: {
+    id: 'mode_collapse', name: 'Mode Collapse', type: 'attack', target: 'enemy', cost: 1, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'hallucination',
+    description: 'Deal 20 damage to target. Add 10 stress. The model only outputs one thing: pain.',
+    effects: { damage: 20, addStress: 10 },
+    upgradedEffects: { damage: 28, addStress: 10 },
+    upgradedDescription: 'Deal 28 damage. Add 10 stress.',
+    icon: '🌀',
+  },
+  self_supervised: {
+    id: 'self_supervised', name: 'Self-Supervised', type: 'power', target: 'self', cost: 2, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'gradient_descent',
+    description: 'Gain 3 Confidence. Gain 2 Self Care. Learn without labels. Just vibes and gradients.',
+    effects: { applyToSelf: { confidence: 3, selfCare: 2 } },
+    upgradedEffects: { applyToSelf: { confidence: 4, selfCare: 3 } },
+    upgradedDescription: 'Cost 1. Gain 4 Confidence. Gain 3 Self Care.',
+    upgradedCost: 1,
+    icon: '🔁',
+  },
+
+  // ── AI Engineer Legendary ──
+  agi_moment: {
+    id: 'agi_moment', name: 'AGI Moment', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'gradient_descent',
+    description: 'Gain 1 Confidence for every card you play this combat. Permanently. The board fired the CEO. The CEO fired the board. The model watched. [Phase 2]',
+    effects: { applyToSelf: { confidence: 5 } }, // placeholder
+    upgradedEffects: { applyToSelf: { confidence: 6 } },
+    upgradedDescription: 'Cost 2. Gain 1 Confidence for every card played.',
+    upgradedCost: 2,
+    icon: '🤖',
+  },
+  doomscroll: {
+    id: 'doomscroll', name: 'Doomscroll', type: 'power', target: 'self', cost: 1, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'hallucination',
+    description: 'Deal 5 damage to ALL enemies at start of each turn. Gain 5 stress each turn. You\'ve been scrolling for 4 hours. The news got worse. [Phase 2]',
+    effects: { applyToSelf: { hustleCulture: 1 }, applyToAll: { vulnerable: 1 } }, // placeholder
+    upgradedEffects: { applyToSelf: { hustleCulture: 1 }, applyToAll: { vulnerable: 2 } },
+    upgradedDescription: '7 damage to all. 4 stress per turn.',
+    icon: '📱',
+  },
+  constitutional_ai: {
+    id: 'constitutional_ai', name: 'Constitutional AI', type: 'power', target: 'self', cost: 2, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'prompt_engineering',
+    description: 'All stress you would gain is converted to block at 2:1 (2 stress = 1 block). Helpful, harmless, honest. Also invincible. [Phase 2]',
+    effects: { applyToSelf: { resilience: 4, selfCare: 3 } }, // placeholder
+    upgradedEffects: { applyToSelf: { resilience: 5, selfCare: 4 } },
+    upgradedDescription: 'Cost 1. Stress converts to block 2:1.',
+    upgradedCost: 1,
+    icon: '📖',
+  },
+  gpt_wrapper: {
+    id: 'gpt_wrapper', name: 'GPT Wrapper', type: 'power', target: 'self', cost: 0, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'hallucination', exhaust: true,
+    description: 'Exhaust. At the start of each turn, play the top card of your discard pile for free. Series A: $40M. Product: thin wrapper. Exit strategy: vibes. [Phase 2]',
+    effects: { draw: 2, applyToSelf: { networking: 2 } }, // placeholder
+    upgradedEffects: { draw: 3, applyToSelf: { networking: 2 } },
+    upgradedDescription: 'Also draw 1 card each turn.',
+    icon: '🚀',
   },
 };
