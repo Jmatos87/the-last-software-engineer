@@ -12,9 +12,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'production_server', name: 'Production Server', icon: '🖥️',
-    description: 'Start of combat: gain 1 Confidence (+1 attack damage per stack). Running since 2016. Nobody dares touch it.',
+    description: 'Start of combat: gain 1 Confidence and 1 Resilience. Running since 2016. Nobody dares touch it.',
     rarity: 'starter', class: 'backend', isStarter: true,
-    effect: { startBattleConfidence: 1 },
+    effect: { startBattleConfidence: 1, startBattleResilience: 1 },
   },
   {
     id: 'whiteboard_marker', name: 'Whiteboard Marker', icon: '🖊️',

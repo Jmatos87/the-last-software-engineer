@@ -10,10 +10,10 @@ export const backendCards: Record<string, CardDef> = {
   sql_injection: {
     id: 'sql_injection', name: 'SQL Injection', type: 'attack', target: 'enemy', cost: 1, rarity: 'starter',
     class: 'backend',
-    description: "Deal 8 damage. '; DROP TABLE enemies;--",
-    effects: { damage: 8 },
-    upgradedEffects: { damage: 12 },
-    upgradedDescription: "Deal 12 damage. '; DROP DATABASE;--",
+    description: "Deal 9 damage. '; DROP TABLE enemies;--",
+    effects: { damage: 9 },
+    upgradedEffects: { damage: 13 },
+    upgradedDescription: "Deal 13 damage. '; DROP DATABASE;--",
     icon: '💉',
   },
   api_response: {
@@ -76,10 +76,10 @@ export const backendCards: Record<string, CardDef> = {
   firewall_rules: {
     id: 'firewall_rules', name: 'Firewall Rules', type: 'skill', target: 'self', cost: 1, rarity: 'common',
     class: 'backend', archetype: 'rate_limiter',
-    description: 'Gain 8 block. Gain 1 Counter-Offer (reflect dmg when hit). iptables -A INPUT -j REJECT.',
-    effects: { block: 8, applyToSelf: { counterOffer: 1 } },
-    upgradedEffects: { block: 11, applyToSelf: { counterOffer: 1 } },
-    upgradedDescription: 'Gain 11 block. Gain 1 Counter-Offer (reflect dmg when hit).',
+    description: 'Gain 9 block. Gain 1 Counter-Offer (reflect dmg when hit). iptables -A INPUT -j REJECT.',
+    effects: { block: 9, applyToSelf: { counterOffer: 1 } },
+    upgradedEffects: { block: 12, applyToSelf: { counterOffer: 1 } },
+    upgradedDescription: 'Gain 12 block. Gain 1 Counter-Offer (reflect dmg when hit).',
     icon: '🔥',
   },
   tcp_handshake: {
@@ -190,10 +190,10 @@ export const backendCards: Record<string, CardDef> = {
   rate_limiter: {
     id: 'rate_limiter', name: 'Rate Limiter', type: 'power', target: 'self', cost: 1, rarity: 'rare',
     class: 'backend', archetype: 'rate_limiter',
-    description: 'Gain 3 Counter-Offer (reflect dmg when hit). 429 Too Many Requests.',
-    effects: { applyToSelf: { counterOffer: 3 } },
-    upgradedEffects: { applyToSelf: { counterOffer: 5 } },
-    upgradedDescription: 'Gain 5 Counter-Offer (reflect dmg when hit).',
+    description: 'Gain 4 Counter-Offer (reflect dmg when hit). 429 Too Many Requests.',
+    effects: { applyToSelf: { counterOffer: 4 } },
+    upgradedEffects: { applyToSelf: { counterOffer: 6 } },
+    upgradedDescription: 'Gain 6 Counter-Offer (reflect dmg when hit).',
     icon: '🚧',
   },
   ddos_protection: {
