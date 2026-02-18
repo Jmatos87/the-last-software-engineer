@@ -178,101 +178,101 @@ export const act1Enemies: Record<string, EnemyDef> = {
   unpaid_take_home: {
     id: 'unpaid_take_home',
     name: 'Unpaid Take-Home Assignment',
-    hp: 112,
+    hp: 68,
     gold: 76,
     icon: '💸',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 3, resilience: 2 }, quip: '"Oh, and add microservices."' },
+      { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 2, resilience: 1 }, quip: '"Oh, and add microservices."' },
     ],
     moves: [
       // Phase 1: Opening pressure (indices 0-1)
-      { name: 'Overscoped!', type: 'exhaust', exhaustCount: 2, stressDamage: 8, icon: '📋', quip: '"Oh, and write the documentation."' },
-      { name: 'Crunch Time', type: 'attack', damage: 16, icon: '😰', quip: '"Due in 4 hours. No pressure!"' },
+      { name: 'Overscoped!', type: 'exhaust', exhaustCount: 2, stressDamage: 6, icon: '📋', quip: '"Oh, and write the documentation."' },
+      { name: 'Crunch Time', type: 'attack', damage: 12, icon: '😰', quip: '"Due in 4 hours. No pressure!"' },
       // Phase 2: All-out assault (indices 2-4)
-      { name: 'Scope Creep', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"Oh also build the backend."' },
-      { name: 'Pair Stress', type: 'attack', damage: 9, times: 2, icon: '😵', quip: '"This should be a weekend project!"' },
-      { name: 'Full-Stack Assault', type: 'attack', damage: 22, icon: '💥', quip: '"Add CI/CD and deploy to prod."' },
+      { name: 'Scope Creep', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"Oh also build the backend."' },
+      { name: 'Pair Stress', type: 'attack', damage: 8, times: 2, icon: '😵', quip: '"This should be a weekend project!"' },
+      { name: 'Full-Stack Assault', type: 'attack', damage: 15, icon: '💥', quip: '"Add CI/CD and deploy to prod."' },
     ],
   },
 
   linkedin_influencer: {
     id: 'linkedin_influencer',
     name: 'LinkedIn Influencer',
-    hp: 102,
+    hp: 64,
     gold: 70,
     icon: '📱',
     isElite: true,
     phases: [
-      { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"Time to go VIRAL."' },
+      { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"Time to go VIRAL."' },
     ],
     moves: [
       // Phase 1: Soft harassment (indices 0-2)
-      { name: 'Viral Post', type: 'attack', damage: 16, icon: '📢', quip: '"Agree? 👇 Like & repost."' },
+      { name: 'Viral Post', type: 'attack', damage: 12, icon: '📢', quip: '"Agree? 👇 Like & repost."' },
       { name: 'Humble Brag', type: 'debuff', applyToTarget: { cringe: 2 }, icon: '😬', quip: '"I turned down 47 offers this week."' },
-      { name: 'Engagement Farming', type: 'attack_defend', damage: 7, block: 6, applyToSelf: { regen: 3 }, icon: '🌱', quip: '"I cried at my standing desk today."' },
+      { name: 'Engagement Farming', type: 'attack_defend', damage: 6, block: 5, applyToSelf: { regen: 2 }, icon: '🌱', quip: '"I cried at my standing desk today."' },
       // Phase 2: Influencer rage mode (indices 3-5)
       { name: 'Personal Brand', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🤳', quip: '"I\'m building an EMPIRE."' },
-      { name: 'Influencer Barrage', type: 'attack', damage: 7, times: 3, icon: '📱', quip: '"Like. Share. SUBSCRIBE."' },
-      { name: 'Thought Leader Slam', type: 'attack', damage: 18, stressDamage: 8, icon: '💡', quip: '"I posted about hustle culture at 4 AM."' },
+      { name: 'Influencer Barrage', type: 'attack', damage: 5, times: 3, icon: '📱', quip: '"Like. Share. SUBSCRIBE."' },
+      { name: 'Thought Leader Slam', type: 'attack', damage: 13, stressDamage: 6, icon: '💡', quip: '"I posted about hustle culture at 4 AM."' },
     ],
   },
 
   applicant_tracking_golem: {
     id: 'applicant_tracking_golem',
     name: 'Applicant Tracking Golem',
-    hp: 122,
+    hp: 72,
     gold: 82,
     icon: '⚙️',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"MAXIMUM REJECTION ENGAGED."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"MAXIMUM REJECTION ENGAGED."' },
     ],
     moves: [
       // Phase 1: Aggressive opener (indices 0-2)
-      { name: 'System Slam', type: 'attack', damage: 16, icon: '⚙️', quip: '"Application #4,729 processed."' },
+      { name: 'System Slam', type: 'attack', damage: 12, icon: '⚙️', quip: '"Application #4,729 processed."' },
       { name: 'Absorb Pattern', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🔄', quip: '"Optimizing rejection pipeline..."' },
-      { name: 'Data Crunch', type: 'attack', damage: 9, times: 2, icon: '💾', quip: '"Your data is now our data."' },
+      { name: 'Data Crunch', type: 'attack', damage: 7, times: 2, icon: '💾', quip: '"Your data is now our data."' },
       // Phase 2: Armored assault (indices 3-4)
-      { name: 'Process Queue', type: 'attack_defend', damage: 12, block: 12, icon: '📊', quip: '"You are #8,341 in the queue."' },
-      { name: 'Firewall Upload', type: 'attack_defend', damage: 16, block: 16, icon: '🔗', quip: '"Firewall engaged. You\'re locked out."' },
+      { name: 'Process Queue', type: 'attack_defend', damage: 9, block: 10, icon: '📊', quip: '"You are #8,341 in the queue."' },
+      { name: 'Firewall Upload', type: 'attack_defend', damage: 12, block: 13, icon: '🔗', quip: '"Firewall engaged. You\'re locked out."' },
     ],
   },
 
   networking_event: {
     id: 'networking_event',
     name: 'The Networking Event',
-    hp: 106,
+    hp: 65,
     gold: 72,
     icon: '🍸',
     isElite: true,
     moves: [
-      { name: 'Small Talk', type: 'stress_attack', stressDamage: 14, icon: '💬', quip: '"So... what do you do?"' },
-      { name: 'Awkward Handshake', type: 'attack', damage: 9, stressDamage: 4, icon: '🤝', quip: '"*limp fish grip*"' },
-      { name: 'Elevator Pitch', type: 'attack', damage: 17, icon: '🗣️', quip: '"I\'m disrupting disruption."' },
-      { name: 'Exchange Cards', type: 'buff', applyToSelf: { confidence: 5 }, icon: '📇', quip: '"Let\'s connect on LinkedIn!"' },
+      { name: 'Small Talk', type: 'stress_attack', stressDamage: 9, icon: '💬', quip: '"So... what do you do?"' },
+      { name: 'Awkward Handshake', type: 'attack', damage: 7, stressDamage: 3, icon: '🤝', quip: '"*limp fish grip*"' },
+      { name: 'Elevator Pitch', type: 'attack', damage: 13, icon: '🗣️', quip: '"I\'m disrupting disruption."' },
+      { name: 'Exchange Cards', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📇', quip: '"Let\'s connect on LinkedIn!"' },
     ],
   },
 
   automated_rejection: {
     id: 'automated_rejection',
     name: 'Automated Rejection Letter',
-    hp: 98,
+    hp: 60,
     gold: 65,
     icon: '✉️',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"INITIATING BATCH REJECTION PROTOCOL."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"INITIATING BATCH REJECTION PROTOCOL."' },
     ],
     moves: [
       // Phase 1: Standard rejection flow (indices 0-2)
-      { name: 'Demoralize', type: 'debuff', applyToTarget: { confidence: -2 }, icon: '😞', quip: '"Thank you for your interest."' },
-      { name: 'Form Rejection', type: 'attack', damage: 10, stressDamage: 5, icon: '✉️', quip: '"Dear [CANDIDATE_NAME]..."' },
-      { name: 'Not A Good Fit', type: 'attack', damage: 22, icon: '❌', quip: '"We\'re looking for a unicorn."' },
+      { name: 'Demoralize', type: 'debuff', applyToTarget: { confidence: -1 }, icon: '😞', quip: '"Thank you for your interest."' },
+      { name: 'Form Rejection', type: 'attack', damage: 8, stressDamage: 4, icon: '✉️', quip: '"Dear [CANDIDATE_NAME]..."' },
+      { name: 'Not A Good Fit', type: 'attack', damage: 15, icon: '❌', quip: '"We\'re looking for a unicorn."' },
       // Phase 2: Automated rejection machine (indices 3-5)
-      { name: 'Auto-Reject Mode', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⚙️', quip: '"PROCESSING 10,000 APPLICATIONS..."' },
-      { name: 'Rejection Cascade', type: 'attack', damage: 6, times: 3, icon: '✉️', quip: '"Rejected. Rejected. Rejected."' },
-      { name: 'Mass Rejection', type: 'attack', damage: 24, stressDamage: 12, icon: '❌', quip: '"Your entire career has been archived."' },
+      { name: 'Auto-Reject Mode', type: 'buff', applyToSelf: { confidence: 2 }, icon: '⚙️', quip: '"PROCESSING 10,000 APPLICATIONS..."' },
+      { name: 'Rejection Cascade', type: 'attack', damage: 5, times: 3, icon: '✉️', quip: '"Rejected. Rejected. Rejected."' },
+      { name: 'Mass Rejection', type: 'attack', damage: 17, stressDamage: 8, icon: '❌', quip: '"Your entire career has been archived."' },
     ],
   },
 
@@ -281,7 +281,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
   hr_phone_screen: {
     id: 'hr_phone_screen',
     name: 'HR Phone Screen',
-    hp: 182,
+    hp: 160,
     gold: 120,
     icon: '📞',
     isBoss: true,
@@ -300,15 +300,15 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'We\'ll Be In Touch', type: 'attack', damage: 20, stressDamage: 10, icon: '☎️', quip: '"(Narrator: They weren\'t.)"' },
       { name: 'Benefits Bait', type: 'attack', damage: 12, stressDamage: 5, icon: '🎣', quip: '"We have unlimited PTO! (Don\'t use it.)"' },
       // Phase 3: pure DPS race — no more buff turns (indices 7-8)
-      { name: 'Benefits Bait', type: 'attack', damage: 16, stressDamage: 8, icon: '🎣', quip: '"Last chance. Take the offer or get nothing."' },
-      { name: 'REJECTED', type: 'attack', damage: 30, stressDamage: 14, icon: '❌', quip: '"We went with another candidate. Forever."' },
+      { name: 'Benefits Bait', type: 'attack', damage: 8, stressDamage: 3, icon: '🎣', quip: '"Last chance. Take the offer or get nothing."' },
+      { name: 'REJECTED', type: 'attack', damage: 16, stressDamage: 7, icon: '❌', quip: '"We went with another candidate. Forever."' },
     ],
   },
 
   ats_final_form: {
     id: 'ats_final_form',
     name: 'The ATS Final Form',
-    hp: 205,
+    hp: 178,
     gold: 130,
     icon: '🏗️',
     isBoss: true,
@@ -328,15 +328,15 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Total Rejection', type: 'attack', damage: 14, times: 2, icon: '❌', quip: '"Application status: OBLITERATED."' },
       { name: 'System Crash', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Fatal error: career not found."' },
       // Phase 3: pure DPS race — buff folded into onEnter (indices 8-9)
-      { name: 'System Crash', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Rebooting... to destroy you faster."' },
-      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 38, stressDamage: 14, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
+      { name: 'System Crash', type: 'attack', damage: 15, stressDamage: 4, icon: '💀', quip: '"Rebooting... to destroy you faster."' },
+      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 22, stressDamage: 7, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
     ],
   },
 
   ghosting_phantom: {
     id: 'ghosting_phantom',
     name: 'The Ghosting Phantom',
-    hp: 162,
+    hp: 142,
     gold: 110,
     icon: '👻',
     isBoss: true,
@@ -356,7 +356,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Full Ghosting', type: 'attack', damage: 26, stressDamage: 10, icon: '☠️', quip: '"The position has been filled... forever."' },
       // Phase 3: final stand (indices 6-7)
       { name: 'Eternal Silence', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🕳️', quip: '"The void is permanent."' },
-      { name: 'Final Ghosting', type: 'attack', damage: 32, stressDamage: 16, icon: '☠️', quip: '"You never existed to us."' },
+      { name: 'Final Ghosting', type: 'attack', damage: 18, stressDamage: 8, icon: '☠️', quip: '"You never existed to us."' },
     ],
   },
 };
