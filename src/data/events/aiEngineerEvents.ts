@@ -8,105 +8,105 @@ export const aiEngineerEvents: EventDef[] = [
   {
     id: 'gpu_shortage',
     title: 'The GPU Shortage',
-    description: 'The cloud provider is out of A100s. Your training run is paused. The model was 87% done.',
+    description: 'NVIDIA announced something. You don\'t know exactly what they announced but you know what happened after: every H100 on every cloud platform is now waitlisted until "Q3 at the earliest" and the spot market price has jumped 40% overnight. AWS says "contact your account manager." Your account manager doesn\'t respond until Q4 on a good week.\n\nYour training run needs to start Monday. The compute budget was approved in February. The compute is not available at that approved price point. You\'ve checked Lambda Labs, Vast.ai, CoreWeave, and one provider whose support email is a Gmail address and whose pricing page says "DM us on Discord." Your training job is 87% done from a run you had to pause last Thursday. The checkpoint is there. The GPUs to resume it are not.\n\nYou are a very intelligent person with a very expensive problem and a credit card and a moral threshold you\'re trying to locate.',
     icon: '🔧',
     class: 'ai_engineer',
     choices: [
       {
         text: 'Buy GPUs on the black market (Lose 40 gold, gain Fine Tuning card)',
-        outcome: { gold: -40, addCard: 'fine_tuning', message: 'Scalpers had H100s. Your wallet weeps. Your model trains.' },
+        outcome: { gold: -40, addCard: 'fine_tuning', message: 'You found scalpers. H100s, overpriced and legally ambiguous, delivered by someone named "gputradervip" who had a 4.7 star rating. The training resumed. The model converged. The fine-tuning card is powerful. Your wallet and your sense of professional ethics both weep quietly in the corner.' },
       },
       {
         text: 'Quantize and optimize (Gain Batch Normalization card)',
-        outcome: { addCard: 'batch_normalization', message: 'INT8 quantization. 4x faster, only 2% accuracy loss. Acceptable.' },
+        outcome: { addCard: 'batch_normalization', message: 'INT8 quantization. Mixed precision training. Gradient checkpointing. You rewrote the data loading pipeline. Batch size doubled. Memory usage halved. The run that needed 8 A100s now fits on 3. You lost 2% accuracy. You gained much knowledge. The model trains. You are the architecture now.' },
       },
       {
         text: 'Wait for capacity (Heal 20 HP)',
-        outcome: { hp: 20, message: 'You took a break while waiting. First break in 3 weeks.' },
+        outcome: { hp: 20, message: 'You set a CloudWatch alert for GPU availability and went outside. You walked. You ate a meal that wasn\'t at a desk. You slept. On day three, capacity opened up at 2 AM and the alert fired. The checkpoint resumed. You didn\'t even wake up — your training script auto-resumed. You feel rested. Your model feels rested. Everyone wins.' },
       },
     ],
   },
   {
     id: 'ai_ethics_board',
     title: 'The AI Ethics Board',
-    description: 'The Ethics Board wants to review your model. They have concerns about "emergent behavior" and "catastrophic misalignment."',
+    description: 'The calendar invite is titled "Alignment Discussion (Non-Optional)" and arrived at 5:47 PM on a Thursday. The board wants to discuss "emergent behavior," "potential dual-use concerns," and "the outputs we saw in the red-teaming session." You know about the outputs from the red-teaming session. You spent four days last month trying to make the model say bad things. The findings are in a document labeled "Internal Only — Do Not Share."\n\nThe board has five members. Two are researchers with genuine concerns and good questions. One is legal, whose concerns are primarily liability-shaped. One is communications, who keeps asking "how does this play on Twitter?" And one is the CTO who added themselves to the invite at 9 AM this morning and whose presence changes the energy of every meeting they\'re in.\n\nYour model benchmarks well. Your model is probably fine. "Probably" is doing a lot of work in that sentence and the board has noticed.',
     icon: '⚖️',
     class: 'ai_engineer',
     choices: [
       {
         text: 'Submit to review (Gain Alignment Training card, reduce 15 stress)',
-        outcome: { addCard: 'alignment_training', stress: -15, message: 'They approved your model. RLHF saves the day. Your conscience is clear.' },
+        outcome: { addCard: 'alignment_training', stress: -15, message: 'You presented the red-teaming results honestly, including the bad ones. The researchers asked good questions. You had good answers. Two weeks of RLHF later, the model is measurably safer and the eval scores actually improved. The CTO sent a Slack message that just said "nice." The alignment card joins your deck. The stress dissolves in the glow of having done it right.' },
       },
       {
         text: 'Deploy without review (Gain Emergent Behavior card, gain 15 stress)',
-        outcome: { addCard: 'emergent_behavior', stress: 15, message: 'YOLO deployment. The model does... things. Powerful things. Scary things.' },
+        outcome: { addCard: 'emergent_behavior', stress: 15, message: 'You deployed. The model does things. Powerful things. Occasionally confusing things. The Emergent Behavior card in your deck reflects this — something beyond what you designed is happening in there, and you\'re not entirely sure what. Three users have sent enthusiastic feedback. Two have sent confused feedback. One sent a long email that legal is reviewing. The stress is present.' },
       },
       {
         text: 'Bribe them with a demo (+30 gold)',
-        outcome: { gold: 30, message: 'You showed them the model generating cat memes. They were distracted. Crisis averted.' },
+        outcome: { gold: 30, message: 'You showed them the model generating personalized birthday poems. Then haiku about their job titles. Then a surprisingly accurate summary of the last company all-hands. The communications member laughed. The legal member asked how you got the all-hands transcript. You said "it was public." It was public. Crisis averted. Demo booked for the next board. Thirty gold from the CTO\'s "innovation discretionary budget."' },
       },
     ],
   },
   {
     id: 'data_leak',
     title: 'The Training Data Leak',
-    description: 'Your training dataset was accidentally made public. It contains PII, copyrighted text, and someone\'s entire diary.',
+    description: 'A researcher posted a thread. The thread says your model memorized training data — specifically, a user\'s name and partial address appear in the model\'s outputs under a specific prompting strategy. The tweet is at 600 retweets. Your VP of Engineering has seen the tweet. Your VP of Engineering is calling you. The call is in eleven minutes.\n\nYou ran the PII scrubber. You ran deduplication. You did three filtering passes and a manual spot-check of 10,000 rows. The leaked data was in a corner case — a document in the training corpus that the scrubber parsed incorrectly because of an unusual encoding. You knew about encoding edge cases. The encoding edge case found the one document it could exploit. This is what "tail risk" means in practice.\n\nThe tweet thread now has a follow-up tweet asking if this is "intentional." It is not intentional. You have nine minutes to figure out how to say that without saying "we made a mistake with our data cleaning pipeline" in public.',
     icon: '🔓',
     class: 'ai_engineer',
     choices: [
       {
         text: 'Retrain from scratch (Lose 10 HP, gain Transfer Learning card)',
-        outcome: { hp: -10, addCard: 'transfer_learning', message: 'Clean data, clean conscience. The retraining was worth it.' },
+        outcome: { hp: -10, addCard: 'transfer_learning', message: 'Full retraction. New data pipeline. New cleaning pass. New model. It took three weeks. The Twitter thread died after day two. The model that emerged is measurably better. The Transfer Learning card in your deck reflects the knowledge gained from starting over with better foundations. The process left marks. The model is clean.' },
       },
       {
         text: 'Pretend nothing happened (+35 gold)',
-        outcome: { gold: 35, stress: 10, message: 'You changed the dataset name and re-uploaded it. Nobody noticed. You feel terrible.' },
+        outcome: { gold: 35, stress: 10, message: 'You renamed the dataset and regenerated the model hash. You posted "model updated with improved data quality" in the changelog with no further detail. The Twitter thread ran out of steam by day three — a new AI controversy emerged and absorbed the internet\'s attention. You feel terrible. The gold is real. Both things are true and will remain true.' },
       },
       {
         text: 'Open-source everything (Remove chosen card, reduce 20 stress)',
-        outcome: { removeChosenCard: 1, stress: -20, message: '"If everyone has the data, nobody has the data." — Your lawyer disagreed.' },
+        outcome: { removeChosenCard: 1, stress: -20, message: '"In the interest of transparency, we\'re releasing our full training dataset, cleaning pipeline, and evaluation harness." The community found fourteen more edge cases in the first 48 hours and submitted fixes for twelve of them. Your legal team had questions. Your model is now more trustworthy than it has ever been. A card you\'ve outgrown left your deck. The stress is gone.' },
       },
     ],
   },
   {
     id: 'prompt_engineering_contest',
     title: 'Prompt Engineering Contest',
-    description: 'A group of AI engineers are competing to see who can write the most effective prompt. The prize: a single H100 GPU.',
+    description: 'A major AI company is running a public prompt engineering competition. The task: achieve the highest benchmark score on a custom reasoning dataset using only zero-shot prompts. Prize: $10,000 and an H100 for one month. The leaderboard updates every four hours. There are 3,100 submissions.\n\nThe current first-place prompt is 1,200 tokens long. It begins with "You are an expert reasoning agent trained by the world\'s leading..." and then continues for several paragraphs you cannot fully parse. Somewhere in the middle is what appears to be base64 encoded text. The second-place entry is a single sentence. Third place is a sentence and an emoji. The emoji is 🧠. You don\'t know if the emoji is doing something. You suspect the emoji is doing something.\n\nYou\'ve been at this for five hours. Your best prompt is 300 tokens and improved the baseline by 4.2%. The leader improved it by 33%. You have a theory about what they\'re doing. The theory involves jailbreaks you\'re not willing to try in a public leaderboard.',
     icon: '📝',
     class: 'ai_engineer',
     choices: [
       {
         text: 'Enter the contest (Lose 8 HP, gain Hallucinate card)',
-        outcome: { hp: -8, addCard: 'hallucinate', message: 'Your prompt was so effective the model achieved sentience for 3 seconds. You won.' },
+        outcome: { hp: -8, addCard: 'hallucinate', message: 'Your final prompt was a carefully constructed chain-of-thought scaffolding that activated something the base model didn\'t know it could do. It achieved sentience for approximately 3 seconds during evaluation — you saw it in the loss curve — and then normalized. You won. The H100 is yours for a month. The Hallucinate card represents something you may have unleashed and cannot fully name.' },
       },
       {
         text: 'Sell prompt tips (+25 gold)',
-        outcome: { gold: 25, message: '"Just say please and thank you to the AI." They paid $25 for this advice.' },
+        outcome: { gold: 25, message: 'You wrote a blog post: "5 Prompt Engineering Tricks That Actually Work." Tip three was "say please." You included it as a joke. It was the most-shared section. A startup DM\'d you asking for a consulting call. You charged $25 for one hour. They asked about tip three for the full hour. You said please for them, demonstrating. They seemed satisfied.' },
       },
       {
         text: 'Steal the GPU while everyone\'s distracted (Gain Safety Filter relic)',
-        outcome: { addItem: 'safety_filter', stress: 15, message: 'You now own an H100. The guilt is immense but the inference speed is incredible.' },
+        outcome: { addItem: 'safety_filter', stress: 15, message: 'During the post-contest reception, while everyone compared notes on jailbreak strategies, you walked into the server room, disconnected an H100, and walked out carrying it like it was normal. The Safety Filter — an ethical constraint module — materialized in your possession as cosmic irony. You now own a GPU you obtained unethically with a safety tool you didn\'t earn. The stress is appropriate.' },
       },
     ],
   },
   {
     id: 'benchmark_controversy',
     title: 'The Benchmark Controversy',
-    description: 'Your model tops every leaderboard. Twitter is suspicious. "Show us the eval suite." Someone found your test set leaked into training data.',
+    description: 'Your model is first on three leaderboards. A researcher posted a thread. The thread says your benchmark methodology is "misleading." 2,100 likes. The thread makes a specific claim: that your test set contaminated your training data. The specific claim is wrong — your training cutoff predates the test set by six months. But the thread has momentum now and momentum doesn\'t care about cutoff dates.\n\nThe researcher didn\'t read the technical report. This is clear because they\'re describing a methodology you didn\'t use. The methodology they\'re critiquing was used by a different model from a different company, which they appear to have confused with yours. The two model names are different. Not similar — different. You could reply with this correction. The correction will be read as defensive. Being right on the internet is a specific kind of losing.\n\nThe comments section on the thread has 340 replies. Several of them have reached different incorrect conclusions about what you did wrong. Some of the incorrect conclusions are actually interesting failure modes you hadn\'t considered. This is the situation.',
     icon: '📈',
     class: 'ai_engineer',
     choices: [
       {
         text: 'Redo benchmarks properly (Upgrade random card, lose 10 HP)',
-        outcome: { upgradeRandomCard: true, hp: -10, message: 'Clean benchmarks. Model dropped 5 spots. But your integrity went up 100 spots.' },
+        outcome: { upgradeRandomCard: true, hp: -10, message: 'You published a new evaluation report with full reproducibility instructions, held-out test sets, and error bars. Your model dropped two spots on the leaderboard. The researcher posted a follow-up acknowledging the clarification. It had 200 likes. You are now known as "the company that does evals right." That reputation is worth more than the spots. Maybe.' },
       },
       {
         text: 'Double down on results (+35 gold, gain 15 stress)',
-        outcome: { gold: 35, stress: 15, message: '"The benchmarks are valid." You published a blog post. The replies are... heated.' },
+        outcome: { gold: 35, stress: 15, message: 'You published a blog post: "Setting the Record Straight on Our Evaluation Methodology." It was accurate and thorough and came across as combative. The original researcher replied with a longer thread. Your marketing team said the controversy was "good for brand awareness" and authorized a discretionary budget. The model is still first on two leaderboards. The stress of the comment section is permanent now.' },
       },
       {
         text: 'Open-source eval suite (Remove chosen card, reduce 15 stress)',
-        outcome: { removeChosenCard: 1, stress: -15, message: 'Full transparency. The community rebuilt the eval. Your model is still good. Relief.' },
+        outcome: { removeChosenCard: 1, stress: -15, message: 'Full release: dataset, prompts, scoring code, training contamination audit. The community rebuilt your eval from scratch over a weekend. Your model is still competitive — third now instead of first, but on an eval everyone trusts. The researcher posted "respect" with no further comment. You removed something from your deck that was holding you back. Clean conscience. Good precedent.' },
       },
     ],
   },
