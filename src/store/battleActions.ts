@@ -212,6 +212,19 @@ export function executePlayCard(
     }
   }
 
+  // Deal damage again if target is vulnerable (cascade_delete)
+  if (effects.vulnerableDoubleHit && effects.damage && targetInstanceId) {
+    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+    if (enemyIdx !== -1) {
+      const originalEnemy = battle.enemies.find(e => e.instanceId === targetInstanceId);
+      const wasVulnerable = (originalEnemy?.statusEffects.vulnerable || 0) > 0;
+      if (wasVulnerable) {
+        const bonusDmg = calculateDamage(effects.damage, battle.playerStatusEffects, originalEnemy!.statusEffects, run.items);
+        newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], bonusDmg);
+      }
+    }
+  }
+
   // Apply damage to all enemies
   if (effects.damageAll) {
     newBattle.enemies = newBattle.enemies.map(enemy => {
@@ -236,6 +249,17 @@ export function executePlayCard(
   if (effects.block) {
     const block = calculateBlock(effects.block, battle.playerStatusEffects, run.items);
     newBattle.playerBlock = (newBattle.playerBlock || 0) + block;
+  }
+
+  // Bonus block if player already had block before this card was played (shadow_dom)
+  if (effects.bonusBlockIfHasBlock && (battle.playerBlock || 0) > 0) {
+    newBattle.playerBlock = (newBattle.playerBlock || 0) + effects.bonusBlockIfHasBlock;
+  }
+
+  // Bonus block if player has Counter-Offer (tcp_handshake)
+  if (effects.bonusBlockIfCounterOffer && (newBattle.playerStatusEffects.counterOffer || 0) > 0) {
+    const bonusBlock = calculateBlock(effects.bonusBlockIfCounterOffer, battle.playerStatusEffects, run.items);
+    newBattle.playerBlock = (newBattle.playerBlock || 0) + bonusBlock;
   }
 
   // Apply copium — directly reduces stress
@@ -273,6 +297,15 @@ export function executePlayCard(
     newBattle.hand = [...newBattle.hand, ...drawn];
     newBattle.drawPile = newDrawPile;
     newBattle.discardPile = newDiscardPile;
+  }
+
+  // Discard cards after drawing (hydration)
+  if (effects.discardAfterDraw && effects.discardAfterDraw > 0 && newBattle.hand.length > 0) {
+    for (let i = 0; i < effects.discardAfterDraw && newBattle.hand.length > 0; i++) {
+      const idx = Math.floor(Math.random() * newBattle.hand.length);
+      const [discarded] = newBattle.hand.splice(idx, 1);
+      newBattle.discardPile = [...newBattle.discardPile, discarded];
+    }
   }
 
   // Gain energy
@@ -511,6 +544,13 @@ function triggerExhaustRelics(battle: BattleState, run: RunState): void {
     }
     if (item.effect.exhaustGainEnergy) {
       battle.energy += 1;
+    }
+    // Draw 1 card when exhausting (event_driven relic)
+    if (item.effect.exhaustDrawCard) {
+      const { drawn, newDrawPile, newDiscardPile } = drawCards(battle.drawPile, battle.discardPile, 1);
+      battle.hand = [...battle.hand, ...drawn];
+      battle.drawPile = newDrawPile;
+      battle.discardPile = newDiscardPile;
     }
     // Double trigger
     if (item.effect.exhaustDoubleTrigger) {
@@ -779,7 +819,10 @@ export function executeEnemyTurn(
         // Already in phase — cycle within phase moves only
         const phase = updatedEnemy.phases[targetPhaseIdx];
         const phaseStart = phase.moveStartIndex;
-        const phaseMoves = updatedEnemy.moves.length - phaseStart;
+        const phaseEnd = (targetPhaseIdx + 1 < updatedEnemy.phases!.length)
+          ? updatedEnemy.phases![targetPhaseIdx + 1].moveStartIndex
+          : updatedEnemy.moves.length;
+        const phaseMoves = phaseEnd - phaseStart;
         const nextIndex = phaseStart + ((updatedEnemy.moveIndex - phaseStart + 1) % phaseMoves);
         updatedEnemy.moveIndex = nextIndex;
         updatedEnemy.currentMove = updatedEnemy.moves[nextIndex];
@@ -866,6 +909,11 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   // Stress changes from buffs
   let stressChange = 0;
   let hpChange = 0;
+
+  // Curse cards drawn add 5 stress each
+  const cursesDrawn = hand.filter(c => c.type === 'curse').length;
+  if (cursesDrawn > 0) stressChange += cursesDrawn * 5;
+
   // Apply player poison damage (poison ticks each turn, tickStatusEffects decrements it after)
   if ((battle.playerStatusEffects.poison || 0) > 0) {
     hpChange -= battle.playerStatusEffects.poison!;

@@ -92,6 +92,10 @@ export interface CardEffect {
   shuffleDiscardToDraw?: boolean;  // shuffle discard pile into draw pile
   exhaustAllHand?: boolean;  // exhaust all cards in hand
   damagePerCardExhausted?: number;  // deal N × (cards exhausted this play) damage to target
+  bonusBlockIfHasBlock?: number;    // gain extra block if player already has block
+  vulnerableDoubleHit?: boolean;    // deal damage again if target is vulnerable
+  discardAfterDraw?: number;        // discard N cards from hand after drawing
+  bonusBlockIfCounterOffer?: number; // gain extra block if player has Counter-Offer
 }
 
 export interface CardDef {

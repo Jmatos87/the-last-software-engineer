@@ -24,7 +24,7 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
-const GAME_VERSION = '1.7.0';
+const GAME_VERSION = '1.8.0';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
@@ -982,6 +982,37 @@ export const useGameStore = create<GameState>()(
             ...enemy,
             statusEffects: mergeStatusEffects(enemy.statusEffects, eff.applyToAll!),
           })) as any;
+        }
+
+        // Heal to full HP
+        if (eff.healFull) {
+          s.run.hp = s.run.maxHp;
+        }
+
+        // Stress to zero
+        if (eff.stressToZero) {
+          s.run.stress = 0;
+        }
+
+        // Add stress
+        if (eff.addStress) {
+          s.run.stress = Math.min(s.run.maxStress, s.run.stress + eff.addStress);
+        }
+
+        // Add epic cards to hand
+        if (eff.addEpicCardsToHand && s.battle) {
+          const playerClass = getPlayerClass(s.run.character.id);
+          const epicCardsList = Object.values(cards).filter((c: any) =>
+            c.rarity === 'epic' && (c.class === playerClass || !c.class)
+          );
+          const count = eff.addEpicCardsToHand;
+          for (let i = 0; i < count; i++) {
+            if (epicCardsList.length > 0) {
+              const pick = epicCardsList[Math.floor(Math.random() * epicCardsList.length)] as any;
+              const inst = createCardInstance(pick);
+              (s.battle.hand as any[]).push(inst);
+            }
+          }
         }
 
         // Remove dead enemies and track gold earned

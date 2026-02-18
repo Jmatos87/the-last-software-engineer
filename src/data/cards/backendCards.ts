@@ -86,8 +86,8 @@ export const backendCards: Record<string, CardDef> = {
     id: 'tcp_handshake', name: 'TCP Handshake', type: 'skill', target: 'self', cost: 1, rarity: 'common',
     class: 'backend', archetype: 'rate_limiter',
     description: 'Gain 6 block. If you have Counter-Offer, gain 4 more. SYN... SYN-ACK... pain.',
-    effects: { block: 6 },
-    upgradedEffects: { block: 8 },
+    effects: { block: 6, bonusBlockIfCounterOffer: 4 },
+    upgradedEffects: { block: 8, bonusBlockIfCounterOffer: 4 },
     upgradedDescription: 'Gain 8 block. If you have Counter-Offer, gain 4 more.',
     icon: '🤝',
   },
@@ -365,13 +365,12 @@ export const backendCards: Record<string, CardDef> = {
 
   // ── Backend New Rares ──
   n_plus_one: {
-    id: 'n_plus_one', name: 'N+1 Query', type: 'attack', target: 'enemy', cost: 1, rarity: 'rare',
+    id: 'n_plus_one', name: 'N+1 Query', type: 'attack', target: 'enemy', cost: 2, rarity: 'rare',
     class: 'backend', archetype: 'query_optimizer',
     description: 'Deal 5 damage 4 times. SELECT * FROM pain WHERE id = every_row.',
     effects: { damage: 5, times: 4 },
-    upgradedEffects: { damage: 6, times: 4 },
-    upgradedDescription: 'Cost 2. Deal 6 damage 4 times.',
-    upgradedCost: 2,
+    upgradedEffects: { damage: 7, times: 4 },
+    upgradedDescription: 'Deal 7 damage 4 times.',
     icon: '🔢',
   },
   load_balancer: {

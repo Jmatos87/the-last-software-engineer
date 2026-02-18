@@ -158,7 +158,7 @@ export const consumables: Record<string, ConsumableDef> = {
     id: 'postmortem',
     name: 'Postmortem Report',
     description: 'Heal 18 HP. Gain 20 block. Reduce 10 stress. Learn from failure.',
-    rarity: 'rare',
+    rarity: 'epic',
     icon: '📊',
     target: 'self',
     effect: { heal: 18, block: 20, stressRelief: 10 },

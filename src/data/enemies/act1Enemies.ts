@@ -163,12 +163,12 @@ export const act1Enemies: Record<string, EnemyDef> = {
   linkedin_notification_swarm: {
     id: 'linkedin_notification_swarm',
     name: 'LinkedIn Notification',
-    hp: 24,
+    hp: 18,
     gold: 10,
     icon: '🔔',
     moves: [
       { name: 'Ping!', type: 'attack', damage: 6, stressDamage: 3, icon: '🔔', quip: '"Someone viewed your profile!"' },
-      { name: 'Buzz!', type: 'stress_attack', stressDamage: 8, icon: '📳', quip: '"37 new job alerts!"' },
+      { name: 'Buzz!', type: 'stress_attack', stressDamage: 4, icon: '📳', quip: '"37 new job alerts!"' },
       { name: 'Ding!', type: 'attack', damage: 7, icon: '🛎️', quip: '"Congrats on 5 years at—oh wait."' },
     ],
   },
