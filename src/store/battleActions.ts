@@ -866,6 +866,10 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   // Stress changes from buffs
   let stressChange = 0;
   let hpChange = 0;
+  // Apply player poison damage (poison ticks each turn, tickStatusEffects decrements it after)
+  if ((battle.playerStatusEffects.poison || 0) > 0) {
+    hpChange -= battle.playerStatusEffects.poison!;
+  }
   // Self Care: reduce stress
   const selfCare = battle.playerStatusEffects.selfCare || 0;
   if (selfCare > 0) stressChange -= selfCare;

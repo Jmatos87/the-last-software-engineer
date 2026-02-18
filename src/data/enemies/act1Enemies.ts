@@ -53,54 +53,54 @@ export const act1Enemies: Record<string, EnemyDef> = {
   recruiter_bot: {
     id: 'recruiter_bot',
     name: 'Recruiter Bot',
-    hp: 34,
+    hp: 44,
     gold: 22,
     icon: '🤳',
     moves: [
       { name: 'Cold Email', type: 'attack', damage: 5, icon: '📧', quip: '"Quick 15-min chat?"' },
       { name: 'Exciting Opportunity!', type: 'debuff', applyToTarget: { hope: 3 }, icon: '✨', quip: '"Perfect fit for your skillset!"' },
       { name: 'Let\'s Circle Back', type: 'attack', damage: 7, icon: '🔄', quip: '"Touching base per my last email."' },
-      { name: 'Actually, It\'s Contract', type: 'attack', damage: 8, stressDamage: 4, icon: '📄', quip: '"But great for your portfolio!"' },
+      { name: 'Actually, It\'s Contract', type: 'attack', damage: 10, stressDamage: 5, icon: '📄', quip: '"But great for your portfolio!"' },
     ],
   },
 
   ghost_company: {
     id: 'ghost_company',
     name: 'Ghost Company',
-    hp: 18,
+    hp: 26,
     gold: 8,
     icon: '👻',
     hideIntent: true,
     moves: [
       { name: 'Form Letter', type: 'attack', damage: 5, icon: '📨', quip: '"We went with another candidate."' },
       { name: 'Radio Silence', type: 'attack', damage: 6, icon: '📵', quip: '"..."' },
-      { name: 'Vanish', type: 'debuff', applyToTarget: { ghosted: 1 }, icon: '💨', quip: '"*seen at 3:47 PM*"' },
+      { name: 'Vanish', type: 'debuff', applyToTarget: { ghosted: 2, weak: 1 }, icon: '💨', quip: '"*seen at 3:47 PM*"' },
     ],
   },
 
   take_home: {
     id: 'take_home',
     name: 'Take-Home Assignment',
-    hp: 36,
+    hp: 46,
     gold: 24,
     icon: '📝',
     moves: [
       { name: 'Requirements Doc', type: 'attack', damage: 6, icon: '📄', quip: '"Oh, and add auth too."' },
-      { name: 'Scope Creep', type: 'attack', damage: 8, icon: '📈', quip: '"Just one more feature..."' },
+      { name: 'Scope Creep', type: 'attack', damage: 11, icon: '📈', quip: '"Just one more feature..."' },
       { name: 'Edge Cases', type: 'attack', damage: 10, icon: '🔥', quip: '"What if the user is on a boat?"' },
-      { name: 'Due Tomorrow', type: 'stress_attack', stressDamage: 8, icon: '⏰', quip: '"Should only take a few hours!"' },
+      { name: 'Due Tomorrow', type: 'stress_attack', stressDamage: 14, icon: '⏰', quip: '"Should only take a few hours!"' },
     ],
   },
 
   cover_letter_shredder: {
     id: 'cover_letter_shredder',
     name: 'Cover Letter Shredder',
-    hp: 28,
+    hp: 38,
     gold: 20,
     icon: '✂️',
     moves: [
-      { name: 'Shred!', type: 'exhaust', exhaustCount: 1, icon: '✂️', quip: '"Nobody reads these anyway."' },
-      { name: 'Paper Cut', type: 'attack', damage: 7, icon: '📃', quip: '"Ow! That was my best paragraph!"' },
+      { name: 'Shred!', type: 'exhaust', exhaustCount: 2, icon: '✂️', quip: '"Nobody reads these anyway."' },
+      { name: 'Paper Cut', type: 'attack', damage: 10, icon: '📃', quip: '"Ow! That was my best paragraph!"' },
       { name: 'Confetti Storm', type: 'attack', damage: 5, stressDamage: 3, icon: '🎊', quip: '"Your passion is now confetti!"' },
     ],
   },
@@ -108,14 +108,14 @@ export const act1Enemies: Record<string, EnemyDef> = {
   keyword_stuffer: {
     id: 'keyword_stuffer',
     name: 'Keyword Stuffer',
-    hp: 24,
+    hp: 42,
     gold: 16,
     icon: '🔑',
     moves: [
       { name: 'SEO Boost', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '📈', quip: '"Leverage those core competencies!"' },
       { name: 'Buzzword Slap', type: 'attack', damage: 5, icon: '💬', quip: '"Synergize this!"' },
       { name: 'Synergy!', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '🤝', quip: '"Let\'s align our paradigms!"' },
-      { name: 'Jargon Jab', type: 'attack', damage: 6, icon: '📝', quip: '"Circle back on that deliverable!"' },
+      { name: 'Jargon Jab', type: 'attack', damage: 9, icon: '📝', quip: '"Circle back on that deliverable!"' },
     ],
   },
 
@@ -136,12 +136,12 @@ export const act1Enemies: Record<string, EnemyDef> = {
   application_fee_scammer: {
     id: 'application_fee_scammer',
     name: 'Application Fee Scammer',
-    hp: 20,
+    hp: 32,
     gold: 28,
     icon: '💰',
     moves: [
-      { name: 'Processing Fee', type: 'gold_steal', goldSteal: 8, icon: '💸', quip: '"Small fee to apply. Totally legit."' },
-      { name: 'Admin Fee', type: 'gold_steal', goldSteal: 5, stressDamage: 3, icon: '🧾', quip: '"Background check costs extra."' },
+      { name: 'Processing Fee', type: 'gold_steal', goldSteal: 14, icon: '💸', quip: '"Small fee to apply. Totally legit."' },
+      { name: 'Admin Fee', type: 'gold_steal', goldSteal: 10, stressDamage: 5, icon: '🧾', quip: '"Background check costs extra."' },
       { name: 'Surcharge', type: 'attack', damage: 6, icon: '💳', quip: '"Convenience fee for the privilege!"' },
     ],
   },
@@ -149,27 +149,27 @@ export const act1Enemies: Record<string, EnemyDef> = {
   entry_level_5yrs: {
     id: 'entry_level_5yrs',
     name: '"Entry Level" (5 Yrs Exp)',
-    hp: 35,
+    hp: 44,
     gold: 24,
     icon: '📋',
     moves: [
       { name: 'Impossible Requirements', type: 'attack_defend', damage: 6, block: 4, icon: '📝', quip: '"10 years Swift. It\'s from 2014."' },
-      { name: 'Must Know 12 Frameworks', type: 'attack', damage: 8, icon: '📚', quip: '"Also COBOL. Non-negotiable."' },
+      { name: 'Must Know 12 Frameworks', type: 'attack', damage: 12, icon: '📚', quip: '"Also COBOL. Non-negotiable."' },
       { name: 'Fortify', type: 'defend', block: 8, icon: '🏗️', quip: '"Competitive salary. Trust us."' },
-      { name: 'Gatekeep', type: 'attack', damage: 7, stressDamage: 3, icon: '🚧', quip: '"Entry level. Senior pay? Lol."' },
+      { name: 'Gatekeep', type: 'attack', damage: 10, stressDamage: 4, icon: '🚧', quip: '"Entry level. Senior pay? Lol."' },
     ],
   },
 
   linkedin_notification_swarm: {
     id: 'linkedin_notification_swarm',
     name: 'LinkedIn Notification',
-    hp: 16,
+    hp: 24,
     gold: 10,
     icon: '🔔',
     moves: [
-      { name: 'Ping!', type: 'attack', damage: 4, stressDamage: 2, icon: '🔔', quip: '"Someone viewed your profile!"' },
-      { name: 'Buzz!', type: 'stress_attack', stressDamage: 5, icon: '📳', quip: '"37 new job alerts!"' },
-      { name: 'Ding!', type: 'attack', damage: 5, icon: '🛎️', quip: '"Congrats on 5 years at—oh wait."' },
+      { name: 'Ping!', type: 'attack', damage: 6, stressDamage: 3, icon: '🔔', quip: '"Someone viewed your profile!"' },
+      { name: 'Buzz!', type: 'stress_attack', stressDamage: 8, icon: '📳', quip: '"37 new job alerts!"' },
+      { name: 'Ding!', type: 'attack', damage: 7, icon: '🛎️', quip: '"Congrats on 5 years at—oh wait."' },
     ],
   },
 
@@ -178,91 +178,101 @@ export const act1Enemies: Record<string, EnemyDef> = {
   unpaid_take_home: {
     id: 'unpaid_take_home',
     name: 'Unpaid Take-Home Assignment',
-    hp: 88,
+    hp: 112,
     gold: 76,
     icon: '💸',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 3, resilience: 2 }, quip: '"Oh, and add microservices."' },
+    ],
     moves: [
-      { name: 'Scope Creep', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"Oh also build the backend."' },
-      { name: 'Crunch Time', type: 'attack', damage: 10, icon: '😰', quip: '"Due in 4 hours. No pressure!"' },
-      { name: 'Pair Stress', type: 'attack', damage: 7, times: 2, icon: '😵', quip: '"This should be a weekend project!"' },
-      { name: 'Full-Stack Assault', type: 'attack', damage: 14, icon: '💥', quip: '"Add CI/CD and deploy to prod."' },
-      { name: 'Overscoped!', type: 'exhaust', exhaustCount: 1, icon: '📋', quip: '"Oh, and write the documentation."' },
+      // Phase 1: Opening pressure (indices 0-1)
+      { name: 'Overscoped!', type: 'exhaust', exhaustCount: 2, stressDamage: 8, icon: '📋', quip: '"Oh, and write the documentation."' },
+      { name: 'Crunch Time', type: 'attack', damage: 16, icon: '😰', quip: '"Due in 4 hours. No pressure!"' },
+      // Phase 2: All-out assault (indices 2-4)
+      { name: 'Scope Creep', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"Oh also build the backend."' },
+      { name: 'Pair Stress', type: 'attack', damage: 9, times: 2, icon: '😵', quip: '"This should be a weekend project!"' },
+      { name: 'Full-Stack Assault', type: 'attack', damage: 22, icon: '💥', quip: '"Add CI/CD and deploy to prod."' },
     ],
   },
 
   linkedin_influencer: {
     id: 'linkedin_influencer',
     name: 'LinkedIn Influencer',
-    hp: 78,
+    hp: 102,
     gold: 70,
     icon: '📱',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"Time to go VIRAL."' },
+      { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"Time to go VIRAL."' },
     ],
     moves: [
       // Phase 1: Soft harassment (indices 0-2)
-      { name: 'Viral Post', type: 'attack', damage: 10, icon: '📢', quip: '"Agree? 👇 Like & repost."' },
+      { name: 'Viral Post', type: 'attack', damage: 16, icon: '📢', quip: '"Agree? 👇 Like & repost."' },
       { name: 'Humble Brag', type: 'debuff', applyToTarget: { cringe: 2 }, icon: '😬', quip: '"I turned down 47 offers this week."' },
       { name: 'Engagement Farming', type: 'attack_defend', damage: 7, block: 6, applyToSelf: { regen: 3 }, icon: '🌱', quip: '"I cried at my standing desk today."' },
       // Phase 2: Influencer rage mode (indices 3-5)
-      { name: 'Personal Brand', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤳', quip: '"I\'m building an EMPIRE."' },
-      { name: 'Influencer Barrage', type: 'attack', damage: 5, times: 3, icon: '📱', quip: '"Like. Share. SUBSCRIBE."' },
-      { name: 'Thought Leader Slam', type: 'attack', damage: 14, stressDamage: 6, icon: '💡', quip: '"I posted about hustle culture at 4 AM."' },
+      { name: 'Personal Brand', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🤳', quip: '"I\'m building an EMPIRE."' },
+      { name: 'Influencer Barrage', type: 'attack', damage: 7, times: 3, icon: '📱', quip: '"Like. Share. SUBSCRIBE."' },
+      { name: 'Thought Leader Slam', type: 'attack', damage: 18, stressDamage: 8, icon: '💡', quip: '"I posted about hustle culture at 4 AM."' },
     ],
   },
 
   applicant_tracking_golem: {
     id: 'applicant_tracking_golem',
     name: 'Applicant Tracking Golem',
-    hp: 95,
+    hp: 122,
     gold: 82,
     icon: '⚙️',
     isElite: true,
+    phases: [
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"MAXIMUM REJECTION ENGAGED."' },
+    ],
     moves: [
-      { name: 'Absorb Pattern', type: 'buff', applyToSelf: { confidence: 1 }, icon: '🔄', quip: '"Optimizing rejection pipeline..."' },
-      { name: 'System Slam', type: 'attack', damage: 12, icon: '⚙️', quip: '"Application #4,729 processed."' },
-      { name: 'Data Crunch', type: 'attack', damage: 8, times: 2, icon: '💾', quip: '"Your data is now our data."' },
-      { name: 'Process Queue', type: 'attack_defend', damage: 10, block: 8, icon: '📊', quip: '"You are #8,341 in the queue."' },
-      { name: 'Pipeline Sync', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '🔗', quip: '"Syncing rejection pipelines..."' },
+      // Phase 1: Aggressive opener (indices 0-2)
+      { name: 'System Slam', type: 'attack', damage: 16, icon: '⚙️', quip: '"Application #4,729 processed."' },
+      { name: 'Absorb Pattern', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🔄', quip: '"Optimizing rejection pipeline..."' },
+      { name: 'Data Crunch', type: 'attack', damage: 9, times: 2, icon: '💾', quip: '"Your data is now our data."' },
+      // Phase 2: Armored assault (indices 3-4)
+      { name: 'Process Queue', type: 'attack_defend', damage: 12, block: 12, icon: '📊', quip: '"You are #8,341 in the queue."' },
+      { name: 'Firewall Upload', type: 'attack_defend', damage: 16, block: 16, icon: '🔗', quip: '"Firewall engaged. You\'re locked out."' },
     ],
   },
 
   networking_event: {
     id: 'networking_event',
     name: 'The Networking Event',
-    hp: 82,
+    hp: 106,
     gold: 72,
     icon: '🍸',
     isElite: true,
     moves: [
-      { name: 'Small Talk', type: 'stress_attack', stressDamage: 8, icon: '💬', quip: '"So... what do you do?"' },
+      { name: 'Small Talk', type: 'stress_attack', stressDamage: 14, icon: '💬', quip: '"So... what do you do?"' },
       { name: 'Awkward Handshake', type: 'attack', damage: 9, stressDamage: 4, icon: '🤝', quip: '"*limp fish grip*"' },
-      { name: 'Elevator Pitch', type: 'attack', damage: 11, icon: '🗣️', quip: '"I\'m disrupting disruption."' },
-      { name: 'Exchange Cards', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📇', quip: '"Let\'s connect on LinkedIn!"' },
+      { name: 'Elevator Pitch', type: 'attack', damage: 17, icon: '🗣️', quip: '"I\'m disrupting disruption."' },
+      { name: 'Exchange Cards', type: 'buff', applyToSelf: { confidence: 5 }, icon: '📇', quip: '"Let\'s connect on LinkedIn!"' },
     ],
   },
 
   automated_rejection: {
     id: 'automated_rejection',
     name: 'Automated Rejection Letter',
-    hp: 73,
+    hp: 98,
     gold: 65,
     icon: '✉️',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"INITIATING BATCH REJECTION PROTOCOL."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"INITIATING BATCH REJECTION PROTOCOL."' },
     ],
     moves: [
       // Phase 1: Standard rejection flow (indices 0-2)
-      { name: 'Demoralize', type: 'debuff', applyToTarget: { confidence: -1 }, icon: '😞', quip: '"Thank you for your interest."' },
+      { name: 'Demoralize', type: 'debuff', applyToTarget: { confidence: -2 }, icon: '😞', quip: '"Thank you for your interest."' },
       { name: 'Form Rejection', type: 'attack', damage: 10, stressDamage: 5, icon: '✉️', quip: '"Dear [CANDIDATE_NAME]..."' },
-      { name: 'Not A Good Fit', type: 'attack', damage: 16, icon: '❌', quip: '"We\'re looking for a unicorn."' },
+      { name: 'Not A Good Fit', type: 'attack', damage: 22, icon: '❌', quip: '"We\'re looking for a unicorn."' },
       // Phase 2: Automated rejection machine (indices 3-5)
       { name: 'Auto-Reject Mode', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⚙️', quip: '"PROCESSING 10,000 APPLICATIONS..."' },
       { name: 'Rejection Cascade', type: 'attack', damage: 6, times: 3, icon: '✉️', quip: '"Rejected. Rejected. Rejected."' },
-      { name: 'Mass Rejection', type: 'attack', damage: 18, stressDamage: 8, icon: '❌', quip: '"Your entire career has been archived."' },
+      { name: 'Mass Rejection', type: 'attack', damage: 24, stressDamage: 12, icon: '❌', quip: '"Your entire career has been archived."' },
     ],
   },
 
@@ -271,12 +281,12 @@ export const act1Enemies: Record<string, EnemyDef> = {
   hr_phone_screen: {
     id: 'hr_phone_screen',
     name: 'HR Phone Screen',
-    hp: 163,
+    hp: 182,
     gold: 120,
     icon: '📞',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"Gloves are off. Let\'s talk comp."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"Gloves are off. Let\'s talk comp."' },
       { hpPercent: 25, moveStartIndex: 7, onEnter: { confidence: 3 }, quip: '"This interview is OVER."' },
     ],
     moves: [
@@ -289,21 +299,21 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Salary Expectations?', type: 'attack', damage: 16, stressDamage: 6, icon: '💵', quip: '"What\'s your current comp?"' },
       { name: 'We\'ll Be In Touch', type: 'attack', damage: 20, stressDamage: 10, icon: '☎️', quip: '"(Narrator: They weren\'t.)"' },
       { name: 'Benefits Bait', type: 'attack', damage: 12, stressDamage: 5, icon: '🎣', quip: '"We have unlimited PTO! (Don\'t use it.)"' },
-      // Phase 3: final stand (indices 7-8)
-      { name: 'No More Questions', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🔥', quip: '"I\'ve heard ENOUGH."' },
-      { name: 'REJECTED', type: 'attack', damage: 24, stressDamage: 10, icon: '❌', quip: '"We went with another candidate. Forever."' },
+      // Phase 3: pure DPS race — no more buff turns (indices 7-8)
+      { name: 'Benefits Bait', type: 'attack', damage: 16, stressDamage: 8, icon: '🎣', quip: '"Last chance. Take the offer or get nothing."' },
+      { name: 'REJECTED', type: 'attack', damage: 30, stressDamage: 14, icon: '❌', quip: '"We went with another candidate. Forever."' },
     ],
   },
 
   ats_final_form: {
     id: 'ats_final_form',
     name: 'The ATS Final Form',
-    hp: 182,
+    hp: 205,
     gold: 130,
     icon: '🏗️',
     isBoss: true,
     phases: [
-      { hpPercent: 60, moveStartIndex: 4, onEnter: { confidence: 3 }, quip: '"THIS ISN\'T EVEN MY FINAL FORM."' },
+      { hpPercent: 60, moveStartIndex: 4, onEnter: { confidence: 4 }, quip: '"THIS ISN\'T EVEN MY FINAL FORM."' },
       { hpPercent: 25, moveStartIndex: 8, onEnter: { confidence: 4 }, quip: '"CRITICAL FAILURE IMMINENT."' },
     ],
     moves: [
@@ -316,24 +326,24 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'TRANSFORM', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🔥', quip: '"MAXIMUM OVERDRIVE ENGAGED."' },
       { name: 'Maximum Overdrive', type: 'attack', damage: 18, icon: '💥', quip: '"REJECT. REJECT. REJECT."' },
       { name: 'Total Rejection', type: 'attack', damage: 14, times: 2, icon: '❌', quip: '"Application status: OBLITERATED."' },
-      { name: 'System Crash', type: 'attack', damage: 26, stressDamage: 8, icon: '💀', quip: '"Fatal error: career not found."' },
-      // Phase 3: final stand (indices 8-9)
-      { name: 'TOTAL SYSTEM FAILURE', type: 'buff', applyToSelf: { confidence: 4 }, icon: '⚠️', quip: '"ALL SYSTEMS: OVERDRIVE."' },
-      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
+      { name: 'System Crash', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Fatal error: career not found."' },
+      // Phase 3: pure DPS race — buff folded into onEnter (indices 8-9)
+      { name: 'System Crash', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Rebooting... to destroy you faster."' },
+      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 38, stressDamage: 14, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
     ],
   },
 
   ghosting_phantom: {
     id: 'ghosting_phantom',
     name: 'The Ghosting Phantom',
-    hp: 143,
+    hp: 162,
     gold: 110,
     icon: '👻',
     isBoss: true,
     hideIntent: true,
     phases: [
-      { hpPercent: 40, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"You\'ll never hear from us again."' },
-      { hpPercent: 25, moveStartIndex: 6, onEnter: { confidence: 3 }, quip: '"You\'ll never hear from ANYONE again."' },
+      { hpPercent: 40, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"You\'ll never hear from us again."' },
+      { hpPercent: 25, moveStartIndex: 6, onEnter: { confidence: 4 }, quip: '"You\'ll never hear from ANYONE again."' },
     ],
     moves: [
       // Phase 1: eerie (indices 0-2)
@@ -343,10 +353,10 @@ export const act1Enemies: Record<string, EnemyDef> = {
       // Phase 2: aggressive + debuffs (indices 3-5)
       { name: 'Spectral Slash', type: 'attack', damage: 15, icon: '💫', quip: '"I was never even real."' },
       { name: 'Maybe Next Time', type: 'debuff', applyToTarget: { weak: 2, ghosted: 2 }, icon: '💨', quip: '"We\'ll definitely reach out soon!"' },
-      { name: 'Full Ghosting', type: 'attack', damage: 21, stressDamage: 8, icon: '☠️', quip: '"The position has been filled... forever."' },
+      { name: 'Full Ghosting', type: 'attack', damage: 26, stressDamage: 10, icon: '☠️', quip: '"The position has been filled... forever."' },
       // Phase 3: final stand (indices 6-7)
-      { name: 'Eternal Silence', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🕳️', quip: '"The void is permanent."' },
-      { name: 'Final Ghosting', type: 'attack', damage: 24, stressDamage: 12, icon: '☠️', quip: '"You never existed to us."' },
+      { name: 'Eternal Silence', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🕳️', quip: '"The void is permanent."' },
+      { name: 'Final Ghosting', type: 'attack', damage: 32, stressDamage: 16, icon: '☠️', quip: '"You never existed to us."' },
     ],
   },
 };
