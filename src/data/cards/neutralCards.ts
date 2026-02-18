@@ -238,6 +238,27 @@ export const neutralCards: Record<string, CardDef> = {
     icon: '⚡',
   },
 
+  // ── Neutral New Legendaries ──
+  the_rejection_letter: {
+    id: 'the_rejection_letter', name: 'The Rejection Letter', type: 'skill', target: 'self', cost: 1, rarity: 'legendary',
+    exhaust: true,
+    description: 'Exhaust. Heal 35 HP. Reduce 30 Stress. Gain 1 Confidence. "We have decided to move forward with other candidates." You have decided to move forward with winning.',
+    effects: { heal: 35, copium: 30, applyToSelf: { confidence: 1 } },
+    upgradedEffects: { heal: 45, copium: 40, applyToSelf: { confidence: 2 } },
+    upgradedDescription: 'Cost 0. Exhaust. Heal 45 HP. Reduce 40 Stress. Gain 2 Confidence.',
+    upgradedCost: 0,
+    icon: '📨',
+  },
+  the_acquisition: {
+    id: 'the_acquisition', name: 'The Acquisition', type: 'power', target: 'self', cost: 3, rarity: 'legendary',
+    description: 'Gain 50 gold. Gain 2 Confidence. Gain 2 Resilience. Gain 2 Networking. You didn\'t sell out. You bought in.',
+    effects: { gainGold: 50, applyToSelf: { confidence: 2, resilience: 2, networking: 2 } },
+    upgradedEffects: { gainGold: 70, applyToSelf: { confidence: 3, resilience: 3, networking: 3 } },
+    upgradedDescription: 'Cost 2. Gain 70 gold. Gain 3 Confidence. Gain 3 Resilience. Gain 3 Networking.',
+    upgradedCost: 2,
+    icon: '🤝',
+  },
+
   // ── Curses ──
   ghosted_curse: {
     id: 'ghosted_curse', name: 'Ghosted', type: 'curse', target: 'self', cost: 1, rarity: 'curse',
