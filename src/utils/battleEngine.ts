@@ -159,10 +159,10 @@ export function tickStatusEffects(effects: StatusEffect): StatusEffect {
   if (effects.hope && effects.hope > 0) newEffects.hope = effects.hope - 1;
   if (effects.cringe && effects.cringe > 0) newEffects.cringe = effects.cringe - 1;
   if (effects.ghosted && effects.ghosted > 0) newEffects.ghosted = effects.ghosted - 1;
+  if (effects.regen && effects.regen > 0) newEffects.regen = effects.regen - 1;
   // Permanent (persist)
   if (effects.confidence) newEffects.confidence = effects.confidence;
   if (effects.resilience) newEffects.resilience = effects.resilience;
-  if (effects.regen) newEffects.regen = effects.regen;
   if (effects.selfCare) newEffects.selfCare = effects.selfCare;
   if (effects.networking) newEffects.networking = effects.networking;
   if (effects.savingsAccount) newEffects.savingsAccount = effects.savingsAccount;

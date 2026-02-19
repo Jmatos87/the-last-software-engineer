@@ -1135,6 +1135,10 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   if ((battle.playerStatusEffects.poison || 0) > 0) {
     hpChange -= battle.playerStatusEffects.poison!;
   }
+  // Apply player regen healing (heals each turn, does not decrement)
+  if ((battle.playerStatusEffects.regen || 0) > 0) {
+    hpChange += battle.playerStatusEffects.regen!;
+  }
   // Self Care: reduce stress
   const selfCare = battle.playerStatusEffects.selfCare || 0;
   if (selfCare > 0) stressChange -= selfCare;
