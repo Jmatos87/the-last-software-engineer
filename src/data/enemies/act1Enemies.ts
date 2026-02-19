@@ -7,7 +7,9 @@ import type { EnemyDef } from '../../types';
 export const act1Enemies: Record<string, EnemyDef> = {
 
   // ── Act 1 Common Enemies ──
+  // Archetypes: Ritualist (StS), Wake-Up (RoP), Escalator (MT), Wildcard (Inscryption), Compound (DD)
 
+  // RITUALIST — buffs self, then releases scaled hit
   resume_ats: {
     id: 'resume_ats',
     name: 'Resume ATS Filter',
@@ -15,13 +17,15 @@ export const act1Enemies: Record<string, EnemyDef> = {
     gold: 20,
     icon: '🤖',
     moves: [
-      { name: 'Keyword Scan', type: 'attack', damage: 6, icon: '🔍', quip: '"Hmm... no blockchain?"' },
-      { name: 'Format Check', type: 'attack', damage: 5, icon: '📋', quip: '"PDF? We only take .docx."' },
-      { name: 'Auto-Reject', type: 'attack', damage: 9, icon: '❌', quip: '"Better luck never!"' },
-      { name: 'Parse Failure', type: 'discard', discardCount: 1, stressDamage: 4, icon: '🗑️', quip: '"Is this a resume or abstract art?"' },
+      { name: 'Keyword Scan', type: 'attack', damage: 9, icon: '🔍', quip: '"Hmm... no blockchain?"' },
+      { name: 'Pattern Match', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🧠', quip: '"Updating rejection model..."' },
+      { name: 'Format Error', type: 'attack', damage: 13, icon: '📋', quip: '"PDF? We only take .docx."' },
+      { name: 'Deep Scan', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🔬', quip: '"Running neural rejection layer..."' },
+      { name: 'AUTO-REJECT', type: 'attack', damage: 22, icon: '❌', quip: '"Better luck never!"' },
     ],
   },
 
+  // RITUALIST — defend-then-strike, Timeout Slam scales off confidence
   legacy_ats: {
     id: 'legacy_ats',
     name: 'Legacy ATS',
@@ -29,27 +33,30 @@ export const act1Enemies: Record<string, EnemyDef> = {
     gold: 26,
     icon: '🖨️',
     moves: [
-      { name: 'Connection Lost', type: 'attack', damage: 8, icon: '📡', quip: '"Server circa 2003 says hi."' },
-      { name: 'System Error', type: 'attack', damage: 6, icon: '⚠️', quip: '"Have you tried IE6?"' },
-      { name: 'Loading...', type: 'defend', block: 8, icon: '⏳', quip: '"Please wait 3-5 business days."' },
-      { name: 'Timeout Slam', type: 'attack', damage: 10, icon: '💤', quip: '"Session expired. Start over."' },
+      { name: 'Connection Lost', type: 'attack', damage: 11, icon: '📡', quip: '"Server circa 2003 says hi."' },
+      { name: 'Loading...', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⏳', quip: '"Please wait 3-5 business days."' },
+      { name: 'System Error', type: 'attack', damage: 9, stressDamage: 5, icon: '⚠️', quip: '"Have you tried IE6?"' },
+      { name: 'Timeout Slam', type: 'attack', damage: 22, icon: '💤', quip: '"Session expired. Start over."' },
     ],
   },
 
+  // WILDCARD — hideIntent; alternates scan/debuff/surprise exhaust+attack
   ai_ats: {
     id: 'ai_ats',
     name: 'AI-Powered ATS',
     hp: 26,
     gold: 18,
     icon: '🧠',
+    hideIntent: true,
     moves: [
-      { name: 'Deep Scan', type: 'attack', damage: 7, icon: '🔬', quip: '"My neural net says no."' },
-      { name: 'Pattern Match', type: 'attack', damage: 5, icon: '🎯', quip: '"You match 0.3% of candidates."' },
-      { name: 'Neural Reject', type: 'discard', discardCount: 2, icon: '🗑️', quip: '"GPT wrote a better resume."' },
-      { name: 'AI Assessment', type: 'attack', damage: 9, icon: '⚡', quip: '"I replaced the recruiter too."' },
+      { name: 'Deep Scan', type: 'attack', damage: 9, icon: '🔬', quip: '"My neural net says no."' },
+      { name: 'Pattern Match', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🎯', quip: '"You match 0.3% of candidates."' },
+      { name: 'Neural Reject', type: 'exhaust', exhaustCount: 2, icon: '🗑️', quip: '"GPT wrote a better resume."' },
+      { name: 'AI Assessment', type: 'attack', damage: 16, stressDamage: 6, icon: '⚡', quip: '"I replaced the recruiter too."' },
     ],
   },
 
+  // WAKE-UP — cycle escalates from 6 dmg to 20 dmg; killing it fast matters
   recruiter_bot: {
     id: 'recruiter_bot',
     name: 'Recruiter Bot',
@@ -57,13 +64,14 @@ export const act1Enemies: Record<string, EnemyDef> = {
     gold: 22,
     icon: '🤳',
     moves: [
-      { name: 'Cold Email', type: 'attack', damage: 5, icon: '📧', quip: '"Quick 15-min chat?"' },
-      { name: 'Exciting Opportunity!', type: 'debuff', applyToTarget: { hope: 3 }, icon: '✨', quip: '"Perfect fit for your skillset!"' },
-      { name: 'Let\'s Circle Back', type: 'attack', damage: 7, icon: '🔄', quip: '"Touching base per my last email."' },
-      { name: 'Actually, It\'s Contract', type: 'attack', damage: 10, stressDamage: 5, icon: '📄', quip: '"But great for your portfolio!"' },
+      { name: 'Cold Email', type: 'attack', damage: 6, stressDamage: 4, icon: '📧', quip: '"Quick 15-min chat?"' },
+      { name: 'Exciting Opportunity!', type: 'attack', damage: 11, applyToTarget: { hope: 2 }, icon: '✨', quip: '"Perfect fit for your skillset!"' },
+      { name: "Let's Circle Back", type: 'attack', damage: 15, stressDamage: 6, icon: '🔄', quip: '"Touching base per my last email."' },
+      { name: "Actually, It's Contract", type: 'attack', damage: 20, stressDamage: 8, icon: '📄', quip: '"But great for your portfolio!"' },
     ],
   },
 
+  // WILDCARD — hideIntent; gold drain then surprise high attack on Vanish turn
   ghost_company: {
     id: 'ghost_company',
     name: 'Ghost Company',
@@ -72,12 +80,13 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '👻',
     hideIntent: true,
     moves: [
-      { name: 'Form Letter', type: 'attack', damage: 5, icon: '📨', quip: '"We went with another candidate."' },
-      { name: 'Radio Silence', type: 'attack', damage: 6, icon: '📵', quip: '"..."' },
+      { name: 'Radio Silence', type: 'stress_attack', stressDamage: 9, icon: '📵', quip: '"..."' },
+      { name: 'Form Letter', type: 'attack', damage: 13, icon: '📨', quip: '"We went with another candidate."' },
       { name: 'Vanish', type: 'debuff', applyToTarget: { ghosted: 2, weak: 1 }, icon: '💨', quip: '"*seen at 3:47 PM*"' },
     ],
   },
 
+  // COMPOUND — poison re-applies each cycle; vulnerable compounds; stress cascade at end
   take_home: {
     id: 'take_home',
     name: 'Take-Home Assignment',
@@ -85,13 +94,14 @@ export const act1Enemies: Record<string, EnemyDef> = {
     gold: 24,
     icon: '📝',
     moves: [
-      { name: 'Requirements Doc', type: 'attack', damage: 6, icon: '📄', quip: '"Oh, and add auth too."' },
-      { name: 'Scope Creep', type: 'attack', damage: 11, icon: '📈', quip: '"Just one more feature..."' },
-      { name: 'Edge Cases', type: 'attack', damage: 10, icon: '🔥', quip: '"What if the user is on a boat?"' },
-      { name: 'Due Tomorrow', type: 'stress_attack', stressDamage: 14, icon: '⏰', quip: '"Should only take a few hours!"' },
+      { name: 'Requirements Doc', type: 'debuff', applyToTarget: { poison: 3 }, icon: '📄', quip: '"Oh, and add auth too."' },
+      { name: 'Scope Creep', type: 'attack', damage: 13, applyToTarget: { poison: 2 }, icon: '📈', quip: '"Just one more feature..."' },
+      { name: 'Edge Cases', type: 'attack', damage: 17, applyToTarget: { vulnerable: 2 }, icon: '🔥', quip: '"What if the user is on a boat?"' },
+      { name: 'Due Tomorrow', type: 'stress_attack', stressDamage: 18, icon: '⏰', quip: '"Should only take a few hours!"' },
     ],
   },
 
+  // COMPOUND — exhaust + vulnerable stacks compound across cycles
   cover_letter_shredder: {
     id: 'cover_letter_shredder',
     name: 'Cover Letter Shredder',
@@ -100,11 +110,12 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '✂️',
     moves: [
       { name: 'Shred!', type: 'exhaust', exhaustCount: 2, icon: '✂️', quip: '"Nobody reads these anyway."' },
-      { name: 'Paper Cut', type: 'attack', damage: 10, icon: '📃', quip: '"Ow! That was my best paragraph!"' },
-      { name: 'Confetti Storm', type: 'attack', damage: 5, stressDamage: 3, icon: '🎊', quip: '"Your passion is now confetti!"' },
+      { name: 'Paper Cut', type: 'attack', damage: 14, applyToTarget: { vulnerable: 1 }, icon: '📃', quip: '"Ow! That was my best paragraph!"' },
+      { name: 'Confetti Storm', type: 'attack', damage: 11, stressDamage: 5, applyToTarget: { vulnerable: 2 }, icon: '🎊', quip: '"Your passion is now confetti!"' },
     ],
   },
 
+  // ESCALATOR — gains confidence via Synergy! buff; also buffs allies in group fights
   keyword_stuffer: {
     id: 'keyword_stuffer',
     name: 'Keyword Stuffer',
@@ -113,12 +124,13 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '🔑',
     moves: [
       { name: 'SEO Boost', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '📈', quip: '"Leverage those core competencies!"' },
-      { name: 'Buzzword Slap', type: 'attack', damage: 5, icon: '💬', quip: '"Synergize this!"' },
-      { name: 'Synergy!', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '🤝', quip: '"Let\'s align our paradigms!"' },
-      { name: 'Jargon Jab', type: 'attack', damage: 9, icon: '📝', quip: '"Circle back on that deliverable!"' },
+      { name: 'Buzzword Slap', type: 'attack', damage: 10, icon: '💬', quip: '"Synergize this!"' },
+      { name: 'Synergy!', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤝', quip: '"Let\'s align our paradigms!"' },
+      { name: 'Jargon Jab', type: 'attack', damage: 14, icon: '📝', quip: '"Circle back on that deliverable!"' },
     ],
   },
 
+  // COMPOUND — debuffs compound; resilience drain makes player block less effective
   job_board_troll: {
     id: 'job_board_troll',
     name: 'Job Board Troll',
@@ -126,26 +138,29 @@ export const act1Enemies: Record<string, EnemyDef> = {
     gold: 22,
     icon: '🧌',
     moves: [
-      { name: 'Overqualified!', type: 'debuff', applyToTarget: { resilience: -1 }, icon: '📜', quip: '"PhD for data entry? Pass."' },
-      { name: 'Troll Smash', type: 'attack', damage: 7, icon: '👊', quip: '"Just learn to code lol"' },
-      { name: 'Underqualified!', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '📋', quip: '"Only 9 years of React?"' },
-      { name: 'Flame War', type: 'attack', damage: 8, icon: '🔥', quip: '"Tabs vs spaces... FIGHT!"' },
+      { name: 'Overqualified!', type: 'debuff', applyToTarget: { resilience: -1, vulnerable: 1 }, icon: '📜', quip: '"PhD for data entry? Pass."' },
+      { name: 'Troll Smash', type: 'attack', damage: 13, icon: '👊', quip: '"Just learn to code lol"' },
+      { name: 'Underqualified!', type: 'debuff', applyToTarget: { vulnerable: 2, weak: 1 }, icon: '📋', quip: '"Only 9 years of React?"' },
+      { name: 'Flame War', type: 'attack', damage: 18, stressDamage: 6, icon: '🔥', quip: '"Tabs vs spaces... FIGHT!"' },
     ],
   },
 
+  // WILDCARD — hideIntent; gold drain is the real threat, Surcharge is a nasty surprise
   application_fee_scammer: {
     id: 'application_fee_scammer',
     name: 'Application Fee Scammer',
     hp: 32,
     gold: 28,
     icon: '💰',
+    hideIntent: true,
     moves: [
-      { name: 'Processing Fee', type: 'gold_steal', goldSteal: 14, icon: '💸', quip: '"Small fee to apply. Totally legit."' },
-      { name: 'Admin Fee', type: 'gold_steal', goldSteal: 10, stressDamage: 5, icon: '🧾', quip: '"Background check costs extra."' },
-      { name: 'Surcharge', type: 'attack', damage: 6, icon: '💳', quip: '"Convenience fee for the privilege!"' },
+      { name: 'Processing Fee', type: 'gold_steal', goldSteal: 16, icon: '💸', quip: '"Small fee to apply. Totally legit."' },
+      { name: 'Admin Fee', type: 'gold_steal', goldSteal: 12, stressDamage: 6, icon: '🧾', quip: '"Background check costs extra."' },
+      { name: 'Surcharge', type: 'attack', damage: 20, icon: '💳', quip: '"Convenience fee for the privilege!"' },
     ],
   },
 
+  // ESCALATOR — gains confidence via attack_defend (applyToSelf) and Fortify (buff)
   entry_level_5yrs: {
     id: 'entry_level_5yrs',
     name: '"Entry Level" (5 Yrs Exp)',
@@ -153,13 +168,14 @@ export const act1Enemies: Record<string, EnemyDef> = {
     gold: 24,
     icon: '📋',
     moves: [
-      { name: 'Impossible Requirements', type: 'attack_defend', damage: 6, block: 4, icon: '📝', quip: '"10 years Swift. It\'s from 2014."' },
-      { name: 'Must Know 12 Frameworks', type: 'attack', damage: 12, icon: '📚', quip: '"Also COBOL. Non-negotiable."' },
-      { name: 'Fortify', type: 'defend', block: 8, icon: '🏗️', quip: '"Competitive salary. Trust us."' },
-      { name: 'Gatekeep', type: 'attack', damage: 10, stressDamage: 4, icon: '🚧', quip: '"Entry level. Senior pay? Lol."' },
+      { name: 'Impossible Requirements', type: 'attack_defend', damage: 10, block: 5, applyToSelf: { confidence: 1 }, icon: '📝', quip: '"10 years Swift. It\'s from 2014."' },
+      { name: 'Must Know 12 Frameworks', type: 'attack', damage: 17, icon: '📚', quip: '"Also COBOL. Non-negotiable."' },
+      { name: 'Fortify', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🏗️', quip: '"Competitive salary. Trust us."' },
+      { name: 'Gatekeep', type: 'attack', damage: 14, stressDamage: 5, icon: '🚧', quip: '"Entry level. Senior pay? Lol."' },
     ],
   },
 
+  // COMPOUND — stress compounds each cycle; Ding! escalates
   linkedin_notification_swarm: {
     id: 'linkedin_notification_swarm',
     name: 'LinkedIn Notification',
@@ -167,9 +183,9 @@ export const act1Enemies: Record<string, EnemyDef> = {
     gold: 10,
     icon: '🔔',
     moves: [
-      { name: 'Ping!', type: 'attack', damage: 6, stressDamage: 3, icon: '🔔', quip: '"Someone viewed your profile!"' },
-      { name: 'Buzz!', type: 'stress_attack', stressDamage: 4, icon: '📳', quip: '"37 new job alerts!"' },
-      { name: 'Ding!', type: 'attack', damage: 7, icon: '🛎️', quip: '"Congrats on 5 years at—oh wait."' },
+      { name: 'Ping!', type: 'attack', damage: 9, stressDamage: 5, icon: '🔔', quip: '"Someone viewed your profile!"' },
+      { name: 'Buzz!', type: 'stress_attack', stressDamage: 9, icon: '📳', quip: '"37 new job alerts!"' },
+      { name: 'Ding!', type: 'attack', damage: 13, stressDamage: 6, icon: '🛎️', quip: '"Congrats on 5 years at—oh wait."' },
     ],
   },
 
