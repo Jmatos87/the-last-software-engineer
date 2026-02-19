@@ -47,7 +47,7 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
       {/* Stats */}
       <div style={{ display: 'flex', gap: compact ? 6 : 12, fontSize: compact ? 10 : 13, alignItems: 'center' }}>
         <span style={{ color: 'var(--gold-color)' }}>💰 {run.gold}</span>
-        {!compact && <span style={{ color: 'var(--accent-purple)' }}>Act {run.act}</span>}
+        <span style={{ color: 'var(--accent-purple)' }}>Act {run.act}</span>
         {!compact && <span style={{ color: 'var(--text-secondary)' }}>📦 {run.deck.length}</span>}
       </div>
 
