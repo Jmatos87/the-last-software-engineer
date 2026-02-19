@@ -6,8 +6,9 @@ import type { EnemyDef } from '../../types';
 
 export const act2Enemies: Record<string, EnemyDef> = {
 
-  // ── Act 2 Common Enemies (HP +8-10, key damage bumps) ──
+  // ── Act 2 Common Enemies ──
 
+  // RITUALIST — Optimize This buffs → Edge Case hits scaled
   whiteboard_demon: {
     id: 'whiteboard_demon',
     name: 'Whiteboard Demon',
@@ -15,13 +16,14 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 40,
     icon: '📊',
     moves: [
-      { name: 'Solve in O(n)', type: 'attack', damage: 10, icon: '📊', quip: '"Now do it without extra space."' },
-      { name: 'Time Complexity', type: 'attack', damage: 8, stressDamage: 4, icon: '⏱️', quip: '"That\'s O(n²). Unacceptable."' },
-      { name: 'Edge Case', type: 'attack', damage: 14, icon: '🔥', quip: '"What if the array is empty?"' },
-      { name: 'Optimize This', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '📉', quip: '"Can you do better?"' },
+      { name: 'Solve in O(n)', type: 'attack', damage: 12, icon: '📊', quip: '"Now do it without extra space."' },
+      { name: 'Optimize This', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📉', quip: '"Can you do better?"' },
+      { name: 'Time Complexity', type: 'attack', damage: 14, stressDamage: 5, icon: '⏱️', quip: '"That\'s O(n²). Unacceptable."' },
+      { name: 'Edge Case', type: 'attack', damage: 22, icon: '🔥', quip: '"What if the array is empty?"' },
     ],
   },
 
+  // RITUALIST — literal escalating difficulty: Easy < Medium < Hard
   leetcode_goblin: {
     id: 'leetcode_goblin',
     name: 'LeetCode Goblin',
@@ -29,13 +31,14 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 34,
     icon: '👺',
     moves: [
-      { name: 'Easy Problem', type: 'attack', damage: 6, icon: '🟢', quip: '"This one\'s a warmup."' },
-      { name: 'Medium Problem', type: 'attack', damage: 8, icon: '🟡', quip: '"Just invert a binary tree."' },
-      { name: 'Hard Problem', type: 'attack', damage: 13, icon: '🔴', quip: '"This one\'s a classic!"' },
-      { name: 'Time Limit Exceeded', type: 'stress_attack', stressDamage: 7, icon: '⏰', quip: '"Your solution timed out. Again."' },
+      { name: 'Easy Problem', type: 'attack', damage: 9, icon: '🟢', quip: '"This one\'s a warmup."' },
+      { name: 'Medium Problem', type: 'attack', damage: 14, icon: '🟡', quip: '"Just invert a binary tree."' },
+      { name: 'Hard Problem', type: 'attack', damage: 20, icon: '🔴', quip: '"This one\'s a classic!"' },
+      { name: 'Time Limit Exceeded', type: 'stress_attack', stressDamage: 11, icon: '⏰', quip: '"Your solution timed out. Again."' },
     ],
   },
 
+  // WAKE-UP — soft opener, then grows to Forced Fun (big hit)
   culture_fit_enforcer: {
     id: 'culture_fit_enforcer',
     name: 'Culture Fit Enforcer',
@@ -43,13 +46,14 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 36,
     icon: '😊',
     moves: [
-      { name: 'We\'re Like Family', type: 'stress_attack', stressDamage: 8, icon: '👨‍👩‍👧‍👦', quip: '"A dysfunctional one, but still!"' },
+      { name: "We're Like Family", type: 'stress_attack', stressDamage: 9, icon: '👨‍👩‍👧‍👦', quip: '"A dysfunctional one, but still!"' },
       { name: 'Red Flag', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🚩', quip: '"We work hard AND play hard."' },
-      { name: 'Pizza Parties!', type: 'stress_attack', stressDamage: 6, icon: '🍕', quip: '"Instead of raises this quarter!"' },
-      { name: 'Forced Fun', type: 'attack', damage: 8, stressDamage: 4, icon: '🎉', quip: '"Mandatory team karaoke at 6 AM!"' },
+      { name: 'Pizza Parties!', type: 'attack', damage: 12, stressDamage: 6, icon: '🍕', quip: '"Instead of raises this quarter!"' },
+      { name: 'Forced Fun', type: 'attack', damage: 18, stressDamage: 8, icon: '🎉', quip: '"Mandatory team karaoke at 6 AM!"' },
     ],
   },
 
+  // COMPOUND — debuffs compound each cycle; Competency Check lands on double-debuffed player
   behavioral_question_bot: {
     id: 'behavioral_question_bot',
     name: 'Behavioral Question Bot',
@@ -59,11 +63,12 @@ export const act2Enemies: Record<string, EnemyDef> = {
     moves: [
       { name: 'Tell Me About A Time...', type: 'debuff', applyToTarget: { weak: 2 }, icon: '🕐', quip: '"Use the STAR method, please."' },
       { name: 'Why Should We Hire You?', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🤔', quip: '"Convince me you exist."' },
-      { name: 'Where Do You See Yourself?', type: 'stress_attack', stressDamage: 7, icon: '🔮', quip: '"Not here, apparently."' },
-      { name: 'Competency Check', type: 'attack', damage: 9, icon: '✅', quip: '"Hmm, insufficient leadership."' },
+      { name: 'Where Do You See Yourself?', type: 'stress_attack', stressDamage: 9, icon: '🔮', quip: '"Not here, apparently."' },
+      { name: 'Competency Check', type: 'attack', damage: 18, icon: '✅', quip: '"Hmm, insufficient leadership."' },
     ],
   },
 
+  // COMPOUND — Code Review applies weak; attacks scale off it
   pair_programmer_enemy: {
     id: 'pair_programmer_enemy',
     name: 'The Pair Programmer',
@@ -71,13 +76,14 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 38,
     icon: '👥',
     moves: [
-      { name: 'Copy That', type: 'attack_defend', damage: 7, block: 7, icon: '📋', quip: '"I would\'ve used a reducer here."' },
-      { name: 'Actually...', type: 'attack', damage: 11, icon: '☝️', quip: '"Well, actually, it\'s O(log n)."' },
-      { name: 'Let Me Drive', type: 'attack', damage: 8, stressDamage: 3, icon: '⌨️', quip: '"*types furiously on your keyboard*"' },
-      { name: 'Code Review', type: 'debuff', applyToTarget: { weak: 1, vulnerable: 1 }, icon: '👀', quip: '"47 comments on your PR."' },
+      { name: 'Copy That', type: 'attack_defend', damage: 10, block: 7, icon: '📋', quip: '"I would\'ve used a reducer here."' },
+      { name: 'Actually...', type: 'attack', damage: 16, icon: '☝️', quip: '"Well, actually, it\'s O(log n)."' },
+      { name: 'Let Me Drive', type: 'attack', damage: 13, stressDamage: 5, icon: '⌨️', quip: '"*types furiously on your keyboard*"' },
+      { name: 'Code Review', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 1 }, icon: '👀', quip: '"47 comments on your PR."' },
     ],
   },
 
+  // ESCALATOR — Trick Question gives confidence; Pop Quiz scales dangerously
   trivia_quizmaster: {
     id: 'trivia_quizmaster',
     name: 'Trivia Quizmaster',
@@ -85,13 +91,14 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 30,
     icon: '❓',
     moves: [
-      { name: 'Pop Quiz!', type: 'attack', damage: 13, icon: '❓', quip: '"What\'s the max heap size in V8?"' },
-      { name: 'Trick Question', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🃏', quip: '"Trick question — there\'s no answer."' },
-      { name: 'Bonus Round', type: 'attack', damage: 7, icon: '⭐', quip: '"Now in Haskell."' },
-      { name: 'Stumped!', type: 'stress_attack', stressDamage: 6, icon: '😶', quip: '"The silence speaks volumes."' },
+      { name: 'Pop Quiz!', type: 'attack', damage: 15, icon: '❓', quip: '"What\'s the max heap size in V8?"' },
+      { name: 'Trick Question', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🃏', quip: '"Trick question — there\'s no answer."' },
+      { name: 'Bonus Round', type: 'attack', damage: 12, icon: '⭐', quip: '"Now in Haskell."' },
+      { name: 'Stumped!', type: 'stress_attack', stressDamage: 10, icon: '😶', quip: '"The silence speaks volumes."' },
     ],
   },
 
+  // ESCALATOR — passive support + indirect escalation via buff_allies; now has actual attack
   recruiter_middleman: {
     id: 'recruiter_middleman',
     name: 'Recruiter Middleman',
@@ -99,13 +106,14 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 34,
     icon: '🤵',
     moves: [
-      { name: 'Shield Candidates', type: 'buff_allies', applyToTarget: { resilience: 1 }, icon: '🛡️', quip: '"I\'ll prep you for the prep call."' },
-      { name: 'Stall', type: 'defend', block: 10, icon: '⏳', quip: '"The hiring manager is OOO."' },
-      { name: 'Pipeline Management', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '📊', quip: '"You\'re in our talent pipeline!"' },
-      { name: 'The Runaround', type: 'stress_attack', stressDamage: 5, icon: '🔄', quip: '"Let me transfer you to..."' },
+      { name: 'Shield Candidates', type: 'buff_allies', applyToSelf: { resilience: 1 }, icon: '🛡️', quip: '"I\'ll prep you for the prep call."' },
+      { name: 'Stall', type: 'defend', block: 12, icon: '⏳', quip: '"The hiring manager is OOO."' },
+      { name: 'Pipeline Management', type: 'buff_allies', applyToSelf: { confidence: 2 }, icon: '📊', quip: '"You\'re in our talent pipeline!"' },
+      { name: 'The Runaround', type: 'attack', damage: 13, stressDamage: 6, icon: '🔄', quip: '"Let me transfer you to..."' },
     ],
   },
 
+  // RITUALIST — Feature Creep buffs; Deploy Pressure is scaled payoff
   take_home_v2: {
     id: 'take_home_v2',
     name: 'Take-Home Project v2',
@@ -113,41 +121,47 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 42,
     icon: '💻',
     moves: [
-      { name: 'MVP Sprint', type: 'attack', damage: 8, icon: '🏃', quip: '"Ship it by Monday."' },
-      { name: 'Feature Creep', type: 'buff', applyToSelf: { confidence: 1 }, icon: '📈', quip: '"Oh, also add dark mode."' },
-      { name: 'Deploy Pressure', type: 'attack', damage: 13, stressDamage: 4, icon: '🚀', quip: '"Deploy to prod. No staging."' },
-      { name: 'Stack Overflow', type: 'attack_defend', damage: 9, block: 5, icon: '📚', quip: '"Closed as duplicate."' },
+      { name: 'MVP Sprint', type: 'attack', damage: 12, icon: '🏃', quip: '"Ship it by Monday."' },
+      { name: 'Feature Creep', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"Oh, also add dark mode."' },
+      { name: 'Deploy Pressure', type: 'attack', damage: 20, stressDamage: 6, icon: '🚀', quip: '"Deploy to prod. No staging."' },
+      { name: 'Stack Overflow', type: 'attack_defend', damage: 12, block: 6, icon: '📚', quip: '"Closed as duplicate."' },
     ],
   },
 
+  // WILDCARD — hideIntent; gold drain then surprise Take It Or Leave It
   the_lowballer: {
     id: 'the_lowballer',
     name: 'The Lowballer',
     hp: 42,
     gold: 38,
     icon: '💵',
+    hideIntent: true,
     moves: [
-      { name: 'We Offer Exposure', type: 'gold_steal', goldSteal: 8, stressDamage: 4, icon: '💸', quip: '"Think of the experience!"' },
-      { name: 'Budget Cuts', type: 'gold_steal', goldSteal: 6, icon: '✂️', quip: '"Market conditions, you understand."' },
-      { name: 'Take It Or Leave It', type: 'attack', damage: 12, icon: '🤷', quip: '"Final offer. Non-negotiable."' },
-      { name: 'Equity Instead', type: 'stress_attack', stressDamage: 7, icon: '📉', quip: '"0.001% pre-dilution. Generous!"' },
+      { name: 'We Offer Exposure', type: 'gold_steal', goldSteal: 10, stressDamage: 5, icon: '💸', quip: '"Think of the experience!"' },
+      { name: 'Budget Cuts', type: 'gold_steal', goldSteal: 8, icon: '✂️', quip: '"Market conditions, you understand."' },
+      { name: 'Take It Or Leave It', type: 'attack', damage: 22, icon: '🤷', quip: '"Final offer. Non-negotiable."' },
+      { name: 'Equity Instead', type: 'stress_attack', stressDamage: 11, icon: '📉', quip: '"0.001% pre-dilution. Generous!"' },
     ],
   },
 
+  // WILDCARD — hideIntent; exhaust disrupts then Technical Difficulties surprise combo
   zoom_fatigue: {
     id: 'zoom_fatigue',
     name: 'Zoom Fatigue',
     hp: 64,
     gold: 38,
     icon: '😴',
+    hideIntent: true,
     moves: [
-      { name: 'Buffer...', type: 'exhaust', exhaustCount: 1, icon: '🔄', quip: '"Can everyone see my screen?"' },
-      { name: 'You\'re On Mute', type: 'attack', damage: 8, icon: '🔇', quip: '"You\'re still on mute."' },
-      { name: 'Camera Off Despair', type: 'stress_attack', stressDamage: 6, icon: '📷', quip: '"We prefer cameras on."' },
-      { name: 'Technical Difficulties', type: 'exhaust', exhaustCount: 2, stressDamage: 3, icon: '⚠️', quip: '"Sorry, my internet—*bzzt*"' },
+      { name: 'Buffer...', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '🔄', quip: '"Can everyone see my screen?"' },
+      { name: "You're On Mute", type: 'attack', damage: 14, icon: '🔇', quip: '"You\'re still on mute."' },
+      { name: 'Camera Off Despair', type: 'stress_attack', stressDamage: 8, icon: '📷', quip: '"We prefer cameras on."' },
+      { name: 'Technical Difficulties', type: 'exhaust', exhaustCount: 2, stressDamage: 5, icon: '⚠️', quip: '"Sorry, my internet—*bzzt*"' },
+      { name: 'Reconnecting...', type: 'attack', damage: 18, icon: '🔌', quip: '"Aaaand we\'re back."' },
     ],
   },
 
+  // COMPOUND — debuffs compound; Call References lands on heavily debuffed player
   reference_checker: {
     id: 'reference_checker',
     name: 'Reference Checker',
@@ -155,13 +169,14 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 32,
     icon: '🔍',
     moves: [
-      { name: 'Background Scan', type: 'attack', damage: 8, icon: '🔍', quip: '"Interesting GitHub history..."' },
-      { name: 'Inconsistency Found', type: 'attack', damage: 14, icon: '⚠️', quip: '"This date doesn\'t match."' },
+      { name: 'Background Scan', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🔍', quip: '"Interesting GitHub history..."' },
+      { name: 'Inconsistency Found', type: 'attack', damage: 16, icon: '⚠️', quip: '"This date doesn\'t match."' },
       { name: 'Verify Credentials', type: 'debuff', applyToTarget: { weak: 2 }, icon: '📋', quip: '"Your \'degree\' from where now?"' },
-      { name: 'Call References', type: 'attack', damage: 9, stressDamage: 3, icon: '📞', quip: '"Your old boss was... candid."' },
+      { name: 'Call References', type: 'attack', damage: 22, stressDamage: 6, icon: '📞', quip: '"Your old boss was... candid."' },
     ],
   },
 
+  // WAKE-UP — Reschedule is passive stress; activates with Double-Booked then Calendar Tetris
   scheduling_nightmare: {
     id: 'scheduling_nightmare',
     name: 'Scheduling Nightmare',
@@ -169,10 +184,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 36,
     icon: '📅',
     moves: [
-      { name: 'Reschedule', type: 'stress_attack', stressDamage: 6, icon: '📅', quip: '"Something came up. Next week?"' },
-      { name: 'Double-Booked', type: 'attack', damage: 10, icon: '📆', quip: '"Oops, we have two of you."' },
-      { name: 'Time Zone Chaos', type: 'attack', damage: 7, stressDamage: 4, icon: '🌐', quip: '"Was that PST or EST? Or IST?"' },
-      { name: 'Calendar Tetris', type: 'debuff', applyToTarget: { weak: 1, vulnerable: 1 }, icon: '🧩', quip: '"Only slot is 4 AM Thursday."' },
+      { name: 'Reschedule', type: 'stress_attack', stressDamage: 8, icon: '📅', quip: '"Something came up. Next week?"' },
+      { name: 'Double-Booked', type: 'attack', damage: 13, icon: '📆', quip: '"Oops, we have two of you."' },
+      { name: 'Time Zone Chaos', type: 'attack', damage: 12, stressDamage: 5, icon: '🌐', quip: '"Was that PST or EST? Or IST?"' },
+      { name: 'Calendar Tetris', type: 'attack', damage: 18, applyToTarget: { weak: 1, vulnerable: 1 }, icon: '🧩', quip: '"Only slot is 4 AM Thursday."' },
     ],
   },
 
