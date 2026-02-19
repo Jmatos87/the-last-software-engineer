@@ -111,6 +111,31 @@ function loadGame(): { screen: import('../types').Screen; run: import('../types'
     // If the saved screen is a transient state with no persisted data, fall back to MAP
     const transientScreens = ['BATTLE', 'BATTLE_REWARD', 'EVENT', 'REST', 'SHOP'];
     if (data.screen && transientScreens.includes(data.screen) && data.run) {
+      // For mid-battle refreshes: unvisit the current node and revert map position
+      // so the player re-fights the encounter rather than skipping it.
+      // Other transient screens (BATTLE_REWARD, EVENT, REST, SHOP) already resolved
+      // their node action, so we leave the map state alone.
+      if (data.screen === 'BATTLE') {
+        const map = data.run.map;
+        if (map) {
+          const currentNodeId = map.currentNodeId;
+          const currentRow = map.currentRow ?? -1;
+          const currentNode = (map.nodes ?? []).find((n: any) => n.id === currentNodeId);
+          if (currentNode) currentNode.visited = false;
+          if (currentRow <= 0) {
+            map.currentRow = -1;
+            map.currentNodeId = null;
+          } else {
+            map.currentRow = currentRow - 1;
+            const prevNode = (map.nodes ?? []).find((n: any) =>
+              n.row === currentRow - 1 &&
+              (n.connections ?? []).includes(currentNodeId) &&
+              n.visited
+            );
+            map.currentNodeId = prevNode?.id ?? null;
+          }
+        }
+      }
       data.screen = 'MAP';
     }
     return data;
