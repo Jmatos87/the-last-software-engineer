@@ -173,7 +173,7 @@ export interface CardInstance extends CardDef {
 }
 
 // ── Enemies ──
-export type EnemyMoveType = 'attack' | 'defend' | 'buff' | 'debuff' | 'attack_defend' | 'stress_attack' | 'dual_attack' | 'discard' | 'exhaust' | 'buff_allies' | 'gold_steal' | 'heal_allies';
+export type EnemyMoveType = 'attack' | 'defend' | 'buff' | 'debuff' | 'attack_defend' | 'stress_attack' | 'dual_attack' | 'discard' | 'exhaust' | 'buff_allies' | 'gold_steal' | 'heal_allies' | 'summon' | 'energy_drain' | 'corrupt';
 
 export interface EnemyMove {
   name: string;
@@ -188,6 +188,11 @@ export interface EnemyMove {
   exhaustCount?: number;
   goldSteal?: number;
   healAmount?: number;
+  summonId?: string;        // enemy ID to spawn (for summon type)
+  summonCount?: number;     // how many to spawn, default 1 (for summon type)
+  energyDrain?: number;     // reduce player energy next turn by N (for energy_drain type)
+  corruptCardId?: string;   // curse card ID to add to discard (for corrupt type)
+
   icon: string;
   quip?: string;
 }
@@ -210,6 +215,7 @@ export interface EnemyDef {
   isBoss?: boolean;
   hideIntent?: boolean;
   phases?: EnemyPhase[];
+  startStatusEffects?: StatusEffect;  // status effects applied to this enemy at battle start (berserker archetype)
 }
 
 export interface EnemyInstance extends EnemyDef {
@@ -382,6 +388,7 @@ export interface BattleState {
   tokens: number;                   // token economy accumulator, persists across turns
   cardPlayCounts: Record<string, number>; // times each card.id played this combat
   nextTurnDrawPenalty: number;      // enemy debuff: reduce cards drawn next turn by this amount
+  nextTurnEnergyPenalty: number;    // energy_drain accumulates here; applied and reset at startNewTurn
 }
 
 // ── Run ──
