@@ -300,8 +300,8 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'We\'ll Be In Touch', type: 'attack', damage: 20, stressDamage: 10, icon: '☎️', quip: '"(Narrator: They weren\'t.)"' },
       { name: 'Benefits Bait', type: 'attack', damage: 12, stressDamage: 5, icon: '🎣', quip: '"We have unlimited PTO! (Don\'t use it.)"' },
       // Phase 3: pure DPS race — no more buff turns (indices 7-8)
-      { name: 'Benefits Bait', type: 'attack', damage: 6, stressDamage: 3, icon: '🎣', quip: '"Last chance. Take the offer or get nothing."' },
-      { name: 'REJECTED', type: 'attack', damage: 13, stressDamage: 6, icon: '❌', quip: '"We went with another candidate. Forever."' },
+      { name: 'Benefits Bait', type: 'attack', damage: 22, stressDamage: 8, icon: '🎣', quip: '"Last chance. Take the offer or get nothing."' },
+      { name: 'REJECTED', type: 'attack', damage: 28, stressDamage: 12, icon: '❌', quip: '"We went with another candidate. Forever."' },
     ],
   },
 
@@ -328,8 +328,8 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Total Rejection', type: 'attack', damage: 14, times: 2, icon: '❌', quip: '"Application status: OBLITERATED."' },
       { name: 'System Crash', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Fatal error: career not found."' },
       // Phase 3: pure DPS race — buff folded into onEnter (indices 8-9)
-      { name: 'System Crash', type: 'attack', damage: 12, stressDamage: 3, icon: '💀', quip: '"Rebooting... to destroy you faster."' },
-      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 18, stressDamage: 6, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
+      { name: 'System Crash', type: 'attack', damage: 24, stressDamage: 8, icon: '💀', quip: '"Rebooting... to destroy you faster."' },
+      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 32, stressDamage: 12, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
     ],
   },
 
@@ -354,9 +354,9 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Spectral Slash', type: 'attack', damage: 15, icon: '💫', quip: '"I was never even real."' },
       { name: 'Maybe Next Time', type: 'debuff', applyToTarget: { weak: 2, ghosted: 2 }, icon: '💨', quip: '"We\'ll definitely reach out soon!"' },
       { name: 'Full Ghosting', type: 'attack', damage: 26, stressDamage: 10, icon: '☠️', quip: '"The position has been filled... forever."' },
-      // Phase 3: final stand (indices 6-7)
-      { name: 'Eternal Silence', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🕳️', quip: '"The void is permanent."' },
-      { name: 'Final Ghosting', type: 'attack', damage: 14, stressDamage: 6, icon: '☠️', quip: '"You never existed to us."' },
+      // Phase 3: pure DPS race — buff folded into onEnter (indices 6-7)
+      { name: 'Eternal Silence', type: 'attack', damage: 22, stressDamage: 10, icon: '🕳️', quip: '"The inbox will never reply. Ever."' },
+      { name: 'Final Ghosting', type: 'attack', damage: 28, stressDamage: 14, icon: '☠️', quip: '"You never existed to us."' },
     ],
   },
 };

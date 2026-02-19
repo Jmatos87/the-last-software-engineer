@@ -306,8 +306,8 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { name: 'Group Deliberation', type: 'defend', block: 12, icon: '🤔', quip: '"We need to align internally."' },
       { name: 'Final Verdict', type: 'attack', damage: 22, stressDamage: 8, icon: '⚖️', quip: '"The panel has decided."' },
       // Phase 3: pure DPS race — buff folded into onEnter (indices 6-7)
-      { name: 'Cross-Examination Barrage', type: 'attack', damage: 9, times: 3, icon: '⚔️', quip: '"Answer. Answer. ANSWER."' },
-      { name: 'Unanimous Rejection', type: 'attack', damage: 25, stressDamage: 11, icon: '⚖️', quip: '"Motion to reject. ALL in favor."' },
+      { name: 'Cross-Examination Barrage', type: 'attack', damage: 12, times: 3, icon: '⚔️', quip: '"Answer. Answer. ANSWER."' },
+      { name: 'Unanimous Rejection', type: 'attack', damage: 38, stressDamage: 15, icon: '⚖️', quip: '"Motion to reject. ALL in favor."' },
     ],
   },
 
@@ -333,8 +333,8 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { name: 'Segfault', type: 'attack', damage: 15, icon: '💀', quip: '"Core dumped. So did your career."' },
       { name: 'TIME\'S UP!', type: 'attack', damage: 30, stressDamage: 13, icon: '⏰', quip: '"Pencils down. Step away."' },
       // Phase 3: pure DPS race — buff folded into onEnter (indices 7-8)
-      { name: 'TIME\'S UP!', type: 'attack', damage: 24, stressDamage: 11, icon: '⏰', quip: '"You ran out of time. AGAIN."' },
-      { name: 'FAILED', type: 'attack', damage: 28, stressDamage: 12, icon: '💀', quip: '"Interview status: TERMINATED."' },
+      { name: 'TIME\'S UP!', type: 'attack', damage: 36, stressDamage: 15, icon: '⏰', quip: '"You ran out of time. AGAIN."' },
+      { name: 'FAILED', type: 'attack', damage: 42, stressDamage: 17, icon: '💀', quip: '"Interview status: TERMINATED."' },
     ],
   },
 
@@ -360,9 +360,9 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { name: 'Architecture Review', type: 'attack', damage: 16, icon: '🏗️', quip: '"This doesn\'t scale."' },
       { name: 'Scale Question', type: 'attack', damage: 12, stressDamage: 5, icon: '📊', quip: '"What if we have a billion users?"' },
       { name: 'Executive Decision', type: 'attack', damage: 32, stressDamage: 12, icon: '⚡', quip: '"I\'ve seen enough."' },
-      // Phase 3: final stand (indices 8-9)
-      { name: 'You\'re Fired', type: 'buff', applyToSelf: { confidence: 5 }, icon: '🔥', quip: '"Pack your things."' },
-      { name: 'Severance Denied', type: 'attack', damage: 29, stressDamage: 12, icon: '☠️', quip: '"And you owe US money."' },
+      // Phase 3: pure DPS race — buff folded into onEnter (indices 8-9)
+      { name: 'You\'re Fired', type: 'attack', damage: 32, stressDamage: 13, icon: '🔥', quip: '"Pack your things. NOW."' },
+      { name: 'Severance Denied', type: 'attack', damage: 44, stressDamage: 18, icon: '☠️', quip: '"And you owe US money."' },
     ],
   },
 };

@@ -308,9 +308,9 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'Budget Discussion', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '💰', quip: '"Headcount is frozen. Mostly."' },
       { name: 'Counter-Counter Offer', type: 'attack', damage: 20, stressDamage: 8, icon: '⚖️', quip: '"We counter your counter. Again."' },
       // Phase 3: pure DPS race — buff folded into onEnter (indices 5-7)
-      { name: 'Counter-Counter Offer', type: 'attack', damage: 19, stressDamage: 8, icon: '⚖️', quip: '"Counter. Counter. COUNTER."' },
-      { name: 'Committee Slam', type: 'attack', damage: 35, icon: '💥', quip: '"Motion to reject. All in favor?"' },
-      { name: 'Offer Rescinded', type: 'attack', damage: 30, stressDamage: 11, icon: '📄', quip: '"The offer has been WITHDRAWN."' },
+      { name: 'Counter-Counter Offer', type: 'attack', damage: 30, stressDamage: 12, icon: '⚖️', quip: '"Counter. Counter. COUNTER."' },
+      { name: 'Committee Slam', type: 'attack', damage: 48, icon: '💥', quip: '"Motion to reject. All in favor?"' },
+      { name: 'Offer Rescinded', type: 'attack', damage: 42, stressDamage: 16, icon: '📄', quip: '"The offer has been WITHDRAWN."' },
     ],
   },
 
@@ -334,10 +334,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'Execute!', type: 'attack', damage: 18, icon: '⚡', quip: '"Ship it or I ship you out."' },
       { name: 'Disruption', type: 'attack', damage: 20, stressDamage: 10, icon: '💥', quip: '"We disrupted the disruptors."' },
       // Phase 3: "Hostile" — reordered for attacks-last cycling (indices 5-8)
-      { name: 'Disruption', type: 'attack', damage: 16, stressDamage: 8, icon: '💥', quip: '"Disrupt EVERYTHING."' },
-      { name: 'Golden Parachute', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🪂', quip: '"I have a $50M exit package."' },
-      { name: 'Move Fast Break Things', type: 'attack', damage: 24, icon: '🔥', quip: '"Including your career!"' },
-      { name: 'Hostile Takeover', type: 'attack', damage: 35, stressDamage: 14, icon: '☠️', quip: '"Bow before the brand."' },
+      { name: 'Disruption', type: 'attack', damage: 28, stressDamage: 12, icon: '💥', quip: '"Disrupt EVERYTHING."' },
+      { name: 'Golden Parachute', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🪂', quip: '"I have a $50M exit package."' },
+      { name: 'Move Fast Break Things', type: 'attack', damage: 40, icon: '🔥', quip: '"Including your career!"' },
+      { name: 'Hostile Takeover', type: 'attack', damage: 52, stressDamage: 20, icon: '☠️', quip: '"Bow before the brand."' },
     ],
   },
 
@@ -362,8 +362,8 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'Crushing Anxiety', type: 'stress_attack', stressDamage: 18, icon: '💀', quip: '"You can\'t even breathe right."' },
       // Phase 3 (indices 5-7)
       { name: 'Identity Crisis', type: 'debuff', applyToTarget: { weak: 3, vulnerable: 3, confidence: -3 }, icon: '🪞', quip: '"Who even are you anymore?"' },
-      { name: 'Complete Meltdown', type: 'attack', damage: 25, stressDamage: 27, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
-      { name: 'You Never Belonged', type: 'attack', damage: 22, stressDamage: 14, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
+      { name: 'Complete Meltdown', type: 'attack', damage: 38, stressDamage: 30, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
+      { name: 'You Never Belonged', type: 'attack', damage: 35, stressDamage: 20, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
     ],
   },
 };
