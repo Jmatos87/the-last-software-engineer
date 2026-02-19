@@ -365,6 +365,69 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { name: 'Severance Denied', type: 'attack', damage: 44, stressDamage: 18, icon: '☠️', quip: '"And you owe US money."' },
     ],
   },
+
+  // ── Act 2 Minions (spawned by elites/bosses) ──
+
+  question_fragment: {
+    id: 'question_fragment',
+    name: 'Follow-Up Question',
+    hp: 20,
+    gold: 0,
+    icon: '❓',
+    moves: [
+      { name: 'Follow-Up', type: 'debuff', applyToTarget: { weak: 1 }, icon: '❓', quip: '"But what about edge cases?"' },
+      { name: 'Part B', type: 'attack', damage: 9, icon: '📝', quip: '"Now do it in O(1) space."' },
+    ],
+  },
+
+  panel_member_a: {
+    id: 'panel_member_a',
+    name: 'Panel Member A',
+    hp: 22,
+    gold: 8,
+    icon: '🧑',
+    moves: [
+      { name: 'Alignment', type: 'buff_allies', applyToSelf: { confidence: 1 }, icon: '🤝', quip: '"The panel concurs."' },
+      { name: 'Cross-Question', type: 'attack', damage: 8, applyToTarget: { weak: 1 }, icon: '⚔️', quip: '"Interesting answer. But why?"' },
+    ],
+  },
+
+  panel_member_b: {
+    id: 'panel_member_b',
+    name: 'Panel Member B',
+    hp: 22,
+    gold: 8,
+    icon: '👩',
+    moves: [
+      { name: 'We Disagree', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🚩', quip: '"That contradicts what you said earlier."' },
+      { name: 'Deliberate', type: 'defend', block: 10, icon: '🤔', quip: '"*whispering with the panel*"' },
+    ],
+  },
+
+  test_case: {
+    id: 'test_case',
+    name: 'Test Case',
+    hp: 20,
+    gold: 6,
+    icon: '🐛',
+    moves: [
+      { name: 'Bug Report', type: 'corrupt', icon: '🐛', quip: '"Your code has 7 failures."' },
+      { name: 'Edge Case', type: 'attack', damage: 10, stressDamage: 4, icon: '🔴', quip: '"What if input is null?"' },
+    ],
+  },
+
+  executive_assistant: {
+    id: 'executive_assistant',
+    name: 'Executive Assistant',
+    hp: 28,
+    gold: 12,
+    icon: '💼',
+    moves: [
+      { name: 'Calendar Block', type: 'energy_drain', energyDrain: 1, icon: '📅', quip: '"The VP is in back-to-back meetings."' },
+      { name: 'Redirect', type: 'gold_steal', goldSteal: 12, icon: '💸', quip: '"Billing this to your department."' },
+      { name: 'Status Update', type: 'heal_allies', healAmount: 15, icon: '📊', quip: '"Good news for the board."' },
+    ],
+  },
 };
 
 // ── Act 2 Encounter Tables ──
