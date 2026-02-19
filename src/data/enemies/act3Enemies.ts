@@ -366,6 +366,69 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { name: 'You Never Belonged', type: 'attack', damage: 35, stressDamage: 20, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
     ],
   },
+
+  // ── Act 3 Minions (spawned by elites/bosses) ──
+
+  chaos_agent: {
+    id: 'chaos_agent',
+    name: 'Chaos Agent',
+    hp: 24,
+    gold: 0,
+    icon: '🌀',
+    moves: [
+      { name: 'Restructure', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🌀', quip: '"Your role has been \'realigned.\'"' },
+      { name: 'Disrupt', type: 'attack', damage: 9, stressDamage: 5, icon: '💥', quip: '"Change is good. Probably."' },
+    ],
+  },
+
+  committee_chair: {
+    id: 'committee_chair',
+    name: 'Committee Chair',
+    hp: 30,
+    gold: 12,
+    icon: '📋',
+    moves: [
+      { name: 'Due Diligence', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '📋', quip: '"We need more documentation."' },
+      { name: 'Review Complete', type: 'attack', damage: 13, icon: '✅', quip: '"Motion to reject. Seconded."' },
+    ],
+  },
+
+  compliance_officer: {
+    id: 'compliance_officer',
+    name: 'Compliance Officer',
+    hp: 24,
+    gold: 10,
+    icon: '⚖️',
+    moves: [
+      { name: 'Policy', type: 'corrupt', icon: '📜', quip: '"Per regulation 47-B..."' },
+      { name: 'Enforcement', type: 'attack', damage: 9, applyToTarget: { vulnerable: 1 }, icon: '🔨', quip: '"Non-compliance is not tolerated."' },
+    ],
+  },
+
+  pr_manager: {
+    id: 'pr_manager',
+    name: 'PR Manager',
+    hp: 32,
+    gold: 14,
+    icon: '📢',
+    moves: [
+      { name: 'Spin Story', type: 'heal_allies', healAmount: 18, icon: '🌀', quip: '"The CEO remains fully committed."' },
+      { name: 'Press Release', type: 'stress_attack', stressDamage: 12, icon: '📰', quip: '"Sources say you\'re not a culture fit."' },
+      { name: 'No Comment', type: 'defend', block: 8, icon: '🤐', quip: '"We cannot confirm or deny."' },
+    ],
+  },
+
+  inner_critic: {
+    id: 'inner_critic',
+    name: 'Inner Critic',
+    hp: 30,
+    gold: 10,
+    icon: '🪞',
+    moves: [
+      { name: 'Self-Doubt', type: 'debuff', applyToTarget: { weak: 1, vulnerable: 1 }, icon: '😟', quip: '"You don\'t deserve this."' },
+      { name: 'Spiral', type: 'attack', damage: 10, stressDamage: 14, icon: '🌀', quip: '"Everyone can see through you."' },
+    ],
+  },
 };
 
 // ── Act 3 Encounter Tables ──
