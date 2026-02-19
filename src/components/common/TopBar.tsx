@@ -24,18 +24,25 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
       {/* Character */}
       <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 4 : 8 }}>
         <span style={{ fontSize: compact ? 14 : 20 }}>{run.character.icon}</span>
-        <span style={{ fontSize: compact ? 11 : 13, fontWeight: 'bold' }}>{run.character.name}</span>
+        {!compact && <span style={{ fontSize: 13, fontWeight: 'bold' }}>{run.character.name}</span>}
       </div>
 
-      {/* HP bar */}
-      <div style={{ width: compact ? 80 : 120 }}>
-        <HpBar current={run.hp} max={run.maxHp} height={compact ? 8 : 10} label="HP" />
-      </div>
-
-      {/* Stress bar */}
-      <div style={{ width: compact ? 70 : 100 }}>
-        <HpBar current={run.stress} max={run.maxStress} height={compact ? 8 : 10} color="var(--accent-purple)" label="STRESS" />
-      </div>
+      {/* HP + Stress bars */}
+      {compact ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 3, width: 64 }}>
+          <HpBar current={run.hp} max={run.maxHp} height={6} showNumbers={false} />
+          <HpBar current={run.stress} max={run.maxStress} height={6} color="var(--accent-purple)" showNumbers={false} />
+        </div>
+      ) : (
+        <>
+          <div style={{ width: 120 }}>
+            <HpBar current={run.hp} max={run.maxHp} height={10} label="HP" />
+          </div>
+          <div style={{ width: 100 }}>
+            <HpBar current={run.stress} max={run.maxStress} height={10} color="var(--accent-purple)" label="STRESS" />
+          </div>
+        </>
+      )}
 
       {/* Stats */}
       <div style={{ display: 'flex', gap: compact ? 6 : 12, fontSize: compact ? 10 : 13, alignItems: 'center' }}>
@@ -108,7 +115,7 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
           borderRadius: 'var(--radius-sm)',
         }}
       >
-        ✕ Quit Run
+        {compact ? '✕' : '✕ Quit Run'}
       </button>
 
       {/* Quit confirmation modal */}
