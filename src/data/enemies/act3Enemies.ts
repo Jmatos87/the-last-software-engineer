@@ -320,17 +320,18 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { hpPercent: 30, moveStartIndex: 5, onEnter: { confidence: 2 }, quip: '"FINAL DELIBERATION."' },
     ],
     moves: [
-      // Phase 1 (indices 0-2)
-      { name: 'Committee Review', type: 'attack', damage: 12, icon: '📋', quip: '"We\'ve reviewed your... everything."' },
-      { name: 'Stress Interview', type: 'stress_attack', stressDamage: 12, icon: '😰', quip: '"Sell me this pen. Now this desk."' },
-      { name: 'Deliberation', type: 'defend', block: 20, icon: '🤔', quip: '"We need to discuss amongst ourselves."' },
-      // Phase 2 (indices 3-4)
+      // Phase 1 (0-2)
+      { name: 'Committee Review', type: 'attack', damage: 14, icon: '📋', quip: '"We\'ve reviewed your... everything."' },
+      { name: 'Stress Interview', type: 'stress_attack', stressDamage: 14, icon: '😰', quip: '"Sell me this pen. Now this desk."' },
+      { name: 'Deliberation', type: 'defend', block: 22, icon: '🤔', quip: '"We need to discuss amongst ourselves."' },
+      // Phase 2 (3-4)
       { name: 'Budget Discussion', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '💰', quip: '"Headcount is frozen. Mostly."' },
-      { name: 'Counter-Counter Offer', type: 'attack', damage: 20, stressDamage: 8, icon: '⚖️', quip: '"We counter your counter. Again."' },
-      // Phase 3: pure DPS race — buff folded into onEnter (indices 5-7)
-      { name: 'Counter-Counter Offer', type: 'attack', damage: 30, stressDamage: 12, icon: '⚖️', quip: '"Counter. Counter. COUNTER."' },
-      { name: 'Committee Slam', type: 'attack', damage: 48, icon: '💥', quip: '"Motion to reject. All in favor?"' },
-      { name: 'Offer Rescinded', type: 'attack', damage: 42, stressDamage: 16, icon: '📄', quip: '"The offer has been WITHDRAWN."' },
+      { name: 'Counter-Counter Offer', type: 'attack', damage: 24, stressDamage: 9, icon: '⚖️', quip: '"We counter your counter. Again."' },
+      // Phase 3: DPS race (5-8)
+      { name: 'Recall Committee', type: 'summon', summonId: 'committee_chair', summonCount: 1, icon: '📋', quip: '"We need full quorum for this vote."' },
+      { name: 'Counter-Slam', type: 'attack', damage: 33, stressDamage: 13, icon: '⚖️', quip: '"Counter. Counter. COUNTER."' },
+      { name: 'Committee Slam', type: 'attack', damage: 52, icon: '💥', quip: '"Motion to reject. All in favor?"' },
+      { name: 'Offer Rescinded', type: 'attack', damage: 44, stressDamage: 17, icon: '📄', quip: '"The offer has been WITHDRAWN."' },
     ],
   },
 
@@ -346,18 +347,19 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { hpPercent: 30, moveStartIndex: 5, onEnter: { confidence: 5 }, quip: '"I AM the company."' },
     ],
     moves: [
-      // Phase 1: "Vision" (indices 0-2)
+      // Phase 1 (0-2)
       { name: 'Visionary Speech', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🎤', quip: '"We\'re changing the world."' },
-      { name: 'Inspire Fear', type: 'stress_attack', stressDamage: 10, icon: '😨', quip: '"Layoffs? What layoffs?"' },
-      { name: 'Corporate Strategy', type: 'attack_defend', damage: 12, block: 10, icon: '📊', quip: '"It\'s a paradigm shift."' },
-      // Phase 2: "Execution" (indices 3-4)
-      { name: 'Execute!', type: 'attack', damage: 18, icon: '⚡', quip: '"Ship it or I ship you out."' },
-      { name: 'Disruption', type: 'attack', damage: 20, stressDamage: 10, icon: '💥', quip: '"We disrupted the disruptors."' },
-      // Phase 3: "Hostile" — reordered for attacks-last cycling (indices 5-8)
-      { name: 'Disruption', type: 'attack', damage: 28, stressDamage: 12, icon: '💥', quip: '"Disrupt EVERYTHING."' },
+      { name: 'Inspire Fear', type: 'stress_attack', stressDamage: 12, icon: '😨', quip: '"Layoffs? What layoffs?"' },
+      { name: 'Corporate Strategy', type: 'attack_defend', damage: 14, block: 12, icon: '📊', quip: '"It\'s a paradigm shift."' },
+      // Phase 2 (3-4)
+      { name: 'Execute!', type: 'attack', damage: 22, icon: '⚡', quip: '"Ship it or I ship you out."' },
+      { name: 'Disruption', type: 'attack', damage: 25, stressDamage: 11, icon: '💥', quip: '"We disrupted the disruptors."' },
+      // Phase 3 (5-9)
+      { name: 'Rehire PR', type: 'summon', summonId: 'pr_manager', summonCount: 1, icon: '📢', quip: '"Get me positive coverage on this."' },
+      { name: 'Disrupt Everything', type: 'attack', damage: 32, stressDamage: 13, icon: '💥', quip: '"Disrupt EVERYTHING."' },
       { name: 'Golden Parachute', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🪂', quip: '"I have a $50M exit package."' },
-      { name: 'Move Fast Break Things', type: 'attack', damage: 40, icon: '🔥', quip: '"Including your career!"' },
-      { name: 'Hostile Takeover', type: 'attack', damage: 52, stressDamage: 20, icon: '☠️', quip: '"Bow before the brand."' },
+      { name: 'Move Fast Break Things', type: 'attack', damage: 44, icon: '🔥', quip: '"Including your career!"' },
+      { name: 'Hostile Takeover', type: 'attack', damage: 56, stressDamage: 21, icon: '☠️', quip: '"Bow before the brand."' },
     ],
   },
 
@@ -373,17 +375,17 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { hpPercent: 25, moveStartIndex: 5, onEnter: { confidence: 5 }, quip: '"COMPLETE MELTDOWN IMMINENT."' },
     ],
     moves: [
-      // Phase 1 (indices 0-2)
-      { name: 'You\'re A Fraud', type: 'debuff', applyToTarget: { confidence: -2 }, icon: '🎭', quip: '"You don\'t deserve this offer."' },
-      { name: 'Everyone Knows', type: 'stress_attack', stressDamage: 15, icon: '👁️', quip: '"They\'re all whispering about you."' },
-      { name: 'Spiral of Doubt', type: 'stress_attack', stressDamage: 12, icon: '🌀', quip: '"Was any of it real?"' },
-      // Phase 2 (indices 3-4)
-      { name: 'They\'ll Find Out', type: 'attack', damage: 16, stressDamage: 12, icon: '😱', quip: '"Day one. They\'ll know."' },
-      { name: 'Crushing Anxiety', type: 'stress_attack', stressDamage: 18, icon: '💀', quip: '"You can\'t even breathe right."' },
-      // Phase 3 (indices 5-7)
+      // Phase 1 (0-2)
+      { name: "You're A Fraud", type: 'debuff', applyToTarget: { confidence: -2 }, icon: '🎭', quip: '"You don\'t deserve this offer."' },
+      { name: 'Everyone Knows', type: 'stress_attack', stressDamage: 17, icon: '👁️', quip: '"They\'re all whispering about you."' },
+      { name: 'Spiral of Doubt', type: 'stress_attack', stressDamage: 14, icon: '🌀', quip: '"Was any of it real?"' },
+      // Phase 2 (3-4)
+      { name: 'Recall Inner Critic', type: 'summon', summonId: 'inner_critic', summonCount: 1, icon: '🪞', quip: '"Listen to that voice inside you."' },
+      { name: "They'll Find Out", type: 'attack', damage: 20, stressDamage: 14, icon: '😱', quip: '"Day one. They\'ll know."' },
+      // Phase 3 (5-7)
       { name: 'Identity Crisis', type: 'debuff', applyToTarget: { weak: 3, vulnerable: 3, confidence: -3 }, icon: '🪞', quip: '"Who even are you anymore?"' },
-      { name: 'Complete Meltdown', type: 'attack', damage: 38, stressDamage: 30, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
-      { name: 'You Never Belonged', type: 'attack', damage: 35, stressDamage: 20, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
+      { name: 'Complete Meltdown', type: 'attack', damage: 42, stressDamage: 32, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
+      { name: 'You Never Belonged', type: 'attack', damage: 38, stressDamage: 22, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
     ],
   },
 
