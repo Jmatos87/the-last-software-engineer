@@ -95,8 +95,8 @@ export const ShopScreen: React.FC = () => {
         })}
       </div>
 
-      {/* Items for sale */}
-      <h3 style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 12 }}>Items</h3>
+      {/* Artifacts for sale */}
+      <h3 style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 12 }}>Artifacts</h3>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         {shopItems.map(item => {
           const cost = getItemCost(item.rarity);
