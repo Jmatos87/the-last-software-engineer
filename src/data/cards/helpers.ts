@@ -15,6 +15,14 @@ export function getRewardCards(count: number, rarity?: 'common' | 'rare' | 'epic
 
   function pickRarity(): 'common' | 'rare' | 'epic' | 'legendary' {
     if (rarity) return rarity;
+    // Elite and boss fights: no commons — minimum rarity is rare
+    if (encounterType === 'elite' || encounterType === 'boss') {
+      const total = rarityWeights.rare + rarityWeights.epic + rarityWeights.legendary;
+      const roll = Math.random() * total;
+      if (roll < rarityWeights.legendary) return 'legendary';
+      if (roll < rarityWeights.legendary + rarityWeights.epic) return 'epic';
+      return 'rare';
+    }
     const roll = Math.random() * 100;
     if (roll < rarityWeights.legendary) return 'legendary';
     if (roll < rarityWeights.legendary + rarityWeights.epic) return 'epic';

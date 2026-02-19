@@ -381,6 +381,7 @@ export interface BattleState {
   temperature: number;              // 0–10, starts at 5; overflow ≥10 → AoE; freeze ≤0 → block
   tokens: number;                   // token economy accumulator, persists across turns
   cardPlayCounts: Record<string, number>; // times each card.id played this combat
+  nextTurnDrawPenalty: number;      // enemy debuff: reduce cards drawn next turn by this amount
 }
 
 // ── Run ──

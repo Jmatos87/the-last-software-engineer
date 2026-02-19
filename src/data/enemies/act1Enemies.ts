@@ -319,7 +319,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     moves: [
       // Phase 1: scans + discards (indices 0-3)
       { name: 'Full System Scan', type: 'attack', damage: 8, icon: '🔍', quip: '"Scanning for hope... none found."' },
-      { name: 'Resume Shredder', type: 'discard', discardCount: 2, stressDamage: 4, icon: '🗑️', quip: '"Formatting: UNACCEPTABLE."' },
+      { name: 'Resume Shredder', type: 'discard', discardCount: 2, stressDamage: 4, icon: '🗑️', quip: '"Formatting: UNACCEPTABLE. Exhausted from the process."' },
       { name: 'Keyword Purge', type: 'attack', damage: 10, icon: '⚡', quip: '"You said \'passionate.\' Cringe."' },
       { name: 'Database Overwrite', type: 'attack_defend', damage: 7, block: 10, icon: '💾', quip: '"Your file has been... updated."' },
       // Phase 2: raw power (indices 4-7)

@@ -135,6 +135,7 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: Batt
       temperature: 5,
       tokens: 0,
       cardPlayCounts: {},
+      nextTurnDrawPenalty: 0,
     },
     hpAdjust,
     stressAdjust,
@@ -884,12 +885,17 @@ export function executeEnemyTurn(
         break;
       }
       case 'discard': {
-        // Discard random cards from hand
         const discardCount = move.discardCount || 1;
-        for (let i = 0; i < discardCount && newBattle.hand.length > 0; i++) {
-          const idx = Math.floor(Math.random() * newBattle.hand.length);
-          const [discarded] = newBattle.hand.splice(idx, 1);
-          newBattle.discardPile = [...newBattle.discardPile, discarded];
+        if (discardCount <= 2) {
+          // Small discard: exhaust cards permanently from combat
+          for (let i = 0; i < discardCount && newBattle.hand.length > 0; i++) {
+            const idx = Math.floor(Math.random() * newBattle.hand.length);
+            const [exhausted] = newBattle.hand.splice(idx, 1);
+            newBattle.exhaustPile = [...newBattle.exhaustPile, exhausted];
+          }
+        } else {
+          // Large discard: reduce how many cards the hero draws next turn
+          newBattle.nextTurnDrawPenalty = (newBattle.nextTurnDrawPenalty || 0) + discardCount;
         }
         // Discard moves can also deal stress
         if (move.stressDamage) {
@@ -1096,7 +1102,8 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   const newExhaust = [...battle.exhaustPile, ...etherealExhausted];
   const extraDraw = run.items.reduce((sum, item) => sum + (item.effect.extraDraw || 0), 0);
   const networkingDraw = battle.playerStatusEffects.networking || 0;
-  const drawCount = 5 + extraDraw + networkingDraw;
+  const drawPenalty = battle.nextTurnDrawPenalty || 0;
+  const drawCount = Math.max(1, 5 + extraDraw + networkingDraw - drawPenalty);
 
   const { drawn, newDrawPile, newDiscardPile } = drawCards(battle.drawPile, newDiscard, drawCount);
 
@@ -1211,6 +1218,7 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       temperature: battle.temperature ?? 5,
       tokens: battle.tokens ?? 0,
       cardPlayCounts: battle.cardPlayCounts ?? {},
+      nextTurnDrawPenalty: 0,
     },
     stressChange,
     hpChange,

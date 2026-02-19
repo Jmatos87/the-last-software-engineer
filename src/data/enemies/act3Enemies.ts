@@ -234,7 +234,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     ],
     moves: [
       // Phase 1: Corporate chaos (indices 0-2)
-      { name: 'Shuffle Teams', type: 'discard', discardCount: 4, icon: '🔀', quip: '"Your team no longer exists."' },
+      { name: 'Shuffle Teams', type: 'discard', discardCount: 4, icon: '🔀', quip: '"Your team no longer exists. Draw 4 fewer cards next turn."' },
       { name: 'New Manager', type: 'attack', damage: 14, stressDamage: 5, icon: '👤', quip: '"Meet your 4th manager this year."' },
       { name: 'Restructure', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '🌀', quip: '"Your role has been \'realigned.\'"' },
       // Phase 2: Scorched earth (indices 3-5)
