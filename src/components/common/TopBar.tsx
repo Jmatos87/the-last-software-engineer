@@ -24,7 +24,7 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
       {/* Character */}
       <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 4 : 8 }}>
         <span style={{ fontSize: compact ? 14 : 20 }}>{run.character.icon}</span>
-        {!compact && <span style={{ fontSize: 13, fontWeight: 'bold' }}>{run.character.name}</span>}
+        <span style={{ fontSize: compact ? 11 : 13, fontWeight: 'bold' }}>{run.character.name}</span>
       </div>
 
       {/* HP + Stress bars */}
