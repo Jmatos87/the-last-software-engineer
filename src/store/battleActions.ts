@@ -259,21 +259,45 @@ export function executePlayCard(
     });
   }
 
+  // Step 2 — Temperature heatUp/coolDown (must run before hot/cold conditionals)
+  if (effects.heatUp) {
+    const next = (newBattle.temperature ?? 5) + effects.heatUp;
+    if (next >= 10) {
+      // Overflow: deal 12 AoE, reset to 5
+      newBattle.enemies = newBattle.enemies.map(e =>
+        applyDamageToEnemy(e, calculateDamage(12, battle.playerStatusEffects, e.statusEffects, run.items)));
+      newBattle.temperature = 5;
+    } else {
+      newBattle.temperature = next;
+    }
+  }
+  if (effects.coolDown) {
+    const next = (newBattle.temperature ?? 5) - effects.coolDown;
+    if (next <= 0) {
+      // Freeze: gain 15 block, reset to 5
+      newBattle.playerBlock = (newBattle.playerBlock || 0) + 15;
+      newBattle.temperature = 5;
+    } else {
+      newBattle.temperature = next;
+    }
+  }
+
   // Step 3 — Temperature conditional bonuses (damageIfHot, damageAllIfHot, blockIfCold)
-  if (effects.damageIfHot && (battle.temperature ?? 5) >= 7 && targetInstanceId) {
+  // Uses newBattle.temperature so heatUp/coolDown above are already applied
+  if (effects.damageIfHot && (newBattle.temperature ?? 5) >= 7 && targetInstanceId) {
     const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
     if (enemyIdx !== -1) {
       const dmg = calculateDamage(effects.damageIfHot, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
       newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
     }
   }
-  if (effects.damageAllIfHot && (battle.temperature ?? 5) >= 7) {
+  if (effects.damageAllIfHot && (newBattle.temperature ?? 5) >= 7) {
     newBattle.enemies = newBattle.enemies.map(e => {
       const dmg = calculateDamage(effects.damageAllIfHot!, battle.playerStatusEffects, e.statusEffects, run.items);
       return applyDamageToEnemy(e, dmg);
     });
   }
-  if (effects.blockIfCold && (battle.temperature ?? 5) <= 3) {
+  if (effects.blockIfCold && (newBattle.temperature ?? 5) <= 3) {
     newBattle.playerBlock = (newBattle.playerBlock || 0) + effects.blockIfCold;
   }
 
@@ -322,29 +346,6 @@ export function executePlayCard(
   // Consume nextCardCostZero flag (fast_refresh / event_bubbling)
   if (battle.nextCardCostZero) {
     newBattle.nextCardCostZero = false;
-  }
-
-  // Step 2 — Temperature heatUp/coolDown
-  if (effects.heatUp) {
-    const next = (newBattle.temperature ?? 5) + effects.heatUp;
-    if (next >= 10) {
-      // Overflow: deal 12 AoE, reset to 5
-      newBattle.enemies = newBattle.enemies.map(e =>
-        applyDamageToEnemy(e, calculateDamage(12, battle.playerStatusEffects, e.statusEffects, run.items)));
-      newBattle.temperature = 5;
-    } else {
-      newBattle.temperature = next;
-    }
-  }
-  if (effects.coolDown) {
-    const next = (newBattle.temperature ?? 5) - effects.coolDown;
-    if (next <= 0) {
-      // Freeze: gain 15 block, reset to 5
-      newBattle.playerBlock = (newBattle.playerBlock || 0) + 15;
-      newBattle.temperature = 5;
-    } else {
-      newBattle.temperature = next;
-    }
   }
 
   // Deal N × cardsPlayedThisTurn to target (batched_update, component_did_mount)

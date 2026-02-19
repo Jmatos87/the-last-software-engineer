@@ -24,7 +24,7 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
-const GAME_VERSION = '1.11.4';
+const GAME_VERSION = '1.11.5';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
@@ -1105,9 +1105,80 @@ export const useGameStore = create<GameState>()(
       // Check if battle won after consumable use
       const afterUse = get();
       if (afterUse.battle && afterUse.battle.enemies.length === 0) {
-        // Trigger the same victory logic — call playCard with a no-op to trigger victory check
-        // Actually, we can just let the BattleScreen detect the empty enemies array
-        // The victory check in playCard's post-processing handles this
+        const isEliteC = state.run.map.nodes.find(
+          n => n.id === state.run!.map.currentNodeId
+        )?.type === 'elite';
+        const isBossC = state.run.map.nodes.find(
+          n => n.id === state.run!.map.currentNodeId
+        )?.type === 'boss';
+
+        const killsC = afterUse.battle.killCount || 0;
+        const allGhostedC = killsC === 0;
+        const actC = state.run.act;
+        const extraGoldC = state.run.items.reduce((sum, item) => sum + (item.effect.extraGold || 0), 0);
+        const extraGoldPercentC = state.run.items.reduce((sum, item) => sum + (item.effect.extraGoldPercent || 0), 0);
+        const rawGoldC = allGhostedC ? 0 : (afterUse.battle.goldEarned + extraGoldC);
+        const goldRewardC = extraGoldPercentC > 0 ? Math.floor(rawGoldC * (1 + extraGoldPercentC / 100)) : rawGoldC;
+        const healOnKillC = killsC > 0 ? state.run.items.reduce((sum, item) => sum + (item.effect.healOnKill || 0), 0) : 0;
+
+        const ownedIdsC = state.run.items.map(i => i.id);
+        let artifactChoicesC: import('../types').ItemDef[] | undefined;
+        if (isBossC) {
+          artifactChoicesC = getRewardArtifact(ownedIdsC, 3, state.run?.character?.id);
+        } else if (isEliteC && Math.random() < 0.5) {
+          artifactChoicesC = getRewardArtifact(ownedIdsC, 1, state.run?.character?.id);
+        }
+
+        const canHoldConsumableC = state.run.consumables.length < state.run.maxConsumables;
+        let consumableChoicesC: import('../types').ConsumableDef[] | undefined;
+        if (canHoldConsumableC) {
+          if (isBossC) {
+            consumableChoicesC = [getRareConsumable()];
+          } else if (isEliteC) {
+            consumableChoicesC = [getConsumableDrop(actC)];
+          } else if (Math.random() < 0.5) {
+            consumableChoicesC = [getConsumableDrop(actC)];
+          }
+        }
+
+        set(s => {
+          if (s.run) {
+            s.run.hp = Math.min(s.run.maxHp, s.run.hp + healOnKillC);
+            s.run.gold += goldRewardC;
+          }
+        });
+
+        const actStressC = actC === 1 ? 3 : actC === 2 ? 5 : 8;
+        setTimeout(() => {
+          if (isBossC) {
+            set(s => {
+              if (!s.run) return;
+              s.run.hp = s.run.maxHp;
+              s.pendingRewards = {
+                gold: goldRewardC,
+                cardChoices: allGhostedC ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), actC, 'boss') as any,
+                artifactChoices: artifactChoicesC && artifactChoicesC.length > 0 ? artifactChoicesC as any : undefined,
+                consumableChoices: consumableChoicesC,
+                isBossReward: true,
+              };
+              s.battle = null;
+              s.screen = 'BATTLE_REWARD';
+            });
+            return;
+          }
+          set(s => {
+            if (!s.run) return;
+            s.run.stress = Math.min(s.run.maxStress, s.run.stress + actStressC);
+            s.pendingRewards = {
+              gold: goldRewardC,
+              cardChoices: allGhostedC ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), actC, isEliteC ? 'elite' : 'normal') as any,
+              artifactChoices: artifactChoicesC && artifactChoicesC.length > 0 ? artifactChoicesC as any : undefined,
+              consumableChoices: consumableChoicesC,
+            };
+            s.battle = null;
+            s.screen = 'BATTLE_REWARD';
+          });
+        }, 800);
       }
     },
 
