@@ -191,8 +191,9 @@ export const act2Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  // ── Act 2 Elite Enemies (HP +20, damage bumps) ──
+  // ── Act 2 Elite Enemies ──
 
+  // JUGGERNAUT — Phase 1 interrogates; Phase 2 erupts with scaled Pop Quiz ×3 and Code Review FAILED
   senior_dev_interrogator: {
     id: 'senior_dev_interrogator',
     name: 'Senior Dev Interrogator',
@@ -201,21 +202,22 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '🧓',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 2 }, quip: '"You call yourself a SENIOR?"' },
+      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 4 }, quip: '"You call yourself a SENIOR?"' },
     ],
     moves: [
-      // Phase 1: Interrogation (indices 0-3)
-      { name: 'Explain Your Process', type: 'attack', damage: 10, stressDamage: 4, icon: '🔬', quip: '"Walk me through every decision."' },
+      // Phase 1 (0-3)
+      { name: 'Explain Your Process', type: 'attack', damage: 13, stressDamage: 5, icon: '🔬', quip: '"Walk me through every decision."' },
       { name: 'Code Review', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 1 }, icon: '👀', quip: '"I see you used var. In 2026."' },
-      { name: 'Deep Dive', type: 'attack', damage: 12, icon: '🤿', quip: '"Let\'s go three levels deeper."' },
-      { name: 'Years of Experience', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📅', quip: '"I\'ve been doing this since Perl."' },
-      // Phase 2: Gloves off (indices 4-6)
+      { name: 'Deep Dive', type: 'attack', damage: 15, icon: '🤿', quip: '"Let\'s go three levels deeper."' },
+      { name: 'Years of Experience', type: 'buff', applyToSelf: { confidence: 4 }, icon: '📅', quip: '"I\'ve been doing this since Perl."' },
+      // Phase 2 (4-6)
       { name: '"I\'ve Seen Everything"', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📅', quip: '"I\'ve been doing this since before you were born."' },
-      { name: 'Pop Quiz', type: 'attack', damage: 6, times: 2, icon: '❓', quip: '"What\'s the time complexity? NOW."' },
-      { name: 'Code Review: FAILED', type: 'attack', damage: 14, stressDamage: 5, icon: '🧹', quip: '"This code is an embarrassment."' },
+      { name: 'Pop Quiz', type: 'attack', damage: 8, times: 3, icon: '❓', quip: '"What\'s the time complexity? NOW."' },
+      { name: 'Code Review: FAILED', type: 'attack', damage: 20, stressDamage: 8, icon: '🧹', quip: '"This code is an embarrassment."' },
     ],
   },
 
+  // SUMMONER — Grow Heads summons a question_fragment; Phase 2 spawns another
   whiteboard_hydra: {
     id: 'whiteboard_hydra',
     name: 'The Whiteboard Hydra',
@@ -224,21 +226,22 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '🐉',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 2 }, quip: '"For every answer, THREE more questions."' },
+      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 3 }, quip: '"For every answer, THREE more questions."' },
     ],
     moves: [
-      // Phase 1: Standard whiteboard hell (indices 0-3)
-      { name: 'Follow-Up Question', type: 'attack', damage: 7, icon: '❓', quip: '"But what about concurrency?"' },
-      { name: 'Multi-Part Problem', type: 'attack', damage: 5, times: 2, icon: '📝', quip: '"Part A... and Part B."' },
-      { name: 'Whiteboard Barrage', type: 'attack', damage: 9, stressDamage: 3, icon: '📊', quip: '"Now diagram the entire system."' },
-      { name: 'Grow Heads', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🐲', quip: '"One more follow-up question..."' },
-      // Phase 2: Hydra unleashed (indices 4-6)
-      { name: 'Hydra Awakens', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🐲', quip: '"The whiteboard is INFINITE."' },
-      { name: 'Infinite Follow-Ups', type: 'attack', damage: 4, times: 4, icon: '❓', quip: '"Part C, D, E, F..."' },
-      { name: 'Erase Everything', type: 'attack', damage: 13, stressDamage: 5, icon: '🧽', quip: '"Start over. From the BEGINNING."' },
+      // Phase 1 (0-3)
+      { name: 'Follow-Up Question', type: 'attack', damage: 9, icon: '❓', quip: '"But what about concurrency?"' },
+      { name: 'Multi-Part Problem', type: 'attack', damage: 7, times: 2, icon: '📝', quip: '"Part A... and Part B."' },
+      { name: 'Grow Heads', type: 'summon', summonId: 'question_fragment', summonCount: 1, icon: '🐲', quip: '"One more follow-up question..."' },
+      { name: 'Whiteboard Barrage', type: 'attack', damage: 12, stressDamage: 4, icon: '📊', quip: '"Now diagram the entire system."' },
+      // Phase 2 (4-6)
+      { name: 'Hydra Awakens', type: 'summon', summonId: 'question_fragment', summonCount: 1, icon: '🐲', quip: '"The whiteboard is INFINITE."' },
+      { name: 'Infinite Follow-Ups', type: 'attack', damage: 5, times: 4, icon: '❓', quip: '"Part C, D, E, F..."' },
+      { name: 'Erase Everything', type: 'attack', damage: 18, stressDamage: 7, exhaustCount: 1, icon: '🧽', quip: '"Start over. From the BEGINNING."' },
     ],
   },
 
+  // MANIPULATOR — energy_drain + corrupt (policy violation); bureaucratic resource siege
   hr_gatekeeper: {
     id: 'hr_gatekeeper',
     name: 'HR Gatekeeper',
@@ -250,17 +253,18 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"COMPLIANCE MODE ACTIVATED."' },
     ],
     moves: [
-      // Phase 1: Bureaucratic wall (indices 0-2)
+      // Phase 1 (0-2)
       { name: 'Bureaucracy Wall', type: 'defend', block: 15, icon: '🧱', quip: '"Fill out form HR-7B first."' },
-      { name: 'Red Tape', type: 'stress_attack', stressDamage: 6, icon: '📎', quip: '"That requires three approvals."' },
-      { name: 'Policy Enforcement', type: 'attack_defend', damage: 8, block: 6, icon: '📋', quip: '"Per section 4, subsection C..."' },
-      // Phase 2: Gatekeeper goes offensive (indices 3-5)
-      { name: 'Policy Overhaul', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📋', quip: '"New policy: ZERO TOLERANCE."' },
-      { name: 'Compliance Hammer', type: 'attack', damage: 13, icon: '🔨', quip: '"Non-compliant resources will be PURGED."' },
-      { name: 'Access Permanently Denied', type: 'attack', damage: 17, stressDamage: 6, icon: '🚫', quip: '"Your badge has been DEACTIVATED."' },
+      { name: 'Red Tape', type: 'energy_drain', energyDrain: 1, stressDamage: 7, icon: '📎', quip: '"That requires three approvals."' },
+      { name: 'Policy Enforcement', type: 'corrupt', stressDamage: 5, icon: '📋', quip: '"Per section 4, subsection C... here\'s a bug."' },
+      // Phase 2 (3-5)
+      { name: 'Policy Overhaul', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📋', quip: '"New policy: ZERO TOLERANCE."' },
+      { name: 'Compliance Hammer', type: 'attack', damage: 18, icon: '🔨', quip: '"Non-compliant resources will be PURGED."' },
+      { name: 'Access Permanently Denied', type: 'attack', damage: 22, stressDamage: 8, icon: '🚫', quip: '"Your badge has been DEACTIVATED."' },
     ],
   },
 
+  // ESCALATOR — gains confidence every action; Neural Overload reaches absurd values late
   the_algorithm: {
     id: 'the_algorithm',
     name: 'The Algorithm',
@@ -272,16 +276,17 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"ENTERING DEEP LEARNING MODE."' },
     ],
     moves: [
-      // Phase 1 (indices 0-2)
-      { name: 'Analyze Pattern', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📊', quip: '"Training on your weaknesses..."' },
-      { name: 'Optimized Strike', type: 'attack', damage: 9, icon: '⚡', quip: '"Calculated. Precise. Devastating."' },
-      { name: 'Recursive Loop', type: 'attack', damage: 6, times: 2, icon: '🔄', quip: '"while(true) { reject(); }"' },
-      // Phase 2 (indices 3-4)
-      { name: 'Machine Learning', type: 'attack_defend', damage: 9, block: 5, icon: '🤖', quip: '"I learned from 10M rejections."' },
-      { name: 'Neural Overload', type: 'attack', damage: 18, stressDamage: 6, icon: '🧠', quip: '"Processing power: MAXIMUM."' },
+      // Phase 1 (0-2)
+      { name: 'Analyze Pattern', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📊', quip: '"Training on your weaknesses..."' },
+      { name: 'Optimized Strike', type: 'attack', damage: 12, icon: '⚡', quip: '"Calculated. Precise. Devastating."' },
+      { name: 'Recursive Loop', type: 'attack', damage: 8, times: 2, icon: '🔄', quip: '"while(true) { reject(); }"' },
+      // Phase 2 (3-4)
+      { name: 'Machine Learning', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤖', quip: '"I learned from 10M rejections."' },
+      { name: 'Neural Overload', type: 'attack', damage: 22, stressDamage: 8, icon: '🧠', quip: '"Processing power: MAXIMUM."' },
     ],
   },
 
+  // BERSERKER — starts with confidence +3; Overtime Mandate stacks more; All-Hands is the finisher
   crunch_time_manager: {
     id: 'crunch_time_manager',
     name: 'Crunch Time Manager',
@@ -289,12 +294,13 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 105,
     icon: '⏰',
     isElite: true,
+    startStatusEffects: { confidence: 3 },
     moves: [
-      { name: 'Need This By EOD', type: 'attack', damage: 10, stressDamage: 5, icon: '⏰', quip: '"EOD means 5 PM my time zone."' },
-      { name: 'Overtime Mandate', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"We\'re all pulling extra hours!"' },
-      { name: 'Weekend Work', type: 'attack', damage: 10, stressDamage: 4, icon: '📅', quip: '"Just a quick Saturday deploy."' },
-      { name: 'Sprint Review', type: 'attack', damage: 9, icon: '🏃', quip: '"Why is this ticket still open?"' },
-      { name: 'All-Hands Pressure', type: 'attack', damage: 16, stressDamage: 7, icon: '💥', quip: '"The board is watching."' },
+      { name: 'Need This By EOD', type: 'attack', damage: 14, stressDamage: 6, icon: '⏰', quip: '"EOD means 5 PM my time zone."' },
+      { name: 'Overtime Mandate', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"We\'re all pulling extra hours!"' },
+      { name: 'Weekend Work', type: 'attack', damage: 14, stressDamage: 5, icon: '📅', quip: '"Just a quick Saturday deploy."' },
+      { name: 'Sprint Review', type: 'energy_drain', energyDrain: 1, stressDamage: 7, icon: '🏃', quip: '"Why is this ticket still open?"' },
+      { name: 'All-Hands Pressure', type: 'attack', damage: 24, stressDamage: 9, icon: '💥', quip: '"The board is watching."' },
     ],
   },
 
