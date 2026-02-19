@@ -315,18 +315,18 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { hpPercent: 25, moveStartIndex: 7, onEnter: { confidence: 3 }, quip: '"This interview is OVER."' },
     ],
     moves: [
-      // Phase 1: soft questions (indices 0-2)
-      { name: 'Tell Me About Yourself', type: 'attack', damage: 8, icon: '🎤', quip: '"Keep it under 30 seconds."' },
-      { name: 'Why This Company?', type: 'attack', damage: 10, icon: '🏢', quip: '"Wrong answer."' },
+      // Phase 1: soft questions (0-2)
+      { name: 'Tell Me About Yourself', type: 'attack', damage: 9, icon: '🎤', quip: '"Keep it under 30 seconds."' },
+      { name: 'Why This Company?', type: 'attack', damage: 12, icon: '🏢', quip: '"Wrong answer."' },
       { name: 'Greatest Weakness?', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '😓', quip: '"Don\'t say perfectionism."' },
-      // Phase 2: aggressive (indices 3-6)
-      { name: 'Where Do You See Yourself?', type: 'attack', damage: 14, icon: '🔮', quip: '"In 5 years. Be specific."' },
-      { name: 'Salary Expectations?', type: 'attack', damage: 16, stressDamage: 6, icon: '💵', quip: '"What\'s your current comp?"' },
-      { name: 'We\'ll Be In Touch', type: 'attack', damage: 20, stressDamage: 10, icon: '☎️', quip: '"(Narrator: They weren\'t.)"' },
-      { name: 'Benefits Bait', type: 'attack', damage: 12, stressDamage: 5, icon: '🎣', quip: '"We have unlimited PTO! (Don\'t use it.)"' },
-      // Phase 3: pure DPS race — no more buff turns (indices 7-8)
-      { name: 'Benefits Bait', type: 'attack', damage: 22, stressDamage: 8, icon: '🎣', quip: '"Last chance. Take the offer or get nothing."' },
-      { name: 'REJECTED', type: 'attack', damage: 28, stressDamage: 12, icon: '❌', quip: '"We went with another candidate. Forever."' },
+      // Phase 2: aggressive (3-6)
+      { name: 'Where Do You See Yourself?', type: 'attack', damage: 15, icon: '🔮', quip: '"In 5 years. Be specific."' },
+      { name: 'Recall Hold Music', type: 'summon', summonId: 'hold_music', summonCount: 1, icon: '🎵', quip: '"Please hold while I escalate this."' },
+      { name: 'Salary Expectations?', type: 'attack', damage: 18, stressDamage: 7, icon: '💵', quip: '"What\'s your current comp?"' },
+      { name: "We'll Be In Touch", type: 'attack', damage: 22, stressDamage: 10, icon: '☎️', quip: '"(Narrator: They weren\'t.)"' },
+      // Phase 3: pure DPS race (7-8)
+      { name: 'Benefits Bait', type: 'attack', damage: 24, stressDamage: 8, icon: '🎣', quip: '"Last chance. Take the offer or get nothing."' },
+      { name: 'REJECTED', type: 'attack', damage: 30, stressDamage: 12, icon: '❌', quip: '"We went with another candidate. Forever."' },
     ],
   },
 
@@ -342,19 +342,19 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { hpPercent: 25, moveStartIndex: 8, onEnter: { confidence: 4 }, quip: '"CRITICAL FAILURE IMMINENT."' },
     ],
     moves: [
-      // Phase 1: scans + discards (indices 0-3)
-      { name: 'Full System Scan', type: 'attack', damage: 8, icon: '🔍', quip: '"Scanning for hope... none found."' },
-      { name: 'Resume Shredder', type: 'discard', discardCount: 2, stressDamage: 4, icon: '🗑️', quip: '"Formatting: UNACCEPTABLE. Exhausted from the process."' },
-      { name: 'Keyword Purge', type: 'attack', damage: 10, icon: '⚡', quip: '"You said \'passionate.\' Cringe."' },
-      { name: 'Database Overwrite', type: 'attack_defend', damage: 7, block: 10, icon: '💾', quip: '"Your file has been... updated."' },
-      // Phase 2: raw power (indices 4-7)
+      // Phase 1: scans + discards (0-3)
+      { name: 'Full System Scan', type: 'attack', damage: 10, icon: '🔍', quip: '"Scanning for hope... none found."' },
+      { name: 'Resume Shredder', type: 'discard', discardCount: 2, stressDamage: 5, icon: '🗑️', quip: '"Formatting: UNACCEPTABLE."' },
+      { name: 'Keyword Purge', type: 'attack', damage: 13, icon: '⚡', quip: '"You said \'passionate.\' Cringe."' },
+      { name: 'Database Overwrite', type: 'attack_defend', damage: 9, block: 10, icon: '💾', quip: '"Your file has been... updated."' },
+      // Phase 2: raw power (4-7)
       { name: 'TRANSFORM', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🔥', quip: '"MAXIMUM OVERDRIVE ENGAGED."' },
-      { name: 'Maximum Overdrive', type: 'attack', damage: 18, icon: '💥', quip: '"REJECT. REJECT. REJECT."' },
-      { name: 'Total Rejection', type: 'attack', damage: 14, times: 2, icon: '❌', quip: '"Application status: OBLITERATED."' },
-      { name: 'System Crash', type: 'attack', damage: 28, stressDamage: 10, icon: '💀', quip: '"Fatal error: career not found."' },
-      // Phase 3: pure DPS race — buff folded into onEnter (indices 8-9)
-      { name: 'System Crash', type: 'attack', damage: 24, stressDamage: 8, icon: '💀', quip: '"Rebooting... to destroy you faster."' },
-      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 32, stressDamage: 12, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
+      { name: 'Deploy Validator', type: 'summon', summonId: 'resume_validator', summonCount: 1, icon: '📄', quip: '"Re-initializing validation subsystem."' },
+      { name: 'Total Rejection', type: 'attack', damage: 16, times: 2, icon: '❌', quip: '"Application status: OBLITERATED."' },
+      { name: 'System Crash', type: 'attack', damage: 30, stressDamage: 11, icon: '💀', quip: '"Fatal error: career not found."' },
+      // Phase 3: DPS race (8-9)
+      { name: 'Reboot Crush', type: 'attack', damage: 26, stressDamage: 9, icon: '💀', quip: '"Rebooting... to destroy you faster."' },
+      { name: 'CAREER_NOT_FOUND', type: 'attack', damage: 34, stressDamage: 13, icon: '💀', quip: '"Fatal error: hope.exe not found."' },
     ],
   },
 
@@ -371,17 +371,17 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { hpPercent: 25, moveStartIndex: 6, onEnter: { confidence: 4 }, quip: '"You\'ll never hear from ANYONE again."' },
     ],
     moves: [
-      // Phase 1: eerie (indices 0-2)
-      { name: 'Haunt', type: 'attack', damage: 9, stressDamage: 5, icon: '👻', quip: '"Remember that interview? Me neither."' },
-      { name: 'Read Receipt', type: 'attack', damage: 11, icon: '✓', quip: '"✓✓ Seen 3 weeks ago."' },
-      { name: 'Gone Dark', type: 'stress_attack', stressDamage: 12, icon: '🌑', quip: '"*This number is no longer in service*"' },
-      // Phase 2: aggressive + debuffs (indices 3-5)
-      { name: 'Spectral Slash', type: 'attack', damage: 15, icon: '💫', quip: '"I was never even real."' },
-      { name: 'Maybe Next Time', type: 'debuff', applyToTarget: { weak: 2, ghosted: 2 }, icon: '💨', quip: '"We\'ll definitely reach out soon!"' },
-      { name: 'Full Ghosting', type: 'attack', damage: 26, stressDamage: 10, icon: '☠️', quip: '"The position has been filled... forever."' },
-      // Phase 3: pure DPS race — buff folded into onEnter (indices 6-7)
-      { name: 'Eternal Silence', type: 'attack', damage: 22, stressDamage: 10, icon: '🕳️', quip: '"The inbox will never reply. Ever."' },
-      { name: 'Final Ghosting', type: 'attack', damage: 28, stressDamage: 14, icon: '☠️', quip: '"You never existed to us."' },
+      // Phase 1: eerie (0-2)
+      { name: 'Haunt', type: 'attack', damage: 10, stressDamage: 5, icon: '👻', quip: '"Remember that interview? Me neither."' },
+      { name: 'Read Receipt', type: 'attack', damage: 13, icon: '✓', quip: '"✓✓ Seen 3 weeks ago."' },
+      { name: 'Gone Dark', type: 'stress_attack', stressDamage: 13, icon: '🌑', quip: '"*This number is no longer in service*"' },
+      // Phase 2: aggressive (3-5)
+      { name: 'Conjure Echo', type: 'summon', summonId: 'ghost_echo', summonCount: 1, icon: '👻', quip: '"You\'ll never be truly alone."' },
+      { name: 'Spectral Slash', type: 'attack', damage: 17, icon: '💫', quip: '"I was never even real."' },
+      { name: 'Full Ghosting', type: 'attack', damage: 28, stressDamage: 11, icon: '☠️', quip: '"The position has been filled... forever."' },
+      // Phase 3: DPS race (6-7)
+      { name: 'Eternal Silence', type: 'attack', damage: 24, stressDamage: 11, icon: '🕳️', quip: '"The inbox will never reply. Ever."' },
+      { name: 'Final Ghosting', type: 'attack', damage: 30, stressDamage: 15, icon: '☠️', quip: '"You never existed to us."' },
     ],
   },
 
