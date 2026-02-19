@@ -108,6 +108,11 @@ function loadGame(): { screen: import('../types').Screen; run: import('../types'
         if (e.onPlayAttack) { migrateEffects(e.onPlayAttack); }
       }
     }
+    // If the saved screen is a transient state with no persisted data, fall back to MAP
+    const transientScreens = ['BATTLE', 'BATTLE_REWARD', 'EVENT', 'REST', 'SHOP'];
+    if (data.screen && transientScreens.includes(data.screen) && data.run) {
+      data.screen = 'MAP';
+    }
     return data;
   } catch { return null; }
 }
