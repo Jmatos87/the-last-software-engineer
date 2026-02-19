@@ -191,27 +191,31 @@ export const act1Enemies: Record<string, EnemyDef> = {
 
   // ── Act 1 Elite Enemies ──
 
-  unpaid_take_home: {
-    id: 'unpaid_take_home',
-    name: 'Unpaid Take-Home Assignment',
-    hp: 55,
-    gold: 76,
-    icon: '💸',
+  // SUMMONER — summons ats_minion × 2 at 50% HP; re-summons one more in phase 2 cycle
+  applicant_tracking_golem: {
+    id: 'applicant_tracking_golem',
+    name: 'Applicant Tracking Golem',
+    hp: 58,
+    gold: 82,
+    icon: '⚙️',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 2, resilience: 1 }, quip: '"Oh, and add microservices."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"SUMMONING BACKUP. REJECTION ENHANCED."' },
     ],
     moves: [
-      // Phase 1: Opening pressure (indices 0-1)
-      { name: 'Overscoped!', type: 'exhaust', exhaustCount: 2, stressDamage: 6, icon: '📋', quip: '"Oh, and write the documentation."' },
-      { name: 'Crunch Time', type: 'attack', damage: 12, icon: '😰', quip: '"Due in 4 hours. No pressure!"' },
-      // Phase 2: All-out assault (indices 2-4)
-      { name: 'Scope Creep', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"Oh also build the backend."' },
-      { name: 'Pair Stress', type: 'attack', damage: 8, times: 2, icon: '😵', quip: '"This should be a weekend project!"' },
-      { name: 'Full-Stack Assault', type: 'attack', damage: 15, icon: '💥', quip: '"Add CI/CD and deploy to prod."' },
+      // Phase 1 (0-2)
+      { name: 'System Slam', type: 'attack', damage: 14, icon: '⚙️', quip: '"Application #4,729 processed."' },
+      { name: 'Absorb Pattern', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🔄', quip: '"Optimizing rejection pipeline..."' },
+      { name: 'Data Crunch', type: 'attack', damage: 10, times: 2, icon: '💾', quip: '"Your data is now our data."' },
+      // Phase 2 (3-6) — summon on first move of phase 2
+      { name: 'Deploy Minions', type: 'summon', summonId: 'ats_minion', summonCount: 2, icon: '🤖', quip: '"INITIATING PARALLEL REJECTION PROTOCOL."' },
+      { name: 'Process Queue', type: 'attack_defend', damage: 14, block: 12, icon: '📊', quip: '"You are #8,341 in the queue."' },
+      { name: 'Firewall Upload', type: 'attack', damage: 18, icon: '🔗', quip: '"Firewall engaged. You\'re locked out."' },
+      { name: 'Backup Minion', type: 'summon', summonId: 'ats_minion', summonCount: 1, icon: '🤖', quip: '"Deploying contingency unit."' },
     ],
   },
 
+  // ESCALATOR — gains confidence permanently every turn; Influencer Barrage is murder late
   linkedin_influencer: {
     id: 'linkedin_influencer',
     name: 'LinkedIn Influencer',
@@ -223,38 +227,40 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"Time to go VIRAL."' },
     ],
     moves: [
-      // Phase 1: Soft harassment (indices 0-2)
-      { name: 'Viral Post', type: 'attack', damage: 12, icon: '📢', quip: '"Agree? 👇 Like & repost."' },
-      { name: 'Humble Brag', type: 'debuff', applyToTarget: { cringe: 2 }, icon: '😬', quip: '"I turned down 47 offers this week."' },
-      { name: 'Engagement Farming', type: 'attack_defend', damage: 6, block: 5, applyToSelf: { regen: 2 }, icon: '🌱', quip: '"I cried at my standing desk today."' },
-      // Phase 2: Influencer rage mode (indices 3-5)
-      { name: 'Personal Brand', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🤳', quip: '"I\'m building an EMPIRE."' },
-      { name: 'Influencer Barrage', type: 'attack', damage: 5, times: 3, icon: '📱', quip: '"Like. Share. SUBSCRIBE."' },
-      { name: 'Thought Leader Slam', type: 'attack', damage: 13, stressDamage: 6, icon: '💡', quip: '"I posted about hustle culture at 4 AM."' },
+      // Phase 1 (0-2)
+      { name: 'Viral Post', type: 'attack', damage: 13, icon: '📢', quip: '"Agree? 👇 Like & repost."' },
+      { name: 'Humble Brag', type: 'buff', applyToSelf: { confidence: 2 }, icon: '😬', quip: '"I turned down 47 offers this week."' },
+      { name: 'Engagement Farming', type: 'attack_defend', damage: 8, block: 6, applyToSelf: { regen: 2 }, icon: '🌱', quip: '"I cried at my standing desk today."' },
+      // Phase 2 (3-5)
+      { name: 'Personal Brand', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤳', quip: '"I\'m building an EMPIRE."' },
+      { name: 'Influencer Barrage', type: 'attack', damage: 7, times: 3, icon: '📱', quip: '"Like. Share. SUBSCRIBE."' },
+      { name: 'Thought Leader Slam', type: 'attack', damage: 18, stressDamage: 8, icon: '💡', quip: '"I posted about hustle culture at 4 AM."' },
     ],
   },
 
-  applicant_tracking_golem: {
-    id: 'applicant_tracking_golem',
-    name: 'Applicant Tracking Golem',
-    hp: 58,
-    gold: 82,
-    icon: '⚙️',
+  // JUGGERNAUT — Phase 1 builds block+confidence; Phase 2 erupts with massive scaled hits
+  unpaid_take_home: {
+    id: 'unpaid_take_home',
+    name: 'Unpaid Take-Home Assignment',
+    hp: 55,
+    gold: 76,
+    icon: '💸',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"MAXIMUM REJECTION ENGAGED."' },
+      { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 3, resilience: 1 }, quip: '"Oh, and add microservices. And CI/CD."' },
     ],
     moves: [
-      // Phase 1: Aggressive opener (indices 0-2)
-      { name: 'System Slam', type: 'attack', damage: 12, icon: '⚙️', quip: '"Application #4,729 processed."' },
-      { name: 'Absorb Pattern', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🔄', quip: '"Optimizing rejection pipeline..."' },
-      { name: 'Data Crunch', type: 'attack', damage: 7, times: 2, icon: '💾', quip: '"Your data is now our data."' },
-      // Phase 2: Armored assault (indices 3-4)
-      { name: 'Process Queue', type: 'attack_defend', damage: 9, block: 10, icon: '📊', quip: '"You are #8,341 in the queue."' },
-      { name: 'Firewall Upload', type: 'attack_defend', damage: 12, block: 13, icon: '🔗', quip: '"Firewall engaged. You\'re locked out."' },
+      // Phase 1 (0-1)
+      { name: 'Overscoped!', type: 'exhaust', exhaustCount: 2, stressDamage: 8, icon: '📋', quip: '"Oh, and write the documentation."' },
+      { name: 'Crunch Time', type: 'attack', damage: 16, icon: '😰', quip: '"Due in 4 hours. No pressure!"' },
+      // Phase 2 (2-4)
+      { name: 'Scope Creep', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"Oh also build the backend."' },
+      { name: 'Pair Stress', type: 'attack', damage: 10, times: 2, stressDamage: 5, icon: '😵', quip: '"This should be a weekend project!"' },
+      { name: 'Full-Stack Assault', type: 'attack', damage: 24, icon: '💥', quip: '"Add CI/CD and deploy to prod."' },
     ],
   },
 
+  // MANIPULATOR — energy drain + corrupt; drains resources and poisons your deck
   networking_event: {
     id: 'networking_event',
     name: 'The Networking Event',
@@ -263,13 +269,15 @@ export const act1Enemies: Record<string, EnemyDef> = {
     icon: '🍸',
     isElite: true,
     moves: [
-      { name: 'Small Talk', type: 'stress_attack', stressDamage: 9, icon: '💬', quip: '"So... what do you do?"' },
-      { name: 'Awkward Handshake', type: 'attack', damage: 7, stressDamage: 3, icon: '🤝', quip: '"*limp fish grip*"' },
-      { name: 'Elevator Pitch', type: 'attack', damage: 13, icon: '🗣️', quip: '"I\'m disrupting disruption."' },
+      { name: 'Small Talk', type: 'energy_drain', energyDrain: 1, stressDamage: 10, icon: '💬', quip: '"So... what do you do?"' },
+      { name: 'Awkward Handshake', type: 'attack', damage: 12, stressDamage: 5, icon: '🤝', quip: '"*limp fish grip*"' },
+      { name: 'Elevator Pitch', type: 'corrupt', stressDamage: 4, icon: '🗣️', quip: '"I\'m disrupting disruption. Here\'s my card."' },
       { name: 'Exchange Cards', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📇', quip: '"Let\'s connect on LinkedIn!"' },
+      { name: 'Thought Leadership', type: 'attack', damage: 18, icon: '💡', quip: '"This is how I closed my Series A."' },
     ],
   },
 
+  // BERSERKER — starts with confidence +4; DPS race from turn 1
   automated_rejection: {
     id: 'automated_rejection',
     name: 'Automated Rejection Letter',
@@ -277,18 +285,19 @@ export const act1Enemies: Record<string, EnemyDef> = {
     gold: 65,
     icon: '✉️',
     isElite: true,
+    startStatusEffects: { confidence: 4 },
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"INITIATING BATCH REJECTION PROTOCOL."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"INITIATING BATCH REJECTION PROTOCOL."' },
     ],
     moves: [
-      // Phase 1: Standard rejection flow (indices 0-2)
+      // Phase 1 (0-2)
       { name: 'Demoralize', type: 'debuff', applyToTarget: { confidence: -1 }, icon: '😞', quip: '"Thank you for your interest."' },
-      { name: 'Form Rejection', type: 'attack', damage: 8, stressDamage: 4, icon: '✉️', quip: '"Dear [CANDIDATE_NAME]..."' },
-      { name: 'Not A Good Fit', type: 'attack', damage: 15, icon: '❌', quip: '"We\'re looking for a unicorn."' },
-      // Phase 2: Automated rejection machine (indices 3-5)
+      { name: 'Form Rejection', type: 'attack', damage: 12, stressDamage: 5, icon: '✉️', quip: '"Dear [CANDIDATE_NAME]..."' },
+      { name: 'Not A Good Fit', type: 'attack', damage: 20, icon: '❌', quip: '"We\'re looking for a unicorn."' },
+      // Phase 2 (3-5) — now at confidence +7
       { name: 'Auto-Reject Mode', type: 'buff', applyToSelf: { confidence: 2 }, icon: '⚙️', quip: '"PROCESSING 10,000 APPLICATIONS..."' },
-      { name: 'Rejection Cascade', type: 'attack', damage: 5, times: 3, icon: '✉️', quip: '"Rejected. Rejected. Rejected."' },
-      { name: 'Mass Rejection', type: 'attack', damage: 17, stressDamage: 8, icon: '❌', quip: '"Your entire career has been archived."' },
+      { name: 'Rejection Cascade', type: 'attack', damage: 7, times: 4, icon: '✉️', quip: '"Rejected. Rejected. Rejected. Rejected."' },
+      { name: 'Mass Rejection', type: 'attack', damage: 22, stressDamage: 10, icon: '❌', quip: '"Your entire career has been archived."' },
     ],
   },
 
