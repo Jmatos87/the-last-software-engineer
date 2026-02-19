@@ -6,8 +6,9 @@ import type { EnemyDef } from '../../types';
 
 export const act3Enemies: Record<string, EnemyDef> = {
 
-  // ── Act 3 Common Enemies (HP +15-20, massive damage bumps) ──
+  // ── Act 3 Common Enemies ──
 
+  // RITUALIST — Load Balancer buffs defense; Distributed Slam is the payoff
   system_design_titan: {
     id: 'system_design_titan',
     name: 'System Design Titan',
@@ -15,27 +16,30 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 62,
     icon: '🏛️',
     moves: [
-      { name: 'Let\'s Talk Scalability', type: 'attack_defend', damage: 10, block: 8, icon: '📐', quip: '"Draw the architecture. All of it."' },
-      { name: 'Load Balancer', type: 'defend', block: 14, icon: '⚖️', quip: '"Distributing incoming damage..."' },
-      { name: 'Distributed Slam', type: 'attack', damage: 15, icon: '🌐', quip: '"Across 47 microservices!"' },
-      { name: 'Microservice Barrage', type: 'attack', damage: 9, times: 2, icon: '🔧', quip: '"Each one a separate repo."' },
+      { name: "Let's Talk Scalability", type: 'attack_defend', damage: 12, block: 10, icon: '📐', quip: '"Draw the architecture. All of it."' },
+      { name: 'Load Balancer', type: 'buff', applyToSelf: { confidence: 3, resilience: 1 }, icon: '⚖️', quip: '"Distributing incoming damage..."' },
+      { name: 'Distributed Slam', type: 'attack', damage: 22, icon: '🌐', quip: '"Across 47 microservices!"' },
+      { name: 'Microservice Barrage', type: 'attack', damage: 11, times: 2, icon: '🔧', quip: '"Each one a separate repo."' },
     ],
   },
 
+  // WILDCARD — hideIntent; gold drain then Final Offer big surprise hit
   salary_negotiator: {
     id: 'salary_negotiator',
     name: 'Salary Negotiator',
     hp: 60,
     gold: 62,
     icon: '💼',
+    hideIntent: true,
     moves: [
-      { name: 'Lowball Offer', type: 'gold_steal', goldSteal: 18, icon: '💸', quip: '"Best we can do. Economy, y\'know."' },
-      { name: 'Market Rate Denial', type: 'attack', damage: 12, stressDamage: 5, icon: '📉', quip: '"Our internal bands are different."' },
-      { name: 'Benefits Package', type: 'gold_steal', goldSteal: 12, stressDamage: 3, icon: '📦', quip: '"Free snacks count as comp, right?"' },
-      { name: 'Final Offer', type: 'attack', damage: 17, icon: '🤝', quip: '"Take it or we move on."' },
+      { name: 'Lowball Offer', type: 'gold_steal', goldSteal: 20, icon: '💸', quip: '"Best we can do. Economy, y\'know."' },
+      { name: 'Market Rate Denial', type: 'attack', damage: 14, stressDamage: 6, icon: '📉', quip: '"Our internal bands are different."' },
+      { name: 'Benefits Package', type: 'gold_steal', goldSteal: 14, stressDamage: 4, icon: '📦', quip: '"Free snacks count as comp, right?"' },
+      { name: 'Final Offer', type: 'attack', damage: 24, icon: '🤝', quip: '"Take it or we move on."' },
     ],
   },
 
+  // WAKE-UP — You Don't Belong is the passive opener; Spiral is the activated peak
   imposter_syndrome_common: {
     id: 'imposter_syndrome_common',
     name: 'Imposter Syndrome',
@@ -43,27 +47,30 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 48,
     icon: '🎭',
     moves: [
-      { name: 'You Don\'t Belong', type: 'stress_attack', stressDamage: 10, icon: '😰', quip: '"They\'ll realize any day now."' },
+      { name: "You Don't Belong", type: 'stress_attack', stressDamage: 12, icon: '😰', quip: '"They\'ll realize any day now."' },
       { name: 'Self Doubt', type: 'debuff', applyToTarget: { weak: 2 }, icon: '😟', quip: '"You just got lucky so far."' },
-      { name: 'Anxiety Spike', type: 'stress_attack', stressDamage: 12, icon: '😱', quip: '"Everyone else is smarter."' },
-      { name: 'Spiral', type: 'attack', damage: 10, stressDamage: 6, icon: '🌀', quip: '"Google your own name lately?"' },
+      { name: 'Anxiety Spike', type: 'stress_attack', stressDamage: 15, icon: '😱', quip: '"Everyone else is smarter."' },
+      { name: 'Spiral', type: 'attack', damage: 14, stressDamage: 8, applyToTarget: { vulnerable: 2 }, icon: '🌀', quip: '"Google your own name lately?"' },
     ],
   },
 
+  // WILDCARD — hideIntent; SURPRISE is the peak disguised behind Looks Great! defends
   benefits_mimic: {
     id: 'benefits_mimic',
     name: 'Benefits Mimic',
     hp: 65,
     gold: 56,
     icon: '📦',
+    hideIntent: true,
     moves: [
-      { name: 'Looks Great!', type: 'defend', block: 5, icon: '✨', quip: '"Unlimited PTO! (Don\'t use it.)"' },
-      { name: 'SURPRISE!', type: 'attack', damage: 22, stressDamage: 6, icon: '💥', quip: '"$5000 deductible! Gotcha!"' },
-      { name: 'Fine Print', type: 'attack', damage: 12, icon: '📜', quip: '"Dental is extra. Way extra."' },
-      { name: 'Reset Trap', type: 'defend', block: 5, icon: '📦', quip: '"Vision starts after 12 months."' },
+      { name: 'Looks Great!', type: 'defend', block: 8, icon: '✨', quip: '"Unlimited PTO! (Don\'t use it.)"' },
+      { name: 'SURPRISE!', type: 'attack', damage: 28, stressDamage: 8, icon: '💥', quip: '"$5000 deductible! Gotcha!"' },
+      { name: 'Fine Print', type: 'attack', damage: 16, icon: '📜', quip: '"Dental is extra. Way extra."' },
+      { name: 'Reset Trap', type: 'defend', block: 8, icon: '📦', quip: '"Vision starts after 12 months."' },
     ],
   },
 
+  // ESCALATOR — exhaust + Dilution (-confidence) compounds; gains confidence via buff
   equity_phantom: {
     id: 'equity_phantom',
     name: 'Equity Phantom',
@@ -71,13 +78,14 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 45,
     icon: '💎',
     moves: [
-      { name: 'Vesting Cliff', type: 'exhaust', exhaustCount: 2, stressDamage: 6, icon: '📅', quip: '"Only 3 more years to go!"' },
-      { name: 'Paper Money', type: 'attack', damage: 11, icon: '📄', quip: '"Worth millions! On paper."' },
-      { name: 'Dilution', type: 'debuff', applyToTarget: { confidence: -1 }, icon: '💧', quip: '"New funding round! Your share: 0.0001%"' },
-      { name: 'Golden Cage', type: 'exhaust', exhaustCount: 1, icon: '🔒', quip: '"Leave now and lose it all."' },
+      { name: 'Vesting Cliff', type: 'exhaust', exhaustCount: 2, stressDamage: 7, icon: '📅', quip: '"Only 3 more years to go!"' },
+      { name: 'Paper Money', type: 'attack', damage: 15, icon: '📄', quip: '"Worth millions! On paper."' },
+      { name: 'Accumulate', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"Reinvesting gains..."' },
+      { name: 'Golden Cage', type: 'attack', damage: 22, applyToTarget: { confidence: -1 }, icon: '🔒', quip: '"Leave now and lose it all."' },
     ],
   },
 
+  // COMPOUND — Legal Binding exhausts + Restriction debuffs compound; Court Order scales
   non_compete_clause: {
     id: 'non_compete_clause',
     name: 'Non-Compete Clause',
@@ -86,12 +94,13 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '📜',
     moves: [
       { name: 'Legal Binding', type: 'exhaust', exhaustCount: 2, icon: '⚖️', quip: '"You signed page 47. Remember?"' },
-      { name: 'Cease & Desist', type: 'attack', damage: 13, icon: '🚫', quip: '"Our lawyers will be in touch."' },
+      { name: 'Cease & Desist', type: 'attack', damage: 16, icon: '🚫', quip: '"Our lawyers will be in touch."' },
       { name: 'Restriction', type: 'debuff', applyToTarget: { weak: 2, resilience: -1 }, icon: '🔗', quip: '"No working in tech for 2 years."' },
-      { name: 'Court Order', type: 'attack', damage: 17, stressDamage: 5, icon: '⚖️', quip: '"See you in court. We have 40 lawyers."' },
+      { name: 'Court Order', type: 'attack', damage: 24, stressDamage: 7, icon: '⚖️', quip: '"See you in court. We have 40 lawyers."' },
     ],
   },
 
+  // RITUALIST — Pivoting to Blockchain buffs; pivot cycle; Pivoting to Cloud is the payoff
   the_pivot: {
     id: 'the_pivot',
     name: 'The Pivot',
@@ -99,13 +108,14 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 50,
     icon: '🔄',
     moves: [
-      { name: 'Pivoting to AI', type: 'attack', damage: 14, icon: '🤖', quip: '"We\'re an AI company now."' },
-      { name: 'Pivoting to Blockchain', type: 'buff', applyToSelf: { confidence: 2 }, icon: '⛓️', quip: '"Web3 is definitely still a thing."' },
-      { name: 'Pivoting to Cloud', type: 'attack_defend', damage: 10, block: 10, icon: '☁️', quip: '"Everything is serverless now."' },
-      { name: 'Pivoting to... Pivot', type: 'stress_attack', stressDamage: 8, icon: '🔄', quip: '"Our core business is pivoting."' },
+      { name: 'Pivoting to AI', type: 'attack', damage: 16, icon: '🤖', quip: '"We\'re an AI company now."' },
+      { name: 'Pivoting to Blockchain', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⛓️', quip: '"Web3 is definitely still a thing."' },
+      { name: 'Pivoting to Cloud', type: 'attack_defend', damage: 14, block: 12, icon: '☁️', quip: '"Everything is serverless now."' },
+      { name: 'Pivoting to... Pivot', type: 'attack', damage: 20, stressDamage: 8, icon: '🔄', quip: '"Our core business is pivoting."' },
     ],
   },
 
+  // COMPOUND — Smolder applies poison; Ember Spread re-applies; compounds to lethal DoT
   burnout_ember: {
     id: 'burnout_ember',
     name: 'Burnout Ember',
@@ -113,13 +123,14 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 48,
     icon: '🔥',
     moves: [
-      { name: 'Smolder', type: 'debuff', applyToTarget: { poison: 6 }, icon: '🔥', quip: '"You love what you do, right?"' },
-      { name: 'Flare Up', type: 'attack', damage: 10, stressDamage: 5, icon: '💥', quip: '"Sunday scaries are normal."' },
-      { name: 'Slow Burn', type: 'stress_attack', stressDamage: 10, icon: '🕯️', quip: '"It\'s just a phase. For 3 years."' },
-      { name: 'Ember Spread', type: 'debuff', applyToTarget: { poison: 5, vulnerable: 1 }, icon: '🌋', quip: '"Your passion is your problem."' },
+      { name: 'Smolder', type: 'debuff', applyToTarget: { poison: 4 }, icon: '🔥', quip: '"You love what you do, right?"' },
+      { name: 'Flare Up', type: 'attack', damage: 13, stressDamage: 6, icon: '💥', quip: '"Sunday scaries are normal."' },
+      { name: 'Slow Burn', type: 'stress_attack', stressDamage: 12, icon: '🕯️', quip: '"It\'s just a phase. For 3 years."' },
+      { name: 'Ember Spread', type: 'debuff', applyToTarget: { poison: 5, vulnerable: 2 }, icon: '🌋', quip: '"Your passion is your problem."' },
     ],
   },
 
+  // ESCALATOR — Reply All Storm × 2 gains confidence each cycle; Action Items is the scaler
   meeting_email: {
     id: 'meeting_email',
     name: 'Meeting Email',
@@ -127,13 +138,14 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 58,
     icon: '📧',
     moves: [
-      { name: 'Let\'s Circle Back', type: 'attack', damage: 12, icon: '🔄', quip: '"Per my last email..."' },
-      { name: 'Agenda Overload', type: 'exhaust', exhaustCount: 1, stressDamage: 4, icon: '📋', quip: '"42-item agenda for a 30-min call."' },
-      { name: 'Reply All Storm', type: 'attack', damage: 10, times: 2, icon: '📧', quip: '"Please remove me from this thread."' },
-      { name: 'Action Items', type: 'attack', damage: 16, icon: '✅', quip: '"You own all 17 action items."' },
+      { name: "Let's Circle Back", type: 'attack', damage: 14, icon: '🔄', quip: '"Per my last email..."' },
+      { name: 'Agenda Overload', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📋', quip: '"42-item agenda for a 30-min call."' },
+      { name: 'Reply All Storm', type: 'attack', damage: 12, times: 2, icon: '📧', quip: '"Please remove me from this thread."' },
+      { name: 'Action Items', type: 'attack', damage: 24, stressDamage: 7, icon: '✅', quip: '"You own all 17 action items."' },
     ],
   },
 
+  // WAKE-UP — Match Their Offer (heal) is passive; activates with Retention Bonus+Guilt Trip
   the_counteroffer: {
     id: 'the_counteroffer',
     name: 'The Counteroffer',
@@ -141,13 +153,14 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 52,
     icon: '🤝',
     moves: [
-      { name: 'Match Their Offer', type: 'heal_allies', healAmount: 18, icon: '💊', quip: '"We can match... mostly."' },
-      { name: 'Retention Bonus', type: 'attack', damage: 12, icon: '💰', quip: '"One-time payment. Non-negotiable."' },
-      { name: 'We Value You', type: 'heal_allies', healAmount: 14, icon: '❤️', quip: '"You\'re like family! (See Act 2.)"' },
-      { name: 'Guilt Trip', type: 'attack', damage: 11, stressDamage: 5, icon: '😢', quip: '"After everything we\'ve done?"' },
+      { name: 'Match Their Offer', type: 'heal_allies', healAmount: 20, icon: '💊', quip: '"We can match... mostly."' },
+      { name: 'Retention Bonus', type: 'attack', damage: 15, icon: '💰', quip: '"One-time payment. Non-negotiable."' },
+      { name: 'We Value You', type: 'heal_allies', healAmount: 16, icon: '❤️', quip: '"You\'re like family! (See Act 2.)"' },
+      { name: 'Guilt Trip', type: 'attack', damage: 19, stressDamage: 7, icon: '😢', quip: '"After everything we\'ve done?"' },
     ],
   },
 
+  // COMPOUND — Verify Employment debuffs compound; Found Something lands hard
   background_check: {
     id: 'background_check',
     name: 'Background Check',
@@ -155,13 +168,14 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 52,
     icon: '🔎',
     moves: [
-      { name: 'Deep Search', type: 'attack', damage: 12, icon: '🔎', quip: '"Found your MySpace page."' },
-      { name: 'Found Something', type: 'attack', damage: 17, icon: '⚠️', quip: '"Care to explain this tweet?"' },
+      { name: 'Deep Search', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🔎', quip: '"Found your MySpace page."' },
+      { name: 'Found Something', type: 'attack', damage: 22, icon: '⚠️', quip: '"Care to explain this tweet?"' },
       { name: 'Verify Employment', type: 'debuff', applyToTarget: { vulnerable: 2, weak: 1 }, icon: '📋', quip: '"That gap year looks suspicious."' },
-      { name: 'Criminal Record Scan', type: 'attack', damage: 13, stressDamage: 5, icon: '🔍', quip: '"One parking ticket in 2019..."' },
+      { name: 'Criminal Record Scan', type: 'attack', damage: 20, stressDamage: 7, icon: '🔍', quip: '"One parking ticket in 2019..."' },
     ],
   },
 
+  // RITUALIST — Palo Alto or Bust is stress buildup; Housing Crisis is the payoff hit
   relocation_package: {
     id: 'relocation_package',
     name: 'Relocation Package',
@@ -169,10 +183,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 60,
     icon: '🚚',
     moves: [
-      { name: 'Palo Alto or Bust', type: 'attack', damage: 14, stressDamage: 6, icon: '🏠', quip: '"1BR for $4,500/month. Steal!"' },
-      { name: 'Moving Costs', type: 'gold_steal', goldSteal: 15, icon: '💸', quip: '"We cover $500. Movers cost $8K."' },
-      { name: 'Culture Shock', type: 'stress_attack', stressDamage: 10, icon: '😵', quip: '"Hope you like kombucha on tap."' },
-      { name: 'Housing Crisis', type: 'attack', damage: 18, icon: '🏠', quip: '"Your commute is only 2 hours!"' },
+      { name: 'Palo Alto or Bust', type: 'attack', damage: 16, stressDamage: 8, icon: '🏠', quip: '"1BR for $4,500/month. Steal!"' },
+      { name: 'Moving Costs', type: 'gold_steal', goldSteal: 18, icon: '💸', quip: '"We cover $500. Movers cost $8K."' },
+      { name: 'Culture Shock', type: 'buff', applyToSelf: { confidence: 3 }, icon: '😵', quip: '"Hope you like kombucha on tap."' },
+      { name: 'Housing Crisis', type: 'attack', damage: 26, stressDamage: 8, icon: '🏠', quip: '"Your commute is only 2 hours!"' },
     ],
   },
 
