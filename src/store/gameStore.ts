@@ -24,7 +24,7 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
-const GAME_VERSION = '1.11.3';
+const GAME_VERSION = '1.11.4';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
@@ -506,6 +506,86 @@ export const useGameStore = create<GameState>()(
       const hpAfterRegen = regenAmount > 0 ? Math.min(state.run.maxHp, playerHp + regenAmount) : playerHp;
 
       const { battle: newTurn, stressChange, hpChange: turnHpChange } = startNewTurn(afterEnemyTurn, state.run);
+
+      // Check if deployments killed the last enemy during start-of-turn processing
+      if (newTurn.enemies.length === 0) {
+        const isEliteAfterDeploy = state.run.map.nodes.find(
+          n => n.id === state.run!.map.currentNodeId
+        )?.type === 'elite';
+        const isBossAfterDeploy = state.run.map.nodes.find(
+          n => n.id === state.run!.map.currentNodeId
+        )?.type === 'boss';
+
+        const kills = newTurn.killCount || 0;
+        const allGhosted = kills === 0;
+        const actD = state.run.act;
+        const extraGoldD = state.run.items.reduce((sum, item) => sum + (item.effect.extraGold || 0), 0);
+        const extraGoldPercentD = state.run.items.reduce((sum, item) => sum + (item.effect.extraGoldPercent || 0), 0);
+        const rawGoldD = allGhosted ? 0 : (newTurn.goldEarned + extraGoldD);
+        const goldRewardD = extraGoldPercentD > 0 ? Math.floor(rawGoldD * (1 + extraGoldPercentD / 100)) : rawGoldD;
+        const healOnKillD = kills > 0 ? state.run.items.reduce((sum, item) => sum + (item.effect.healOnKill || 0), 0) : 0;
+
+        const ownedIdsD = state.run.items.map(i => i.id);
+        let artifactChoicesD: import('../types').ItemDef[] | undefined;
+        if (isBossAfterDeploy) {
+          artifactChoicesD = getRewardArtifact(ownedIdsD, 3, state.run?.character?.id);
+        } else if (isEliteAfterDeploy && Math.random() < 0.5) {
+          artifactChoicesD = getRewardArtifact(ownedIdsD, 1, state.run?.character?.id);
+        }
+
+        const canHoldConsumableD = state.run.consumables.length < state.run.maxConsumables;
+        let consumableChoicesD: import('../types').ConsumableDef[] | undefined;
+        if (canHoldConsumableD) {
+          if (isBossAfterDeploy) {
+            consumableChoicesD = [getRareConsumable()];
+          } else if (isEliteAfterDeploy) {
+            consumableChoicesD = [getConsumableDrop(actD)];
+          } else if (Math.random() < 0.5) {
+            consumableChoicesD = [getConsumableDrop(actD)];
+          }
+        }
+
+        set(s => {
+          if (!s.run) return;
+          s.run.hp = Math.max(0, Math.min(s.run.maxHp, hpAfterRegen + turnHpChange + healOnKillD));
+          s.run.stress = Math.max(0, Math.min(s.run.maxStress, playerStress + stressChange));
+          s.run.gold += goldRewardD;
+          s.battle = newTurn as any;
+        });
+
+        const actStressD = actD === 1 ? 3 : actD === 2 ? 5 : 8;
+        setTimeout(() => {
+          if (isBossAfterDeploy) {
+            set(s => {
+              if (!s.run) return;
+              s.run.hp = s.run.maxHp;
+              s.pendingRewards = {
+                gold: goldRewardD,
+                cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), actD, 'boss') as any,
+                artifactChoices: artifactChoicesD && artifactChoicesD.length > 0 ? artifactChoicesD as any : undefined,
+                consumableChoices: consumableChoicesD,
+                isBossReward: true,
+              };
+              s.battle = null;
+              s.screen = 'BATTLE_REWARD';
+            });
+            return;
+          }
+          set(s => {
+            if (!s.run) return;
+            s.run.stress = Math.min(s.run.maxStress, s.run.stress + actStressD);
+            s.pendingRewards = {
+              gold: goldRewardD,
+              cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), actD, isEliteAfterDeploy ? 'elite' : 'normal') as any,
+              artifactChoices: artifactChoicesD && artifactChoicesD.length > 0 ? artifactChoicesD as any : undefined,
+              consumableChoices: consumableChoicesD,
+            };
+            s.battle = null;
+            s.screen = 'BATTLE_REWARD';
+          });
+        }, 800);
+        return;
+      }
 
       set(s => {
         if (s.run) {
