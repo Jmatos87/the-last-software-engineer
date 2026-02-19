@@ -285,4 +285,15 @@ export const neutralCards: Record<string, CardDef> = {
     effects: {},
     icon: '🤐',
   },
+  bug_report_curse: {
+    id: 'bug_report_curse',
+    name: 'Bug Report',
+    type: 'curse',
+    target: 'self',
+    cost: 1,
+    rarity: 'curse',
+    icon: '🐛',
+    description: 'Unplayable. When drawn, gain 5 stress. "Severity: Critical. Assignee: You."',
+    effects: {},
+  },
 };
