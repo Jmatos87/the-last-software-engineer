@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { BattleState, Deployment, EnemyDef, EnemyInstance, RunState, CardInstance } from '../types';
 import { createCardInstance, shuffleDeck, drawCards } from '../utils/deckUtils';
 import { cards, getCardDef } from '../data/cards';
+import { enemies } from '../data/enemies';
 import {
   calculateDamage,
   calculateBlock,
@@ -795,6 +796,7 @@ export function executeEnemyTurn(
   let goldChange = 0;
 
   const enemiesToRemove: string[] = [];
+  const enemiesToSpawn: EnemyInstance[] = [];
 
   // Each enemy acts
   newBattle.enemies = newBattle.enemies.map(enemy => {
@@ -840,6 +842,12 @@ export function executeEnemyTurn(
             enemy.id
           );
           playerStress = applyStressToPlayer(playerStress, stressDmg);
+        }
+        if (move.applyToTarget) {
+          newBattle.playerStatusEffects = mergeStatusEffects(
+            newBattle.playerStatusEffects,
+            move.applyToTarget
+          );
         }
         break;
       }
@@ -1008,6 +1016,67 @@ export function executeEnemyTurn(
         if (move.applyToSelf) {
           updatedEnemy.statusEffects = mergeStatusEffects(updatedEnemy.statusEffects, move.applyToSelf);
         }
+        if (move.applyToTarget) {
+          newBattle.playerStatusEffects = mergeStatusEffects(
+            newBattle.playerStatusEffects,
+            move.applyToTarget
+          );
+        }
+        break;
+      }
+      case 'summon': {
+        const summonId = move.summonId;
+        const count = move.summonCount ?? 1;
+        if (summonId) {
+          const def = enemies[summonId];
+          if (def) {
+            const available = Math.max(0, 5 - (newBattle.enemies.length + enemiesToSpawn.length));
+            const spawnCount = Math.min(count, available);
+            for (let i = 0; i < spawnCount; i++) {
+              enemiesToSpawn.push({
+                ...def,
+                instanceId: uuidv4(),
+                currentHp: def.hp,
+                maxHp: def.hp,
+                block: 0,
+                statusEffects: def.startStatusEffects ? { ...def.startStatusEffects } : {},
+                moveIndex: 0,
+                currentMove: def.moves[0],
+              });
+            }
+          }
+        }
+        break;
+      }
+      case 'energy_drain': {
+        const drain = move.energyDrain ?? 1;
+        newBattle.nextTurnEnergyPenalty = (newBattle.nextTurnEnergyPenalty || 0) + drain;
+        if (move.stressDamage) {
+          const stressDmg = calculateStressDamage(
+            move.stressDamage,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects,
+            enemy.id
+          );
+          playerStress = applyStressToPlayer(playerStress, stressDmg);
+        }
+        break;
+      }
+      case 'corrupt': {
+        const curseId = move.corruptCardId ?? 'bug_report_curse';
+        const curseDef = getCardDef(curseId);
+        if (curseDef) {
+          newBattle.discardPile = [...newBattle.discardPile, createCardInstance(curseDef)];
+        }
+        if (move.stressDamage) {
+          const stressDmg = calculateStressDamage(
+            move.stressDamage,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects,
+            enemy.id
+          );
+          playerStress = applyStressToPlayer(playerStress, stressDmg);
+        }
         break;
       }
     }
@@ -1072,10 +1141,11 @@ export function executeEnemyTurn(
     .filter(e => e.currentHp <= 0)
     .reduce((sum, e) => sum + (e.gold || 0), 0);
 
-  // Remove vanished enemies (Ghost Company) and enemies killed by Counter-Offer
-  newBattle.enemies = newBattle.enemies.filter(e =>
-    e.currentHp > 0 && !enemiesToRemove.includes(e.instanceId)
-  );
+  // Remove vanished enemies (Ghost Company) and enemies killed by Counter-Offer; append spawned enemies
+  newBattle.enemies = [
+    ...newBattle.enemies.filter(e => e.currentHp > 0 && !enemiesToRemove.includes(e.instanceId)),
+    ...enemiesToSpawn,
+  ];
 
   // Tick player status effects
   newBattle.playerStatusEffects = tickStatusEffects(newBattle.playerStatusEffects);
