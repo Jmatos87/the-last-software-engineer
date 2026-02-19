@@ -318,17 +318,18 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { hpPercent: 25, moveStartIndex: 6, onEnter: { confidence: 4 }, quip: '"The panel is UNANIMOUS."' },
     ],
     moves: [
-      // Phase 1 (indices 0-2)
-      { name: 'Technical Question', type: 'attack', damage: 9, icon: '🔧', quip: '"Explain polymorphism. In Latin."' },
-      { name: 'Stress Question', type: 'stress_attack', stressDamage: 8, icon: '😰', quip: '"We all disagree. Convince us."' },
+      // Phase 1 (0-2)
+      { name: 'Technical Question', type: 'attack', damage: 11, icon: '🔧', quip: '"Explain polymorphism. In Latin."' },
+      { name: 'Stress Question', type: 'stress_attack', stressDamage: 10, icon: '😰', quip: '"We all disagree. Convince us."' },
       { name: 'Panel Buff', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"*whispering among themselves*"' },
-      // Phase 2 (indices 3-5)
-      { name: 'Cross-Examination', type: 'attack', damage: 12, stressDamage: 4, icon: '⚔️', quip: '"That contradicts what you said."' },
-      { name: 'Group Deliberation', type: 'defend', block: 12, icon: '🤔', quip: '"We need to align internally."' },
-      { name: 'Final Verdict', type: 'attack', damage: 22, stressDamage: 8, icon: '⚖️', quip: '"The panel has decided."' },
-      // Phase 3: pure DPS race — buff folded into onEnter (indices 6-7)
-      { name: 'Cross-Examination Barrage', type: 'attack', damage: 12, times: 3, icon: '⚔️', quip: '"Answer. Answer. ANSWER."' },
-      { name: 'Unanimous Rejection', type: 'attack', damage: 38, stressDamage: 15, icon: '⚖️', quip: '"Motion to reject. ALL in favor."' },
+      // Phase 2 (3-5)
+      { name: 'Cross-Examination', type: 'attack', damage: 15, stressDamage: 5, icon: '⚔️', quip: '"That contradicts what you said."' },
+      { name: 'Group Deliberation', type: 'defend', block: 14, icon: '🤔', quip: '"We need to align internally."' },
+      { name: 'Final Verdict', type: 'attack', damage: 26, stressDamage: 9, icon: '⚖️', quip: '"The panel has decided."' },
+      // Phase 3: DPS race (6-8)
+      { name: 'Recall Panel', type: 'summon', summonId: 'panel_member_a', summonCount: 1, icon: '🧑', quip: '"We need a full quorum."' },
+      { name: 'Cross-Examination Barrage', type: 'attack', damage: 14, times: 3, icon: '⚔️', quip: '"Answer. Answer. ANSWER."' },
+      { name: 'Unanimous Rejection', type: 'attack', damage: 40, stressDamage: 16, icon: '⚖️', quip: '"Motion to reject. ALL in favor."' },
     ],
   },
 
@@ -344,18 +345,18 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { hpPercent: 25, moveStartIndex: 7, onEnter: { confidence: 4 }, quip: '"COMPILATION: FAILED."' },
     ],
     moves: [
-      // Phase 1 (indices 0-3)
-      { name: 'Timer Start', type: 'attack', damage: 7, icon: '⏱️', quip: '"You have 45 minutes. Go."' },
-      { name: 'Syntax Error', type: 'attack', damage: 9, stressDamage: 3, icon: '🔴', quip: '"Missing semicolon on line 1."' },
-      { name: 'Runtime Exception', type: 'attack', damage: 11, icon: '💥', quip: '"undefined is not a function."' },
+      // Phase 1 (0-3)
+      { name: 'Timer Start', type: 'attack', damage: 9, icon: '⏱️', quip: '"You have 45 minutes. Go."' },
+      { name: 'Syntax Error', type: 'attack', damage: 12, stressDamage: 4, icon: '🔴', quip: '"Missing semicolon on line 1."' },
+      { name: 'Runtime Exception', type: 'attack', damage: 14, icon: '💥', quip: '"undefined is not a function."' },
       { name: 'Compiler Fury', type: 'buff', applyToSelf: { confidence: 4 }, icon: '🔥', quip: '"142 errors found."' },
-      // Phase 2 (indices 4-6)
-      { name: 'Stack Overflow', type: 'attack', damage: 12, stressDamage: 5, icon: '📚', quip: '"Maximum call stack exceeded."' },
-      { name: 'Segfault', type: 'attack', damage: 15, icon: '💀', quip: '"Core dumped. So did your career."' },
-      { name: 'TIME\'S UP!', type: 'attack', damage: 30, stressDamage: 13, icon: '⏰', quip: '"Pencils down. Step away."' },
-      // Phase 3: pure DPS race — buff folded into onEnter (indices 7-8)
-      { name: 'TIME\'S UP!', type: 'attack', damage: 36, stressDamage: 15, icon: '⏰', quip: '"You ran out of time. AGAIN."' },
-      { name: 'FAILED', type: 'attack', damage: 42, stressDamage: 17, icon: '💀', quip: '"Interview status: TERMINATED."' },
+      // Phase 2 (4-6)
+      { name: 'Spawn Test Case', type: 'summon', summonId: 'test_case', summonCount: 1, icon: '🐛', quip: '"Running test suite... 47 failures."' },
+      { name: 'Segfault', type: 'attack', damage: 19, icon: '💀', quip: '"Core dumped. So did your career."' },
+      { name: "TIME'S UP!", type: 'attack', damage: 33, stressDamage: 14, icon: '⏰', quip: '"Pencils down. Step away."' },
+      // Phase 3: DPS race (7-8)
+      { name: "TIME'S UP! (Overtime)", type: 'attack', damage: 38, stressDamage: 16, icon: '⏰', quip: '"You ran out of time. AGAIN."' },
+      { name: 'FAILED', type: 'attack', damage: 44, stressDamage: 18, icon: '💀', quip: '"Interview status: TERMINATED."' },
     ],
   },
 
@@ -371,19 +372,20 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { hpPercent: 25, moveStartIndex: 8, onEnter: { confidence: 5 }, quip: '"You\'re DONE here."' },
     ],
     moves: [
-      // Phase 1: "casual chat" (indices 0-3)
-      { name: 'Let\'s Chat Casually', type: 'debuff', applyToTarget: { weak: 2 }, icon: '☕', quip: '"This isn\'t an interview. Relax."' },
-      { name: 'Culture Assessment', type: 'stress_attack', stressDamage: 7, icon: '🏢', quip: '"How do you handle ambiguity?"' },
+      // Phase 1 (0-3)
+      { name: "Let's Chat Casually", type: 'debuff', applyToTarget: { weak: 2 }, icon: '☕', quip: '"This isn\'t an interview. Relax."' },
+      { name: 'Culture Assessment', type: 'stress_attack', stressDamage: 9, icon: '🏢', quip: '"How do you handle ambiguity?"' },
       { name: 'Subtle Probe', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🔍', quip: '"Interesting... very interesting."' },
-      { name: 'Strategic Vision', type: 'attack', damage: 9, icon: '🎯', quip: '"What\'s your 5-year roadmap?"' },
-      // Phase 2: "technical deep-dive" (indices 4-7)
+      { name: 'Strategic Vision', type: 'attack', damage: 12, icon: '🎯', quip: '"What\'s your 5-year roadmap?"' },
+      // Phase 2 (4-7)
       { name: 'Technical Deep-Dive', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤿', quip: '"Gloves off."' },
-      { name: 'Architecture Review', type: 'attack', damage: 16, icon: '🏗️', quip: '"This doesn\'t scale."' },
-      { name: 'Scale Question', type: 'attack', damage: 12, stressDamage: 5, icon: '📊', quip: '"What if we have a billion users?"' },
-      { name: 'Executive Decision', type: 'attack', damage: 32, stressDamage: 12, icon: '⚡', quip: '"I\'ve seen enough."' },
-      // Phase 3: pure DPS race — buff folded into onEnter (indices 8-9)
-      { name: 'You\'re Fired', type: 'attack', damage: 32, stressDamage: 13, icon: '🔥', quip: '"Pack your things. NOW."' },
-      { name: 'Severance Denied', type: 'attack', damage: 44, stressDamage: 18, icon: '☠️', quip: '"And you owe US money."' },
+      { name: 'Architecture Review', type: 'attack', damage: 20, icon: '🏗️', quip: '"This doesn\'t scale."' },
+      { name: 'Scale Question', type: 'attack', damage: 16, stressDamage: 6, icon: '📊', quip: '"What if we have a billion users?"' },
+      { name: 'Executive Decision', type: 'attack', damage: 35, stressDamage: 13, icon: '⚡', quip: '"I\'ve seen enough."' },
+      // Phase 3: DPS race (8-10)
+      { name: 'Recall Assistant', type: 'summon', summonId: 'executive_assistant', summonCount: 1, icon: '💼', quip: '"Get me an update on this candidate."' },
+      { name: "You're Fired", type: 'attack', damage: 34, stressDamage: 14, icon: '🔥', quip: '"Pack your things. NOW."' },
+      { name: 'Severance Denied', type: 'attack', damage: 46, stressDamage: 19, icon: '☠️', quip: '"And you owe US money."' },
     ],
   },
 
