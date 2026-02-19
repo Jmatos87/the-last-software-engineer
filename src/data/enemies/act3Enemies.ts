@@ -190,8 +190,9 @@ export const act3Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  // ── Act 3 Elite Enemies (HP +30, damage bumps — mini-bosses) ──
+  // ── Act 3 Elite Enemies ──
 
+  // JUGGERNAUT — Shareholder Pressure builds massive armor+confidence; Board Decision erupts
   board_member: {
     id: 'board_member',
     name: 'Board Member',
@@ -203,17 +204,18 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 5 }, quip: '"The board demands RESULTS. NOW."' },
     ],
     moves: [
-      // Phase 1: Board politics (indices 0-2)
-      { name: 'Executive Order', type: 'attack', damage: 20, icon: '📜', quip: '"This came from the top."' },
-      { name: 'Quarterly Review', type: 'attack_defend', damage: 12, block: 14, icon: '📊', quip: '"Numbers are down. Your fault."' },
-      { name: 'Shareholder Pressure', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"The shareholders demand growth!"' },
-      // Phase 2: Hostile board (indices 3-5)
-      { name: 'Emergency Board Meeting', type: 'buff', applyToSelf: { confidence: 4 }, icon: '🔥', quip: '"This is a CRISIS."' },
-      { name: 'Board Decision', type: 'attack', damage: 30, stressDamage: 12, icon: '⚡', quip: '"The board has spoken."' },
-      { name: 'Hostile Acquisition', type: 'attack', damage: 16, times: 2, stressDamage: 10, icon: '☠️', quip: '"We\'re taking EVERYTHING."' },
+      // Phase 1 (0-2)
+      { name: 'Executive Order', type: 'attack', damage: 22, icon: '📜', quip: '"This came from the top."' },
+      { name: 'Quarterly Review', type: 'attack_defend', damage: 14, block: 16, icon: '📊', quip: '"Numbers are down. Your fault."' },
+      { name: 'Shareholder Pressure', type: 'buff', applyToSelf: { confidence: 4 }, icon: '📈', quip: '"The shareholders demand growth!"' },
+      // Phase 2 (3-5)
+      { name: 'Emergency Board Meeting', type: 'energy_drain', energyDrain: 1, stressDamage: 10, icon: '🔥', quip: '"This is a CRISIS."' },
+      { name: 'Board Decision', type: 'attack', damage: 34, stressDamage: 13, icon: '⚡', quip: '"The board has spoken."' },
+      { name: 'Hostile Acquisition', type: 'attack', damage: 18, times: 2, stressDamage: 11, icon: '☠️', quip: '"We\'re taking EVERYTHING."' },
     ],
   },
 
+  // MANIPULATOR — Vest Schedule (exhaust+energy drain); locks player resources
   golden_handcuffs: {
     id: 'golden_handcuffs',
     name: 'Golden Handcuffs',
@@ -225,17 +227,18 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 5 }, quip: '"You\'ll NEVER leave."' },
     ],
     moves: [
-      // Phase 1: Resource drain (indices 0-2)
-      { name: 'Vest Schedule', type: 'exhaust', exhaustCount: 3, stressDamage: 8, icon: '📅', quip: '"Your cliff is in 11 months."' },
-      { name: 'Retention Hit', type: 'attack', damage: 15, icon: '⛓️', quip: '"You can\'t afford to leave."' },
+      // Phase 1 (0-2)
+      { name: 'Vest Schedule', type: 'exhaust', exhaustCount: 3, stressDamage: 9, icon: '📅', quip: '"Your cliff is in 11 months."' },
+      { name: 'Retention Hit', type: 'energy_drain', energyDrain: 1, stressDamage: 6, icon: '⛓️', quip: '"You can\'t afford to leave."' },
       { name: 'Stock Lock', type: 'exhaust', exhaustCount: 2, icon: '🔒', quip: '"90-day exercise window. Good luck."' },
-      // Phase 2: Golden fury (indices 3-5)
-      { name: 'Unvested Fury', type: 'buff', applyToSelf: { confidence: 4 }, icon: '💎', quip: '"Your equity is WORTHLESS."' },
-      { name: 'Golden Slam', type: 'attack', damage: 28, stressDamage: 10, icon: '💰', quip: '"Trapped by your own success!"' },
-      { name: 'Market Crash', type: 'attack', damage: 14, times: 2, icon: '📉', quip: '"Portfolio value: ZERO."' },
+      // Phase 2 (3-5)
+      { name: 'Unvested Fury', type: 'buff', applyToSelf: { confidence: 5 }, icon: '💎', quip: '"Your equity is WORTHLESS."' },
+      { name: 'Golden Slam', type: 'attack', damage: 32, stressDamage: 11, icon: '💰', quip: '"Trapped by your own success!"' },
+      { name: 'Market Crash', type: 'attack', damage: 16, times: 2, icon: '📉', quip: '"Portfolio value: ZERO."' },
     ],
   },
 
+  // SUMMONER — Shuffle Teams spawns chaos_agents; Phase 2 spawns more; debuffs compound
   the_reorg: {
     id: 'the_reorg',
     name: 'The Reorg',
@@ -247,17 +250,18 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"EVERYTHING must go."' },
     ],
     moves: [
-      // Phase 1: Corporate chaos (indices 0-2)
-      { name: 'Shuffle Teams', type: 'discard', discardCount: 4, icon: '🔀', quip: '"Your team no longer exists. Draw 4 fewer cards next turn."' },
-      { name: 'New Manager', type: 'attack', damage: 14, stressDamage: 5, icon: '👤', quip: '"Meet your 4th manager this year."' },
+      // Phase 1 (0-2)
+      { name: 'Shuffle Teams', type: 'summon', summonId: 'chaos_agent', summonCount: 2, icon: '🔀', quip: '"Your team no longer exists."' },
+      { name: 'New Manager', type: 'attack', damage: 17, stressDamage: 6, icon: '👤', quip: '"Meet your 4th manager this year."' },
       { name: 'Restructure', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '🌀', quip: '"Your role has been \'realigned.\'"' },
-      // Phase 2: Scorched earth (indices 3-5)
-      { name: 'Scorched Earth', type: 'buff', applyToSelf: { confidence: 4 }, icon: '🔥', quip: '"Burn the org chart."' },
-      { name: 'Mass Layoff', type: 'attack', damage: 28, icon: '🌊', quip: '"Efficiency optimization complete."' },
-      { name: 'Reorg Slam', type: 'attack', damage: 14, times: 2, stressDamage: 10, icon: '💥', quip: '"Your role has been ELIMINATED."' },
+      // Phase 2 (3-5)
+      { name: 'Recall Chaos', type: 'summon', summonId: 'chaos_agent', summonCount: 1, icon: '🌀', quip: '"Deploying change management consultants."' },
+      { name: 'Mass Layoff', type: 'attack', damage: 32, icon: '🌊', quip: '"Efficiency optimization complete."' },
+      { name: 'Reorg Slam', type: 'attack', damage: 17, times: 2, stressDamage: 11, icon: '💥', quip: '"Your role has been ELIMINATED."' },
     ],
   },
 
+  // ESCALATOR — Accumulate gives confidence +5 spike; Technical Bankruptcy scales to insane values
   technical_debt_golem: {
     id: 'technical_debt_golem',
     name: 'Technical Debt Golem',
@@ -269,15 +273,16 @@ export const act3Enemies: Record<string, EnemyDef> = {
       { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 5 }, quip: '"DEBT LIMIT EXCEEDED."' },
     ],
     moves: [
-      // Phase 1 (indices 0-1)
-      { name: 'Legacy Code', type: 'attack', damage: 10, icon: '📟', quip: '"This was written in jQuery. In 2024."' },
-      { name: 'Accumulate', type: 'buff', applyToSelf: { confidence: 4 }, icon: '📈', quip: '"TODO: fix later (2019)"' },
-      // Phase 2 (indices 2-3)
-      { name: 'Spaghetti Strike', type: 'attack', damage: 20, icon: '🍝', quip: '"One file. 14,000 lines."' },
-      { name: 'Technical Bankruptcy', type: 'attack', damage: 30, stressDamage: 10, icon: '💥', quip: '"No tests. No docs. No hope."' },
+      // Phase 1 (0-1)
+      { name: 'Legacy Code', type: 'attack', damage: 13, icon: '📟', quip: '"This was written in jQuery. In 2024."' },
+      { name: 'Accumulate', type: 'buff', applyToSelf: { confidence: 5 }, icon: '📈', quip: '"TODO: fix later (2019)"' },
+      // Phase 2 (2-3)
+      { name: 'Spaghetti Strike', type: 'attack', damage: 24, icon: '🍝', quip: '"One file. 14,000 lines."' },
+      { name: 'Technical Bankruptcy', type: 'attack', damage: 36, stressDamage: 12, icon: '💥', quip: '"No tests. No docs. No hope."' },
     ],
   },
 
+  // BERSERKER — starts with confidence +5; Performance Review nerfs player; terminates fast
   the_pip: {
     id: 'the_pip',
     name: 'The PIP',
@@ -285,18 +290,19 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 120,
     icon: '📉',
     isElite: true,
+    startStatusEffects: { confidence: 5 },
     phases: [
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"Your 30 days are UP."' },
     ],
     moves: [
-      // Phase 1: Performance warning (indices 0-2)
+      // Phase 1 (0-2)
       { name: 'Performance Review', type: 'debuff', applyToTarget: { confidence: -1, resilience: -1 }, icon: '📉', quip: '"Meets expectations. Barely."' },
-      { name: 'Improvement Plan', type: 'stress_attack', stressDamage: 14, icon: '📋', quip: '"You have 30 days."' },
-      { name: 'Final Warning', type: 'attack', damage: 20, stressDamage: 8, icon: '⚠️', quip: '"This is your last chance."' },
-      // Phase 2: Termination mode (indices 3-5)
-      { name: 'Clock Is Ticking', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⏰', quip: '"Tick. Tock."' },
-      { name: 'Last Chance', type: 'attack', damage: 28, icon: '⚠️', quip: '"This is it."' },
-      { name: 'Terminated', type: 'attack', damage: 26, stressDamage: 14, icon: '🚪', quip: '"Security will escort you out."' },
+      { name: 'Improvement Plan', type: 'stress_attack', stressDamage: 16, icon: '📋', quip: '"You have 30 days."' },
+      { name: 'Final Warning', type: 'attack', damage: 24, stressDamage: 9, icon: '⚠️', quip: '"This is your last chance."' },
+      // Phase 2 (3-5)
+      { name: 'Clock Is Ticking', type: 'energy_drain', energyDrain: 1, stressDamage: 8, icon: '⏰', quip: '"Tick. Tock."' },
+      { name: 'Last Chance', type: 'attack', damage: 32, icon: '⚠️', quip: '"This is it."' },
+      { name: 'Terminated', type: 'attack', damage: 30, stressDamage: 16, icon: '🚪', quip: '"Security will escort you out."' },
     ],
   },
 
