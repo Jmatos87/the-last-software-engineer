@@ -65,19 +65,19 @@ export function getBossEncounter(act: number, run?: RunState): string[] {
   const isLowHP         = run.hp / run.maxHp < 0.5;
 
   if (act === 1) {
-    if (isBlockHeavy)  return ['hr_phone_screen'];   // vuln+weak negates block investment
-    if (isDrawEngine)  return ['ats_final_form'];    // discard wrecks draw engines
-    if (isAttackHeavy) return ['ghosting_phantom'];  // hidden intent defeats attack planners
+    if (isBlockHeavy)  return ['hr_phone_screen', 'hold_music'];              // vuln+weak negates block investment
+    if (isDrawEngine)  return ['ats_final_form', 'resume_validator'];          // discard wrecks draw engines
+    if (isAttackHeavy) return ['ghosting_phantom', 'ghost_echo', 'ghost_echo']; // hidden intent defeats attack planners
   }
   if (act === 2) {
-    if (isHighStress)    return ['panel_interview_hydra']; // stress attacks compound existing damage
-    if (hasPowerSynergy) return ['vp_of_engineering'];     // debuffs punish power setup windows
-    return ['live_coding_challenge'];                       // burst punishes depleted runs
+    if (isHighStress)    return ['panel_interview_hydra', 'panel_member_a', 'panel_member_b']; // stress attacks compound existing damage
+    if (hasPowerSynergy) return ['vp_of_engineering', 'executive_assistant'];                   // debuffs punish power setup windows
+    return ['live_coding_challenge', 'test_case'];                                              // burst punishes depleted runs
   }
   if (act === 3) {
-    if (hasPowerSynergy)         return ['imposter_syndrome_final']; // conf drain crushes stacking
-    if (isHighStress || isLowHP) return ['offer_committee'];         // stress finisher
-    return ['the_ceo'];                                               // general final exam
+    if (hasPowerSynergy)         return ['imposter_syndrome_final', 'inner_critic'];              // conf drain crushes stacking
+    if (isHighStress || isLowHP) return ['offer_committee', 'committee_chair', 'compliance_officer']; // stress finisher
+    return ['the_ceo', 'pr_manager'];                                                            // general final exam
   }
 
   return pool[Math.floor(Math.random() * pool.length)];

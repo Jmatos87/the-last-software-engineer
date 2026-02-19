@@ -497,7 +497,7 @@ export const act3ElitePool: string[][] = [
 ];
 
 export const act3BossPool: string[][] = [
-  ['offer_committee'],
-  ['the_ceo'],
-  ['imposter_syndrome_final'],
+  ['offer_committee', 'committee_chair', 'compliance_officer'],
+  ['the_ceo', 'pr_manager'],
+  ['imposter_syndrome_final', 'inner_critic'],
 ];

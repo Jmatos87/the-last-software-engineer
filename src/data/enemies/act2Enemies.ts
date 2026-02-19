@@ -497,7 +497,7 @@ export const act2ElitePool: string[][] = [
 ];
 
 export const act2BossPool: string[][] = [
-  ['panel_interview_hydra'],
-  ['live_coding_challenge'],
-  ['vp_of_engineering'],
+  ['panel_interview_hydra', 'panel_member_a', 'panel_member_b'],
+  ['live_coding_challenge', 'test_case'],
+  ['vp_of_engineering', 'executive_assistant'],
 ];

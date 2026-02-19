@@ -481,7 +481,7 @@ export const act1ElitePool: string[][] = [
 ];
 
 export const act1BossPool: string[][] = [
-  ['hr_phone_screen'],
-  ['ats_final_form'],
-  ['ghosting_phantom'],
+  ['hr_phone_screen', 'hold_music'],
+  ['ats_final_form', 'resume_validator'],
+  ['ghosting_phantom', 'ghost_echo', 'ghost_echo'],
 ];
