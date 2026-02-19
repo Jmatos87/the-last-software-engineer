@@ -359,6 +359,58 @@ export const act1Enemies: Record<string, EnemyDef> = {
       { name: 'Final Ghosting', type: 'attack', damage: 28, stressDamage: 14, icon: '☠️', quip: '"You never existed to us."' },
     ],
   },
+
+  // ── Act 1 Minions (spawned by elites/bosses) ──
+
+  ats_minion: {
+    id: 'ats_minion',
+    name: 'ATS Minion',
+    hp: 18,
+    gold: 0,
+    icon: '🤖',
+    moves: [
+      { name: 'Format Check', type: 'exhaust', exhaustCount: 1, icon: '📋', quip: '"Wrong file type."' },
+      { name: 'Keyword Error', type: 'attack', damage: 7, stressDamage: 3, icon: '❌', quip: '"Missing: blockchain, synergy, agile."' },
+    ],
+  },
+
+  hold_music: {
+    id: 'hold_music',
+    name: 'Hold Music',
+    hp: 25,
+    gold: 8,
+    icon: '🎵',
+    moves: [
+      { name: 'Please Hold', type: 'energy_drain', energyDrain: 1, stressDamage: 7, icon: '📞', quip: '"Your call is important to us."' },
+      { name: 'Elevator Music', type: 'stress_attack', stressDamage: 10, icon: '🎶', quip: '"...Muzak intensifies..."' },
+      { name: 'Transfer', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '🔀', quip: '"Let me connect you."' },
+    ],
+  },
+
+  resume_validator: {
+    id: 'resume_validator',
+    name: 'Resume Validator',
+    hp: 22,
+    gold: 6,
+    icon: '📄',
+    moves: [
+      { name: 'Format Error', type: 'exhaust', exhaustCount: 1, icon: '📋', quip: '"PDF rejected. Again."' },
+      { name: 'Validation Failed', type: 'corrupt', stressDamage: 5, icon: '🐛', quip: '"Resubmit from scratch."' },
+    ],
+  },
+
+  ghost_echo: {
+    id: 'ghost_echo',
+    name: 'Ghost Echo',
+    hp: 18,
+    gold: 5,
+    icon: '👻',
+    hideIntent: true,
+    moves: [
+      { name: 'Whisper', type: 'exhaust', exhaustCount: 1, icon: '💨', quip: '"*you hear nothing*"' },
+      { name: 'Fade', type: 'stress_attack', stressDamage: 8, icon: '🌑', quip: '"*still nothing*"' },
+    ],
+  },
 };
 
 // ── Act 1 Encounter Tables ──
