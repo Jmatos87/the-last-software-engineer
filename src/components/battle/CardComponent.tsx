@@ -192,7 +192,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
           fontWeight: 'bold',
           color: '#000',
         }}>
-          {card.cost}
+          {battle?.nextCardCostZero ? 0 : card.cost}
         </div>
         {!compact && (
           <span style={{ fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
@@ -258,6 +258,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
 // Simplified version for drag overlay
 export const CardOverlay: React.FC<{ card: CardInstance }> = ({ card }) => {
   const { compact } = useMobile();
+  const nextCardFree = useGameStore(s => s.battle?.nextCardCostZero ?? false);
   const borderColor = card.type === 'attack' ? 'var(--card-attack)'
     : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
 
@@ -281,7 +282,7 @@ export const CardOverlay: React.FC<{ card: CardInstance }> = ({ card }) => {
           background: 'var(--energy-color)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: compact ? 10 : 14, fontWeight: 'bold', color: '#000',
-        }}>{card.cost}</div>
+        }}>{nextCardFree ? 0 : card.cost}</div>
       </div>
       <div style={{ fontSize: compact ? 18 : 28, textAlign: 'center' }}>{card.icon}</div>
       <div style={{ fontSize: compact ? 9 : 11, fontWeight: 'bold', textAlign: 'center' }}>{card.name}</div>
