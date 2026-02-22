@@ -269,6 +269,21 @@ button.success {
 .blueprint-step.pending { background: rgba(75, 85, 99, 0.3); color: #9ca3af; border: 1px solid rgba(75, 85, 99, 0.4); }
 .blueprint-progress { color: #6b7280; font-size: 0.68rem; }
 
+/* Resonance indicator styles for Architect engineer slots */
+.engineer-slot-badge.slot-resonant {
+  border: 1px solid #fbbf24;
+  box-shadow: 0 0 6px rgba(251, 191, 36, 0.4);
+}
+.engineer-slot-badge.slot-harmonic {
+  border: 1px solid #f59e0b;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+  animation: harmonic-pulse 1.5s ease-in-out infinite;
+}
+@keyframes harmonic-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.6); }
+  50% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.9); }
+}
+
 /* Mobile landscape */
 @media (max-height: 600px) {
   body { font-size: 12px; }

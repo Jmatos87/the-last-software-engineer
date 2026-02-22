@@ -61,10 +61,10 @@ export const backendCards: Record<string, CardDef> = {
   connection_pool: {
     id: 'connection_pool', name: 'Connection Pool', type: 'skill', target: 'self', cost: 1, rarity: 'common',
     class: 'backend', archetype: 'ice',
-    description: 'Gain 8 block. maxPoolSize: 10. Current connections: 11. Panic.',
-    effects: { block: 8 },
-    upgradedEffects: { block: 12 },
-    upgradedDescription: 'Gain 12 block.',
+    description: 'Gain 8 Block. Schedule 6 Block for next turn. [☁️ Ice] maxPoolSize: 10. Current connections: 11. Panic.',
+    effects: { block: 8, queueBlock: 6 },
+    upgradedEffects: { block: 12, queueBlock: 8 },
+    upgradedDescription: 'Gain 12 Block. Schedule 8 Block for next turn. [☁️ Ice]',
     icon: '🔌',
   },
   cold_backup: {
@@ -162,7 +162,7 @@ export const backendCards: Record<string, CardDef> = {
     icon: '🔄',
   },
   pub_sub_event: {
-    id: 'pub_sub_event', name: 'Pub/Sub Event', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
+    id: 'pub_sub_event', name: 'Pub/Sub Event', type: 'attack', target: 'enemy', cost: 0, rarity: 'common',
     class: 'backend', archetype: 'lightning',
     description: 'Deal 4 damage. Schedule 6 chain damage to each enemy next turn. Published to 3 services. Consumed by 6. None were ready.',
     effects: { damage: 4, queueChain: 6 },
@@ -229,10 +229,10 @@ export const backendCards: Record<string, CardDef> = {
   kubernetes_pod: {
     id: 'kubernetes_pod', name: 'K8s Pod', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
     class: 'backend', archetype: 'ice',
-    description: 'Gain 5 block. Schedule 12 block for next turn. Deploy a Pod for 3 turns (3 block/turn). kubectl apply -f hope.yml. Status: Pending.',
-    effects: { block: 5, queueBlock: 12, deploy: { name: 'K8s Pod', icon: '⚓', turns: 3, blockPerTurn: 3 } },
-    upgradedEffects: { block: 8, queueBlock: 16, deploy: { name: 'K8s Pod+', icon: '⚓', turns: 4, blockPerTurn: 4 } },
-    upgradedDescription: 'Gain 8 block. Schedule 16 block. Deploy a Pod for 4 turns (4 block/turn).',
+    description: 'Gain 10 Block. Schedule 14 Block for next turn. [☁️ Ice]',
+    effects: { block: 10, queueBlock: 14 },
+    upgradedEffects: { block: 12, queueBlock: 18 },
+    upgradedDescription: 'Gain 12 Block. Schedule 18 Block for next turn. [☁️ Ice]',
     icon: '⚓',
   },
 
@@ -314,10 +314,10 @@ export const backendCards: Record<string, CardDef> = {
   event_storm: {
     id: 'event_storm', name: 'Event Storm', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
     class: 'backend', archetype: 'lightning',
-    description: 'Schedule 25 chain damage to each enemy next turn. The event bus has opinions. The opinions: fatal.',
-    effects: { queueChain: 25 },
-    upgradedEffects: { queueChain: 33 },
-    upgradedDescription: 'Schedule 33 chain damage to each enemy next turn.',
+    description: 'Schedule 16 chain damage to each enemy next turn. The event bus has opinions. The opinions: fatal.',
+    effects: { queueChain: 16 },
+    upgradedEffects: { queueChain: 20 },
+    upgradedDescription: 'Schedule 20 chain damage to each enemy next turn.',
     icon: '🌪️',
   },
   thunderbolt_query: {
@@ -434,10 +434,10 @@ export const backendCards: Record<string, CardDef> = {
   elemental_convergence: {
     id: 'elemental_convergence', name: 'Elemental Convergence', type: 'skill', target: 'self', cost: 3, rarity: 'epic',
     class: 'backend',
-    description: 'Gain 10 block. Schedule 15 block, 15 AoE damage, and 15 chain damage next turn. Gain 2 Confidence and 2 Resilience. Ice. Fire. Lightning. All three pipelines. Armed.',
-    effects: { block: 10, applyToSelf: { confidence: 2, resilience: 2 }, queueBlock: 15, queueDamageAll: 15, queueChain: 15 },
-    upgradedEffects: { block: 14, applyToSelf: { confidence: 3, resilience: 3 }, queueBlock: 20, queueDamageAll: 20, queueChain: 20 },
-    upgradedDescription: 'Gain 14 block. Schedule 20/20/20. Gain 3 Confidence and 3 Resilience.',
+    description: 'Gain 10 block. Schedule 10 block, 10 AoE damage, and 10 chain damage next turn. Gain 2 Confidence and 2 Resilience. Ice. Fire. Lightning. All three pipelines. Armed.',
+    effects: { block: 10, applyToSelf: { confidence: 2, resilience: 2 }, queueBlock: 10, queueDamageAll: 10, queueChain: 10 },
+    upgradedEffects: { block: 14, applyToSelf: { confidence: 3, resilience: 3 }, queueBlock: 12, queueDamageAll: 12, queueChain: 12 },
+    upgradedDescription: 'Gain 14 block. Schedule 12/12/12. Gain 3 Confidence and 3 Resilience.',
     icon: '🌟',
   },
 
@@ -479,6 +479,44 @@ export const backendCards: Record<string, CardDef> = {
     upgradedEffects: { queueBlock: 35, queueDamageAll: 35, queueChain: 35 },
     upgradedDescription: 'Schedule 35/35/35 next turn. Exhaust. The full detonation.',
     icon: '☢️',
+  },
+
+  // ── New Burn Cards ──
+  fuel_injection: {
+    id: 'fuel_injection', name: 'Fuel Injection', type: 'attack', target: 'enemy', cost: 1, rarity: 'rare',
+    class: 'backend', archetype: 'fire',
+    description: 'Deal 8 damage. Double Burn on target.',
+    effects: { damage: 8, doubleBurnOnTarget: true },
+    upgradedEffects: { damage: 10, tripleBurnOnTarget: true },
+    upgradedDescription: 'Deal 10 damage. Triple Burn on target.',
+    icon: '🔥',
+  },
+  backdraft: {
+    id: 'backdraft', name: 'Backdraft', type: 'attack', target: 'enemy', cost: 2, rarity: 'epic',
+    class: 'backend', archetype: 'fire', exhaust: true,
+    description: 'Deal damage equal to Burn stacks × 5. Remove Burn. Exhaust.',
+    effects: { damagePerBurn: 5, consumeBurnOnHit: true },
+    upgradedEffects: { damagePerBurn: 6, consumeBurnOnHit: true },
+    upgradedDescription: 'Deal damage equal to Burn stacks × 6. Remove Burn. Exhaust.',
+    icon: '💥',
+  },
+  thermal_cascade: {
+    id: 'thermal_cascade', name: 'Thermal Cascade', type: 'power', target: 'self', cost: 2, rarity: 'epic',
+    class: 'backend', archetype: 'fire',
+    description: 'Burn ticks deal ×2 damage.',
+    effects: { burnDoTMultiplier: 2 },
+    upgradedEffects: { burnDoTMultiplier: 3 },
+    upgradedDescription: 'Burn ticks deal ×3 damage.',
+    icon: '🌡️',
+  },
+  incendiary_comment: {
+    id: 'incendiary_comment', name: 'Incendiary Comment', type: 'skill', target: 'all_enemies', cost: 1, rarity: 'rare',
+    class: 'backend', archetype: 'fire',
+    description: 'Apply 4 Burn to all enemies.',
+    effects: { applyBurnAll: 4 },
+    upgradedEffects: { applyBurnAll: 5 },
+    upgradedDescription: 'Apply 5 Burn to all enemies.',
+    icon: '🗣️',
   },
 
   // ── Curse ──

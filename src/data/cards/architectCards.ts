@@ -282,11 +282,11 @@ export const architectCards: Record<string, CardDef> = {
   },
   over_engineering: {
     id: 'over_engineering', name: 'Over-Engineering', type: 'attack', target: 'enemy', cost: 3, rarity: 'rare',
-    class: 'architect',
-    description: 'Deal 40 damage. Add a Scope Creep to your discard. "Just one more abstraction layer."',
-    effects: { damage: 40, addScopeCreepToDiscard: 1 },
-    upgradedEffects: { damage: 55, addScopeCreepToDiscard: 1 },
-    upgradedDescription: 'Deal 55 damage. Add a Scope Creep to discard.',
+    class: 'architect', exhaust: true,
+    description: 'Deal 40 damage. Exhaust. No notes. No survivors.',
+    effects: { damage: 40 },
+    upgradedEffects: { damage: 50 },
+    upgradedDescription: 'Deal 50 damage. Exhaust.',
     icon: '🌀',
   },
   cross_functional_team: {
@@ -383,10 +383,10 @@ export const architectCards: Record<string, CardDef> = {
   domain_driven_design: {
     id: 'domain_driven_design', name: 'Domain-Driven Design', type: 'attack', target: 'enemy', cost: 3, rarity: 'epic',
     class: 'architect',
-    description: 'Deal 12 damage per slotted engineer to target. Model the real world.',
-    effects: { damagePerSlot: 12 },
-    upgradedEffects: { damagePerSlot: 16 },
-    upgradedDescription: 'Deal 16 damage per slotted engineer to target.',
+    description: 'Deal 9 damage per slotted Engineer. Model the real world.',
+    effects: { damagePerSlot: 9 },
+    upgradedEffects: { damagePerSlot: 12 },
+    upgradedDescription: 'Deal 12 damage per slotted Engineer.',
     icon: '🗂️',
   },
   blueprint_bypass: {

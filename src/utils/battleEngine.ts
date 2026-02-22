@@ -61,19 +61,28 @@ export function calculateStressDamage(
 export function calculateBlock(
   baseBlock: number,
   effects: StatusEffect,
-  items: ItemDef[] = []
+  items: ItemDef[] = [],
+  isSkillCard: boolean = false
 ): number {
-  let block = baseBlock;
+  let total = baseBlock;
 
   // Add resilience
-  block += effects.resilience || 0;
+  total += effects.resilience || 0;
 
   // Add item bonus block
   for (const item of items) {
-    block += item.effect.bonusBlock || 0;
+    total += item.effect.bonusBlock || 0;
   }
 
-  return Math.max(0, block);
+  // css_custom_props relic: block from skills increased by skillBlockMultiplier%
+  if (isSkillCard) {
+    const multiplierItem = items.find(i => i.effect.skillBlockMultiplier);
+    if (multiplierItem) {
+      total = Math.ceil(total * (multiplierItem.effect.skillBlockMultiplier! / 100));
+    }
+  }
+
+  return Math.max(0, total);
 }
 
 export function calculateCopium(
@@ -160,8 +169,8 @@ export function tickStatusEffects(effects: StatusEffect): StatusEffect {
   if (effects.cringe && effects.cringe > 0) newEffects.cringe = effects.cringe - 1;
   if (effects.ghosted && effects.ghosted > 0) newEffects.ghosted = effects.ghosted - 1;
   if (effects.regen && effects.regen > 0) newEffects.regen = effects.regen - 1;
-  // Frontend: dodge decrements each turn (agility fades; bleed is handled separately in startNewTurn)
-  if (effects.dodge && effects.dodge > 0) newEffects.dodge = effects.dodge - 1;
+  // Frontend: dodge decays at player turn start (not here) — preserve current value
+  if (effects.dodge && effects.dodge > 0) newEffects.dodge = effects.dodge;
   // Permanent (persist)
   if (effects.confidence) newEffects.confidence = effects.confidence;
   if (effects.resilience) newEffects.resilience = effects.resilience;

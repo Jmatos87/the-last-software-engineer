@@ -164,6 +164,19 @@ export interface CardEffect {
   regenerateBlueprint?: boolean;   // generate new random blueprint, reset progress to 0
   shuffleEngineerSlots?: boolean;  // shuffle order of engineer slots
   addScopeCreepToDiscard?: number; // add N scope_creep curse cards to discard pile
+  // === v1.15 additions ===
+  // Dodge-scaling (Frontend)
+  damagePerDodge?: number;
+  bonusDamageIfDodgedThisTurn?: boolean;
+  bonusDamageIfDodgedThisTurnAmount?: number;
+  dodgeScalesDamage?: number;
+  // Burn amplifiers (Backend)
+  doubleBurnOnTarget?: boolean;
+  tripleBurnOnTarget?: boolean;
+  damagePerBurn?: number;
+  consumeBurnOnHit?: boolean;
+  burnDoTMultiplier?: number;
+  applyBurnAll?: number;
 }
 
 // ── Detonation Queue (Backend Engineer) ──
@@ -206,6 +219,9 @@ export interface EngineerEvoke {
   damageAllEqualsCounterOffer?: boolean; // deal counterOffer stacks as damage to all
   gainCounterOfferDouble?: boolean;     // gain counterOffer = current counterOffer stacks
   doubleResilience?: boolean;           // gain resilience = current resilience stacks
+  applyToSelf?: StatusEffect;
+  doublePlayerStatus?: boolean;
+  damageAllScalesWithCounterOffer?: number;
 }
 
 export interface EngineerSlot {
@@ -214,6 +230,7 @@ export interface EngineerSlot {
   icon: string;
   passiveEffect: EngineerPassive;
   evokeEffect: EngineerEvoke;
+  harmonicEffect?: EngineerEvoke;
 }
 
 // ── Deployments ──
@@ -244,6 +261,7 @@ export interface CardDef {
   class?: CardClass;       // undefined = neutral
   archetype?: string;      // hint for smart reward weighting
   exhaust?: boolean;       // non-power cards that exhaust when played
+  upgradedExhaust?: boolean;
   ethereal?: boolean;      // exhaust at end of turn if not played
 }
 
@@ -383,6 +401,7 @@ export interface ItemDef {
     startCombatActConfidence?: boolean; // gain confidence+resilience = act number
     addRandomCardStart?: boolean;     // add random 0-cost class card at combat start
     firstPowerFree?: boolean;         // first power each combat costs 0
+    firstEngineerCardFree?: boolean;
     exhaustGainEnergy?: boolean;      // gain 1 energy when exhaust
     // New epic relic effects
     skillBlockMultiplier?: number;    // multiply block from skills by N% (e.g. 150 = +50%)
@@ -477,6 +496,13 @@ export interface BattleState {
   // Architect Engineer Slot mechanics
   engineerSlots: EngineerSlot[];     // currently slotted engineers
   maxEngineerSlots: number;          // starts at 3; cards can change 1–5
+  // v1.15 new mechanic fields
+  dodgedThisTurn: boolean;
+  dodgeScalesDamage: number;
+  burnDoTMultiplier: number;
+  circuitBreakerUsed: boolean;
+  firstNCardsFreeRemaining: number;
+  firstEngineerCardFreeUsed: boolean;
   blueprint: string[];               // ordered 3-engineer-ID sequence for blueprint completion
   blueprintProgress: number;         // sequential matches achieved (0–3)
 }

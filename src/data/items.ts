@@ -18,9 +18,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'whiteboard_marker', name: 'Whiteboard Marker', icon: '🖊️',
-    description: 'First Power each combat costs 0. Uncapped. Dried out. Still works.',
+    description: 'First Engineer card each combat costs 0. Uncapped. Dried out. Still works.',
     rarity: 'starter', class: 'architect', isStarter: true,
-    effect: { firstPowerFree: true },
+    effect: { firstEngineerCardFree: true },
   },
   {
     id: 'gpu_cluster', name: 'GPU Cluster', icon: '🔧',

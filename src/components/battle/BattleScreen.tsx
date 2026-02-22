@@ -406,13 +406,24 @@ export const BattleScreen: React.FC = () => {
                   {(battle.engineerSlots || []).length === 0 && (
                     <span className="no-slots-hint">No engineers slotted</span>
                   )}
-                  {(battle.engineerSlots || []).map((slot, i) => (
-                    <div key={i} className="engineer-slot-badge">
-                      <span className="slot-icon">{slot.icon}</span>
-                      <span className="slot-name">{slot.name}</span>
-                      <span className="slot-passive">{formatEngineerPassive(slot.passiveEffect)}</span>
-                    </div>
-                  ))}
+                  {(() => {
+                    const slots = battle.engineerSlots || [];
+                    const isHarmonic = slots.length >= 2 && slots.every(s => s.id === slots[0]?.id);
+                    const resonantIndices = new Set<number>();
+                    for (let i = 0; i < slots.length - 1; i++) {
+                      if (slots[i].id === slots[i + 1].id) {
+                        resonantIndices.add(i);
+                        resonantIndices.add(i + 1);
+                      }
+                    }
+                    return slots.map((slot, i) => (
+                      <div key={i} className={`engineer-slot-badge ${isHarmonic ? 'slot-harmonic' : resonantIndices.has(i) ? 'slot-resonant' : ''}`}>
+                        <span className="slot-icon">{slot.icon}</span>
+                        <span className="slot-name">{slot.name}</span>
+                        <span className="slot-passive">{formatEngineerPassive(slot.passiveEffect)}</span>
+                      </div>
+                    ));
+                  })()}
                   <span className="slot-count-badge">
                     {(battle.engineerSlots || []).length}/{battle.maxEngineerSlots || 3} slots
                   </span>
