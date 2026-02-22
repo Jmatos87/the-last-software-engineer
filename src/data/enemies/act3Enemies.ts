@@ -12,7 +12,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   system_design_titan: {
     id: 'system_design_titan',
     name: 'System Design Titan',
-    hp: 70,
+    hp: 180,
     gold: 62,
     icon: '🏛️',
     moves: [
@@ -27,7 +27,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   salary_negotiator: {
     id: 'salary_negotiator',
     name: 'Salary Negotiator',
-    hp: 60,
+    hp: 155,
     gold: 62,
     icon: '💼',
     hideIntent: true,
@@ -43,7 +43,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   imposter_syndrome_common: {
     id: 'imposter_syndrome_common',
     name: 'Imposter Syndrome',
-    hp: 55,
+    hp: 155,
     gold: 48,
     icon: '🎭',
     moves: [
@@ -58,7 +58,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   benefits_mimic: {
     id: 'benefits_mimic',
     name: 'Benefits Mimic',
-    hp: 65,
+    hp: 165,
     gold: 56,
     icon: '📦',
     hideIntent: true,
@@ -74,7 +74,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   equity_phantom: {
     id: 'equity_phantom',
     name: 'Equity Phantom',
-    hp: 68,
+    hp: 170,
     gold: 45,
     icon: '💎',
     moves: [
@@ -89,7 +89,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   non_compete_clause: {
     id: 'non_compete_clause',
     name: 'Non-Compete Clause',
-    hp: 63,
+    hp: 160,
     gold: 54,
     icon: '📜',
     moves: [
@@ -104,7 +104,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   the_pivot: {
     id: 'the_pivot',
     name: 'The Pivot',
-    hp: 57,
+    hp: 155,
     gold: 50,
     icon: '🔄',
     moves: [
@@ -119,7 +119,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   burnout_ember: {
     id: 'burnout_ember',
     name: 'Burnout Ember',
-    hp: 70,
+    hp: 175,
     gold: 48,
     icon: '🔥',
     moves: [
@@ -134,7 +134,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   meeting_email: {
     id: 'meeting_email',
     name: 'Meeting Email',
-    hp: 67,
+    hp: 165,
     gold: 58,
     icon: '📧',
     moves: [
@@ -149,7 +149,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   the_counteroffer: {
     id: 'the_counteroffer',
     name: 'The Counteroffer',
-    hp: 88,
+    hp: 195,
     gold: 52,
     icon: '🤝',
     moves: [
@@ -164,7 +164,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   background_check: {
     id: 'background_check',
     name: 'Background Check',
-    hp: 59,
+    hp: 155,
     gold: 52,
     icon: '🔎',
     moves: [
@@ -179,7 +179,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   relocation_package: {
     id: 'relocation_package',
     name: 'Relocation Package',
-    hp: 65,
+    hp: 165,
     gold: 60,
     icon: '🚚',
     moves: [
@@ -196,7 +196,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   board_member: {
     id: 'board_member',
     name: 'Board Member',
-    hp: 150,
+    hp: 380,
     gold: 150,
     icon: '🎩',
     isElite: true,
@@ -219,7 +219,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   golden_handcuffs: {
     id: 'golden_handcuffs',
     name: 'Golden Handcuffs',
-    hp: 143,
+    hp: 350,
     gold: 140,
     icon: '⛓️',
     isElite: true,
@@ -242,7 +242,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   the_reorg: {
     id: 'the_reorg',
     name: 'The Reorg',
-    hp: 135,
+    hp: 320,
     gold: 130,
     icon: '🌀',
     isElite: true,
@@ -265,7 +265,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   technical_debt_golem: {
     id: 'technical_debt_golem',
     name: 'Technical Debt Golem',
-    hp: 158,
+    hp: 420,
     gold: 160,
     icon: '🗿',
     isElite: true,
@@ -286,7 +286,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   the_pip: {
     id: 'the_pip',
     name: 'The PIP',
-    hp: 128,
+    hp: 300,
     gold: 120,
     icon: '📉',
     isElite: true,
@@ -311,7 +311,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   offer_committee: {
     id: 'offer_committee',
     name: 'Offer Committee',
-    hp: 264,
+    hp: 520,
     gold: 240,
     icon: '👥',
     isBoss: true,
@@ -338,7 +338,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   the_ceo: {
     id: 'the_ceo',
     name: 'The CEO',
-    hp: 250,
+    hp: 580,
     gold: 230,
     icon: '🏆',
     isBoss: true,
@@ -366,7 +366,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
   imposter_syndrome_final: {
     id: 'imposter_syndrome_final',
     name: 'Imposter Syndrome (Final Form)',
-    hp: 222,
+    hp: 480,
     gold: 220,
     icon: '🎭',
     isBoss: true,

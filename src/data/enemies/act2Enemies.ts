@@ -12,7 +12,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   whiteboard_demon: {
     id: 'whiteboard_demon',
     name: 'Whiteboard Demon',
-    hp: 53,
+    hp: 115,
     gold: 40,
     icon: '📊',
     moves: [
@@ -27,7 +27,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   leetcode_goblin: {
     id: 'leetcode_goblin',
     name: 'LeetCode Goblin',
-    hp: 43,
+    hp: 100,
     gold: 34,
     icon: '👺',
     moves: [
@@ -42,7 +42,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   culture_fit_enforcer: {
     id: 'culture_fit_enforcer',
     name: 'Culture Fit Enforcer',
-    hp: 48,
+    hp: 105,
     gold: 36,
     icon: '😊',
     moves: [
@@ -57,7 +57,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   behavioral_question_bot: {
     id: 'behavioral_question_bot',
     name: 'Behavioral Question Bot',
-    hp: 58,
+    hp: 120,
     gold: 36,
     icon: '🎭',
     moves: [
@@ -72,7 +72,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   pair_programmer_enemy: {
     id: 'pair_programmer_enemy',
     name: 'The Pair Programmer',
-    hp: 50,
+    hp: 110,
     gold: 38,
     icon: '👥',
     moves: [
@@ -87,7 +87,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   trivia_quizmaster: {
     id: 'trivia_quizmaster',
     name: 'Trivia Quizmaster',
-    hp: 46,
+    hp: 100,
     gold: 30,
     icon: '❓',
     moves: [
@@ -102,7 +102,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   recruiter_middleman: {
     id: 'recruiter_middleman',
     name: 'Recruiter Middleman',
-    hp: 68,
+    hp: 130,
     gold: 34,
     icon: '🤵',
     moves: [
@@ -117,7 +117,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   take_home_v2: {
     id: 'take_home_v2',
     name: 'Take-Home Project v2',
-    hp: 56,
+    hp: 115,
     gold: 42,
     icon: '💻',
     moves: [
@@ -132,7 +132,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   the_lowballer: {
     id: 'the_lowballer',
     name: 'The Lowballer',
-    hp: 42,
+    hp: 100,
     gold: 38,
     icon: '💵',
     hideIntent: true,
@@ -148,7 +148,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   zoom_fatigue: {
     id: 'zoom_fatigue',
     name: 'Zoom Fatigue',
-    hp: 64,
+    hp: 120,
     gold: 38,
     icon: '😴',
     hideIntent: true,
@@ -165,7 +165,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   reference_checker: {
     id: 'reference_checker',
     name: 'Reference Checker',
-    hp: 40,
+    hp: 105,
     gold: 32,
     icon: '🔍',
     moves: [
@@ -180,7 +180,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   scheduling_nightmare: {
     id: 'scheduling_nightmare',
     name: 'Scheduling Nightmare',
-    hp: 48,
+    hp: 110,
     gold: 36,
     icon: '📅',
     moves: [
@@ -197,7 +197,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   senior_dev_interrogator: {
     id: 'senior_dev_interrogator',
     name: 'Senior Dev Interrogator',
-    hp: 112,
+    hp: 240,
     gold: 110,
     icon: '🧓',
     isElite: true,
@@ -221,7 +221,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   whiteboard_hydra: {
     id: 'whiteboard_hydra',
     name: 'The Whiteboard Hydra',
-    hp: 108,
+    hp: 220,
     gold: 100,
     icon: '🐉',
     isElite: true,
@@ -245,7 +245,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   hr_gatekeeper: {
     id: 'hr_gatekeeper',
     name: 'HR Gatekeeper',
-    hp: 100,
+    hp: 200,
     gold: 95,
     icon: '🚪',
     isElite: true,
@@ -268,7 +268,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   the_algorithm: {
     id: 'the_algorithm',
     name: 'The Algorithm',
-    hp: 120,
+    hp: 280,
     gold: 120,
     icon: '🧮',
     isElite: true,
@@ -290,7 +290,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   crunch_time_manager: {
     id: 'crunch_time_manager',
     name: 'Crunch Time Manager',
-    hp: 108,
+    hp: 260,
     gold: 105,
     icon: '⏰',
     isElite: true,
@@ -309,7 +309,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   panel_interview_hydra: {
     id: 'panel_interview_hydra',
     name: 'Panel Interview Hydra',
-    hp: 200,
+    hp: 340,
     gold: 185,
     icon: '🐲',
     isBoss: true,
@@ -336,7 +336,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   live_coding_challenge: {
     id: 'live_coding_challenge',
     name: 'The Live Coding Challenge',
-    hp: 190,
+    hp: 380,
     gold: 175,
     icon: '⌨️',
     isBoss: true,
@@ -363,7 +363,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
   vp_of_engineering: {
     id: 'vp_of_engineering',
     name: 'The VP of Engineering',
-    hp: 218,
+    hp: 440,
     gold: 195,
     icon: '👔',
     isBoss: true,
