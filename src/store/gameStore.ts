@@ -4,6 +4,7 @@ import type { GameState, EnemyDef, ConsumableInstance } from '../types';
 import { characters } from '../data/characters';
 import { cards, getRewardCards, getCardDef } from '../data/cards';
 import { enemies, getNormalEncounter, getEliteEncounter, getBossEncounter } from '../data/enemies';
+import { generateBlueprint } from '../data/engineers';
 import { events } from '../data/events';
 import { items, getRewardArtifact, getStarterRelic } from '../data/items';
 import { consumables, getConsumableDrop, getRareConsumable, getRandomConsumable, getConsumableDef } from '../data/consumables';
@@ -24,7 +25,7 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
-const GAME_VERSION = '1.15.0';
+const GAME_VERSION = '1.16.0';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
@@ -361,15 +362,16 @@ export const useGameStore = create<GameState>()(
         }
 
         // Determine consumable drops
+        const playerClassForConsumable = getPlayerClass(state.run?.character?.id);
         const canHoldConsumable = state.run.consumables.length < state.run.maxConsumables;
         let consumableChoices: import('../types').ConsumableDef[] | undefined;
         if (canHoldConsumable) {
           if (isBoss) {
             consumableChoices = [getRareConsumable()];
           } else if (isElite) {
-            consumableChoices = [getConsumableDrop(act)];
+            consumableChoices = [getConsumableDrop(act, playerClassForConsumable)];
           } else if (Math.random() < 0.5) {
-            consumableChoices = [getConsumableDrop(act)];
+            consumableChoices = [getConsumableDrop(act, playerClassForConsumable)];
           }
         }
 
@@ -394,11 +396,15 @@ export const useGameStore = create<GameState>()(
           }
           // Post-fight passive stress
           const actStress = act === 1 ? 3 : act === 2 ? 5 : 8;
+          // stressPerCombat relic: gain N extra stress after each combat
+          const relicStress = state.run?.items.reduce((s, i) => s + (i.effect.stressPerCombat || 0), 0) ?? 0;
+          // healPerCombat relic (office_plant): heal N HP after each combat
+          const relicHeal = state.run?.items.reduce((s, i) => s + (i.effect.healPerCombat || 0), 0) ?? 0;
           set(s => {
             if (!s.run) return;
-            s.run.hp = Math.min(s.run.maxHp, s.run.hp + healOnKill);
+            s.run.hp = Math.min(s.run.maxHp, s.run.hp + healOnKill + relicHeal);
             s.run.gold += goldReward;
-            s.run.stress = Math.min(s.run.maxStress, s.run.stress + actStress);
+            s.run.stress = Math.min(s.run.maxStress, s.run.stress + actStress + relicStress);
             s.pendingRewards = {
               gold: goldReward,
               cardChoices: allGhosted ? [] : getRewardCards(3, undefined, getPlayerClass(state.run?.character?.id), act, isElite ? 'elite' : 'normal') as any,
@@ -474,15 +480,16 @@ export const useGameStore = create<GameState>()(
         }
 
         // Determine consumable drops
+        const playerClassForConsumable2 = getPlayerClass(state.run?.character?.id);
         const canHoldConsumable2 = state.run.consumables.length < state.run.maxConsumables;
         let consumableChoices2: import('../types').ConsumableDef[] | undefined;
         if (canHoldConsumable2) {
           if (isBoss) {
             consumableChoices2 = [getRareConsumable()];
           } else if (isElite) {
-            consumableChoices2 = [getConsumableDrop(act2)];
+            consumableChoices2 = [getConsumableDrop(act2, playerClassForConsumable2)];
           } else if (Math.random() < 0.5) {
-            consumableChoices2 = [getConsumableDrop(act2)];
+            consumableChoices2 = [getConsumableDrop(act2, playerClassForConsumable2)];
           }
         }
 
@@ -563,15 +570,16 @@ export const useGameStore = create<GameState>()(
           artifactChoicesD = getRewardArtifact(ownedIdsD, 1, state.run?.character?.id);
         }
 
+        const playerClassForConsumableD = getPlayerClass(state.run?.character?.id);
         const canHoldConsumableD = state.run.consumables.length < state.run.maxConsumables;
         let consumableChoicesD: import('../types').ConsumableDef[] | undefined;
         if (canHoldConsumableD) {
           if (isBossAfterDeploy) {
             consumableChoicesD = [getRareConsumable()];
           } else if (isEliteAfterDeploy) {
-            consumableChoicesD = [getConsumableDrop(actD)];
+            consumableChoicesD = [getConsumableDrop(actD, playerClassForConsumableD)];
           } else if (Math.random() < 0.5) {
-            consumableChoicesD = [getConsumableDrop(actD)];
+            consumableChoicesD = [getConsumableDrop(actD, playerClassForConsumableD)];
           }
         }
 
@@ -1125,6 +1133,71 @@ export const useGameStore = create<GameState>()(
           }
         }
 
+        // Class-specific consumable effects
+        // gainFlow: Frontend — gain N flow immediately
+        if (eff.gainFlow) {
+          s.battle.flow = Math.min(7, (s.battle.flow || 0) + eff.gainFlow);
+        }
+
+        // triggerDetonation: Backend — fire detonation queue immediately this turn
+        if (eff.triggerDetonation && s.battle.detonationQueue && s.battle.detonationQueue.length > 0) {
+          const queue = s.battle.detonationQueue;
+          const qElements = new Set(queue.map((e: any) => e.element));
+          const batchMult = qElements.size >= 3 ? 2.0 : qElements.size === 2 ? 1.5 : 1.0;
+          let extraBlock = 0;
+          for (const qe of queue as any[]) {
+            if (qe.blockAmount) {
+              extraBlock += Math.floor(qe.blockAmount * batchMult);
+            }
+            if (qe.damageAllAmount) {
+              const dmgQ = Math.floor(qe.damageAllAmount * batchMult);
+              if (dmgQ > 0) {
+                s.battle.enemies = s.battle.enemies.map(en => {
+                  const d = calculateDamage(dmgQ, s.battle!.playerStatusEffects, en.statusEffects);
+                  return applyDamageToEnemy(en, d);
+                }) as any;
+              }
+            }
+            if (qe.chainAmount) {
+              const chainD = Math.floor(qe.chainAmount * batchMult);
+              if (chainD > 0) {
+                s.battle.enemies = s.battle.enemies.map(en => {
+                  const d = calculateDamage(chainD, s.battle!.playerStatusEffects, en.statusEffects);
+                  return applyDamageToEnemy(en, d);
+                }) as any;
+              }
+            }
+          }
+          s.battle.playerBlock += extraBlock;
+          s.battle.detonationQueue = [] as any;
+        }
+
+        // advanceBlueprintConsumable: Architect — advance blueprint by N steps
+        if (eff.advanceBlueprintConsumable && s.battle.blueprint) {
+          const bpPrev = s.battle.blueprintProgress || 0;
+          s.battle.blueprintProgress = Math.min(
+            bpPrev + eff.advanceBlueprintConsumable,
+            s.battle.blueprint.length
+          );
+          if ((s.battle.blueprintProgress || 0) >= s.battle.blueprint.length && s.battle.blueprint.length > 0) {
+            // Evoke all slotted engineers and reset blueprint
+            const slotsToEvoke = [...(s.battle.engineerSlots || [])];
+            s.battle.engineerSlots = [] as any;
+            s.battle.blueprint = generateBlueprint() as any;
+            s.battle.blueprintProgress = 0;
+            // Simple evoke: apply block from each slot's evoke
+            for (const slot of slotsToEvoke as any[]) {
+              if (slot.evokeEffect?.block) s.battle.playerBlock += slot.evokeEffect.block;
+              if (slot.evokeEffect?.energy) s.battle.energy += slot.evokeEffect.energy;
+            }
+          }
+        }
+
+        // setTemperature: AI Engineer — set temperature to N
+        if (eff.setTemperature !== undefined) {
+          s.battle.temperature = Math.max(0, Math.min(10, eff.setTemperature));
+        }
+
         // Remove dead enemies and track gold earned
         const deadFromConsumable = s.battle.enemies.filter(e => e.currentHp <= 0);
         s.battle.killCount = (s.battle.killCount || 0) + deadFromConsumable.length;
@@ -1159,15 +1232,16 @@ export const useGameStore = create<GameState>()(
           artifactChoicesC = getRewardArtifact(ownedIdsC, 1, state.run?.character?.id);
         }
 
+        const playerClassForConsumableC = getPlayerClass(state.run?.character?.id);
         const canHoldConsumableC = state.run.consumables.length < state.run.maxConsumables;
         let consumableChoicesC: import('../types').ConsumableDef[] | undefined;
         if (canHoldConsumableC) {
           if (isBossC) {
             consumableChoicesC = [getRareConsumable()];
           } else if (isEliteC) {
-            consumableChoicesC = [getConsumableDrop(actC)];
+            consumableChoicesC = [getConsumableDrop(actC, playerClassForConsumableC)];
           } else if (Math.random() < 0.5) {
-            consumableChoicesC = [getConsumableDrop(actC)];
+            consumableChoicesC = [getConsumableDrop(actC, playerClassForConsumableC)];
           }
         }
 

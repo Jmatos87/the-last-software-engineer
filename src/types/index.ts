@@ -18,6 +18,11 @@ export interface ConsumableEffect {
   applyToAll?: StatusEffect;
   goldGain?: number;
   addEpicCardsToHand?: number;
+  // Class-specific consumable effects
+  gainFlow?: number;                   // gain N flow (frontend)
+  triggerDetonation?: boolean;         // fire detonation queue immediately (backend)
+  advanceBlueprintConsumable?: number; // advance blueprint by N (architect)
+  setTemperature?: number;             // set temperature to N (ai_engineer)
 }
 
 export interface ConsumableDef {
@@ -28,6 +33,7 @@ export interface ConsumableDef {
   icon: string;
   target: ConsumableTarget;
   effect: ConsumableEffect;
+  class?: CardClass;  // if set, only drop for matching player class
 }
 
 export interface ConsumableInstance extends ConsumableDef {
@@ -412,6 +418,39 @@ export interface ItemDef {
     confidenceAlsoReduceStress?: number;  // cards that grant confidence also reduce stress by N
     startBattleBlockFromLastCombat?: boolean;  // start combat with block = cards played last combat
     extraEnergyFirstTurn?: number;    // gain N extra energy on first turn only
+    // ── Frontend relic fields ──
+    drawOnOverflow?: number;           // after overflow: draw N cards
+    dodgeOnOverflow?: number;          // after overflow: gain N dodge
+    retainFlow?: number;               // retain N flow between turns (don't reset to 0)
+    blockPerDodgeStack?: number;       // at turn start: gain N block per dodge stack
+    startFlowBonus?: number;           // start combat with N flow
+    overflowBonusDamage?: number;      // overflow deals N extra AoE damage (frontend + ai_engineer)
+    // ── Backend relic fields ──
+    firstIceDoubleQueue?: boolean;     // first ice card each combat queues double block
+    healOnDetonate?: number;           // heal N HP after detonation fires
+    startSelfBurn?: number;            // start combat with N burn on player
+    tripleElementEnergy?: number;      // queue all 3 elements in one turn: gain N energy next turn
+    burnPropagation?: boolean;         // applying burn to one enemy also applies 1 burn to others
+    vulnerableOnDetonate?: boolean;    // after detonation fires: apply 1 vulnerable to all enemies
+    // ── Architect relic fields ──
+    drawOnBlueprintAdvance?: number;   // after advancing blueprint: draw N cards
+    blueprintCompleteVulnerable?: number; // blueprint completion: apply N vulnerable to all enemies
+    startBlockPerEngineer?: number;    // start combat with N block per slotted engineer
+    doubleEngineerPassive?: boolean;   // engineer passives trigger twice each turn
+    // maxEngineerSlots is also an ItemDef effect field (cap at N, replaces default 3)
+    confidencePerSlottedEngineer?: boolean; // gain 1 confidence/turn per slotted engineer
+    // ── AI Engineer relic fields ──
+    trainingLoopBonus?: number;        // training_loop cards gain +N extra bonus per play count
+    startTokens?: number;              // start combat with N tokens
+    tokenLossPerTurn?: number;         // lose N tokens at end of each turn
+    overflowEnergyGain?: number;       // on temperature overflow: gain N energy
+    overflowResetToZero?: boolean;     // overflow resets temperature to 0 instead of 5
+    hotThreshold?: number;             // override hot bonus activation threshold (default 7)
+    temperatureFloor?: number;         // temperature cannot go below N
+    // ── Neutral relic fields ──
+    damageReductionPercent?: number;   // take N% less incoming damage
+    startBattleStress?: number;        // start each combat with N stress added
+    confidenceOnKill?: number;         // on enemy kill: gain N confidence this combat
   };
 }
 
@@ -505,6 +544,8 @@ export interface BattleState {
   firstEngineerCardFreeUsed: boolean;
   blueprint: string[];               // ordered 3-engineer-ID sequence for blueprint completion
   blueprintProgress: number;         // sequential matches achieved (0–3)
+  // v1.16 new mechanic fields
+  firstIceUsed: boolean;             // tracks whether firstIceDoubleQueue relic has fired this combat
 }
 
 // ── Run ──

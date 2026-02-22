@@ -2,370 +2,261 @@ import type { ItemDef, CardClass } from '../types';
 
 export const items: ItemDef[] = [
   // ═══════════════════════════════════════════════════════════════
-  // STARTER RELICS (1 per class, given at run start)
+  // STARTER RELICS (1 per class)
   // ═══════════════════════════════════════════════════════════════
   {
     id: 'node_modules', name: 'node_modules', icon: '📦',
-    description: 'Start of combat: gain 1 Confidence and add a random 0-cost Frontend card to hand. 4.2 GB of dependencies.',
+    description: 'Start combat with 1 Confidence. After overflow, draw 2 cards. 4.2 GB of dependencies finally paying off.',
     rarity: 'starter', class: 'frontend', isStarter: true,
-    effect: { addRandomCardStart: true, startBattleConfidence: 1 },
+    effect: { startBattleConfidence: 1, drawOnOverflow: 2 },
   },
   {
     id: 'production_server', name: 'Production Server', icon: '🖥️',
-    description: 'Start of combat: gain 1 Confidence and 1 Resilience. Running since 2016. Nobody dares touch it.',
+    description: 'Start combat with 1 Confidence, 1 Resilience, and 4 block. Running since 2016. Nobody dares touch it.',
     rarity: 'starter', class: 'backend', isStarter: true,
-    effect: { startBattleConfidence: 1, startBattleResilience: 1 },
+    effect: { startBattleConfidence: 1, startBattleResilience: 1, startBattleBlock: 4 },
   },
   {
     id: 'whiteboard_marker', name: 'Whiteboard Marker', icon: '🖊️',
-    description: 'First Engineer card each combat costs 0. Uncapped. Dried out. Still works.',
+    description: 'First Engineer card each combat costs 0. Dried out. Still works.',
     rarity: 'starter', class: 'architect', isStarter: true,
     effect: { firstEngineerCardFree: true },
   },
   {
     id: 'gpu_cluster', name: 'GPU Cluster', icon: '🔧',
-    description: 'Draw 1 extra card each turn. $47,000/month in cloud compute.',
+    description: 'Draw 1 extra card per turn. Training_loop cards gain +1 bonus per play count. $47,000/month in cloud compute.',
     rarity: 'starter', class: 'ai_engineer', isStarter: true,
-    effect: { extraDraw: 1 },
+    effect: { extraDraw: 1, trainingLoopBonus: 1 },
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // FRONTEND CLASS RELICS
+  // FRONTEND CLASS RELICS (flow / dodge / bleed)
   // ═══════════════════════════════════════════════════════════════
   {
-    id: 'webpack_bundle', name: 'Webpack Bundle', icon: '📦',
-    description: 'Gain 3 block whenever you draw outside draw phase. (Simplified: +3 block on skills)',
+    id: 'surge_capacitor', name: 'Surge Capacitor', icon: '⚡',
+    description: 'Overflow deals 5 extra damage to all enemies. Release the backpressure.',
     rarity: 'common', class: 'frontend',
-    effect: { bonusBlock: 3 },
+    effect: { overflowBonusDamage: 5 },
   },
   {
-    id: 'chrome_devtools', name: 'Chrome DevTools', icon: '🔍',
-    description: 'First skill each turn gives +5 block.',
+    id: 'flow_retain', name: 'Perpetual Flow State', icon: '🌊',
+    description: 'Retain 2 Flow between turns (doesn\'t reset to 0 at turn end). You never leave the zone.',
     rarity: 'rare', class: 'frontend',
-    effect: { firstSkillBlock: 5 },
+    effect: { retainFlow: 2 },
   },
   {
-    id: 'safari_bug_report', name: 'Safari Bug Report', icon: '🐛',
-    description: 'Whenever you apply Vulnerable, also apply 1 Weak.',
+    id: 'dodge_protocol', name: 'Dodge Protocol', icon: '👻',
+    description: 'At the start of each turn, gain 1 block per Dodge stack. Evasion becoming armor.',
     rarity: 'rare', class: 'frontend',
-    effect: { vulnerableAlsoWeak: true },
+    effect: { blockPerDodgeStack: 1 },
   },
   {
-    id: 'react_fiber', name: 'React Fiber', icon: '⚡',
-    description: 'When you play 3+ cards in a turn, gain 1 energy.',
+    id: 'hot_reload', name: 'Hot Reload', icon: '♻️',
+    description: 'After overflow: draw 2 cards and gain 2 Dodge. The component refreshed. So did you.',
     rarity: 'epic', class: 'frontend',
-    effect: { cardsPlayedEnergy: 1, cardsPlayedThreshold: 3 },
+    effect: { drawOnOverflow: 2, dodgeOnOverflow: 2 },
   },
   {
-    id: 'tailwind_config', name: 'Tailwind Config', icon: '🎨',
-    description: 'Start of combat: gain 1 Confidence and 1 Resilience. Block from cards +2.',
+    id: 'dependency_hell', name: 'Dependency Hell', icon: '📦',
+    description: 'Start combat with 4 Flow. Start each combat with 8 stress. Peer dependencies: irreconcilable.',
     rarity: 'epic', class: 'frontend',
-    effect: { startBattleConfidence: 1, startBattleResilience: 1, bonusBlock: 2 },
-  },
-  // New epic relics — Frontend
-  {
-    id: 'the_bundle', name: 'The Bundle', icon: '🗜️',
-    description: 'Every 4 cards played in a turn, gain 1 extra energy next turn. Ship fast.',
-    rarity: 'epic', class: 'frontend',
-    effect: { cardsPlayedEnergy: 1, cardsPlayedThreshold: 4 },
+    effect: { startFlowBonus: 4, startBattleStress: 8 },
   },
   {
     id: 'css_custom_props', name: 'CSS Custom Properties', icon: '🎨',
-    description: 'Block from skills is increased by 50% (rounded up). var(--invincibility: yes).',
+    description: 'Block from skills is increased by 50%. Start combat with 1 Confidence. var(--invincibility: conditional).',
     rarity: 'epic', class: 'frontend',
-    effect: { skillBlockMultiplier: 150 },
+    effect: { skillBlockMultiplier: 150, startBattleConfidence: 1 },
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // BACKEND CLASS RELICS
+  // BACKEND CLASS RELICS (detonation queue / ice / fire / lightning)
   // ═══════════════════════════════════════════════════════════════
   {
-    id: 'load_balancer', name: 'Load Balancer', icon: '⚖️',
-    description: 'Multi-hit attacks deal +2 damage per hit.',
+    id: 'cache_invalidation', name: 'Cache Invalidation', icon: '❄️',
+    description: 'First ice card each combat queues double block. The hard problem: briefly solved.',
     rarity: 'common', class: 'backend',
-    effect: { multiHitBonus: 2 },
+    effect: { firstIceDoubleQueue: true },
   },
   {
-    id: 'waf_rules', name: 'WAF Rules', icon: '🛡️',
-    description: 'Start combat with 4 Counter-Offer (reflect damage when hit).',
+    id: 'hot_standby', name: 'Hot Standby', icon: '🔋',
+    description: 'After your detonation fires, heal 4 HP. Always on. Always alert. Spiritually gone.',
     rarity: 'rare', class: 'backend',
-    effect: { counterOfferStart: 4 },
+    effect: { healOnDetonate: 4 },
   },
   {
-    id: 'redis_cache', name: 'Redis Cache', icon: '🔴',
-    description: 'When you exhaust a card, gain 4 block.',
+    id: 'technical_debt_relic', name: 'Technical Debt', icon: '💳',
+    description: 'Gain 1 extra energy per turn. Start each combat with 1 Burn on yourself. You borrowed from future-you.',
     rarity: 'rare', class: 'backend',
-    effect: { exhaustSynergyBlock: 4 },
+    effect: { extraEnergy: 1, startSelfBurn: 1 },
   },
   {
-    id: 'kubernetes_cluster', name: 'Kubernetes Cluster', icon: '☸️',
-    description: 'At start of combat, gain Confidence (+1 attack damage) equal to power cards in deck.',
+    id: 'triple_stack_optimizer', name: 'Triple Stack Optimizer', icon: '🌪️',
+    description: 'Queue all 3 elements (ice + fire + lightning) in one turn: gain 1 energy next turn.',
     rarity: 'epic', class: 'backend',
-    effect: { startCombatConfidencePerPower: true },
+    effect: { tripleElementEnergy: 1 },
   },
   {
-    id: 'database_replica', name: 'Database Replica', icon: '💾',
-    description: 'When you exhaust a card, deal 3 damage to all enemies.',
+    id: 'burn_propagator', name: 'Burn Propagator', icon: '🔥',
+    description: 'Applying Burn to any enemy also applies 1 Burn to all other enemies. Fire spreads. That is the technical term.',
     rarity: 'epic', class: 'backend',
-    effect: { exhaustSynergyDamage: 3 },
-  },
-  // New epic relics — Backend
-  {
-    id: 'load_testing_rig', name: 'Load Testing Rig', icon: '📡',
-    description: 'Multi-hit attacks gain +3 damage per additional hit (instead of +1). 10,000 RPS and rising.',
-    rarity: 'epic', class: 'backend',
-    effect: { multiHitBonus: 3 },
+    effect: { burnPropagation: true },
   },
   {
     id: 'circuit_breaker', name: 'Circuit Breaker', icon: '⚡',
-    description: 'Once per combat, survive a killing blow with 1 HP. Trips automatically. Like your on-call rotation.',
+    description: 'Once per combat, survive a killing blow with 1 HP. After detonation fires, apply 1 Vulnerable to all enemies.',
     rarity: 'epic', class: 'backend',
-    effect: { surviveKillingBlow: true },
+    effect: { surviveKillingBlow: true, vulnerableOnDetonate: true },
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // ARCHITECT CLASS RELICS
+  // ARCHITECT CLASS RELICS (engineer slots / resonance)
   // ═══════════════════════════════════════════════════════════════
   {
-    id: 'uml_poster', name: 'UML Poster', icon: '📊',
-    description: 'First Power each turn draws 1 card.',
+    id: 'agile_board', name: 'Agile Board', icon: '📋',
+    description: 'Advancing blueprint also draws 1 card. The ticket moved. You noticed.',
     rarity: 'common', class: 'architect',
-    effect: { onPlayPower: { draw: 1 } },
+    effect: { drawOnBlueprintAdvance: 1 },
   },
   {
-    id: 'jira_board', name: 'JIRA Board', icon: '📋',
-    description: 'When you exhaust a card, gain 1 energy.',
+    id: 'architecture_review', name: 'Architecture Review', icon: '🔎',
+    description: 'Blueprint completion applies 2 Vulnerable to all enemies. Rubber-stamped. Violently.',
     rarity: 'rare', class: 'architect',
-    effect: { exhaustGainEnergy: true },
+    effect: { blueprintCompleteVulnerable: 2 },
   },
   {
-    id: 'gantt_chart', name: 'Gantt Chart', icon: '📈',
-    description: 'Start combat with 1 extra energy.',
+    id: 'sprint_velocity', name: 'Sprint Velocity', icon: '🏃',
+    description: 'Start each combat with 4 block per slotted engineer. Prior investment, present shield.',
     rarity: 'rare', class: 'architect',
-    effect: { extraEnergy: 1 },
+    effect: { startBlockPerEngineer: 4 },
   },
   {
-    id: 'microservices_diagram', name: 'Microservices Diagram', icon: '🔀',
-    description: 'Each power played gives +1 Confidence (+1 attack damage) this combat (permanent).',
+    id: 'senior_engineer', name: 'Senior Engineer', icon: '🏅',
+    description: 'Engineer passives trigger twice each turn. Mentorship: passive-aggressive.',
     rarity: 'epic', class: 'architect',
-    effect: { perPowerPlayed: { confidence: 1 } },
+    effect: { doubleEngineerPassive: true },
   },
   {
-    id: 'legacy_codebase', name: 'Legacy Codebase', icon: '📜',
-    description: 'Exhaust effects trigger twice.',
+    id: 'scope_creep', name: 'Scope Creep', icon: '📈',
+    description: 'Gain 1 Confidence at turn start per slotted engineer. The team is small. The confidence: enormous.',
     rarity: 'epic', class: 'architect',
-    effect: { exhaustDoubleTrigger: true },
-  },
-  // New epic relics — Architect
-  {
-    id: 'event_driven', name: 'Event-Driven Architecture', icon: '📡',
-    description: 'Whenever any card is exhausted (any source), draw 1 card. The events flow. So do you.',
-    rarity: 'epic', class: 'architect',
-    effect: { exhaustDrawCard: true },
+    effect: { confidencePerSlottedEngineer: true },
   },
   {
     id: 'domain_model', name: 'Domain Model', icon: '🗂️',
-    description: 'At combat start, your first 3 cards in hand cost 0. Well-bounded contexts.',
+    description: 'At combat start, your first 3 cards played cost 0. Well-bounded contexts.',
     rarity: 'epic', class: 'architect',
     effect: { firstNCardsFree: 3 },
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // AI ENGINEER CLASS RELICS
+  // AI ENGINEER CLASS RELICS (temperature / tokens / training_loop)
   // ═══════════════════════════════════════════════════════════════
   {
-    id: 'training_data', name: 'Training Data', icon: '📊',
-    description: 'At start of turn, if you have Confidence (+attack damage), gain 1 more.',
+    id: 'learning_rate', name: 'Learning Rate', icon: '📊',
+    description: 'Training_loop cards gain +1 extra bonus per play count on top of their listed rate.',
     rarity: 'common', class: 'ai_engineer',
-    effect: { confidenceIfHasConfidence: true },
+    effect: { trainingLoopBonus: 1 },
   },
   {
-    id: 'prompt_template', name: 'Prompt Template', icon: '📝',
-    description: 'Copium effects give +3 bonus.',
+    id: 'token_faucet', name: 'Token Faucet', icon: '🪣',
+    description: 'Start each combat with 3 tokens. Lose 1 token per turn. It trickles. It drains.',
     rarity: 'rare', class: 'ai_engineer',
-    effect: { bonusCopium: 3 },
+    effect: { startTokens: 3, tokenLossPerTurn: 1 },
   },
   {
-    id: 'chaos_monkey', name: 'Chaos Monkey', icon: '🐒',
-    description: 'When you take self-damage, deal that damage to a random enemy.',
+    id: 'feedback_loop', name: 'Feedback Loop', icon: '🔄',
+    description: 'When temperature overflows (hits 10), gain 2 energy. Push hard enough to reap.',
     rarity: 'rare', class: 'ai_engineer',
-    effect: { selfDamageReflect: true },
+    effect: { overflowEnergyGain: 2 },
   },
   {
-    id: 'tpu_farm', name: 'TPU Farm', icon: '🏭',
-    description: 'Start of combat: gain Confidence (+attack damage) and Resilience (+block from cards) equal to current act number.',
+    id: 'overfit', name: 'Overfit', icon: '🎯',
+    description: 'Hot bonus activates at temp ≥ 5 (not 7). Temperature cannot drop below 3 (no Cold bonus, no Freeze).',
     rarity: 'epic', class: 'ai_engineer',
-    effect: { startCombatActConfidence: true },
+    effect: { hotThreshold: 5, temperatureFloor: 3 },
   },
   {
-    id: 'safety_filter', name: 'Safety Filter', icon: '🔒',
-    description: 'Self-damage from cards halved. Stress gain from cards halved.',
+    id: 'hallucination_engine', name: 'Hallucination Engine', icon: '🎲',
+    description: 'Overflow deals 10 extra damage to all enemies. Overflow resets temperature to 0 instead of 5.',
     rarity: 'epic', class: 'ai_engineer',
-    effect: { selfDamageHalved: true, stressGainHalved: true },
-  },
-  // New epic relics — AI Engineer
-  {
-    id: 'inference_engine', name: 'Inference Engine', icon: '🤖',
-    description: 'Every 3 Confidence stacks, deal 5 damage to a random enemy at turn start. Autoregressive violence.',
-    rarity: 'epic', class: 'ai_engineer',
-    effect: { confidenceThresholdDamage: { threshold: 3, damage: 5 } },
+    effect: { overflowBonusDamage: 10, overflowResetToZero: true },
   },
   {
-    id: 'rlhf_dataset', name: 'RLHF Dataset', icon: '👍',
-    description: 'Cards that grant Confidence also reduce stress by 2. Aligned with your survival.',
+    id: 'context_limit', name: 'Context Limit', icon: '🪟',
+    description: 'Start combat with 2 Confidence and 2 Resilience. Start each combat with 8 stress. Burned in. Burned out.',
     rarity: 'epic', class: 'ai_engineer',
-    effect: { confidenceAlsoReduceStress: 2 },
+    effect: { startBattleConfidence: 2, startBattleResilience: 2, startBattleStress: 8 },
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // NEUTRAL RELICS
+  // NEUTRAL RELICS (all classes)
   // ═══════════════════════════════════════════════════════════════
   {
-    id: 'mechanical_keyboard', name: 'Mechanical Keyboard',
-    description: 'Start each combat with 1 extra energy.',
-    rarity: 'epic', icon: '⌨️',
-    effect: { extraEnergy: 1 },
+    id: 'office_plant', name: 'Office Plant', icon: '🌱',
+    description: 'Heal 3 HP after each combat. Somehow still alive.',
+    rarity: 'common',
+    effect: { healPerCombat: 3 },
   },
   {
-    id: 'second_monitor', name: 'Second Monitor',
-    description: 'Draw 1 extra card each turn.',
-    rarity: 'rare', icon: '🖥️',
-    effect: { extraDraw: 1 },
+    id: 'expense_report', name: 'Expense Report', icon: '💰',
+    description: 'Gain 8 gold after each combat. Approved on the 4th submission.',
+    rarity: 'common',
+    effect: { extraGold: 8 },
   },
   {
-    id: 'energy_drink', name: 'Energy Drink',
-    description: 'Gain 10 max HP.',
-    rarity: 'common', icon: '🥤',
-    effect: { extraHp: 10 },
-  },
-  {
-    id: 'rubber_duck_relic', name: 'Rubber Duck',
-    description: 'Heal 3 HP after each combat.',
-    rarity: 'common', icon: '🦆',
-    effect: { healOnKill: 3 },
-  },
-  {
-    id: 'bitcoin_miner', name: 'Bitcoin Miner',
-    description: 'Gain 15 extra gold after each combat.',
-    rarity: 'rare', icon: '₿',
-    effect: { extraGold: 15 },
-  },
-  {
-    id: 'gaming_mouse', name: 'Gaming Mouse',
-    description: 'Deal 3 extra damage with attacks.',
-    rarity: 'rare', icon: '🖱️',
-    effect: { bonusDamage: 3 },
-  },
-  {
-    id: 'standing_desk', name: 'Standing Desk',
-    description: 'Gain 2 extra block from skills.',
-    rarity: 'rare', icon: '🪑',
-    effect: { bonusBlock: 2 },
-  },
-  {
-    id: 'linkedin_premium', name: 'LinkedIn Premium',
-    description: 'Start each combat with 1 extra energy. Finally worth the subscription.',
-    rarity: 'epic', icon: '💎',
-    effect: { extraEnergy: 1 },
-  },
-  {
-    id: 'noise_canceling_headphones', name: 'Noise-Canceling Headphones',
-    description: 'Draw 1 extra card each turn. Block out the standup meeting.',
-    rarity: 'rare', icon: '🎧',
-    effect: { extraDraw: 1 },
-  },
-  {
-    id: 'ergonomic_chair', name: 'Ergonomic Chair',
-    description: 'Gain 15 max HP. Your back finally forgives you.',
-    rarity: 'rare', icon: '🪑',
+    id: 'standing_desk', name: 'Standing Desk', icon: '🪑',
+    description: 'Gain 15 max HP. Your back: slightly less destroyed.',
+    rarity: 'common',
     effect: { extraHp: 15 },
   },
   {
-    id: 'company_swag_mug', name: 'Company Swag Mug',
-    description: 'Heal 3 HP after each combat. The logo is already fading.',
-    rarity: 'common', icon: '☕',
-    effect: { healOnKill: 3 },
+    id: 'onboarding_docs', name: 'Onboarding Docs', icon: '📖',
+    description: 'Start each combat with 5 block. Written by whoever left last.',
+    rarity: 'common',
+    effect: { startBattleBlock: 5 },
   },
   {
-    id: 'referral_bonus', name: 'Referral Bonus',
-    description: 'Gain 10 extra gold after each combat. Networking pays off.',
-    rarity: 'rare', icon: '🤝',
-    effect: { extraGold: 10 },
+    id: 'crunch_mode', name: 'Crunch Mode', icon: '⏰',
+    description: 'Gain 1 extra energy per turn. Gain 5 stress after each combat. Sleep: optional.',
+    rarity: 'rare',
+    effect: { extraEnergy: 1, stressPerCombat: 5 },
   },
   {
-    id: 'clicky_keyboard', name: 'Clicky Keyboard',
-    description: 'Deal 2 bonus damage on attacks.',
-    rarity: 'rare', icon: '⌨️',
+    id: 'second_monitor', name: 'Second Monitor', icon: '🖥️',
+    description: 'Draw 1 extra card each turn. Block out the standup meeting.',
+    rarity: 'rare',
+    effect: { extraDraw: 1 },
+  },
+  {
+    id: 'gaming_mouse', name: 'Gaming Mouse', icon: '🖱️',
+    description: 'Deal 2 extra damage with all attacks.',
+    rarity: 'rare',
     effect: { bonusDamage: 2 },
   },
   {
-    id: 'blue_light_glasses', name: 'Blue Light Glasses',
-    description: 'Gain 2 bonus block on skills.',
-    rarity: 'rare', icon: '👓',
-    effect: { bonusBlock: 2 },
-  },
-  // Curse / double-edged artifacts
-  {
-    id: 'open_floor_plan', name: 'Open Floor Plan',
-    description: 'Draw 1 extra card each turn, but gain 10 stress per combat.',
-    rarity: 'rare', icon: '🏢',
-    effect: { extraDraw: 1, stressPerCombat: 10 },
+    id: 'imposter_syndrome', name: 'Imposter Syndrome', icon: '🎭',
+    description: 'Take 25% less damage from all sources. Start each combat with 10 stress. You don\'t belong here. That saves you.',
+    rarity: 'rare',
+    effect: { damageReductionPercent: 25, startBattleStress: 10 },
   },
   {
-    id: 'crunch_mode', name: 'Crunch Mode',
-    description: '+3 Confidence (+3 attack damage) at combat start, but take 5 damage.',
-    rarity: 'epic', icon: '🔥',
-    effect: { startBattleConfidence: 3, startBattleDamage: 5 },
+    id: 'performance_review', name: 'Performance Review', icon: '📊',
+    description: 'Start combat: +1 Confidence, +1 Resilience. Gain 8 stress after each combat. Exceeds expectations. Barely survives them.',
+    rarity: 'epic',
+    effect: { startBattleConfidence: 1, startBattleResilience: 1, stressPerCombat: 8 },
   },
   {
-    id: 'imposter_syndrome', name: 'Imposter Syndrome',
-    description: 'Start each combat with 2 Vulnerable. You don\'t belong here.',
-    rarity: 'rare', icon: '😰',
-    effect: { startBattleVulnerable: 2 },
+    id: 'stock_options', name: 'Stock Options', icon: '📈',
+    description: 'Gain 25 gold after each combat. Max HP -10. 4-year vest. Cliff at month 5.',
+    rarity: 'epic',
+    effect: { extraGold: 25, extraHp: -10 },
   },
   {
-    id: 'unlimited_pto', name: 'Unlimited PTO',
-    description: 'Heal 8 HP per combat, but start Weak 1.',
-    rarity: 'epic', icon: '🏖️',
-    effect: { healPerCombat: 8, startBattleWeak: 1 },
-  },
-  {
-    id: 'on_call_rotation', name: 'On-Call Rotation',
-    description: '+2 Resilience (+2 block from cards) at combat start, but +8 stress per combat.',
-    rarity: 'rare', icon: '📟',
-    effect: { startBattleResilience: 2, stressPerCombat: 8 },
-  },
-  // New neutral relics
-  {
-    id: 'glassdoor_reviews', name: 'Glassdoor Reviews',
-    description: 'At start of combat, gain 3 block.',
-    rarity: 'common', icon: '⭐',
-    effect: { startBattleBlock: 3 },
-  },
-  {
-    id: 'blind_resume', name: 'Blind Resume',
-    description: 'Card removal costs 25 less gold.',
-    rarity: 'rare', icon: '📄',
-    effect: { cardRemovalDiscount: 25 },
-  },
-  {
-    id: 'equity_package', name: 'Equity Package',
-    description: 'Gain 5 extra gold per combat. Gold rewards +25%.',
-    rarity: 'epic', icon: '📈',
-    effect: { extraGold: 5, extraGoldPercent: 25 },
-  },
-  // New epic relics — Neutral
-  {
-    id: 'remote_work', name: 'Remote Work',
-    description: 'Start each combat with block equal to cards you played last combat. Carry your momentum.',
-    rarity: 'epic', icon: '🏠',
-    effect: { startBattleBlockFromLastCombat: true },
-  },
-  {
-    id: 'four_day_workweek', name: 'Four-Day Workweek',
-    description: 'Gain 2 extra energy on your first turn only. Friday is cancelled.',
-    rarity: 'epic', icon: '🗓️',
-    effect: { extraEnergyFirstTurn: 2 },
+    id: 'management_deck', name: 'Management Deck', icon: '🃏',
+    description: 'On kill: gain 3 Confidence for this combat. The boss is eliminated. You feel great.',
+    rarity: 'epic',
+    effect: { confidenceOnKill: 3 },
   },
 ];
 
@@ -379,7 +270,6 @@ function getCharClassId(charId: string): CardClass | undefined {
 
 export function getShopItems(count: number, characterId?: string): ItemDef[] {
   const classId = characterId ? getCharClassId(characterId) : undefined;
-  // Shop shows class + neutral relics (no starters)
   const pool = items.filter(i => {
     if (i.isStarter) return false;
     if (!classId) return true;
