@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { BattleState, Deployment, EnemyDef, EnemyInstance, RunState, CardInstance } from '../types';
+import type { BattleState, Deployment, EnemyDef, EnemyInstance, RunState, CardInstance, QueuedEffect, EngineerEvoke } from '../types';
 import { createCardInstance, shuffleDeck, drawCards } from '../utils/deckUtils';
 import { cards, getCardDef } from '../data/cards';
 import { enemies } from '../data/enemies';
+import { generateBlueprint, engineerRoster } from '../data/engineers';
 import {
   calculateDamage,
   calculateBlock,
@@ -14,6 +15,113 @@ import {
   tickStatusEffects,
   mergeStatusEffects,
 } from '../utils/battleEngine';
+
+// ── Engineer Slot Helpers ──
+// Both helpers mutate the battle object in place (newBattle is const in executePlayCard)
+
+function applyEvokeEffect(
+  b: BattleState,
+  run: RunState,
+  evoke: EngineerEvoke
+): void {
+  if (evoke.block) b.playerBlock = (b.playerBlock || 0) + evoke.block;
+  if (evoke.energy) b.energy = (b.energy || 0) + evoke.energy;
+
+  if (evoke.draw && evoke.draw > 0) {
+    const { drawn, newDrawPile, newDiscardPile } = drawCards(b.drawPile, b.discardPile, evoke.draw);
+    b.hand = [...b.hand, ...drawn];
+    b.drawPile = newDrawPile;
+    b.discardPile = newDiscardPile;
+  }
+
+  // Single-target damage (+ optional token scaling)
+  if (evoke.damage !== undefined || evoke.damageScalesWithTokens !== undefined) {
+    const baseDmg = evoke.damage || 0;
+    const tokenBonus = evoke.damageScalesWithTokens
+      ? Math.floor((b.tokens || 0) * evoke.damageScalesWithTokens)
+      : 0;
+    const totalDmg = baseDmg + tokenBonus;
+    if (totalDmg > 0 && b.enemies.length > 0) {
+      const idx = Math.floor(Math.random() * b.enemies.length);
+      const dmg = calculateDamage(totalDmg, b.playerStatusEffects, b.enemies[idx].statusEffects, run.items);
+      b.enemies = b.enemies.map((e, i) => i === idx ? applyDamageToEnemy(e, dmg) : e);
+    }
+  }
+
+  // AoE damage
+  if (evoke.damageAll) {
+    const damageAllAmt = evoke.damageAll;
+    b.enemies = b.enemies.map(e =>
+      applyDamageToEnemy(e, calculateDamage(damageAllAmt, b.playerStatusEffects, e.statusEffects, run.items))
+    );
+  }
+
+  // AoE damage scales with tokens (consumes tokens)
+  if (evoke.damageAllScalesWithTokens) {
+    const totalDmg = Math.floor((b.tokens || 0) * evoke.damageAllScalesWithTokens);
+    if (totalDmg > 0) {
+      b.enemies = b.enemies.map(e =>
+        applyDamageToEnemy(e, calculateDamage(totalDmg, b.playerStatusEffects, e.statusEffects, run.items))
+      );
+    }
+    b.tokens = 0;
+  }
+
+  if (evoke.applyToAll) {
+    const toApply = evoke.applyToAll;
+    b.enemies = b.enemies.map(e => ({
+      ...e,
+      statusEffects: mergeStatusEffects(e.statusEffects, toApply),
+    }));
+  }
+
+  if (evoke.shuffleDiscardToDraw) {
+    const combined = shuffleDeck([...b.drawPile, ...b.discardPile]);
+    b.drawPile = combined;
+    b.discardPile = [];
+  }
+
+  if (evoke.queueBlock) {
+    b.detonationQueue = [...b.detonationQueue, { element: 'ice' as const, blockAmount: evoke.queueBlock }];
+  }
+  if (evoke.queueDamageAll) {
+    b.detonationQueue = [...b.detonationQueue, { element: 'fire' as const, damageAllAmount: evoke.queueDamageAll }];
+  }
+  if (evoke.queueChain) {
+    b.detonationQueue = [...b.detonationQueue, { element: 'lightning' as const, chainAmount: evoke.queueChain }];
+  }
+
+  if (evoke.damageAllEqualsCounterOffer) {
+    const dmgAmt = b.playerStatusEffects.counterOffer || 0;
+    if (dmgAmt > 0) {
+      b.enemies = b.enemies.map(e =>
+        applyDamageToEnemy(e, calculateDamage(dmgAmt, b.playerStatusEffects, e.statusEffects, run.items))
+      );
+    }
+  }
+
+  if (evoke.gainCounterOfferDouble) {
+    const current = b.playerStatusEffects.counterOffer || 0;
+    b.playerStatusEffects = mergeStatusEffects(b.playerStatusEffects, { counterOffer: current });
+  }
+
+  if (evoke.doubleResilience) {
+    const current = b.playerStatusEffects.resilience || 0;
+    b.playerStatusEffects = mergeStatusEffects(b.playerStatusEffects, { resilience: current });
+  }
+
+  b.enemies = b.enemies.filter(e => e.currentHp > 0);
+}
+
+function applyBlueprintComplete(b: BattleState, run: RunState): void {
+  const slotsToEvoke = [...b.engineerSlots];
+  b.engineerSlots = [];
+  b.blueprint = generateBlueprint();
+  b.blueprintProgress = 0;
+  for (const slot of slotsToEvoke) {
+    applyEvokeEffect(b, run, slot.evokeEffect);
+  }
+}
 
 export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: BattleState; hpAdjust: number; stressAdjust: number } {
   const enemies: EnemyInstance[] = enemyDefs.map(def => ({
@@ -138,6 +246,13 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: Batt
       cardPlayCounts: {},
       nextTurnDrawPenalty: 0,
       nextTurnEnergyPenalty: 0,
+      flow: 0,
+      nextCardCostReduction: 0,
+      detonationQueue: [],
+      engineerSlots: [],
+      maxEngineerSlots: 3,
+      blueprint: generateBlueprint(),
+      blueprintProgress: 0,
     },
     hpAdjust,
     stressAdjust,
@@ -170,6 +285,11 @@ export function executePlayCard(
   // fast_refresh / event_bubbling: next card played this turn costs 0
   if (battle.nextCardCostZero) {
     effectiveCost = 0;
+  }
+
+  // Frontend burst: reduceNextCardCost lowers next card by N
+  if ((battle.nextCardCostReduction || 0) > 0) {
+    effectiveCost = Math.max(0, effectiveCost - battle.nextCardCostReduction);
   }
 
   if (effectiveCost > battle.energy) return { battle, stressReduction: 0, hpChange: 0, stressChange: 0, goldChange: 0 };
@@ -351,6 +471,11 @@ export function executePlayCard(
     newBattle.nextCardCostZero = false;
   }
 
+  // Consume nextCardCostReduction flag (Frontend burst: minify, hot_key, tree_shake_burst)
+  if ((battle.nextCardCostReduction || 0) > 0) {
+    newBattle.nextCardCostReduction = 0;
+  }
+
   // Deal N × cardsPlayedThisTurn to target (batched_update, component_did_mount)
   if (effects.damagePerCardPlayed && targetInstanceId) {
     const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
@@ -374,6 +499,102 @@ export function executePlayCard(
   if (effects.nextCardCostZero) {
     newBattle.nextCardCostZero = true;
   }
+
+  // Set nextCardCostReduction flag (Frontend burst: minify, hot_key, tree_shake_burst)
+  if (effects.reduceNextCardCost) {
+    newBattle.nextCardCostReduction = (newBattle.nextCardCostReduction || 0) + effects.reduceNextCardCost;
+  }
+
+  // ── Frontend Flow State mechanic ──────────────────────────────────────────
+  // Step A: increment flow (auto +1 per card played) + any extra flow from this card
+  {
+    const flowIncrement = 1 + (effects.gainExtraFlow || 0);
+    const flowNext = (newBattle.flow ?? 0) + flowIncrement;
+    if (flowNext >= 8) {
+      // Overflow: deal 10 AoE damage, gain 2 Dodge, reset flow to 0
+      newBattle.enemies = newBattle.enemies.map(e =>
+        applyDamageToEnemy(e, calculateDamage(10, battle.playerStatusEffects, e.statusEffects, run.items)));
+      newBattle.playerStatusEffects = mergeStatusEffects(newBattle.playerStatusEffects, { dodge: 2 });
+      newBattle.flow = 0;
+    } else {
+      newBattle.flow = flowNext;
+    }
+  }
+
+  // Step B: flow-conditional bonuses (check CURRENT flow after update)
+  if (effects.damageIfFlowHigh && (newBattle.flow >= 5 || (newBattle.flow === 0 && (battle.flow ?? 0) + 1 + (effects.gainExtraFlow || 0) >= 5)) && targetInstanceId) {
+    // Use pre-overflow flow for the check so finishers at flow 5-7 still fire the bonus
+    const preOverflowFlow = (battle.flow ?? 0) + 1 + (effects.gainExtraFlow || 0);
+    if (preOverflowFlow >= 5) {
+      const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+      if (enemyIdx !== -1) {
+        const dmg = calculateDamage(effects.damageIfFlowHigh, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+        newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+      }
+    }
+  }
+  if (effects.damageAllIfFlowHigh) {
+    const preOverflowFlow = (battle.flow ?? 0) + 1 + (effects.gainExtraFlow || 0);
+    if (preOverflowFlow >= 5) {
+      newBattle.enemies = newBattle.enemies.map(e => {
+        const dmg = calculateDamage(effects.damageAllIfFlowHigh!, battle.playerStatusEffects, e.statusEffects, run.items);
+        return applyDamageToEnemy(e, dmg);
+      });
+    }
+  }
+
+  // Step C: bleed-scaling damage (deal N × target's bleed stacks)
+  if (effects.damagePerBleed && targetInstanceId) {
+    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+    if (enemyIdx !== -1) {
+      const bleedStacks = newBattle.enemies[enemyIdx].statusEffects.bleed || 0;
+      if (bleedStacks > 0) {
+        const dmg = calculateDamage(effects.damagePerBleed * bleedStacks, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+        newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+      }
+    }
+  }
+
+  // Step D: double bleed stacks on target (catalyst_patch)
+  if (effects.doubleTargetBleed && targetInstanceId) {
+    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
+    if (enemyIdx !== -1) {
+      const currentBleed = newBattle.enemies[enemyIdx].statusEffects.bleed || 0;
+      if (currentBleed > 0) {
+        newBattle.enemies[enemyIdx] = {
+          ...newBattle.enemies[enemyIdx],
+          statusEffects: { ...newBattle.enemies[enemyIdx].statusEffects, bleed: currentBleed * 2 },
+        };
+      }
+    }
+  }
+  // ── End Flow State mechanic ───────────────────────────────────────────────
+
+  // ── Detonation Queue mechanics (Backend Engineer) ──────────────────────────
+  // Cards push scheduled effects onto the queue; they fire at start of next turn
+  if (effects.queueBlock) {
+    newBattle.detonationQueue = [
+      ...(newBattle.detonationQueue || []),
+      { element: 'ice' as const, blockAmount: effects.queueBlock },
+    ];
+  }
+  if (effects.queueDamageAll || effects.queueBurn) {
+    newBattle.detonationQueue = [
+      ...(newBattle.detonationQueue || []),
+      {
+        element: 'fire' as const,
+        damageAllAmount: effects.queueDamageAll,
+        burnApply: effects.queueBurn,
+      },
+    ];
+  }
+  if (effects.queueChain) {
+    newBattle.detonationQueue = [
+      ...(newBattle.detonationQueue || []),
+      { element: 'lightning' as const, chainAmount: effects.queueChain },
+    ];
+  }
+  // ── End Detonation Queue mechanic ──────────────────────────────────────────
 
   // Apply copium — directly reduces stress
   if (effects.copium) {
@@ -722,6 +943,130 @@ export function executePlayCard(
     newBattle.deployments = deps.slice(0, 3); // fill all 3 slots, replacing anything existing
   }
 
+  // ── Architect: Engineer Slot Effects ──
+
+  // damagePerSlot: bonus damage to target scaled by slot count
+  if (effects.damagePerSlot && (newBattle.engineerSlots || []).length > 0 && targetInstanceId) {
+    const slotDmg = effects.damagePerSlot * newBattle.engineerSlots.length;
+    if (slotDmg > 0) {
+      const target = newBattle.enemies.find(e => e.instanceId === targetInstanceId);
+      if (target) {
+        const calcDmg = calculateDamage(slotDmg, newBattle.playerStatusEffects, target.statusEffects, run.items);
+        newBattle.enemies = newBattle.enemies.map(e =>
+          e.instanceId === targetInstanceId ? applyDamageToEnemy(e, calcDmg) : e
+        );
+      }
+    }
+  }
+
+  // blockPerSlot: bonus block scaled by slot count
+  if (effects.blockPerSlot && (newBattle.engineerSlots || []).length > 0) {
+    const slotBlock = effects.blockPerSlot * newBattle.engineerSlots.length;
+    newBattle.playerBlock += calculateBlock(slotBlock, newBattle.playerStatusEffects, run.items);
+  }
+
+  // damageAllPerSlot: bonus AoE damage scaled by slot count
+  if (effects.damageAllPerSlot && (newBattle.engineerSlots || []).length > 0) {
+    const slotAllDmg = effects.damageAllPerSlot * newBattle.engineerSlots.length;
+    if (slotAllDmg > 0) {
+      newBattle.enemies = newBattle.enemies.map(e =>
+        applyDamageToEnemy(e, calculateDamage(slotAllDmg, newBattle.playerStatusEffects, e.statusEffects, run.items))
+      );
+    }
+  }
+
+  // addScopeCreepToDiscard: add curse cards to discard
+  if (effects.addScopeCreepToDiscard) {
+    const curseDef = getCardDef('scope_creep');
+    if (curseDef) {
+      for (let i = 0; i < effects.addScopeCreepToDiscard; i++) {
+        newBattle.discardPile = [...newBattle.discardPile, createCardInstance(curseDef)];
+      }
+    }
+  }
+
+  // shuffleEngineerSlots: randomize slot order
+  if (effects.shuffleEngineerSlots && (newBattle.engineerSlots || []).length > 1) {
+    newBattle.engineerSlots = [...newBattle.engineerSlots].sort(() => Math.random() - 0.5);
+  }
+
+  // regenerateBlueprint: get a new blueprint, reset progress
+  if (effects.regenerateBlueprint) {
+    newBattle.blueprint = generateBlueprint();
+    newBattle.blueprintProgress = 0;
+  }
+
+  // evokeOldest: fire and remove oldest slotted engineer
+  if (effects.evokeOldest && (newBattle.engineerSlots || []).length > 0) {
+    const oldest = newBattle.engineerSlots[0];
+    newBattle.engineerSlots = newBattle.engineerSlots.slice(1);
+    applyEvokeEffect(newBattle, run, oldest.evokeEffect);
+  }
+
+  // evokeAll: fire all slot evokes, clear slots
+  if (effects.evokeAll && (newBattle.engineerSlots || []).length > 0) {
+    const slotsToEvoke = [...newBattle.engineerSlots];
+    newBattle.engineerSlots = [];
+    newBattle.blueprintProgress = 0;
+    for (const slot of slotsToEvoke) {
+      applyEvokeEffect(newBattle, run, slot.evokeEffect);
+    }
+  }
+
+  // addEngineerSlot: increase max slots
+  if (effects.addEngineerSlot) {
+    newBattle.maxEngineerSlots = Math.min(5, (newBattle.maxEngineerSlots || 3) + effects.addEngineerSlot);
+  }
+
+  // removeEngineerSlot: decrease max slots, evoke oldest if overflow
+  if (effects.removeEngineerSlot) {
+    newBattle.maxEngineerSlots = Math.max(1, (newBattle.maxEngineerSlots || 3) - effects.removeEngineerSlot);
+    while ((newBattle.engineerSlots || []).length > newBattle.maxEngineerSlots) {
+      const oldest = newBattle.engineerSlots[0];
+      newBattle.engineerSlots = newBattle.engineerSlots.slice(1);
+      applyEvokeEffect(newBattle, run, oldest.evokeEffect);
+    }
+  }
+
+  // advanceBlueprint: manually advance progress (triggers completion if ≥ length)
+  if (effects.advanceBlueprint) {
+    newBattle.blueprintProgress = Math.min(
+      (newBattle.blueprintProgress || 0) + effects.advanceBlueprint,
+      (newBattle.blueprint || []).length
+    );
+    if ((newBattle.blueprintProgress || 0) >= (newBattle.blueprint || []).length && (newBattle.blueprint || []).length > 0) {
+      applyBlueprintComplete(newBattle, run);
+    }
+  }
+
+  // slotEngineer: slot an engineer, check blueprint progress, check overflow
+  if (effects.slotEngineer) {
+    const engineerDef = engineerRoster[effects.slotEngineer];
+    if (engineerDef) {
+      newBattle.engineerSlots = [...(newBattle.engineerSlots || []), engineerDef];
+
+      // Check blueprint sequential match
+      const progressIdx = newBattle.blueprintProgress || 0;
+      const expectedId = (newBattle.blueprint || [])[progressIdx];
+      if (effects.slotEngineer === expectedId) {
+        newBattle.blueprintProgress = progressIdx + 1;
+      }
+
+      // Check blueprint completion
+      if ((newBattle.blueprintProgress || 0) >= (newBattle.blueprint || []).length && (newBattle.blueprint || []).length > 0) {
+        applyBlueprintComplete(newBattle, run);
+      }
+      // Check slot overflow (only if blueprint not just completed — slots would have been cleared)
+      else if (newBattle.engineerSlots.length > (newBattle.maxEngineerSlots || 3)) {
+        const evicted = newBattle.engineerSlots[0];
+        newBattle.engineerSlots = newBattle.engineerSlots.slice(1);
+        applyEvokeEffect(newBattle, run, evicted.evokeEffect);
+      }
+    }
+  }
+
+  // ── End Architect Engineer Slot Effects ──
+
   // Remove dead enemies and track kills + gold earned
   const deadEnemies = newBattle.enemies.filter(e => e.currentHp <= 0);
   newBattle.killCount = (newBattle.killCount || 0) + deadEnemies.length;
@@ -821,6 +1166,15 @@ export function executeEnemyTurn(
       case 'attack': {
         const times = move.times || 1;
         for (let i = 0; i < times; i++) {
+          // Dodge check (Frontend evasion): 10% per stack, consumes 1 stack on success
+          const dodgeStacks = newBattle.playerStatusEffects.dodge || 0;
+          if (dodgeStacks > 0 && Math.random() < dodgeStacks * 0.1) {
+            newBattle.playerStatusEffects = {
+              ...newBattle.playerStatusEffects,
+              dodge: dodgeStacks - 1 || undefined,
+            };
+            continue; // skip this hit entirely
+          }
           const dmg = calculateDamage(
             move.damage || 0,
             enemy.statusEffects,
@@ -868,17 +1222,27 @@ export function executeEnemyTurn(
       case 'dual_attack': {
         // HP damage
         if (move.damage) {
-          const dmg = calculateDamage(
-            move.damage,
-            enemy.statusEffects,
-            newBattle.playerStatusEffects
-          );
-          const hpResult = applyDamageToPlayer(playerHp, newBattle.playerBlock, dmg);
-          playerHp = hpResult.hp;
-          newBattle.playerBlock = hpResult.block;
-          // Counter-Offer thorns
-          if (thorns > 0) {
-            updatedEnemy = applyDamageToEnemy(updatedEnemy, thorns);
+          // Dodge check
+          const dodgeStacksDual = newBattle.playerStatusEffects.dodge || 0;
+          const dualDodged = dodgeStacksDual > 0 && Math.random() < dodgeStacksDual * 0.1;
+          if (dualDodged) {
+            newBattle.playerStatusEffects = {
+              ...newBattle.playerStatusEffects,
+              dodge: dodgeStacksDual - 1 || undefined,
+            };
+          } else {
+            const dmg = calculateDamage(
+              move.damage,
+              enemy.statusEffects,
+              newBattle.playerStatusEffects
+            );
+            const hpResult = applyDamageToPlayer(playerHp, newBattle.playerBlock, dmg);
+            playerHp = hpResult.hp;
+            newBattle.playerBlock = hpResult.block;
+            // Counter-Offer thorns
+            if (thorns > 0) {
+              updatedEnemy = applyDamageToEnemy(updatedEnemy, thorns);
+            }
           }
         }
         // Stress damage
@@ -1001,19 +1365,29 @@ export function executeEnemyTurn(
         break;
       }
       case 'attack_defend': {
-        const dmg = calculateDamage(
-          move.damage || 0,
-          enemy.statusEffects,
-          newBattle.playerStatusEffects
-        );
-        const result = applyDamageToPlayer(playerHp, newBattle.playerBlock, dmg);
-        playerHp = result.hp;
-        newBattle.playerBlock = result.block;
-        updatedEnemy.block += move.block || 0;
-        // Counter-Offer thorns
-        if (thorns > 0) {
-          updatedEnemy = applyDamageToEnemy(updatedEnemy, thorns);
+        // Dodge check
+        const dodgeStacksAD = newBattle.playerStatusEffects.dodge || 0;
+        const attackDefendDodged = dodgeStacksAD > 0 && Math.random() < dodgeStacksAD * 0.1;
+        if (attackDefendDodged) {
+          newBattle.playerStatusEffects = {
+            ...newBattle.playerStatusEffects,
+            dodge: dodgeStacksAD - 1 || undefined,
+          };
+        } else {
+          const dmg = calculateDamage(
+            move.damage || 0,
+            enemy.statusEffects,
+            newBattle.playerStatusEffects
+          );
+          const result = applyDamageToPlayer(playerHp, newBattle.playerBlock, dmg);
+          playerHp = result.hp;
+          newBattle.playerBlock = result.block;
+          // Counter-Offer thorns
+          if (thorns > 0) {
+            updatedEnemy = applyDamageToEnemy(updatedEnemy, thorns);
+          }
         }
+        updatedEnemy.block += move.block || 0;
         if (move.applyToSelf) {
           updatedEnemy.statusEffects = mergeStatusEffects(updatedEnemy.statusEffects, move.applyToSelf);
         }
@@ -1174,7 +1548,8 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   const extraDraw = run.items.reduce((sum, item) => sum + (item.effect.extraDraw || 0), 0);
   const networkingDraw = battle.playerStatusEffects.networking || 0;
   const drawPenalty = battle.nextTurnDrawPenalty || 0;
-  const drawCount = Math.max(1, 5 + extraDraw + networkingDraw - drawPenalty);
+  const engineerExtraDraw = (battle.engineerSlots || []).reduce((sum: number, slot) => sum + (slot.passiveEffect.draw || 0), 0);
+  const drawCount = Math.max(1, 5 + extraDraw + networkingDraw - drawPenalty + engineerExtraDraw);
 
   const { drawn, newDrawPile, newDiscardPile } = drawCards(battle.drawPile, newDiscard, drawCount);
 
@@ -1273,6 +1648,139 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   // Remove enemies killed by deployments
   postDeployEnemies = postDeployEnemies.filter(e => e.currentHp > 0);
 
+  // Apply Bleed damage to enemies (Frontend mechanic: fires at start of player's turn)
+  // Bleed is NOT decremented by tickStatusEffects — we handle tick + decrement here for full control
+  let bleedGoldEarned = 0;
+  let bleedKillCount = 0;
+  postDeployEnemies = postDeployEnemies.map(e => {
+    const bleedDmg = e.statusEffects.bleed || 0;
+    if (bleedDmg <= 0) return e;
+    const damaged = applyDamageToEnemy({ ...e, statusEffects: { ...e.statusEffects } }, bleedDmg);
+    const newBleed = bleedDmg > 1 ? bleedDmg - 1 : undefined;
+    return {
+      ...damaged,
+      statusEffects: { ...damaged.statusEffects, bleed: newBleed },
+    };
+  });
+  // Track kills and gold from bleed deaths
+  const bleedDeadEnemies = postDeployEnemies.filter(e => e.currentHp <= 0);
+  bleedKillCount = bleedDeadEnemies.length;
+  bleedGoldEarned = bleedDeadEnemies.reduce((sum, e) => sum + (e.gold || 0), 0);
+  postDeployEnemies = postDeployEnemies.filter(e => e.currentHp > 0);
+  // Suppress unused variable warnings — these will be merged into battle state below
+  void bleedKillCount; void bleedGoldEarned;
+
+  // Apply Burn damage to enemies (Backend mechanic: fires at start of player's turn)
+  // Burn is NOT decremented by tickStatusEffects — same pattern as bleed
+  postDeployEnemies = postDeployEnemies.map(e => {
+    const burnDmg = e.statusEffects.burn || 0;
+    if (burnDmg <= 0) return e;
+    const damaged = applyDamageToEnemy({ ...e, statusEffects: { ...e.statusEffects } }, burnDmg);
+    const newBurn = burnDmg > 1 ? burnDmg - 1 : undefined;
+    return {
+      ...damaged,
+      statusEffects: { ...damaged.statusEffects, burn: newBurn },
+    };
+  });
+  postDeployEnemies = postDeployEnemies.filter(e => e.currentHp > 0);
+
+  // ── Engineer Slot Passives (Architect mechanic: fire every turn start) ──
+  let engineerPassiveBlock = 0;
+  let engineerPassiveEnergy = 0;
+  let engineerTokenGain = 0;
+  let engineerQueuedEffects: QueuedEffect[] = [];
+  const engineerPassiveStatus: import('../types').StatusEffect = {};
+
+  for (const slot of (battle.engineerSlots || [])) {
+    const p = slot.passiveEffect;
+    if (p.block) engineerPassiveBlock += p.block;
+    if (p.energy) engineerPassiveEnergy += p.energy;
+    if (p.dodge) engineerPassiveStatus.dodge = (engineerPassiveStatus.dodge || 0) + p.dodge;
+    if (p.resilience) engineerPassiveStatus.resilience = (engineerPassiveStatus.resilience || 0) + p.resilience;
+    if (p.counterOffer) engineerPassiveStatus.counterOffer = (engineerPassiveStatus.counterOffer || 0) + p.counterOffer;
+    if (p.generateTokens) engineerTokenGain += p.generateTokens;
+    if (p.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: p.queueBlock });
+    if (p.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: p.queueDamageAll });
+    if (p.vulnerableRandom && postDeployEnemies.length > 0) {
+      const vuln = p.vulnerableRandom;
+      const idx = Math.floor(Math.random() * postDeployEnemies.length);
+      postDeployEnemies = postDeployEnemies.map((e, i) =>
+        i === idx ? { ...e, statusEffects: mergeStatusEffects(e.statusEffects, { vulnerable: vuln }) } : e
+      );
+    }
+    if (p.bleedRandom && postDeployEnemies.length > 0) {
+      const bleedAmt = p.bleedRandom;
+      const idx = Math.floor(Math.random() * postDeployEnemies.length);
+      postDeployEnemies = postDeployEnemies.map((e, i) =>
+        i === idx ? { ...e, statusEffects: mergeStatusEffects(e.statusEffects, { bleed: bleedAmt }) } : e
+      );
+    }
+  }
+
+  // Merge engineer passive status into player status
+  const mergedWithEngineer = Object.keys(engineerPassiveStatus).length > 0
+    ? mergeStatusEffects(mergedStatus, engineerPassiveStatus)
+    : mergedStatus;
+  // ── End Engineer Slot Passives ──
+
+  // Process Detonation Queue (Backend mechanic: scheduled effects fire at start of player's turn)
+  // Note: engineer passive queued effects (engineerQueuedEffects) are seeded for NEXT turn in return
+  const queueToProcess: QueuedEffect[] = battle.detonationQueue || [];
+  let detonationBlock = 0;
+  if (queueToProcess.length > 0) {
+    const queueElements = new Set(queueToProcess.map(e => e.element));
+    const batchMultiplier = queueElements.size >= 3 ? 2.0 : queueElements.size === 2 ? 1.5 : 1.0;
+    const systemMeltdown = queueElements.size >= 3;
+
+    for (const qe of queueToProcess) {
+      // Ice: queued block
+      if (qe.blockAmount) {
+        detonationBlock += Math.floor(qe.blockAmount * batchMultiplier);
+      }
+      // Fire: queued AoE damage
+      if (qe.damageAllAmount) {
+        const dmg = Math.floor(qe.damageAllAmount * batchMultiplier);
+        if (dmg > 0) {
+          postDeployEnemies = postDeployEnemies.map(e => {
+            if (e.currentHp <= 0) return e;
+            return applyDamageToEnemy(e, calculateDamage(dmg, battle.playerStatusEffects, e.statusEffects, run.items));
+          });
+        }
+      }
+      // Fire: queued burn application to all enemies
+      if (qe.burnApply) {
+        const burnAmt = Math.floor(qe.burnApply * batchMultiplier);
+        if (burnAmt > 0) {
+          postDeployEnemies = postDeployEnemies.map(e => ({
+            ...e,
+            statusEffects: { ...e.statusEffects, burn: (e.statusEffects.burn || 0) + burnAmt },
+          }));
+        }
+      }
+      // Lightning: queued chain damage to each enemy individually
+      if (qe.chainAmount) {
+        const chainDmg = Math.floor(qe.chainAmount * batchMultiplier);
+        if (chainDmg > 0) {
+          postDeployEnemies = postDeployEnemies.map(e => {
+            if (e.currentHp <= 0) return e;
+            return applyDamageToEnemy(e, calculateDamage(chainDmg, battle.playerStatusEffects, e.statusEffects, run.items));
+          });
+        }
+      }
+    }
+
+    // System Meltdown: all 3 elements fired — apply 1 Vulnerable to all enemies
+    if (systemMeltdown) {
+      postDeployEnemies = postDeployEnemies.map(e => ({
+        ...e,
+        statusEffects: { ...e.statusEffects, vulnerable: (e.statusEffects.vulnerable || 0) + 1 },
+      }));
+    }
+
+    // Filter enemies killed by detonations
+    postDeployEnemies = postDeployEnemies.filter(e => e.currentHp > 0);
+  }
+
   return {
     battle: {
       ...battle,
@@ -1280,9 +1788,9 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       drawPile: newDrawPile,
       discardPile: newDiscardPile,
       exhaustPile: newExhaust,
-      energy: Math.max(0, battle.maxEnergy + hustleEnergy - (battle.nextTurnEnergyPenalty || 0)),
-      playerBlock: newBlock + blockBonus + deploymentBlock,
-      playerStatusEffects: mergedStatus,
+      energy: Math.max(0, battle.maxEnergy + hustleEnergy + engineerPassiveEnergy - (battle.nextTurnEnergyPenalty || 0)),
+      playerBlock: newBlock + blockBonus + deploymentBlock + detonationBlock + engineerPassiveBlock,
+      playerStatusEffects: mergedWithEngineer,
       enemies: postDeployEnemies,
       deployments: activeDeployments,
       turn: battle.turn + 1,
@@ -1291,10 +1799,13 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       firstSkillPlayedThisTurn: false,
       nextCardCostZero: false,
       temperature: battle.temperature ?? 5,
-      tokens: battle.tokens ?? 0,
+      tokens: (battle.tokens ?? 0) + engineerTokenGain,
       cardPlayCounts: battle.cardPlayCounts ?? {},
       nextTurnDrawPenalty: 0,
       nextTurnEnergyPenalty: 0,
+      flow: 0,
+      nextCardCostReduction: 0,
+      detonationQueue: engineerQueuedEffects,
     },
     stressChange,
     hpChange,

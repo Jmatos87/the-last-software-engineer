@@ -160,6 +160,8 @@ export function tickStatusEffects(effects: StatusEffect): StatusEffect {
   if (effects.cringe && effects.cringe > 0) newEffects.cringe = effects.cringe - 1;
   if (effects.ghosted && effects.ghosted > 0) newEffects.ghosted = effects.ghosted - 1;
   if (effects.regen && effects.regen > 0) newEffects.regen = effects.regen - 1;
+  // Frontend: dodge decrements each turn (agility fades; bleed is handled separately in startNewTurn)
+  if (effects.dodge && effects.dodge > 0) newEffects.dodge = effects.dodge - 1;
   // Permanent (persist)
   if (effects.confidence) newEffects.confidence = effects.confidence;
   if (effects.resilience) newEffects.resilience = effects.resilience;
@@ -168,6 +170,10 @@ export function tickStatusEffects(effects: StatusEffect): StatusEffect {
   if (effects.savingsAccount) newEffects.savingsAccount = effects.savingsAccount;
   if (effects.counterOffer) newEffects.counterOffer = effects.counterOffer;
   if (effects.hustleCulture) newEffects.hustleCulture = effects.hustleCulture;
+  // bleed persists on enemies — NOT ticked here, handled in startNewTurn to apply damage then decrement
+  if (effects.bleed && effects.bleed > 0) newEffects.bleed = effects.bleed;
+  // burn persists on enemies — NOT ticked here, handled in startNewTurn to apply damage then decrement
+  if (effects.burn && effects.burn > 0) newEffects.burn = effects.burn;
   return newEffects;
 }
 
@@ -187,5 +193,9 @@ export function mergeStatusEffects(existing: StatusEffect, apply: StatusEffect):
     savingsAccount: (existing.savingsAccount || 0) + (apply.savingsAccount || 0) || undefined,
     counterOffer: (existing.counterOffer || 0) + (apply.counterOffer || 0) || undefined,
     hustleCulture: (existing.hustleCulture || 0) + (apply.hustleCulture || 0) || undefined,
+    // Frontend Engineer mechanics
+    dodge: (existing.dodge || 0) + (apply.dodge || 0) || undefined,
+    bleed: (existing.bleed || 0) + (apply.bleed || 0) || undefined,
+    burn: (existing.burn || 0) + (apply.burn || 0) || undefined,
   };
 }

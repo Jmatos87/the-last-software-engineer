@@ -67,6 +67,11 @@ export interface StatusEffect {
   savingsAccount?: number; // retain up to X block between turns
   counterOffer?: number;   // deal X damage back when hit
   hustleCulture?: number;  // +1 energy per turn, +3 stress per turn per stack
+  // Frontend Engineer mechanics
+  dodge?: number;           // 10% chance per stack to avoid an incoming hit; consumed on dodge; decrements per turn
+  bleed?: number;           // enemy DoT: deal bleed stacks damage at start of player turn, then decrement
+  // Backend Engineer mechanics
+  burn?: number;            // enemy fire DoT: deal burn stacks damage at start of player turn, then decrement
 }
 
 export interface CardEffect {
@@ -134,6 +139,81 @@ export interface CardEffect {
   damagePerTimesPlayed?: number;    // deal N × playCount bonus damage to target
   blockPerTimesPlayed?: number;     // gain N × playCount bonus block
   bonusAtSecondPlay?: { damage?: number; block?: number; draw?: number; copium?: number; energy?: number };
+  // Flow State mechanic (Frontend Engineer)
+  gainExtraFlow?: number;           // gain N extra flow on play (beyond the automatic +1 per card)
+  damageIfFlowHigh?: number;        // bonus damage to target if flow >= 5
+  damageAllIfFlowHigh?: number;     // bonus damage to ALL enemies if flow >= 5
+  damagePerBleed?: number;          // deal N × target's current bleed stacks as bonus damage
+  reduceNextCardCost?: number;      // reduce the next card played this turn by N energy (min 0)
+  doubleTargetBleed?: boolean;      // double all bleed stacks on target
+  // Backend Engineer — Detonation Queue mechanics
+  queueBlock?: number;              // queue N block for next turn (ice detonation)
+  queueDamageAll?: number;          // queue N AoE damage to all enemies for next turn (fire detonation)
+  queueChain?: number;              // queue N damage to each enemy for next turn (lightning detonation, scales with enemy count)
+  queueBurn?: number;               // queue burn application to all enemies for next turn (fire advanced)
+  // Architect Engineer Slot mechanics
+  slotEngineer?: string;           // engineer ID to slot (key into engineerRoster)
+  addEngineerSlot?: number;        // increase maxEngineerSlots by N (max 5)
+  removeEngineerSlot?: number;     // decrease maxEngineerSlots by N (evokes oldest if at max, min 1)
+  evokeOldest?: boolean;           // fire oldest slot's evoke + remove from slots
+  evokeAll?: boolean;              // fire ALL slots' evokes + clear slots
+  damagePerSlot?: number;          // deal N × engineerSlots.length damage to target
+  blockPerSlot?: number;           // gain N × engineerSlots.length block
+  damageAllPerSlot?: number;       // deal N × engineerSlots.length damage to ALL enemies
+  advanceBlueprint?: number;       // advance blueprint progress by N (triggers complete if ≥ length)
+  regenerateBlueprint?: boolean;   // generate new random blueprint, reset progress to 0
+  shuffleEngineerSlots?: boolean;  // shuffle order of engineer slots
+  addScopeCreepToDiscard?: number; // add N scope_creep curse cards to discard pile
+}
+
+// ── Detonation Queue (Backend Engineer) ──
+export interface QueuedEffect {
+  element: 'ice' | 'fire' | 'lightning';
+  blockAmount?: number;       // ice: gain this block when fired
+  damageAllAmount?: number;   // fire: deal this to all enemies when fired
+  chainAmount?: number;       // lightning: deal this to each enemy when fired (scales with enemy count)
+  burnApply?: number;         // fire: also apply this burn to all enemies when fired
+}
+
+// ── Engineer Slots (Architect mechanic) ──
+export interface EngineerPassive {
+  block?: number;
+  draw?: number;
+  energy?: number;
+  dodge?: number;
+  resilience?: number;
+  counterOffer?: number;
+  generateTokens?: number;
+  queueBlock?: number;
+  queueDamageAll?: number;
+  vulnerableRandom?: number;   // apply N vulnerable to random enemy each turn
+  bleedRandom?: number;        // apply N bleed to random enemy each turn
+}
+
+export interface EngineerEvoke {
+  block?: number;
+  draw?: number;
+  energy?: number;
+  damage?: number;                      // deal to random enemy
+  damageScalesWithTokens?: number;      // deal (damage) + tokens × N to random enemy
+  damageAll?: number;                   // deal to all enemies
+  applyToAll?: StatusEffect;
+  shuffleDiscardToDraw?: boolean;
+  queueBlock?: number;                  // queue ice block for next detonation turn
+  queueDamageAll?: number;              // queue fire AoE for next detonation turn
+  queueChain?: number;                  // queue lightning chain for next detonation turn
+  damageAllScalesWithTokens?: number;   // deal tokens × N to all enemies, tokens → 0
+  damageAllEqualsCounterOffer?: boolean; // deal counterOffer stacks as damage to all
+  gainCounterOfferDouble?: boolean;     // gain counterOffer = current counterOffer stacks
+  doubleResilience?: boolean;           // gain resilience = current resilience stacks
+}
+
+export interface EngineerSlot {
+  id: string;
+  name: string;
+  icon: string;
+  passiveEffect: EngineerPassive;
+  evokeEffect: EngineerEvoke;
 }
 
 // ── Deployments ──
@@ -389,6 +469,16 @@ export interface BattleState {
   cardPlayCounts: Record<string, number>; // times each card.id played this combat
   nextTurnDrawPenalty: number;      // enemy debuff: reduce cards drawn next turn by this amount
   nextTurnEnergyPenalty: number;    // energy_drain accumulates here; applied and reset at startNewTurn
+  // Frontend Engineer mechanics
+  flow: number;                     // 0–8, increments per card played, resets each turn; overflow ≥8 → AoE + dodge + reset
+  nextCardCostReduction: number;    // reduces next card played this turn by N energy (min 0), then resets
+  // Backend Engineer mechanics
+  detonationQueue: QueuedEffect[];  // effects that fire at the start of next player turn; batch bonus at 2+ elements
+  // Architect Engineer Slot mechanics
+  engineerSlots: EngineerSlot[];     // currently slotted engineers
+  maxEngineerSlots: number;          // starts at 3; cards can change 1–5
+  blueprint: string[];               // ordered 3-engineer-ID sequence for blueprint completion
+  blueprintProgress: number;         // sequential matches achieved (0–3)
 }
 
 // ── Run ──

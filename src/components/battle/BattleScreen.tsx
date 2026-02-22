@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { engineerRoster } from '../../data/engineers';
+import type { EngineerPassive } from '../../types';
+import act1Bg from '../../assets/act1-bg.png';
 import { DndContext, DragOverlay, useDroppable, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useGameStore } from '../../store/gameStore';
@@ -12,6 +15,22 @@ import { StatusEffects } from '../common/StatusEffects';
 import { CardPreview } from '../common/CardPreview';
 import { TopBar } from '../common/TopBar';
 import { useMobile } from '../../hooks/useMobile';
+
+function formatEngineerPassive(p: EngineerPassive): string {
+  const parts: string[] = [];
+  if (p.energy) parts.push(`+${p.energy}⚡`);
+  if (p.draw) parts.push(`+${p.draw}draw`);
+  if (p.block) parts.push(`+${p.block}blk`);
+  if (p.dodge) parts.push(`+${p.dodge}dge`);
+  if (p.resilience) parts.push(`+${p.resilience}res`);
+  if (p.counterOffer) parts.push(`+${p.counterOffer}ctr`);
+  if (p.generateTokens) parts.push(`+${p.generateTokens}tok`);
+  if (p.queueBlock) parts.push(`⏳${p.queueBlock}blk`);
+  if (p.queueDamageAll) parts.push(`⏳${p.queueDamageAll}AoE`);
+  if (p.vulnerableRandom) parts.push(`vuln`);
+  if (p.bleedRandom) parts.push(`bleed`);
+  return parts.join(' ');
+}
 
 const DeploymentPanel: React.FC<{ deployments: Deployment[] }> = ({ deployments }) => {
   if (deployments.length === 0) return null;
@@ -243,8 +262,13 @@ export const BattleScreen: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'center',
           gap: compact ? 24 : 80,
-          padding: compact ? '0 12px' : '0 40px',
+          padding: compact ? '12px 12px 0' : '24px 40px 0',
           position: 'relative',
+          ...(run?.act === 1 && {
+            backgroundImage: `url(${act1Bg})`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }),
         }}>
           {/* Player side */}
           <div style={{
@@ -253,8 +277,44 @@ export const BattleScreen: React.FC = () => {
             alignItems: 'center',
             gap: 8,
           }}>
+            {/* Spacer matching enemy speech bubble placeholder so icons align horizontally */}
+            <div style={{ minHeight: compact ? 23 : 38 }} />
             <div className={heroAnim} style={{ fontSize: compact ? 32 : 56 }}>{run.character.icon}</div>
             <PlayerStatusPanel />
+            {run.character.id === 'frontend_dev' && battle && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
+                {/* Flow State meter */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                  <span style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: 1 }}>FLOW</span>
+                  <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    {Array.from({ length: 8 }, (_, i) => {
+                      const flow = battle.flow ?? 0;
+                      const isFilled = i < flow;
+                      const isAlmostOverflow = flow >= 6;
+                      const color = isAlmostOverflow ? '#f87171' : '#a78bfa';
+                      return (
+                        <div key={i} style={{
+                          width: compact ? 6 : 8,
+                          height: compact ? 12 : 16,
+                          borderRadius: 2,
+                          background: isFilled ? color : 'transparent',
+                          border: `1px solid ${color}`,
+                          opacity: isFilled ? 1 : 0.25,
+                          transition: 'all 0.15s',
+                        }} />
+                      );
+                    })}
+                  </div>
+                  <span style={{
+                    fontSize: 9,
+                    fontWeight: 'bold',
+                    color: (battle.flow ?? 0) >= 6 ? '#f87171' : '#a78bfa',
+                  }}>
+                    {(battle.flow ?? 0) >= 6 ? `⚡ FLOW ${battle.flow ?? 0}` : `🌊 ${battle.flow ?? 0}`}
+                  </span>
+                </div>
+              </div>
+            )}
             {run.character.id === 'ai_engineer' && battle && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
                 {/* Temperature gauge */}
@@ -301,6 +361,74 @@ export const BattleScreen: React.FC = () => {
                     🪙 {battle.tokens} TOKENS
                   </div>
                 )}
+              </div>
+            )}
+            {run.character.id === 'backend_dev' && battle && (battle.detonationQueue || []).length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+                <span style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: 1 }}>SCHEDULED</span>
+                <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 160 }}>
+                  {(battle.detonationQueue || []).map((qe, i) => {
+                    const color = qe.element === 'ice' ? '#60a5fa' : qe.element === 'fire' ? '#f87171' : '#fbbf24';
+                    const icon = qe.element === 'ice' ? '🧊' : qe.element === 'fire' ? '🔥' : '⚡';
+                    const val = qe.blockAmount ?? qe.damageAllAmount ?? qe.chainAmount ?? 0;
+                    const suffix = qe.blockAmount ? ' blk' : qe.chainAmount ? '/ea' : '';
+                    return (
+                      <div key={i} style={{
+                        background: `rgba(0,0,0,0.5)`,
+                        border: `1px solid ${color}`,
+                        borderRadius: 6,
+                        padding: '2px 6px',
+                        fontSize: 10,
+                        color,
+                        fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 3,
+                      }}>
+                        {icon} {val}{suffix}
+                        {qe.burnApply ? ` +${qe.burnApply}🔥` : ''}
+                      </div>
+                    );
+                  })}
+                </div>
+                {/* Batch bonus indicator */}
+                {new Set((battle.detonationQueue || []).map(q => q.element)).size >= 2 && (
+                  <div style={{ fontSize: 9, color: '#fbbf24', fontWeight: 'bold' }}>
+                    {new Set((battle.detonationQueue || []).map(q => q.element)).size >= 3 ? '💥 SYSTEM MELTDOWN ×2.0' : '⚡ BATCH BONUS ×1.5'}
+                  </div>
+                )}
+              </div>
+            )}
+            {/* Architect — Engineer Slots + Blueprint */}
+            {run.character.id === 'architect' && battle && (
+              <div className="architect-slots-display">
+                <div className="engineer-slots">
+                  {(battle.engineerSlots || []).length === 0 && (
+                    <span className="no-slots-hint">No engineers slotted</span>
+                  )}
+                  {(battle.engineerSlots || []).map((slot, i) => (
+                    <div key={i} className="engineer-slot-badge">
+                      <span className="slot-icon">{slot.icon}</span>
+                      <span className="slot-name">{slot.name}</span>
+                      <span className="slot-passive">{formatEngineerPassive(slot.passiveEffect)}</span>
+                    </div>
+                  ))}
+                  <span className="slot-count-badge">
+                    {(battle.engineerSlots || []).length}/{battle.maxEngineerSlots || 3} slots
+                  </span>
+                </div>
+                <div className="blueprint-display">
+                  <span className="blueprint-label">BLUEPRINT:</span>
+                  {(battle.blueprint || []).map((engineerId, i) => (
+                    <React.Fragment key={i}>
+                      <span className={`blueprint-step ${i < (battle.blueprintProgress || 0) ? 'matched' : 'pending'}`}>
+                        {engineerRoster[engineerId]?.icon ?? '?'} {engineerRoster[engineerId]?.name ?? engineerId}
+                      </span>
+                      {i < (battle.blueprint || []).length - 1 && <span style={{ margin: '0 3px', color: '#6b7280' }}>→</span>}
+                    </React.Fragment>
+                  ))}
+                  <span className="blueprint-progress">({battle.blueprintProgress || 0}/{(battle.blueprint || []).length})</span>
+                </div>
               </div>
             )}
             <ConsumableBar
