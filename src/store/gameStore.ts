@@ -656,6 +656,9 @@ export const useGameStore = create<GameState>()(
           if (s.run.act >= 3) {
             s.screen = 'VICTORY';
           } else {
+            // Stress relief on act completion
+            const actStressRelief = s.run.act === 1 ? 30 : s.run.act === 2 ? 25 : 0;
+            s.run.stress = Math.max(0, s.run.stress - actStressRelief);
             // Advance to next act
             s.run.act += 1;
             s.run.floor = 0;
@@ -702,6 +705,9 @@ export const useGameStore = create<GameState>()(
           if (!s.run || s.run.act >= 3) {
             s.screen = 'VICTORY';
           } else {
+            // Stress relief on act completion
+            const actStressRelief = s.run.act === 1 ? 30 : s.run.act === 2 ? 25 : 0;
+            s.run.stress = Math.max(0, s.run.stress - actStressRelief);
             // Advance to next act
             s.run.act += 1;
             s.run.floor = 0;
@@ -887,12 +893,17 @@ export const useGameStore = create<GameState>()(
           return;
         }
 
+        const itemAdded = outcome.addItem
+          ? (items.find(i => i.id === outcome.addItem) ?? undefined)
+          : undefined;
+
         s.eventOutcome = {
           message: outcome.message,
           cardAdded: cardAdded,
           cardRemoved: cardRemoved,
           cardUpgraded: cardUpgraded,
           consumableAdded: consumableAdded,
+          itemAdded: itemAdded as any,
         };
       });
     },

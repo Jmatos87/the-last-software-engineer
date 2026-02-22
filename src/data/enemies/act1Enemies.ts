@@ -47,7 +47,6 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 60,
     gold: 18,
     icon: '🧠',
-    hideIntent: true,
     moves: [
       { name: 'Deep Scan', type: 'attack', damage: 9, icon: '🔬', quip: '"My neural net says no."' },
       { name: 'Pattern Match', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🎯', quip: '"You match 0.3% of candidates."' },
@@ -152,7 +151,6 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 62,
     gold: 28,
     icon: '💰',
-    hideIntent: true,
     moves: [
       { name: 'Processing Fee', type: 'gold_steal', goldSteal: 16, icon: '💸', quip: '"Small fee to apply. Totally legit."' },
       { name: 'Admin Fee', type: 'gold_steal', goldSteal: 12, stressDamage: 6, icon: '🧾', quip: '"Background check costs extra."' },

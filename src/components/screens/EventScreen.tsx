@@ -284,6 +284,36 @@ export const EventScreen: React.FC = () => {
           );
         })()}
 
+        {eventOutcome.itemAdded && (() => {
+          const item = eventOutcome.itemAdded!;
+          const rarityColor = item.rarity === 'legendary' ? 'var(--accent-gold)' : item.rarity === 'epic' ? 'var(--accent-yellow)' : item.rarity === 'rare' ? 'var(--accent-blue)' : 'var(--text-secondary)';
+          return (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 8,
+            }}>
+              <span style={{ fontSize: 13, color: 'var(--accent-yellow)', fontWeight: 'bold' }}>
+                Relic obtained:
+              </span>
+              <div style={{
+                width: 160,
+                padding: 14,
+                background: 'var(--bg-card)',
+                border: `2px solid ${rarityColor}`,
+                borderRadius: 'var(--radius-md)',
+                textAlign: 'center',
+              }}>
+                <span style={{ fontSize: 24 }}>{item.icon}</span>
+                <div style={{ fontSize: 12, fontWeight: 'bold', marginTop: 4 }}>{item.name}</div>
+                <div style={{ fontSize: 10, color: rarityColor, marginBottom: 6 }}>{item.rarity}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{item.description}</div>
+              </div>
+            </div>
+          );
+        })()}
+
         <button
           onClick={dismissEventOutcome}
           style={{

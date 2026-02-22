@@ -30,7 +30,6 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 155,
     gold: 62,
     icon: '💼',
-    hideIntent: true,
     moves: [
       { name: 'Lowball Offer', type: 'gold_steal', goldSteal: 20, icon: '💸', quip: '"Best we can do. Economy, y\'know."' },
       { name: 'Market Rate Denial', type: 'attack', damage: 14, stressDamage: 6, icon: '📉', quip: '"Our internal bands are different."' },

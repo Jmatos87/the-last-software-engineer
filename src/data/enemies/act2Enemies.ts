@@ -151,7 +151,6 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 120,
     gold: 38,
     icon: '😴',
-    hideIntent: true,
     moves: [
       { name: 'Buffer...', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '🔄', quip: '"Can everyone see my screen?"' },
       { name: "You're On Mute", type: 'attack', damage: 14, icon: '🔇', quip: '"You\'re still on mute."' },
