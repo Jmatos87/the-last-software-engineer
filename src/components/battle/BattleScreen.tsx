@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { engineerRoster } from '../../data/engineers';
 import type { EngineerPassive } from '../../types';
 import act1Bg from '../../assets/act1-bg.png';
+import act2Bg from '../../assets/act2-bg.png';
+import act3Bg from '../../assets/act3-bg.png';
 import { DndContext, DragOverlay, useDroppable, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useGameStore } from '../../store/gameStore';
@@ -266,6 +268,16 @@ export const BattleScreen: React.FC = () => {
           position: 'relative',
           ...(run?.act === 1 && {
             backgroundImage: `url(${act1Bg})`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }),
+          ...(run?.act === 2 && {
+            backgroundImage: `url(${act2Bg})`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }),
+          ...(run?.act === 3 && {
+            backgroundImage: `url(${act3Bg})`,
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
           }),
