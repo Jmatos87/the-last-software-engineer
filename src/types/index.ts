@@ -334,6 +334,7 @@ export interface EnemyDef {
   gold: number;
   moves: EnemyMove[];
   icon: string;
+  portrait?: string;
   isElite?: boolean;
   isBoss?: boolean;
   hideIntent?: boolean;

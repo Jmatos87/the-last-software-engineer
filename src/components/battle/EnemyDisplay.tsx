@@ -187,18 +187,34 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
         )}
       </div>
 
-      {/* Enemy icon */}
+      {/* Enemy icon / portrait */}
       <div className={`portrait-frame ${tierClass}`}>
-        <span style={{
-          fontSize: compact
-            ? (enemy.isBoss ? 40 : enemy.isElite ? 34 : 28)
-            : (enemy.isBoss ? 80 : enemy.isElite ? 64 : 52),
-          lineHeight: 1,
-          filter: shaking ? 'brightness(2)' : 'none',
-          transition: 'filter 0.2s',
-        }}>
-          {enemy.icon}
-        </span>
+        {enemy.portrait ? (
+          <img
+            src={enemy.portrait}
+            alt={enemy.name}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'top',
+              transform: 'scale(1.3)',
+              filter: shaking ? 'brightness(2)' : 'none',
+              transition: 'filter 0.2s',
+            }}
+          />
+        ) : (
+          <span style={{
+            fontSize: compact
+              ? (enemy.isBoss ? 40 : enemy.isElite ? 34 : 28)
+              : (enemy.isBoss ? 80 : enemy.isElite ? 64 : 52),
+            lineHeight: 1,
+            filter: shaking ? 'brightness(2)' : 'none',
+            transition: 'filter 0.2s',
+          }}>
+            {enemy.icon}
+          </span>
+        )}
       </div>
 
       {/* Name */}

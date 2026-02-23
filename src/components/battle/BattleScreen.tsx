@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import act1Bg from '../../assets/act1-bg.png';
-import act2Bg from '../../assets/act2-bg.png';
-import act3Bg from '../../assets/act3-bg.png';
+import act1Bg from '../../assets/act1/act1-bg.png';
+import act2Bg from '../../assets/act2/act2-bg.png';
+import act3Bg from '../../assets/act3/act3-bg.png';
 import { DndContext, DragOverlay, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useGameStore } from '../../store/gameStore';

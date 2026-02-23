@@ -154,7 +154,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim }) => {
             <img
               src={run.character.portrait}
               alt={run.character.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: compact ? 'top' : 'center' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: compact ? 'top' : 'center', transform: 'scale(1.3)' }}
             />
           ) : (
             <span style={{ fontSize: compact ? 32 : 72, lineHeight: 1 }}>

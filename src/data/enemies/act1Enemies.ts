@@ -1,4 +1,18 @@
 import type { EnemyDef } from '../../types';
+import hrPhoneScreenPortrait from '../../assets/act1/hr-phone-screen.png';
+import atsFinalFormPortrait from '../../assets/act1/ats-final-form.png';
+import ghostingPhantomPortrait from '../../assets/act1/ghosting-phantom.png';
+import takeHomePortrait from '../../assets/act1/take-home-assignment.png';
+import resumeAtsPortrait from '../../assets/act1/resume-ats.png';
+import recruiterBotPortrait from '../../assets/act1/recruiter-bot.png';
+import coverLetterShredderPortrait from '../../assets/act1/cover-letter-shredder.png';
+import jobBoardTrollPortrait from '../../assets/act1/job-board-troll.png';
+import applicationFeeScammerPortrait from '../../assets/act1/application-fee-scammer.png';
+import linkedinSwarmPortrait from '../../assets/act1/linkedin-swarm.png';
+import applicantTrackingGolemPortrait from '../../assets/act1/applicant-tracking-golem.png';
+import linkedinInfluencerPortrait from '../../assets/act1/linkedin-influencer.png';
+import networkingEventPortrait from '../../assets/act1/networking-event.png';
+import automatedRejectionPortrait from '../../assets/act1/automated-rejection.png';
 
 // ════════════════════════════════════════════════
 // ACT 1 — The Application Abyss
@@ -16,42 +30,13 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 65,
     gold: 20,
     icon: '🤖',
+    portrait: resumeAtsPortrait,
     moves: [
       { name: 'Keyword Scan', type: 'attack', damage: 9, icon: '🔍', quip: '"Your scroll lacks the blockchain enchantment..."' },
       { name: 'Pattern Match', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🧠', quip: '"The rejection runes grow stronger..."' },
       { name: 'Format Error', type: 'attack', damage: 13, icon: '📋', quip: '"A parchment scroll? I only read .docx tomes."' },
       { name: 'Deep Scan', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🔬', quip: '"Channeling the neural rejection ward..."' },
       { name: 'AUTO-REJECT', type: 'attack', damage: 22, icon: '❌', quip: '"The gates seal forever, applicant!"' },
-    ],
-  },
-
-  // RITUALIST — defend-then-strike, Timeout Slam scales off confidence
-  legacy_ats: {
-    id: 'legacy_ats',
-    name: 'Legacy ATS',
-    hp: 72,
-    gold: 26,
-    icon: '🖨️',
-    moves: [
-      { name: 'Connection Lost', type: 'attack', damage: 11, icon: '📡', quip: '"This ancient construct dates to the Third Age."' },
-      { name: 'Loading...', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⏳', quip: '"The ritual requires three to five business moons."' },
-      { name: 'System Error', type: 'attack', damage: 9, stressDamage: 5, icon: '⚠️', quip: '"Have you tried the Internet Explorer grimoire?"' },
-      { name: 'Timeout Slam', type: 'attack', damage: 22, icon: '💤', quip: '"Your session has withered. Begin the trial anew."' },
-    ],
-  },
-
-  // WILDCARD — hideIntent; alternates scan/debuff/surprise exhaust+attack
-  ai_ats: {
-    id: 'ai_ats',
-    name: 'AI-Powered ATS',
-    hp: 60,
-    gold: 18,
-    icon: '🧠',
-    moves: [
-      { name: 'Deep Scan', type: 'attack', damage: 9, icon: '🔬', quip: '"My neural familiar has deemed you unworthy."' },
-      { name: 'Pattern Match', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🎯', quip: '"You match but 0.3% of the prophecy."' },
-      { name: 'Neural Reject', type: 'exhaust', exhaustCount: 2, icon: '🗑️', quip: '"A golem forged a finer resume than yours."' },
-      { name: 'AI Assessment', type: 'attack', damage: 16, stressDamage: 6, icon: '⚡', quip: '"I devoured the recruiter too. You are next."' },
     ],
   },
 
@@ -62,6 +47,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 68,
     gold: 22,
     icon: '🤳',
+    portrait: recruiterBotPortrait,
     moves: [
       { name: 'Cold Email', type: 'attack', damage: 6, stressDamage: 4, icon: '📧', quip: '"A brief audience, mortal? Just fifteen minutes of your soul."' },
       { name: 'Exciting Opportunity!', type: 'attack', damage: 11, applyToTarget: { hope: 2 }, icon: '✨', quip: '"The stars foretell a perfect fit for thee!"' },
@@ -70,35 +56,6 @@ export const act1Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  // WILDCARD — hideIntent; gold drain then surprise high attack on Vanish turn
-  ghost_company: {
-    id: 'ghost_company',
-    name: 'Ghost Company',
-    hp: 60,
-    gold: 8,
-    icon: '👻',
-    hideIntent: true,
-    moves: [
-      { name: 'Radio Silence', type: 'stress_attack', stressDamage: 9, icon: '📵', quip: '"*only the void answers*"' },
-      { name: 'Form Letter', type: 'attack', damage: 13, icon: '📨', quip: '"The council has chosen another champion."' },
-      { name: 'Vanish', type: 'debuff', applyToTarget: { ghosted: 2, weak: 1 }, icon: '💨', quip: '"*the specter glimpsed your message and vanished*"' },
-    ],
-  },
-
-  // COMPOUND — poison re-applies each cycle; vulnerable compounds; stress cascade at end
-  take_home: {
-    id: 'take_home',
-    name: 'Take-Home Assignment',
-    hp: 75,
-    gold: 24,
-    icon: '📝',
-    moves: [
-      { name: 'Requirements Doc', type: 'debuff', applyToTarget: { poison: 3 }, icon: '📄', quip: '"Oh, the quest also demands authentication wards."' },
-      { name: 'Scope Creep', type: 'attack', damage: 13, applyToTarget: { poison: 2 }, icon: '📈', quip: '"Just one more dungeon to clear..."' },
-      { name: 'Edge Cases', type: 'attack', damage: 17, applyToTarget: { vulnerable: 2 }, icon: '🔥', quip: '"What if the user is adventuring by sea?"' },
-      { name: 'Due Tomorrow', type: 'stress_attack', stressDamage: 18, icon: '⏰', quip: '"A mere side quest! Should take but a few hours."' },
-    ],
-  },
 
   // COMPOUND — exhaust + vulnerable stacks compound across cycles
   cover_letter_shredder: {
@@ -107,25 +64,11 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 64,
     gold: 20,
     icon: '✂️',
+    portrait: coverLetterShredderPortrait,
     moves: [
       { name: 'Shred!', type: 'exhaust', exhaustCount: 2, icon: '✂️', quip: '"No mortal reads these scrolls anyway."' },
       { name: 'Paper Cut', type: 'attack', damage: 14, applyToTarget: { vulnerable: 1 }, icon: '📃', quip: '"That was your finest incantation! Gone."' },
       { name: 'Confetti Storm', type: 'attack', damage: 11, stressDamage: 5, applyToTarget: { vulnerable: 2 }, icon: '🎊', quip: '"Your passion is but confetti in the wind!"' },
-    ],
-  },
-
-  // ESCALATOR — gains confidence via Synergy! buff; also buffs allies in group fights
-  keyword_stuffer: {
-    id: 'keyword_stuffer',
-    name: 'Keyword Stuffer',
-    hp: 68,
-    gold: 16,
-    icon: '🔑',
-    moves: [
-      { name: 'SEO Boost', type: 'buff_allies', applyToTarget: { confidence: 1 }, icon: '📈', quip: '"Leverage thy core competencies, minions!"' },
-      { name: 'Buzzword Slap', type: 'attack', damage: 10, icon: '💬', quip: '"Synergize THIS, adventurer!"' },
-      { name: 'Synergy!', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤝', quip: '"Let us align our arcane paradigms!"' },
-      { name: 'Jargon Jab', type: 'attack', damage: 14, icon: '📝', quip: '"Circle back on that deliverable, worm!"' },
     ],
   },
 
@@ -136,6 +79,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 65,
     gold: 22,
     icon: '🧌',
+    portrait: jobBoardTrollPortrait,
     moves: [
       { name: 'Overqualified!', type: 'debuff', applyToTarget: { resilience: -1, vulnerable: 1 }, icon: '📜', quip: '"A doctorate for data entry? Begone, wizard!"' },
       { name: 'Troll Smash', type: 'attack', damage: 13, icon: '👊', quip: '"Simply master the arcane arts, fool."' },
@@ -151,25 +95,11 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 62,
     gold: 28,
     icon: '💰',
+    portrait: applicationFeeScammerPortrait,
     moves: [
       { name: 'Processing Fee', type: 'gold_steal', goldSteal: 16, icon: '💸', quip: '"A modest tithe to enter. Perfectly legitimate."' },
       { name: 'Admin Fee', type: 'gold_steal', goldSteal: 12, stressDamage: 6, icon: '🧾', quip: '"The background scrying costs extra, traveler."' },
       { name: 'Surcharge', type: 'attack', damage: 20, icon: '💳', quip: '"A convenience toll for the privilege of my dungeon!"' },
-    ],
-  },
-
-  // ESCALATOR — gains confidence via attack_defend (applyToSelf) and Fortify (buff)
-  entry_level_5yrs: {
-    id: 'entry_level_5yrs',
-    name: '"Entry Level" (5 Yrs Exp)',
-    hp: 70,
-    gold: 24,
-    icon: '📋',
-    moves: [
-      { name: 'Impossible Requirements', type: 'attack_defend', damage: 10, block: 5, applyToSelf: { confidence: 1 }, icon: '📝', quip: '"Ten years of Swift mastery. The spell is from 2014."' },
-      { name: 'Must Know 12 Frameworks', type: 'attack', damage: 17, icon: '📚', quip: '"Also COBOL rune-craft. Non-negotiable."' },
-      { name: 'Fortify', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🏗️', quip: '"Competitive treasure. Trust us, adventurer."' },
-      { name: 'Gatekeep', type: 'attack', damage: 14, stressDamage: 5, icon: '🚧', quip: '"Entry-level quest. Senior plunder? Ha!"' },
     ],
   },
 
@@ -180,6 +110,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 26,
     gold: 10,
     icon: '🔔',
+    portrait: linkedinSwarmPortrait,
     moves: [
       { name: 'Ping!', type: 'attack', damage: 9, stressDamage: 5, icon: '🔔', quip: '"A dark spirit has viewed thy profile!"' },
       { name: 'Buzz!', type: 'stress_attack', stressDamage: 9, icon: '📳', quip: '"Thirty-seven new quest alerts swarm thee!"' },
@@ -196,6 +127,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 110,
     gold: 82,
     icon: '⚙️',
+    portrait: applicantTrackingGolemPortrait,
     isElite: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"SUMMONING CONSTRUCTS. REJECTION WARDS AMPLIFIED."' },
@@ -220,6 +152,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 105,
     gold: 70,
     icon: '📱',
+    portrait: linkedinInfluencerPortrait,
     isElite: true,
     phases: [
       { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"The time has come to go LEGENDARY."' },
@@ -243,6 +176,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 115,
     gold: 76,
     icon: '💸',
+    portrait: takeHomePortrait,
     isElite: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 3, resilience: 1 }, quip: '"Oh, and conjure microservices. And a CI/CD ritual circle."' },
@@ -265,6 +199,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 100,
     gold: 72,
     icon: '🍸',
+    portrait: networkingEventPortrait,
     isElite: true,
     moves: [
       { name: 'Small Talk', type: 'energy_drain', energyDrain: 1, stressDamage: 10, icon: '💬', quip: '"So... what manner of adventurer art thou?"' },
@@ -282,6 +217,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 120,
     gold: 65,
     icon: '✉️',
+    portrait: automatedRejectionPortrait,
     isElite: true,
     startStatusEffects: { confidence: 4 },
     phases: [
@@ -307,6 +243,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 210,
     gold: 120,
     icon: '📞',
+    portrait: hrPhoneScreenPortrait,
     isBoss: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"The gauntlets come off. Let us parley compensation."' },
@@ -334,6 +271,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 245,
     gold: 130,
     icon: '🏗️',
+    portrait: atsFinalFormPortrait,
     isBoss: true,
     phases: [
       { hpPercent: 60, moveStartIndex: 4, onEnter: { confidence: 4 }, quip: '"THIS IS NOT EVEN MY FINAL FORM, MORTAL."' },
@@ -362,6 +300,7 @@ export const act1Enemies: Record<string, EnemyDef> = {
     hp: 200,
     gold: 110,
     icon: '👻',
+    portrait: ghostingPhantomPortrait,
     isBoss: true,
     hideIntent: true,
     phases: [
