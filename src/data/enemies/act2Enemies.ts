@@ -222,30 +222,6 @@ export const act2Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  panel_member_a: {
-    id: 'panel_member_a',
-    name: 'Panel Member A',
-    hp: 22,
-    gold: 8,
-    icon: '🧑',
-    moves: [
-      { name: 'Alignment', type: 'buff_allies', applyToSelf: { confidence: 1 }, icon: '🤝', quip: '"The council speaks as one voice."' },
-      { name: 'Cross-Question', type: 'attack', damage: 8, applyToTarget: { weak: 1 }, icon: '⚔️', quip: '"A curious answer. Explain your reasoning."' },
-    ],
-  },
-
-  panel_member_b: {
-    id: 'panel_member_b',
-    name: 'Panel Member B',
-    hp: 22,
-    gold: 8,
-    icon: '👩',
-    moves: [
-      { name: 'We Disagree', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🚩', quip: '"That contradicts your earlier oath."' },
-      { name: 'Deliberate', type: 'defend', block: 10, icon: '🤔', quip: '"*murmurs with the tribunal in shadow*"' },
-    ],
-  },
-
   test_case: {
     id: 'test_case',
     name: 'Test Case',
