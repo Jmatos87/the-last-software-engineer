@@ -330,15 +330,9 @@ button.success {
 
 /* Enemy card */
 .entity-card.enemy {
-  width: 140px;
+  width: 200px;
   padding: 8px;
   gap: 4px;
-}
-.entity-card.enemy.elite {
-  width: 165px;
-}
-.entity-card.enemy.boss {
-  width: 190px;
 }
 .entity-card.enemy.is-targeted {
   border-color: var(--accent-yellow);
@@ -357,20 +351,18 @@ button.success {
   margin: 2px 0;
 }
 
-/* Portrait frame — icon/portrait area with ~3:4 aspect ratio */
+/* Portrait frame — icon/portrait area */
 .portrait-frame {
-  width: 90px;
-  height: 108px;
+  width: 170px;
+  flex: 1;
+  min-height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  flex-shrink: 0;
 }
-.portrait-frame.hero { width: 170px; height: 204px; }
-.portrait-frame.elite { width: 110px; height: 132px; }
-.portrait-frame.boss { width: 140px; height: 168px; }
+.portrait-frame.hero { width: 170px; height: 204px; flex: none; }
 
 /* Gauge pips */
 .gauge-pip {
@@ -395,14 +387,10 @@ button.success {
   .hero-gauge-col { width: 10px; }
   .hero-content-col { gap: 3px; }
   .entity-card.enemy {
-    width: 100px;
+    width: 120px;
     padding: 4px;
     gap: 2px;
   }
-  .entity-card.enemy.elite { width: 115px; }
-  .entity-card.enemy.boss { width: 130px; }
-  .portrait-frame { width: 56px; height: 68px; }
-  .portrait-frame.hero { width: 80px; height: 96px; }
-  .portrait-frame.elite { width: 68px; height: 82px; }
-  .portrait-frame.boss { width: 80px; height: 96px; }
+  .portrait-frame { width: 100px; min-height: 60px; }
+  .portrait-frame.hero { width: 80px; height: 96px; flex: none; }
 }

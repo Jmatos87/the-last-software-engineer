@@ -173,7 +173,6 @@ export const BattleScreen: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: compact ? 8 : 24,
           padding: compact ? '4px 8px 0' : '24px 40px 0',
           position: 'relative',
           ...(run?.act === 1 && {
@@ -192,6 +191,12 @@ export const BattleScreen: React.FC = () => {
             backgroundRepeat: 'no-repeat',
           }),
         }}>
+          {/* Inner wrapper — alignItems:stretch so enemies match hero card height */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'stretch',
+            gap: compact ? 8 : 24,
+          }}>
           {/* Hero card */}
           <HeroCard heroAnim={heroAnim} />
 
@@ -200,6 +205,7 @@ export const BattleScreen: React.FC = () => {
             fontSize: compact ? 12 : 24,
             color: 'var(--text-muted)',
             fontWeight: 'bold',
+            alignSelf: 'center',
           }}>
             VS
           </div>
@@ -209,6 +215,7 @@ export const BattleScreen: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            alignSelf: 'stretch',
             gap: 0,
           }}>
           {/* Detonation countdown pills — shown above enemies */}
@@ -252,9 +259,11 @@ export const BattleScreen: React.FC = () => {
           )}
           <div style={{
             display: 'flex',
+            flex: 1,
             gap: compact ? 6 : 16,
             flexWrap: 'nowrap',
             justifyContent: 'center',
+            alignItems: 'stretch',
             overflow: 'hidden',
             position: 'relative',
             zIndex: targetingConsumableId ? 10 : undefined,
@@ -297,6 +306,7 @@ export const BattleScreen: React.FC = () => {
             ))}
           </div>
           </div>
+          </div>{/* end inner wrapper */}
         </div>
 
         {/* Hand area */}
