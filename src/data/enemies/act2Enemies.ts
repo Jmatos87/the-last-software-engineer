@@ -149,51 +149,6 @@ export const act2Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  // MANIPULATOR — energy_drain + corrupt (policy violation); bureaucratic resource siege
-  hr_gatekeeper: {
-    id: 'hr_gatekeeper',
-    name: 'HR Gatekeeper',
-    hp: 200,
-    gold: 95,
-    icon: '🚪',
-    isElite: true,
-    phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"COMPLIANCE WARD ACTIVATED."' },
-    ],
-    moves: [
-      // Phase 1 (0-2)
-      { name: 'Bureaucracy Wall', type: 'defend', block: 15, icon: '🧱', quip: '"Submit parchment HR-7B before proceeding."' },
-      { name: 'Red Tape', type: 'energy_drain', energyDrain: 1, stressDamage: 7, icon: '📎', quip: '"That requires three elder seals of approval."' },
-      { name: 'Policy Enforcement', type: 'corrupt', stressDamage: 5, icon: '📋', quip: '"Per chapter four, subsection rune C... a curse."' },
-      // Phase 2 (3-5)
-      { name: 'Policy Overhaul', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📋', quip: '"New decree: ZERO TOLERANCE for adventurers."' },
-      { name: 'Compliance Hammer', type: 'attack', damage: 18, icon: '🔨', quip: '"Non-compliant souls shall be PURGED."' },
-      { name: 'Access Permanently Denied', type: 'attack', damage: 22, stressDamage: 8, icon: '🚫', quip: '"Your guild sigil has been REVOKED."' },
-    ],
-  },
-
-  // ESCALATOR — gains confidence every action; Neural Overload reaches absurd values late
-  the_algorithm: {
-    id: 'the_algorithm',
-    name: 'The Algorithm',
-    hp: 280,
-    gold: 120,
-    icon: '🧮',
-    isElite: true,
-    phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"ENTERING DEEP ARCANA MODE."' },
-    ],
-    moves: [
-      // Phase 1 (0-2)
-      { name: 'Analyze Pattern', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📊', quip: '"Training my runes upon your weaknesses..."' },
-      { name: 'Optimized Strike', type: 'attack', damage: 12, icon: '⚡', quip: '"Calculated. Precise. Merciless."' },
-      { name: 'Recursive Loop', type: 'attack', damage: 8, times: 2, icon: '🔄', quip: '"while(true) \\{ banish(); \\}"' },
-      // Phase 2 (3-4)
-      { name: 'Machine Learning', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤖', quip: '"I trained on ten million failed quests."' },
-      { name: 'Neural Overload', type: 'attack', damage: 22, stressDamage: 8, icon: '🧠', quip: '"Processing power of the elder gods: MAXIMUM."' },
-    ],
-  },
-
 
   // ── Act 2 Bosses (HP bumped, phases added) ──
 
@@ -372,8 +327,6 @@ export const act2Trios: string[][] = [
 export const act2ElitePool: string[][] = [
   ['senior_dev_interrogator'],
   ['whiteboard_hydra'],
-  ['hr_gatekeeper'],
-  ['the_algorithm'],
 ];
 
 export const act2BossPool: string[][] = [
