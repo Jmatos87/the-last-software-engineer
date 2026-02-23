@@ -1,4 +1,15 @@
 import type { EnemyDef } from '../../types';
+import salaryNegotiatorPortrait from '../../assets/act3/salary-negotiator.png';
+import benefitsMimicPortrait from '../../assets/act3/benefits-mimic.png';
+import equityPhantomPortrait from '../../assets/act3/equity-phantom.png';
+import theCounterOfferPortrait from '../../assets/act3/the-counteroffer.png';
+import backgroundCheckPortrait from '../../assets/act3/background-check.png';
+import boardMemberPortrait from '../../assets/act3/board-member.png';
+import goldenHandcuffsPortrait from '../../assets/act3/golden-handcuffs.png';
+import technicalDebtGolemPortrait from '../../assets/act3/technical-debt-golem.png';
+import offerCommitteePortrait from '../../assets/act3/offer-committee.png';
+import theCeoPortrait from '../../assets/act3/the-ceo.png';
+import imposterSyndromePortrait from '../../assets/act3/imposter-syndrome.png';
 
 // ════════════════════════════════════════════════
 // ACT 3 — Corporate Final Round
@@ -8,21 +19,6 @@ export const act3Enemies: Record<string, EnemyDef> = {
 
   // ── Act 3 Common Enemies ──
 
-  // RITUALIST — Load Balancer buffs defense; Distributed Slam is the payoff
-  system_design_titan: {
-    id: 'system_design_titan',
-    name: 'System Design Titan',
-    hp: 180,
-    gold: 62,
-    icon: '🏛️',
-    moves: [
-      { name: "Let's Talk Scalability", type: 'attack_defend', damage: 12, block: 10, icon: '📐', quip: '"Behold my architecture, mortal. Kneel before it."' },
-      { name: 'Load Balancer', type: 'buff', applyToSelf: { confidence: 3, resilience: 1 }, icon: '⚖️', quip: '"I distribute my wrath across all realms."' },
-      { name: 'Distributed Slam', type: 'attack', damage: 22, icon: '🌐', quip: '"Forty-seven shards of ruin descend upon you!"' },
-      { name: 'Microservice Barrage', type: 'attack', damage: 11, times: 2, icon: '🔧', quip: '"Each repo a separate cursed tomb."' },
-    ],
-  },
-
   // WILDCARD — hideIntent; gold drain then Final Offer big surprise hit
   salary_negotiator: {
     id: 'salary_negotiator',
@@ -30,26 +26,12 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 155,
     gold: 62,
     icon: '💼',
+    portrait: salaryNegotiatorPortrait,
     moves: [
       { name: 'Lowball Offer', type: 'gold_steal', goldSteal: 20, icon: '💸', quip: '"The treasury offers scraps. Be grateful, worm."' },
       { name: 'Market Rate Denial', type: 'attack', damage: 14, stressDamage: 6, icon: '📉', quip: '"Our kingdom\'s gold bands differ from yours."' },
       { name: 'Benefits Package', type: 'gold_steal', goldSteal: 14, stressDamage: 4, icon: '📦', quip: '"Stale bread counts as compensation here."' },
       { name: 'Final Offer', type: 'attack', damage: 24, icon: '🤝', quip: '"Accept or perish. There is no third path."' },
-    ],
-  },
-
-  // WAKE-UP — You Don't Belong is the passive opener; Spiral is the activated peak
-  imposter_syndrome_common: {
-    id: 'imposter_syndrome_common',
-    name: 'Imposter Syndrome',
-    hp: 155,
-    gold: 48,
-    icon: '🎭',
-    moves: [
-      { name: "You Don't Belong", type: 'stress_attack', stressDamage: 12, icon: '😰', quip: '"The ancient ward senses a fraud in these halls."' },
-      { name: 'Self Doubt', type: 'debuff', applyToTarget: { weak: 2 }, icon: '😟', quip: '"Luck carried you here. Skill did not."' },
-      { name: 'Anxiety Spike', type: 'stress_attack', stressDamage: 15, icon: '😱', quip: '"Every soul in this dungeon outranks you."' },
-      { name: 'Spiral', type: 'attack', damage: 14, stressDamage: 8, applyToTarget: { vulnerable: 2 }, icon: '🌀', quip: '"Scry your own name. See the nothing within."' },
     ],
   },
 
@@ -60,6 +42,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 165,
     gold: 56,
     icon: '📦',
+    portrait: benefitsMimicPortrait,
     hideIntent: true,
     moves: [
       { name: 'Looks Great!', type: 'defend', block: 8, icon: '✨', quip: '"Unlimited rest days! (The dead rest forever.)"' },
@@ -76,71 +59,12 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 170,
     gold: 45,
     icon: '💎',
+    portrait: equityPhantomPortrait,
     moves: [
       { name: 'Vesting Cliff', type: 'exhaust', exhaustCount: 2, stressDamage: 7, icon: '📅', quip: '"Three more winters until the seal breaks."' },
       { name: 'Paper Money', type: 'attack', damage: 15, icon: '📄', quip: '"Phantom gold! Worth millions in the spirit realm."' },
       { name: 'Accumulate', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"I hoard power like a dragon hoards coin."' },
       { name: 'Golden Cage', type: 'attack', damage: 22, applyToTarget: { confidence: -1 }, icon: '🔒', quip: '"Flee now and your soul-bond shatters."' },
-    ],
-  },
-
-  // COMPOUND — Legal Binding exhausts + Restriction debuffs compound; Court Order scales
-  non_compete_clause: {
-    id: 'non_compete_clause',
-    name: 'Non-Compete Clause',
-    hp: 160,
-    gold: 54,
-    icon: '📜',
-    moves: [
-      { name: 'Legal Binding', type: 'exhaust', exhaustCount: 2, icon: '⚖️', quip: '"You signed the blood pact on page forty-seven."' },
-      { name: 'Cease & Desist', type: 'attack', damage: 16, icon: '🚫', quip: '"My legion of barristers hungers for you."' },
-      { name: 'Restriction', type: 'debuff', applyToTarget: { weak: 2, resilience: -1 }, icon: '🔗', quip: '"No questing in any realm for two cycles."' },
-      { name: 'Court Order', type: 'attack', damage: 24, stressDamage: 7, icon: '⚖️', quip: '"The tribunal has forty sworn paladins. You have none."' },
-    ],
-  },
-
-  // RITUALIST — Pivoting to Blockchain buffs; pivot cycle; Pivoting to Cloud is the payoff
-  the_pivot: {
-    id: 'the_pivot',
-    name: 'The Pivot',
-    hp: 155,
-    gold: 50,
-    icon: '🔄',
-    moves: [
-      { name: 'Pivoting to AI', type: 'attack', damage: 16, icon: '🤖', quip: '"We serve the golem lords now."' },
-      { name: 'Pivoting to Blockchain', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⛓️', quip: '"The chain-rune prophecy lives yet!"' },
-      { name: 'Pivoting to Cloud', type: 'attack_defend', damage: 14, block: 12, icon: '☁️', quip: '"All spells are serverless incantations now."' },
-      { name: 'Pivoting to... Pivot', type: 'attack', damage: 20, stressDamage: 8, icon: '🔄', quip: '"Our true power is shapeshifting. Always."' },
-    ],
-  },
-
-  // COMPOUND — Smolder applies poison; Ember Spread re-applies; compounds to lethal DoT
-  burnout_ember: {
-    id: 'burnout_ember',
-    name: 'Burnout Ember',
-    hp: 175,
-    gold: 48,
-    icon: '🔥',
-    moves: [
-      { name: 'Smolder', type: 'debuff', applyToTarget: { poison: 4 }, icon: '🔥', quip: '"Your passion is kindling. I am the flame."' },
-      { name: 'Flare Up', type: 'attack', damage: 13, stressDamage: 6, icon: '💥', quip: '"Sunday dread is merely my ember stirring."' },
-      { name: 'Slow Burn', type: 'stress_attack', stressDamage: 12, icon: '🕯️', quip: '"Three years the fire smolders. Then ash."' },
-      { name: 'Ember Spread', type: 'debuff', applyToTarget: { poison: 5, vulnerable: 2 }, icon: '🌋', quip: '"Your devotion feeds my inferno, fool."' },
-    ],
-  },
-
-  // ESCALATOR — Reply All Storm × 2 gains confidence each cycle; Action Items is the scaler
-  meeting_email: {
-    id: 'meeting_email',
-    name: 'Meeting Email',
-    hp: 165,
-    gold: 58,
-    icon: '📧',
-    moves: [
-      { name: "Let's Circle Back", type: 'attack', damage: 14, icon: '🔄', quip: '"Per my last sending spell, adventurer..."' },
-      { name: 'Agenda Overload', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📋', quip: '"Forty-two runes on the war council scroll."' },
-      { name: 'Reply All Storm', type: 'attack', damage: 12, times: 2, icon: '📧', quip: '"Remove me from this cursed message chain!"' },
-      { name: 'Action Items', type: 'attack', damage: 24, stressDamage: 7, icon: '✅', quip: '"Seventeen quest markers. All yours, hero."' },
     ],
   },
 
@@ -151,6 +75,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 195,
     gold: 52,
     icon: '🤝',
+    portrait: theCounterOfferPortrait,
     moves: [
       { name: 'Match Their Offer', type: 'heal_allies', healAmount: 20, icon: '💊', quip: '"We can match their bounty... mostly."' },
       { name: 'Retention Bonus', type: 'attack', damage: 15, icon: '💰', quip: '"One chest of gold. Non-negotiable, wretch."' },
@@ -166,6 +91,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 155,
     gold: 52,
     icon: '🔎',
+    portrait: backgroundCheckPortrait,
     moves: [
       { name: 'Deep Search', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🔎', quip: '"My scrying orb found your old guild page."' },
       { name: 'Found Something', type: 'attack', damage: 22, icon: '⚠️', quip: '"Care to explain this rune you inscribed?"' },
@@ -174,20 +100,6 @@ export const act3Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  // RITUALIST — Palo Alto or Bust is stress buildup; Housing Crisis is the payoff hit
-  relocation_package: {
-    id: 'relocation_package',
-    name: 'Relocation Package',
-    hp: 165,
-    gold: 60,
-    icon: '🚚',
-    moves: [
-      { name: 'Palo Alto or Bust', type: 'attack', damage: 16, stressDamage: 8, icon: '🏠', quip: '"A hovel in the capital. Only 4,500 gold a moon!"' },
-      { name: 'Moving Costs', type: 'gold_steal', goldSteal: 18, icon: '💸', quip: '"We cover a single mule. The caravan costs 8,000."' },
-      { name: 'Culture Shock', type: 'buff', applyToSelf: { confidence: 3 }, icon: '😵', quip: '"Hope you enjoy enchanted kombucha on tap."' },
-      { name: 'Housing Crisis', type: 'attack', damage: 26, stressDamage: 8, icon: '🏠', quip: '"Your pilgrimage to the office: only two hours!"' },
-    ],
-  },
 
   // ── Act 3 Elite Enemies ──
 
@@ -198,6 +110,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 380,
     gold: 150,
     icon: '🎩',
+    portrait: boardMemberPortrait,
     isElite: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 5 }, quip: '"The council of elders demands TRIBUTE. Now."' },
@@ -221,6 +134,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 350,
     gold: 140,
     icon: '⛓️',
+    portrait: goldenHandcuffsPortrait,
     isElite: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 5 }, quip: '"Your chains are eternal. You will NEVER escape."' },
@@ -237,29 +151,6 @@ export const act3Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  // SUMMONER — Shuffle Teams spawns chaos_agents; Phase 2 spawns more; debuffs compound
-  the_reorg: {
-    id: 'the_reorg',
-    name: 'The Reorg',
-    hp: 320,
-    gold: 130,
-    icon: '🌀',
-    isElite: true,
-    phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"The old order crumbles. EVERYTHING must fall."' },
-    ],
-    moves: [
-      // Phase 1 (0-2)
-      { name: 'Shuffle Teams', type: 'summon', summonId: 'chaos_agent', summonCount: 2, icon: '🔀', quip: '"Your war party has been dissolved by decree."' },
-      { name: 'New Manager', type: 'attack', damage: 17, stressDamage: 6, icon: '👤', quip: '"Behold your fourth overlord this cycle."' },
-      { name: 'Restructure', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '🌀', quip: '"Your rank has been ritually realigned."' },
-      // Phase 2 (3-5)
-      { name: 'Recall Chaos', type: 'summon', summonId: 'chaos_agent', summonCount: 1, icon: '🌀', quip: '"Summoning change-sorcerer consultants."' },
-      { name: 'Mass Layoff', type: 'attack', damage: 32, icon: '🌊', quip: '"The culling is complete. Efficiency achieved."' },
-      { name: 'Reorg Slam', type: 'attack', damage: 17, times: 2, stressDamage: 11, icon: '💥', quip: '"Your station has been ANNIHILATED."' },
-    ],
-  },
-
   // ESCALATOR — Accumulate gives confidence +5 spike; Technical Bankruptcy scales to insane values
   technical_debt_golem: {
     id: 'technical_debt_golem',
@@ -267,6 +158,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 420,
     gold: 160,
     icon: '🗿',
+    portrait: technicalDebtGolemPortrait,
     isElite: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 5 }, quip: '"DEBT THRESHOLD BREACHED. The golem awakens fully."' },
@@ -281,30 +173,6 @@ export const act3Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  // BERSERKER — starts with confidence +5; Performance Review nerfs player; terminates fast
-  the_pip: {
-    id: 'the_pip',
-    name: 'The PIP',
-    hp: 300,
-    gold: 120,
-    icon: '📉',
-    isElite: true,
-    startStatusEffects: { confidence: 5 },
-    phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"Your thirty sunsets are OVER, worm."' },
-    ],
-    moves: [
-      // Phase 1 (0-2)
-      { name: 'Performance Review', type: 'debuff', applyToTarget: { confidence: -1, resilience: -1 }, icon: '📉', quip: '"Meets expectations. Barely. The tribunal is displeased."' },
-      { name: 'Improvement Plan', type: 'stress_attack', stressDamage: 16, icon: '📋', quip: '"You have thirty days before the axe falls."' },
-      { name: 'Final Warning', type: 'attack', damage: 24, stressDamage: 9, icon: '⚠️', quip: '"This is your last rite, adventurer."' },
-      // Phase 2 (3-5)
-      { name: 'Clock Is Ticking', type: 'energy_drain', energyDrain: 1, stressDamage: 8, icon: '⏰', quip: '"The hourglass drains. Tick. Tock."' },
-      { name: 'Last Chance', type: 'attack', damage: 32, icon: '⚠️', quip: '"The executioner sharpens the blade."' },
-      { name: 'Terminated', type: 'attack', damage: 30, stressDamage: 16, icon: '🚪', quip: '"The guard-golems will escort you to the void."' },
-    ],
-  },
-
   // ── Act 3 Bosses (HP bumped, 3 phases each) ──
 
   offer_committee: {
@@ -313,6 +181,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 520,
     gold: 240,
     icon: '👥',
+    portrait: offerCommitteePortrait,
     isBoss: true,
     phases: [
       { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"The conclave grows restless. Blood will be weighed."' },
@@ -340,6 +209,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 580,
     gold: 230,
     icon: '🏆',
+    portrait: theCeoPortrait,
     isBoss: true,
     phases: [
       { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"Enough pleasantries. The dragon stirs."' },
@@ -368,6 +238,7 @@ export const act3Enemies: Record<string, EnemyDef> = {
     hp: 480,
     gold: 220,
     icon: '🎭',
+    portrait: imposterSyndromePortrait,
     isBoss: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"The shadow-curse spreads through your veins..."' },
@@ -389,18 +260,6 @@ export const act3Enemies: Record<string, EnemyDef> = {
   },
 
   // ── Act 3 Minions (spawned by elites/bosses) ──
-
-  chaos_agent: {
-    id: 'chaos_agent',
-    name: 'Chaos Agent',
-    hp: 24,
-    gold: 0,
-    icon: '🌀',
-    moves: [
-      { name: 'Restructure', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🌀', quip: '"Your rank has been ritually reassigned."' },
-      { name: 'Disrupt', type: 'attack', damage: 9, stressDamage: 5, icon: '💥', quip: '"Chaos is a ladder. You are beneath it."' },
-    ],
-  },
 
   committee_chair: {
     id: 'committee_chair',
@@ -455,44 +314,31 @@ export const act3Enemies: Record<string, EnemyDef> = {
 // ── Act 3 Encounter Tables ──
 
 export const act3Solos: string[][] = [
-  ['system_design_titan'],
   ['salary_negotiator'],
-  ['imposter_syndrome_common'],
   ['benefits_mimic'],
   ['equity_phantom'],
-  ['non_compete_clause'],
-  ['the_pivot'],
-  ['burnout_ember'],
-  ['meeting_email'],
   ['the_counteroffer'],
   ['background_check'],
-  ['relocation_package'],
 ];
 
 export const act3Duos: string[][] = [
-  ['the_counteroffer', 'salary_negotiator'],              // Heal + gold drain (must kill healer)
-  ['imposter_syndrome_common', 'burnout_ember'],          // Stress bomb + poison
-  ['non_compete_clause', 'equity_phantom'],               // Deck destruction (3 exhaust/cycle)
-  ['system_design_titan', 'the_pivot'],                   // Tank + escalator (Pivot stacks str)
-  ['meeting_email', 'background_check'],                  // Exhaust + burst damage
-  ['benefits_mimic', 'relocation_package'],               // Surprise burst + gold drain
-  ['burnout_ember', 'burnout_ember'],                     // Poison swarm (6-8 poison/cycle)
-  ['the_pivot', 'burnout_ember'],                         // Confidence scaling + DoT
+  ['the_counteroffer', 'salary_negotiator'],    // Heal + gold drain (must kill healer)
+  ['benefits_mimic', 'equity_phantom'],         // Surprise burst + exhaust
+  ['background_check', 'salary_negotiator'],    // Pressure + drain
+  ['equity_phantom', 'the_counteroffer'],       // Exhaust + heal pair
+  ['benefits_mimic', 'background_check'],       // Burst + debuff
 ];
 
 export const act3Trios: string[][] = [
-  ['imposter_syndrome_common', 'burnout_ember', 'equity_phantom'],                // Stress + poison + exhaust
-  ['system_design_titan', 'the_pivot', 'the_counteroffer'],                       // Tank + scale + heal
-  ['salary_negotiator', 'relocation_package', 'benefits_mimic'],                  // Economic siege
-  ['non_compete_clause', 'background_check', 'meeting_email'],                    // Deck annihilation (4 exhaust/cycle)
+  ['salary_negotiator', 'benefits_mimic', 'equity_phantom'],       // Economic siege
+  ['background_check', 'the_counteroffer', 'salary_negotiator'],   // Interrogation gauntlet
+  ['equity_phantom', 'benefits_mimic', 'background_check'],        // Exhaust + burst + pressure
 ];
 
 export const act3ElitePool: string[][] = [
   ['board_member'],
   ['golden_handcuffs'],
-  ['the_reorg'],
   ['technical_debt_golem'],
-  ['the_pip'],
 ];
 
 export const act3BossPool: string[][] = [

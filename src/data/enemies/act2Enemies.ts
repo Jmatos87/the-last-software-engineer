@@ -1,4 +1,14 @@
 import type { EnemyDef } from '../../types';
+import leetcodeGoblinPortrait from '../../assets/act2/leet-code-goblin.png';
+import cultureFitEnforcerPortrait from '../../assets/act2/culture-fit-enforcer.png';
+import behavioralQuestionBotPortrait from '../../assets/act2/behavioral-question-bot.png';
+import pairProgrammerEnemyPortrait from '../../assets/act2/pair-programming-enemy.png';
+import triviaQuizmasterPortrait from '../../assets/act2/trivia-quiz-master.png';
+import zoomFatiguePortrait from '../../assets/act2/zoom-fatigue.png';
+import seniorDevInterrogatorPortrait from '../../assets/act2/senior-dev-interrogator.png';
+import whiteboardHydraPortrait from '../../assets/act2/whiteboard-hydra.png';
+import liveCodingChallengePortrait from '../../assets/act2/live-coding-challenge.png';
+import vpOfEngineeringPortrait from '../../assets/act2/vp-of-engineering.png';
 
 // ════════════════════════════════════════════════
 // ACT 2 — The Interview Gauntlet
@@ -15,6 +25,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 100,
     gold: 34,
     icon: '👺',
+    portrait: leetcodeGoblinPortrait,
     moves: [
       { name: 'Easy Problem', type: 'attack', damage: 9, icon: '🟢', quip: '"A simple ward to start. Heh heh."' },
       { name: 'Medium Problem', type: 'attack', damage: 14, icon: '🟡', quip: '"Invert the cursed tree! Quickly now!"' },
@@ -30,6 +41,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 105,
     gold: 36,
     icon: '😊',
+    portrait: cultureFitEnforcerPortrait,
     moves: [
       { name: "We're Like Family", type: 'stress_attack', stressDamage: 9, icon: '👨‍👩‍👧‍👦', quip: '"We are a clan bound by oath. Mostly dysfunction."' },
       { name: 'Red Flag', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🚩', quip: '"We toil hard AND revel hard in these halls."' },
@@ -45,6 +57,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 120,
     gold: 36,
     icon: '🎭',
+    portrait: behavioralQuestionBotPortrait,
     moves: [
       { name: 'Tell Me About A Time...', type: 'debuff', applyToTarget: { weak: 2 }, icon: '🕐', quip: '"Recount your deeds using the sacred STAR method."' },
       { name: 'Why Should We Hire You?', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🤔', quip: '"Convince this tribunal you are worthy of breath."' },
@@ -60,6 +73,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 110,
     gold: 38,
     icon: '👥',
+    portrait: pairProgrammerEnemyPortrait,
     moves: [
       { name: 'Copy That', type: 'attack_defend', damage: 10, block: 7, icon: '📋', quip: '"I would have used a different sigil here."' },
       { name: 'Actually...', type: 'attack', damage: 16, icon: '☝️', quip: '"Well actually, that rune is logarithmic."' },
@@ -75,6 +89,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 100,
     gold: 30,
     icon: '❓',
+    portrait: triviaQuizmasterPortrait,
     moves: [
       { name: 'Pop Quiz!', type: 'attack', damage: 15, icon: '❓', quip: '"Name the max heap rune capacity of V8!"' },
       { name: 'Trick Question', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🃏', quip: '"A trick! There was never an answer, fool."' },
@@ -90,6 +105,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 120,
     gold: 38,
     icon: '😴',
+    portrait: zoomFatiguePortrait,
     moves: [
       { name: 'Buffer...', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '🔄', quip: '"Can all spirits see my scrying mirror?"' },
       { name: "You're On Mute", type: 'attack', damage: 14, icon: '🔇', quip: '"Your voice is still silenced, adventurer."' },
@@ -108,6 +124,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 240,
     gold: 110,
     icon: '🧓',
+    portrait: seniorDevInterrogatorPortrait,
     isElite: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 4 }, quip: '"You dare call yourself a SENIOR mage?"' },
@@ -132,6 +149,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 220,
     gold: 100,
     icon: '🐉',
+    portrait: whiteboardHydraPortrait,
     isElite: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 3 }, quip: '"Slay one question, THREE more shall rise!"' },
@@ -158,6 +176,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 380,
     gold: 175,
     icon: '⌨️',
+    portrait: liveCodingChallengePortrait,
     isBoss: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 3 }, quip: '"The sands of the hourglass grow thin..."' },
@@ -185,6 +204,7 @@ export const act2Enemies: Record<string, EnemyDef> = {
     hp: 440,
     gold: 195,
     icon: '👔',
+    portrait: vpOfEngineeringPortrait,
     isBoss: true,
     phases: [
       { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 4 }, quip: '"Now the TRUE trial begins, adventurer."' },
