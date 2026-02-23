@@ -28,10 +28,10 @@ export const CharacterSelectScreen: React.FC = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: compact ? 'flex-start' : 'center',
+      justifyContent: 'flex-start',
       gap: compact ? 12 : 32,
       padding: compact ? 12 : 32,
-      overflow: compact ? 'auto' : undefined,
+      overflow: 'auto',
     }} className="animate-fade-in">
       <div style={{ textAlign: 'center' }}>
         <h1 style={{ fontSize: compact ? 18 : 28, color: 'var(--accent-cyan)', marginBottom: compact ? 4 : 8 }}>
