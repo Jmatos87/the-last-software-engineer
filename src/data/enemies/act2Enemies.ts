@@ -152,33 +152,6 @@ export const act2Enemies: Record<string, EnemyDef> = {
 
   // ── Act 2 Bosses (HP bumped, phases added) ──
 
-  panel_interview_hydra: {
-    id: 'panel_interview_hydra',
-    name: 'Panel Interview Hydra',
-    hp: 340,
-    gold: 185,
-    icon: '🐲',
-    isBoss: true,
-    phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3, resilience: 1 }, quip: '"The tribunal has reached a dark consensus."' },
-      { hpPercent: 25, moveStartIndex: 6, onEnter: { confidence: 4 }, quip: '"The tribunal is UNANIMOUS in judgment."' },
-    ],
-    moves: [
-      // Phase 1 (0-2)
-      { name: 'Technical Question', type: 'attack', damage: 11, icon: '🔧', quip: '"Define polymorphism. In ancient Draconic."' },
-      { name: 'Stress Question', type: 'stress_attack', stressDamage: 10, icon: '😰', quip: '"We all disagree. Sway us or perish."' },
-      { name: 'Panel Buff', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"*dark whispers echo among the council*"' },
-      // Phase 2 (3-5)
-      { name: 'Cross-Examination', type: 'attack', damage: 15, stressDamage: 5, icon: '⚔️', quip: '"That contradicts your earlier testimony, mortal."' },
-      { name: 'Group Deliberation', type: 'defend', block: 14, icon: '🤔', quip: '"The council must align its verdicts."' },
-      { name: 'Final Verdict', type: 'attack', damage: 26, stressDamage: 9, icon: '⚖️', quip: '"The tribunal has rendered judgment."' },
-      // Phase 3: DPS race (6-8)
-      { name: 'Recall Panel', type: 'summon', summonId: 'panel_member_a', summonCount: 1, icon: '🧑', quip: '"Summon the full quorum to the hall."' },
-      { name: 'Cross-Examination Barrage', type: 'attack', damage: 14, times: 3, icon: '⚔️', quip: '"Answer. Answer. ANSWER, mortal!"' },
-      { name: 'Unanimous Rejection', type: 'attack', damage: 40, stressDamage: 16, icon: '⚖️', quip: '"Motion to banish. ALL in favor."' },
-    ],
-  },
-
   live_coding_challenge: {
     id: 'live_coding_challenge',
     name: 'The Live Coding Challenge',
@@ -330,7 +303,6 @@ export const act2ElitePool: string[][] = [
 ];
 
 export const act2BossPool: string[][] = [
-  ['panel_interview_hydra', 'panel_member_a', 'panel_member_b'],
   ['live_coding_challenge', 'test_case'],
   ['vp_of_engineering', 'executive_assistant'],
 ];
