@@ -54,12 +54,10 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim }) => {
   if (!run || !battle) return null;
 
   const charId = run.character.id;
-  const hasGauge = charId === 'frontend_dev' || charId === 'ai_engineer';
 
   const cardClasses = [
     'entity-card',
     'hero',
-    !hasGauge && 'no-gauge',
     isOver && 'is-over',
   ].filter(Boolean).join(' ');
 
@@ -145,22 +143,29 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim }) => {
     );
   })() : null;
 
+  const gauge = flowGauge || tempGauge;
+
   return (
     <div ref={setNodeRef} className={cardClasses}>
-      {/* Optional left gauge */}
-      {flowGauge}
-      {tempGauge}
-
-      {/* Content column */}
       <div className={`hero-content-col ${heroAnim}`}>
-        {/* Hero icon */}
-        <div style={{ fontSize: compact ? 20 : 48, lineHeight: 1 }}>
-          {run.character.icon}
+        {/* Hero icon / portrait */}
+        <div className="portrait-frame hero">
+          {run.character.portrait ? (
+            <img
+              src={run.character.portrait}
+              alt={run.character.name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: compact ? 'top' : 'center' }}
+            />
+          ) : (
+            <span style={{ fontSize: compact ? 32 : 72, lineHeight: 1 }}>
+              {run.character.icon}
+            </span>
+          )}
         </div>
 
         {/* Name */}
         <div style={{
-          fontSize: compact ? 8 : 12,
+          fontSize: compact ? 9 : 13,
           fontWeight: 'bold',
           color: 'var(--accent-blue)',
           whiteSpace: 'nowrap',
@@ -173,23 +178,24 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim }) => {
 
         <div className="card-separator" />
 
-        {/* Block + HP bar */}
-        <div style={{ width: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 2 : 4, width: '100%' }}>
-            {battle.playerBlock > 0 && (
-              <span style={{ fontSize: compact ? 8 : 11, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
-                🛡️{battle.playerBlock}
-              </span>
-            )}
-            <div style={{ flex: 1 }}>
-              <HpBar current={run.hp} max={run.maxHp} height={compact ? 5 : 8} />
+        {/* Bars section: optional gauge to the left of HP/stress */}
+        <div style={{ display: 'flex', gap: compact ? 3 : 6, width: '100%', alignItems: 'stretch' }}>
+          {gauge}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: compact ? 2 : 4 }}>
+            {/* Block + HP bar */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 2 : 4 }}>
+              {battle.playerBlock > 0 && (
+                <span style={{ fontSize: compact ? 8 : 11, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
+                  🛡️{battle.playerBlock}
+                </span>
+              )}
+              <div style={{ flex: 1 }}>
+                <HpBar current={run.hp} max={run.maxHp} height={compact ? 5 : 8} />
+              </div>
             </div>
+            {/* Stress bar */}
+            <HpBar current={run.stress} max={run.maxStress} height={compact ? 4 : 7} color="var(--accent-purple)" />
           </div>
-        </div>
-
-        {/* Stress bar */}
-        <div style={{ width: '100%' }}>
-          <HpBar current={run.stress} max={run.maxStress} height={compact ? 4 : 7} color="var(--accent-purple)" />
         </div>
 
         {/* Status effects */}

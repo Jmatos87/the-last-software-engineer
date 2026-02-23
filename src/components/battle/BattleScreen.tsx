@@ -173,7 +173,7 @@ export const BattleScreen: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: compact ? 8 : 16,
+          gap: compact ? 8 : 24,
           padding: compact ? '4px 8px 0' : '24px 40px 0',
           position: 'relative',
           ...(run?.act === 1 && {
@@ -252,7 +252,7 @@ export const BattleScreen: React.FC = () => {
           )}
           <div style={{
             display: 'flex',
-            gap: compact ? 6 : 12,
+            gap: compact ? 6 : 16,
             flexWrap: 'nowrap',
             justifyContent: 'center',
             overflow: 'hidden',

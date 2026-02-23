@@ -364,6 +364,7 @@ export interface CharacterDef {
   starterDeckIds: string[];
   starterRelicId?: string;
   icon: string;
+  portrait?: string;
   available: boolean;
 }
 

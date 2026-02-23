@@ -1,4 +1,5 @@
 import type { CharacterDef } from '../types';
+import frontendPortrait from '../assets/front-end-class.png';
 
 export const characters: CharacterDef[] = [
   {
@@ -18,6 +19,7 @@ export const characters: CharacterDef[] = [
     ],
     starterRelicId: 'node_modules',
     icon: '💻',
+    portrait: frontendPortrait,
     available: true,
   },
   {

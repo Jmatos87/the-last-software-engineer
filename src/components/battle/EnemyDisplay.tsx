@@ -142,7 +142,9 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
   const intentTooltip = tooltipLines.join(' · ');
 
   const animClass = isFleeing ? 'animate-enemy-flee' : isDying ? 'animate-enemy-death' : isAttacking ? 'animate-enemy-attack' : shaking ? 'animate-shake' : '';
+  const tierClass = enemy.isBoss ? 'boss' : enemy.isElite ? 'elite' : '';
   const stateClasses = [
+    tierClass,
     isOver && 'is-over',
     isTargeted && !isOver && 'is-targeted',
   ].filter(Boolean).join(' ');
@@ -186,15 +188,17 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
       </div>
 
       {/* Enemy icon */}
-      <div style={{
-        fontSize: compact
-          ? (enemy.isBoss ? 28 : enemy.isElite ? 24 : 20)
-          : (enemy.isBoss ? 64 : enemy.isElite ? 52 : 44),
-        lineHeight: 1,
-        filter: shaking ? 'brightness(2)' : 'none',
-        transition: 'filter 0.2s',
-      }}>
-        {enemy.icon}
+      <div className={`portrait-frame ${tierClass}`}>
+        <span style={{
+          fontSize: compact
+            ? (enemy.isBoss ? 40 : enemy.isElite ? 34 : 28)
+            : (enemy.isBoss ? 80 : enemy.isElite ? 64 : 52),
+          lineHeight: 1,
+          filter: shaking ? 'brightness(2)' : 'none',
+          transition: 'filter 0.2s',
+        }}>
+          {enemy.icon}
+        </span>
       </div>
 
       {/* Name */}
