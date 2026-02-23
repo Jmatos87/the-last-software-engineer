@@ -5,7 +5,7 @@ import { characters } from '../data/characters';
 import { cards, getRewardCards, getCardDef } from '../data/cards';
 import { enemies, getNormalEncounter, getEliteEncounter, getBossEncounter } from '../data/enemies';
 import { generateBlueprint } from '../data/engineers';
-import { events } from '../data/events';
+import { getEligibleEvent } from '../data/events';
 import { items, getRewardArtifact, getStarterRelic } from '../data/items';
 import { consumables, getConsumableDrop, getRareConsumable, getRandomConsumable, getConsumableDef } from '../data/consumables';
 import { createCardInstance } from '../utils/deckUtils';
@@ -25,7 +25,7 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
-const GAME_VERSION = '1.17.0';
+const GAME_VERSION = '1.18.0';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
@@ -184,6 +184,8 @@ export const useGameStore = create<GameState>()(
           maxStress: char.maxStress,
           floor: 0,
           act: 1,
+          seenEventIds: [],
+          eventFlags: {},
         };
       });
     },
@@ -246,14 +248,24 @@ export const useGameStore = create<GameState>()(
           set(s => { s.screen = 'REST'; });
           break;
         case 'event': {
-          // Class-aware event selection: show class events + neutral events
+          // Act-aware, class-aware, no-repeat event selection
           const playerClass = getPlayerClass(state.run.character.id);
-          const eligibleEvents = events.filter(e => !e.class || e.class === playerClass);
-          const event = eligibleEvents[Math.floor(Math.random() * eligibleEvents.length)];
-          set(s => {
-            s.pendingEvent = event;
-            s.screen = 'EVENT';
-          });
+          const event = getEligibleEvent(state.run, playerClass);
+          if (event) {
+            set(s => {
+              if (!s.run) return;
+              s.pendingEvent = event;
+              s.run.seenEventIds.push(event.id);
+              s.screen = 'EVENT';
+            });
+          } else {
+            // Fallback: if no events available, heal at a rest-like stop
+            set(s => {
+              if (!s.run) return;
+              s.run.hp = Math.min(s.run.maxHp, s.run.hp + Math.floor(s.run.maxHp * 0.15));
+              s.screen = 'MAP';
+            });
+          }
           break;
         }
         case 'shop':
@@ -826,6 +838,13 @@ export const useGameStore = create<GameState>()(
         }
         if (outcome.stress) {
           s.run.stress = Math.max(0, Math.min(s.run.maxStress, s.run.stress + outcome.stress));
+        }
+        if (outcome.setFlag) {
+          s.run.eventFlags[outcome.setFlag] = true;
+        }
+        if (outcome.maxHp) {
+          s.run.maxHp = Math.max(1, s.run.maxHp + outcome.maxHp);
+          s.run.hp = Math.min(s.run.hp, s.run.maxHp);
         }
 
         let cardUpgraded: any = undefined;

@@ -478,6 +478,7 @@ export interface EventChoice {
   text: string;
   outcome: {
     hp?: number;
+    maxHp?: number;
     gold?: number;
     stress?: number;
     addCard?: string;
@@ -486,6 +487,7 @@ export interface EventChoice {
     upgradeRandomCard?: boolean;
     addItem?: string;
     addConsumable?: string;
+    setFlag?: string;
     message: string;
   };
 }
@@ -497,6 +499,11 @@ export interface EventDef {
   choices: EventChoice[];
   icon: string;
   class?: CardClass;  // class-specific events
+  act?: number;       // 1, 2, or 3 — which act this event appears in (undefined = any act)
+  condition?: {
+    requireFlag?: string;    // only show if this flag is set in run.eventFlags
+    requireNoFlag?: string;  // only show if this flag is NOT set
+  };
 }
 
 // ── Map ──
@@ -582,6 +589,8 @@ export interface RunState {
   maxStress: number;
   floor: number;
   act: number;
+  seenEventIds: string[];
+  eventFlags: Record<string, boolean>;
 }
 
 // ── Game Store ──

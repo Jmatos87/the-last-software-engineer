@@ -9,6 +9,8 @@ export const ShopScreen: React.FC = () => {
   const { compact } = useMobile();
   const { run, buyCard, buyItem, buyConsumable, removeCard, returnToMap } = useGameStore();
   const [removeMode, setRemoveMode] = useState(false);
+  const [soldCards, setSoldCards] = useState<Set<string>>(new Set());
+  const [soldConsumables, setSoldConsumables] = useState<Set<string>>(new Set());
 
   const characterId = run?.character?.id;
 
@@ -67,13 +69,14 @@ export const ShopScreen: React.FC = () => {
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         {shopCards.map(card => {
           const cost = getCardCost(card.rarity);
-          const canAfford = run.gold >= cost;
+          const sold = soldCards.has(card.id);
+          const canAfford = run.gold >= cost && !sold;
           const borderColor = card.type === 'attack' ? 'var(--card-attack)'
             : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
           return (
             <div
               key={card.id}
-              onClick={() => canAfford && buyCard(card.id)}
+              onClick={() => canAfford && (() => { buyCard(card.id); setSoldCards(prev => new Set(prev).add(card.id)); })()}
               style={{
                 width: compact ? 100 : 130,
                 padding: compact ? 8 : 12,
@@ -89,7 +92,9 @@ export const ShopScreen: React.FC = () => {
               <div style={{ fontSize: 24, marginBottom: 4 }}>{card.icon}</div>
               <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
               <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginBottom: 6 }}>{card.description}</div>
-              <div style={{ color: 'var(--gold-color)', fontSize: 13, fontWeight: 'bold' }}>💰 {cost}</div>
+              <div style={{ color: 'var(--gold-color)', fontSize: 13, fontWeight: 'bold' }}>
+                {sold ? 'SOLD' : `💰 ${cost}`}
+              </div>
             </div>
           );
         })}
@@ -133,21 +138,22 @@ export const ShopScreen: React.FC = () => {
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 24 }}>
         {shopConsumableItems.map(c => {
           const cost = getConsumableCost(c.rarity);
-          const canAfford = run.gold >= cost;
+          const sold = soldConsumables.has(c.id);
+          const canAfford = run.gold >= cost && !sold;
           const slotsFull = run.consumables.length >= run.maxConsumables;
           const rarityColor = c.rarity === 'legendary' ? 'var(--accent-gold)' : c.rarity === 'epic' ? 'var(--accent-yellow)' : c.rarity === 'rare' ? 'var(--accent-blue)' : 'var(--text-secondary)';
           return (
             <div
               key={c.id}
-              onClick={() => canAfford && !slotsFull && buyConsumable(c.id)}
+              onClick={() => canAfford && !slotsFull && (() => { buyConsumable(c.id); setSoldConsumables(prev => new Set(prev).add(c.id)); })()}
               style={{
                 width: compact ? 100 : 140,
                 padding: compact ? 8 : 12,
                 background: 'var(--bg-card)',
                 border: `1px solid ${rarityColor}`,
                 borderRadius: 'var(--radius-md)',
-                cursor: canAfford && !slotsFull ? 'pointer' : 'not-allowed',
-                opacity: canAfford && !slotsFull ? 1 : 0.5,
+                cursor: canAfford && !slotsFull && !sold ? 'pointer' : 'not-allowed',
+                opacity: canAfford && !slotsFull && !sold ? 1 : 0.5,
                 textAlign: 'center',
               }}
             >
@@ -155,7 +161,7 @@ export const ShopScreen: React.FC = () => {
               <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{c.name}</div>
               <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginBottom: 6 }}>{c.description}</div>
               <div style={{ color: 'var(--gold-color)', fontSize: 13, fontWeight: 'bold' }}>
-                {slotsFull ? 'SLOTS FULL' : `💰 ${cost}`}
+                {sold ? 'SOLD' : slotsFull ? 'SLOTS FULL' : `💰 ${cost}`}
               </div>
             </div>
           );
