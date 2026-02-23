@@ -57,7 +57,7 @@ export const characters: CharacterDef[] = [
     ],
     starterRelicId: 'whiteboard_marker',
     icon: '📐',
-    available: true,
+    available: false,
   },
   {
     id: 'ai_engineer',

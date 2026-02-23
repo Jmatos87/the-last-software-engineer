@@ -1,113 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { engineerRoster } from '../../data/engineers';
-import type { EngineerPassive } from '../../types';
+import { useState, useEffect, useRef } from 'react';
 import act1Bg from '../../assets/act1-bg.png';
 import act2Bg from '../../assets/act2-bg.png';
 import act3Bg from '../../assets/act3-bg.png';
-import { DndContext, DragOverlay, useDroppable, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { DndContext, DragOverlay, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useGameStore } from '../../store/gameStore';
-import type { CardInstance, Deployment, EnemyInstance } from '../../types';
+import type { CardInstance, EnemyInstance } from '../../types';
 import { CardComponent, CardOverlay } from './CardComponent';
 import { EnemyDisplay } from './EnemyDisplay';
-import { HpBar } from '../common/HpBar';
+import { HeroCard } from './HeroCard';
 import { EnergyOrb } from '../common/EnergyOrb';
-import { StatusEffects } from '../common/StatusEffects';
 import { CardPreview } from '../common/CardPreview';
 import { TopBar } from '../common/TopBar';
 import { useMobile } from '../../hooks/useMobile';
-
-function formatEngineerPassive(p: EngineerPassive): string {
-  const parts: string[] = [];
-  if (p.energy) parts.push(`+${p.energy}⚡`);
-  if (p.draw) parts.push(`+${p.draw}draw`);
-  if (p.block) parts.push(`+${p.block}blk`);
-  if (p.dodge) parts.push(`+${p.dodge}dge`);
-  if (p.resilience) parts.push(`+${p.resilience}res`);
-  if (p.counterOffer) parts.push(`+${p.counterOffer}ctr`);
-  if (p.generateTokens) parts.push(`+${p.generateTokens}tok`);
-  if (p.queueBlock) parts.push(`⏳${p.queueBlock}blk`);
-  if (p.queueDamageAll) parts.push(`⏳${p.queueDamageAll}AoE`);
-  if (p.vulnerableRandom) parts.push(`vuln`);
-  if (p.bleedRandom) parts.push(`bleed`);
-  return parts.join(' ');
-}
-
-const DeploymentPanel: React.FC<{ deployments: Deployment[] }> = ({ deployments }) => {
-  if (deployments.length === 0) return null;
-  return (
-    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
-      {deployments.map((dep, i) => {
-        const parts: string[] = [];
-        if (dep.attackPerTurn) parts.push(`⚔️${dep.attackPerTurn}`);
-        if (dep.blockPerTurn) parts.push(`🛡️${dep.blockPerTurn}`);
-        if (dep.poisonPerTurn) parts.push(`☠️${dep.poisonPerTurn}`);
-        return (
-          <div key={i} style={{
-            background: 'rgba(74,158,255,0.1)',
-            border: '1px solid rgba(74,158,255,0.4)',
-            borderRadius: 6,
-            padding: '3px 7px',
-            fontSize: 11,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 1,
-            minWidth: 56,
-          }}>
-            <span>{dep.icon} {dep.name}</span>
-            <span style={{ color: 'var(--text-muted)' }}>{parts.join(' ')}</span>
-            <span style={{ color: 'var(--accent-green)', fontWeight: 'bold' }}>{dep.turnsLeft}t left</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-const PlayerStatusPanel: React.FC = () => {
-  const run = useGameStore(s => s.run);
-  const battle = useGameStore(s => s.battle);
-  const { compact } = useMobile();
-  const { setNodeRef, isOver } = useDroppable({
-    id: 'self-target',
-    data: { selfTarget: true },
-  });
-
-  if (!run || !battle) return null;
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={{
-        padding: compact ? '4px 8px' : '8px 12px',
-        background: isOver ? 'rgba(74, 222, 128, 0.1)' : 'var(--bg-card)',
-        border: `2px solid ${isOver ? 'var(--accent-green)' : 'var(--border-color)'}`,
-        borderRadius: 'var(--radius-md)',
-        transition: 'all var(--transition-fast)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: compact ? 3 : 6,
-        minWidth: compact ? 100 : 140,
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 3 : 6, width: '100%' }}>
-        {battle.playerBlock > 0 && (
-          <span style={{ fontSize: compact ? 10 : 12, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
-            🛡️{battle.playerBlock}
-          </span>
-        )}
-        <div style={{ flex: 1 }}>
-          <HpBar current={run.hp} max={run.maxHp} height={compact ? 7 : 10} label={compact ? undefined : 'HP'} />
-        </div>
-      </div>
-      <div style={{ width: '100%' }}>
-        <HpBar current={run.stress} max={run.maxStress} height={compact ? 7 : 10} color="var(--accent-purple)" label={compact ? undefined : 'STRESS'} />
-      </div>
-      <StatusEffects effects={battle.playerStatusEffects} />
-    </div>
-  );
-};
 
 export const BattleScreen: React.FC = () => {
   const { run, battle, playCard, endTurn, useConsumable } = useGameStore();
@@ -268,7 +173,7 @@ export const BattleScreen: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: compact ? 16 : 80,
+          gap: compact ? 8 : 16,
           padding: compact ? '4px 8px 0' : '24px 40px 0',
           position: 'relative',
           ...(run?.act === 1 && {
@@ -287,160 +192,8 @@ export const BattleScreen: React.FC = () => {
             backgroundRepeat: 'no-repeat',
           }),
         }}>
-          {/* Player side */}
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 8,
-          }}>
-            {/* Spacer matching enemy speech bubble placeholder so icons align horizontally */}
-            <div style={{ minHeight: compact ? 14 : 38 }} />
-            <div className={heroAnim} style={{ fontSize: compact ? 24 : 56 }}>{run.character.icon}</div>
-            <PlayerStatusPanel />
-            {run.character.id === 'frontend_dev' && battle && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
-                {/* Flow State meter */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                  <span style={{ fontSize: compact ? 8 : 9, color: 'var(--text-muted)', letterSpacing: 1 }}>FLOW</span>
-                  <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    {Array.from({ length: 8 }, (_, i) => {
-                      const flow = battle.flow ?? 0;
-                      const isFilled = i < flow;
-                      const isAlmostOverflow = flow >= 6;
-                      const color = isAlmostOverflow ? '#f87171' : '#a78bfa';
-                      return (
-                        <div key={i} style={{
-                          width: compact ? 5 : 8,
-                          height: compact ? 8 : 16,
-                          borderRadius: 2,
-                          background: isFilled ? color : 'transparent',
-                          border: `1px solid ${color}`,
-                          opacity: isFilled ? 1 : 0.25,
-                          transition: 'all 0.15s',
-                        }} />
-                      );
-                    })}
-                  </div>
-                  <span style={{
-                    fontSize: compact ? 8 : 9,
-                    fontWeight: 'bold',
-                    color: (battle.flow ?? 0) >= 6 ? '#f87171' : '#a78bfa',
-                  }}>
-                    {(battle.flow ?? 0) >= 6 ? `⚡ FLOW ${battle.flow ?? 0}` : `🌊 ${battle.flow ?? 0}`}
-                  </span>
-                </div>
-              </div>
-            )}
-            {run.character.id === 'ai_engineer' && battle && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
-                {/* Temperature gauge */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                  <span style={{ fontSize: compact ? 8 : 9, color: 'var(--text-muted)', letterSpacing: 1 }}>TEMPERATURE</span>
-                  <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    {Array.from({ length: 11 }, (_, i) => {
-                      const isCold = i <= 3;
-                      const isHot = i >= 7;
-                      const color = isCold ? '#60a5fa' : isHot ? '#f87171' : '#4ade80';
-                      const isActive = i === (battle.temperature ?? 5);
-                      return (
-                        <div key={i} style={{
-                          width: compact ? 5 : 8,
-                          height: compact ? 8 : 16,
-                          borderRadius: 2,
-                          background: isActive ? color : 'transparent',
-                          border: `1px solid ${color}`,
-                          opacity: isActive ? 1 : 0.3,
-                          transition: 'all 0.2s',
-                        }} />
-                      );
-                    })}
-                  </div>
-                  <span style={{
-                    fontSize: compact ? 8 : 9,
-                    fontWeight: 'bold',
-                    color: (battle.temperature ?? 5) <= 3 ? '#60a5fa' : (battle.temperature ?? 5) >= 7 ? '#f87171' : '#4ade80',
-                  }}>
-                    {(battle.temperature ?? 5) <= 3 ? '❄️ COLD' : (battle.temperature ?? 5) >= 7 ? '🔥 HOT' : `🌡️ ${battle.temperature ?? 5}`}
-                  </span>
-                </div>
-                {/* Token counter */}
-                {(battle.tokens ?? 0) > 0 && (
-                  <div style={{
-                    background: 'rgba(245,158,11,0.15)',
-                    border: '1px solid rgba(245,158,11,0.5)',
-                    borderRadius: 6,
-                    padding: '2px 8px',
-                    fontSize: compact ? 9 : 12,
-                    color: '#f59e0b',
-                    fontWeight: 'bold',
-                  }}>
-                    🪙 {battle.tokens} TOKENS
-                  </div>
-                )}
-              </div>
-            )}
-            {/* Architect — Engineer Slots + Blueprint */}
-            {run.character.id === 'architect' && battle && (
-              <div className="architect-slots-display">
-                <div className="engineer-slots">
-                  {(battle.engineerSlots || []).length === 0 && (
-                    <span className="no-slots-hint">No engineers slotted</span>
-                  )}
-                  {(() => {
-                    const slots = battle.engineerSlots || [];
-                    const isHarmonic = slots.length >= 2 && slots.every(s => s.id === slots[0]?.id);
-                    const resonantIndices = new Set<number>();
-                    for (let i = 0; i < slots.length - 1; i++) {
-                      if (slots[i].id === slots[i + 1].id) {
-                        resonantIndices.add(i);
-                        resonantIndices.add(i + 1);
-                      }
-                    }
-                    return slots.map((slot, i) => (
-                      <div key={i} className={`engineer-slot-badge ${isHarmonic ? 'slot-harmonic' : resonantIndices.has(i) ? 'slot-resonant' : ''}`}>
-                        <span className="slot-icon">{slot.icon}</span>
-                        <span className="slot-name">{slot.name}</span>
-                        <span className="slot-passive">{formatEngineerPassive(slot.passiveEffect)}</span>
-                      </div>
-                    ));
-                  })()}
-                  <span className="slot-count-badge">
-                    {(battle.engineerSlots || []).length}/{battle.maxEngineerSlots || 3} slots
-                  </span>
-                </div>
-                <div className="blueprint-display">
-                  <span className="blueprint-label">BLUEPRINT:</span>
-                  {(battle.blueprint || []).map((engineerId, i) => (
-                    <React.Fragment key={i}>
-                      <span className={`blueprint-step ${i < (battle.blueprintProgress || 0) ? 'matched' : 'pending'}`}>
-                        {engineerRoster[engineerId]?.icon ?? '?'} {engineerRoster[engineerId]?.name ?? engineerId}
-                      </span>
-                      {i < (battle.blueprint || []).length - 1 && <span style={{ margin: '0 3px', color: '#6b7280' }}>→</span>}
-                    </React.Fragment>
-                  ))}
-                  <span className="blueprint-progress">({battle.blueprintProgress || 0}/{(battle.blueprint || []).length})</span>
-                </div>
-              </div>
-            )}
-            {battle.deployments?.length > 0 && (
-              <DeploymentPanel deployments={battle.deployments} />
-            )}
-            {battle.nextCardCostZero && (
-              <div style={{
-                background: 'rgba(251,191,36,0.15)',
-                border: '1px solid rgba(251,191,36,0.5)',
-                borderRadius: 6,
-                padding: '3px 10px',
-                fontSize: 11,
-                color: '#fbbf24',
-                fontWeight: 'bold',
-                textAlign: 'center',
-              }}>
-                ⚡ Next card is FREE
-              </div>
-            )}
-          </div>
+          {/* Hero card */}
+          <HeroCard heroAnim={heroAnim} />
 
           {/* VS divider */}
           <div style={{
@@ -499,8 +252,8 @@ export const BattleScreen: React.FC = () => {
           )}
           <div style={{
             display: 'flex',
-            gap: 16,
-            flexWrap: 'wrap',
+            gap: compact ? 6 : 12,
+            flexWrap: 'nowrap',
             justifyContent: 'center',
             overflow: 'hidden',
             position: 'relative',

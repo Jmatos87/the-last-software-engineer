@@ -1,0 +1,236 @@
+import React from 'react';
+import { useDroppable } from '@dnd-kit/core';
+import { useGameStore } from '../../store/gameStore';
+import { HpBar } from '../common/HpBar';
+import { StatusEffects } from '../common/StatusEffects';
+import { useMobile } from '../../hooks/useMobile';
+import type { Deployment } from '../../types';
+
+const DeploymentPanel: React.FC<{ deployments: Deployment[] }> = ({ deployments }) => {
+  if (deployments.length === 0) return null;
+  const { compact } = useMobile();
+  return (
+    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center', width: '100%' }}>
+      {deployments.map((dep, i) => {
+        const parts: string[] = [];
+        if (dep.attackPerTurn) parts.push(`⚔️${dep.attackPerTurn}`);
+        if (dep.blockPerTurn) parts.push(`🛡️${dep.blockPerTurn}`);
+        if (dep.poisonPerTurn) parts.push(`☠️${dep.poisonPerTurn}`);
+        return (
+          <div key={i} style={{
+            background: 'rgba(74,158,255,0.1)',
+            border: '1px solid rgba(74,158,255,0.4)',
+            borderRadius: 6,
+            padding: compact ? '2px 5px' : '3px 7px',
+            fontSize: compact ? 8 : 11,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 1,
+          }}>
+            <span>{dep.icon} {dep.name}</span>
+            <span style={{ color: 'var(--text-muted)' }}>{parts.join(' ')}</span>
+            <span style={{ color: 'var(--accent-green)', fontWeight: 'bold' }}>{dep.turnsLeft}t</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+interface HeroCardProps {
+  heroAnim: '' | 'animate-shake' | 'animate-stress';
+}
+
+export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim }) => {
+  const run = useGameStore(s => s.run);
+  const battle = useGameStore(s => s.battle);
+  const { compact } = useMobile();
+  const { setNodeRef, isOver } = useDroppable({
+    id: 'self-target',
+    data: { selfTarget: true },
+  });
+
+  if (!run || !battle) return null;
+
+  const charId = run.character.id;
+  const hasGauge = charId === 'frontend_dev' || charId === 'ai_engineer';
+
+  const cardClasses = [
+    'entity-card',
+    'hero',
+    !hasGauge && 'no-gauge',
+    isOver && 'is-over',
+  ].filter(Boolean).join(' ');
+
+  // Flow gauge (Frontend)
+  const flowGauge = charId === 'frontend_dev' ? (() => {
+    const flow = battle.flow ?? 0;
+    const isAlmostOverflow = flow >= 6;
+    const color = isAlmostOverflow ? '#f87171' : '#a78bfa';
+    return (
+      <div className="hero-gauge-col">
+        <span style={{
+          fontSize: compact ? 6 : 8,
+          lineHeight: 1,
+          color,
+        }}>
+          {isAlmostOverflow ? '⚡' : '🌊'}
+        </span>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column-reverse', gap: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+          {Array.from({ length: 8 }, (_, i) => {
+            const isFilled = i < flow;
+            return (
+              <div key={i} className="gauge-pip" style={{
+                width: compact ? 6 : 10,
+                height: compact ? 3 : 5,
+                background: isFilled ? color : 'transparent',
+                border: `1px solid ${color}`,
+                opacity: isFilled ? 1 : 0.25,
+              }} />
+            );
+          })}
+        </div>
+        <span style={{
+          fontSize: compact ? 6 : 9,
+          fontWeight: 'bold',
+          color,
+          lineHeight: 1,
+        }}>
+          {flow}
+        </span>
+      </div>
+    );
+  })() : null;
+
+  // Temperature gauge (AI Engineer)
+  const tempGauge = charId === 'ai_engineer' ? (() => {
+    const temp = battle.temperature ?? 5;
+    const tempColor = temp <= 3 ? '#60a5fa' : temp >= 7 ? '#f87171' : '#4ade80';
+    return (
+      <div className="hero-gauge-col">
+        <span style={{
+          fontSize: compact ? 6 : 8,
+          lineHeight: 1,
+          color: tempColor,
+        }}>
+          {temp <= 3 ? '❄️' : temp >= 7 ? '🔥' : '🌡️'}
+        </span>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column-reverse', gap: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+          {Array.from({ length: 11 }, (_, i) => {
+            const isCold = i <= 3;
+            const isHot = i >= 7;
+            const pipColor = isCold ? '#60a5fa' : isHot ? '#f87171' : '#4ade80';
+            const isActive = i === temp;
+            return (
+              <div key={i} className="gauge-pip" style={{
+                width: compact ? 6 : 10,
+                height: compact ? 3 : 4,
+                background: isActive ? pipColor : 'transparent',
+                border: `1px solid ${pipColor}`,
+                opacity: isActive ? 1 : 0.3,
+              }} />
+            );
+          })}
+        </div>
+        <span style={{
+          fontSize: compact ? 6 : 9,
+          fontWeight: 'bold',
+          color: tempColor,
+          lineHeight: 1,
+        }}>
+          {temp}
+        </span>
+      </div>
+    );
+  })() : null;
+
+  return (
+    <div ref={setNodeRef} className={cardClasses}>
+      {/* Optional left gauge */}
+      {flowGauge}
+      {tempGauge}
+
+      {/* Content column */}
+      <div className={`hero-content-col ${heroAnim}`}>
+        {/* Hero icon */}
+        <div style={{ fontSize: compact ? 20 : 48, lineHeight: 1 }}>
+          {run.character.icon}
+        </div>
+
+        {/* Name */}
+        <div style={{
+          fontSize: compact ? 8 : 12,
+          fontWeight: 'bold',
+          color: 'var(--accent-blue)',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          maxWidth: '100%',
+        }}>
+          {run.character.name}
+        </div>
+
+        <div className="card-separator" />
+
+        {/* Block + HP bar */}
+        <div style={{ width: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 2 : 4, width: '100%' }}>
+            {battle.playerBlock > 0 && (
+              <span style={{ fontSize: compact ? 8 : 11, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
+                🛡️{battle.playerBlock}
+              </span>
+            )}
+            <div style={{ flex: 1 }}>
+              <HpBar current={run.hp} max={run.maxHp} height={compact ? 5 : 8} />
+            </div>
+          </div>
+        </div>
+
+        {/* Stress bar */}
+        <div style={{ width: '100%' }}>
+          <HpBar current={run.stress} max={run.maxStress} height={compact ? 4 : 7} color="var(--accent-purple)" />
+        </div>
+
+        {/* Status effects */}
+        <StatusEffects effects={battle.playerStatusEffects} />
+
+        {/* Token counter — AI Engineer */}
+        {charId === 'ai_engineer' && (battle.tokens ?? 0) > 0 && (
+          <div style={{
+            background: 'rgba(245,158,11,0.15)',
+            border: '1px solid rgba(245,158,11,0.5)',
+            borderRadius: 4,
+            padding: compact ? '1px 4px' : '2px 6px',
+            fontSize: compact ? 7 : 10,
+            color: '#f59e0b',
+            fontWeight: 'bold',
+          }}>
+            🪙 {battle.tokens}
+          </div>
+        )}
+
+        {/* Deployments */}
+        {battle.deployments?.length > 0 && (
+          <DeploymentPanel deployments={battle.deployments} />
+        )}
+
+        {/* Next card free indicator */}
+        {battle.nextCardCostZero && (
+          <div style={{
+            background: 'rgba(251,191,36,0.15)',
+            border: '1px solid rgba(251,191,36,0.5)',
+            borderRadius: 4,
+            padding: compact ? '1px 4px' : '2px 6px',
+            fontSize: compact ? 7 : 10,
+            color: '#fbbf24',
+            fontWeight: 'bold',
+            textAlign: 'center',
+          }}>
+            ⚡ FREE
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

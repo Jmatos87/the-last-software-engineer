@@ -141,22 +141,16 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
 
   const intentTooltip = tooltipLines.join(' · ');
 
+  const animClass = isFleeing ? 'animate-enemy-flee' : isDying ? 'animate-enemy-death' : isAttacking ? 'animate-enemy-attack' : shaking ? 'animate-shake' : '';
+  const stateClasses = [
+    isOver && 'is-over',
+    isTargeted && !isOver && 'is-targeted',
+  ].filter(Boolean).join(' ');
+
   return (
     <div
       ref={setNodeRef}
-      className={isFleeing ? 'animate-enemy-flee' : isDying ? 'animate-enemy-death' : isAttacking ? 'animate-enemy-attack' : shaking ? 'animate-shake' : ''}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: compact ? 2 : 6,
-        padding: compact ? 4 : 12,
-        background: isOver ? 'rgba(248, 113, 113, 0.1)' : 'transparent',
-        border: `2px solid ${isOver ? 'var(--accent-red)' : isTargeted ? 'var(--accent-yellow)' : 'transparent'}`,
-        borderRadius: 'var(--radius-lg)',
-        transition: 'all var(--transition-fast)',
-        minWidth: compact ? 56 : 100,
-      }}
+      className={`entity-card enemy ${stateClasses} ${animClass}`}
     >
       {/* Speech bubble placeholder — fixed height so layout doesn't shift */}
       <div style={{ minHeight: compact ? 14 : 32, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
@@ -212,22 +206,20 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
         {enemy.name}
       </div>
 
-      {/* Block */}
-      {enemy.block > 0 && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: compact ? 2 : 4,
-          fontSize: compact ? 10 : 12,
-          color: 'var(--block-color)',
-        }}>
-          🛡️ {enemy.block}
-        </div>
-      )}
+      <div className="card-separator" />
 
-      {/* HP bar */}
-      <div style={{ width: compact ? 60 : 100 }}>
-        <HpBar current={enemy.currentHp} max={enemy.maxHp} height={compact ? 6 : 8} />
+      {/* Block + HP bar */}
+      <div style={{ width: '100%' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 2 : 4, width: '100%' }}>
+          {enemy.block > 0 && (
+            <span style={{ fontSize: compact ? 8 : 11, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
+              🛡️{enemy.block}
+            </span>
+          )}
+          <div style={{ flex: 1 }}>
+            <HpBar current={enemy.currentHp} max={enemy.maxHp} height={compact ? 5 : 8} />
+          </div>
+        </div>
       </div>
 
       {/* Status effects */}

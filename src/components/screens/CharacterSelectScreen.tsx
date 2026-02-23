@@ -64,29 +64,15 @@ export const CharacterSelectScreen: React.FC = () => {
             <p style={{ fontSize: 11, color: 'var(--accent-purple)', marginBottom: 8 }}>{char.title}</p>
             {char.available ? (
               <>
-                <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>
-                  {char.description}
-                </p>
+                {!compact && (
+                  <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    {char.description}
+                  </p>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 12, fontSize: 12, flexWrap: 'wrap' }}>
                   <span>❤️ {char.hp}</span>
                   <span>⚡ {char.energy}</span>
-                  <span>🃏 {char.starterDeckIds.length}</span>
                 </div>
-                {(() => {
-                  const relic = char.starterRelicId ? getStarterRelic(char.id) : null;
-                  return relic ? (
-                    <div style={{
-                      marginTop: 8,
-                      padding: '4px 8px',
-                      background: 'var(--bg-secondary)',
-                      borderRadius: 'var(--radius-sm)',
-                      fontSize: 10,
-                      color: 'var(--text-secondary)',
-                    }}>
-                      {relic.icon} {relic.name}
-                    </div>
-                  ) : null;
-                })()}
               </>
             ) : (
               <p style={{ fontSize: 12, color: 'var(--text-muted)', fontStyle: 'italic' }}>
@@ -131,43 +117,47 @@ export const CharacterSelectScreen: React.FC = () => {
               </div>
             ) : null;
           })()}
-          <h3 style={{ marginBottom: 12, fontSize: 14, color: 'var(--text-secondary)' }}>
-            Starter Deck ({selectedChar.starterDeckIds.length} cards)
-          </h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {selectedChar.starterDeckIds.map((cardId, i) => {
-              const card = getCardDef(cardId);
-              if (!card) return null;
-              const borderColor = card.type === 'attack' ? 'var(--card-attack)'
-                : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
-              return (
-                <div
-                  key={i}
-                  onMouseEnter={e => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
-                  }}
-                  onMouseLeave={() => setPreview(null)}
-                  style={{
-                    padding: '6px 10px',
-                    background: 'var(--bg-card)',
-                    border: `1px solid ${borderColor}`,
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: 12,
-                    maxWidth: 140,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 4,
-                    cursor: 'default',
-                  }}
-                >
-                  <span>{card.icon}</span>
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.name}</span>
-                  <span style={{ color: 'var(--energy-color)', fontSize: 10, flexShrink: 0 }}>({card.cost})</span>
-                </div>
-              );
-            })}
-          </div>
+          {!compact && (
+            <>
+              <h3 style={{ marginBottom: 12, fontSize: 14, color: 'var(--text-secondary)' }}>
+                Starter Deck ({selectedChar.starterDeckIds.length} cards)
+              </h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                {selectedChar.starterDeckIds.map((cardId, i) => {
+                  const card = getCardDef(cardId);
+                  if (!card) return null;
+                  const borderColor = card.type === 'attack' ? 'var(--card-attack)'
+                    : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
+                  return (
+                    <div
+                      key={i}
+                      onMouseEnter={e => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setPreview({ card, x: rect.left + rect.width / 2, y: rect.top });
+                      }}
+                      onMouseLeave={() => setPreview(null)}
+                      style={{
+                        padding: '6px 10px',
+                        background: 'var(--bg-card)',
+                        border: `1px solid ${borderColor}`,
+                        borderRadius: 'var(--radius-sm)',
+                        fontSize: 12,
+                        maxWidth: 140,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 4,
+                        cursor: 'default',
+                      }}
+                    >
+                      <span>{card.icon}</span>
+                      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.name}</span>
+                      <span style={{ color: 'var(--energy-color)', fontSize: 10, flexShrink: 0 }}>({card.cost})</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
           <button
             className="primary"
             onClick={startRun}
