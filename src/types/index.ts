@@ -78,6 +78,7 @@ export interface StatusEffect {
   bleed?: number;           // enemy DoT: deal bleed stacks damage at start of player turn, then decrement
   // Backend Engineer mechanics
   burn?: number;            // enemy fire DoT: deal burn stacks damage at start of player turn, then decrement
+  primed?: number;          // each stack applied instantly reduces all detonation timers by 1 (min 1); decrements per turn
 }
 
 export interface CardEffect {
@@ -153,10 +154,27 @@ export interface CardEffect {
   reduceNextCardCost?: number;      // reduce the next card played this turn by N energy (min 0)
   doubleTargetBleed?: boolean;      // double all bleed stacks on target
   // Backend Engineer — Detonation Queue mechanics
-  queueBlock?: number;              // queue N block for next turn (ice detonation)
-  queueDamageAll?: number;          // queue N AoE damage to all enemies for next turn (fire detonation)
-  queueChain?: number;              // queue N damage to each enemy for next turn (lightning detonation, scales with enemy count)
-  queueBurn?: number;               // queue burn application to all enemies for next turn (fire advanced)
+  queueBlock?: number;              // queue N block for next turn (ice detonation, fast/1-turn)
+  queueDamageAll?: number;          // queue N AoE damage to all enemies for next turn (fire detonation, fast/1-turn)
+  queueChain?: number;              // queue N damage to each enemy for next turn (lightning detonation, fast/1-turn)
+  queueBurn?: number;               // queue burn application to all enemies for next turn (fire advanced, fast/1-turn)
+  // Tiered queue variants (existing queueX = fast/1-turn)
+  queueBlockQuick?: number;        // ice block, fires in 2 turns
+  queueBlockDelayed?: number;      // ice block, fires in 3 turns
+  queueBlockCharged?: number;      // ice block, fires in 4 turns
+  queueDamageAllQuick?: number;    // fire AoE, fires in 2 turns
+  queueDamageAllDelayed?: number;  // fire AoE, fires in 3 turns
+  queueDamageAllCharged?: number;  // fire AoE, fires in 4 turns
+  queueChainQuick?: number;        // lightning chain, fires in 2 turns
+  queueChainDelayed?: number;      // lightning chain, fires in 3 turns
+  queueChainCharged?: number;      // lightning chain, fires in 4 turns
+  queueBurnDelayed?: number;       // fire burn AoE, fires in 3 turns
+  queueBurnCharged?: number;       // fire burn AoE, fires in 4 turns
+  // Interaction effects
+  accelerateQueue?: number;        // subtract N from ALL turnsUntilFire (min 1)
+  amplifyQueue?: number;           // multiply all pending amounts by (1 + N/100)
+  stackMatchingQueue?: { element: 'ice' | 'fire' | 'lightning'; amount: number }; // add N to largest pending of same element
+  detonateNow?: boolean;           // fire ALL queued effects immediately this turn
   // Architect Engineer Slot mechanics
   slotEngineer?: string;           // engineer ID to slot (key into engineerRoster)
   addEngineerSlot?: number;        // increase maxEngineerSlots by N (max 5)
@@ -192,6 +210,7 @@ export interface QueuedEffect {
   damageAllAmount?: number;   // fire: deal this to all enemies when fired
   chainAmount?: number;       // lightning: deal this to each enemy when fired (scales with enemy count)
   burnApply?: number;         // fire: also apply this burn to all enemies when fired
+  turnsUntilFire: number;     // countdown: 1=fast, 2=quick, 3=delayed, 4=charged
 }
 
 // ── Engineer Slots (Architect mechanic) ──

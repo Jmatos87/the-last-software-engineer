@@ -169,6 +169,7 @@ export function tickStatusEffects(effects: StatusEffect): StatusEffect {
   if (effects.cringe && effects.cringe > 0) newEffects.cringe = effects.cringe - 1;
   if (effects.ghosted && effects.ghosted > 0) newEffects.ghosted = effects.ghosted - 1;
   if (effects.regen && effects.regen > 0) newEffects.regen = effects.regen - 1;
+  if (effects.primed && effects.primed > 0) newEffects.primed = effects.primed - 1;
   // Frontend: dodge decays at player turn start (not here) — preserve current value
   if (effects.dodge && effects.dodge > 0) newEffects.dodge = effects.dodge;
   // Permanent (persist)

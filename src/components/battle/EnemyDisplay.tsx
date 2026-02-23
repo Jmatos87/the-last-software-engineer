@@ -65,6 +65,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
     savingsAccount: { icon: '🏦', name: 'Savings Account', desc: 'retain block between turns', color: 'var(--accent-yellow)' },
     counterOffer: { icon: '💼', name: 'Counter-Offer', desc: 'deal damage back when hit', color: 'var(--accent-orange)' },
     hustleCulture: { icon: '💪', name: 'Hustle Culture', desc: '+1 energy, +3 stress per turn', color: 'var(--accent-red)' },
+    primed: { icon: '🎯', name: 'Primed', desc: 'Detonation timers were reduced on application', color: '#f97316' },
   };
 
   // Helper: build inline icon + tooltip line for a status effect entry

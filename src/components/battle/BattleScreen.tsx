@@ -375,42 +375,6 @@ export const BattleScreen: React.FC = () => {
                 )}
               </div>
             )}
-            {run.character.id === 'backend_dev' && battle && (battle.detonationQueue || []).length > 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-                <span style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: 1 }}>SCHEDULED</span>
-                <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 160 }}>
-                  {(battle.detonationQueue || []).map((qe, i) => {
-                    const color = qe.element === 'ice' ? '#60a5fa' : qe.element === 'fire' ? '#f87171' : '#fbbf24';
-                    const icon = qe.element === 'ice' ? '🧊' : qe.element === 'fire' ? '🔥' : '⚡';
-                    const val = qe.blockAmount ?? qe.damageAllAmount ?? qe.chainAmount ?? 0;
-                    const suffix = qe.blockAmount ? ' blk' : qe.chainAmount ? '/ea' : '';
-                    return (
-                      <div key={i} style={{
-                        background: `rgba(0,0,0,0.5)`,
-                        border: `1px solid ${color}`,
-                        borderRadius: 6,
-                        padding: '2px 6px',
-                        fontSize: 10,
-                        color,
-                        fontWeight: 'bold',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 3,
-                      }}>
-                        {icon} {val}{suffix}
-                        {qe.burnApply ? ` +${qe.burnApply}🔥` : ''}
-                      </div>
-                    );
-                  })}
-                </div>
-                {/* Batch bonus indicator */}
-                {new Set((battle.detonationQueue || []).map(q => q.element)).size >= 2 && (
-                  <div style={{ fontSize: 9, color: '#fbbf24', fontWeight: 'bold' }}>
-                    {new Set((battle.detonationQueue || []).map(q => q.element)).size >= 3 ? '💥 SYSTEM MELTDOWN ×2.0' : '⚡ BATCH BONUS ×1.5'}
-                  </div>
-                )}
-              </div>
-            )}
             {/* Architect — Engineer Slots + Blueprint */}
             {run.character.id === 'architect' && battle && (
               <div className="architect-slots-display">
@@ -489,6 +453,51 @@ export const BattleScreen: React.FC = () => {
           {/* Enemies */}
           <div style={{
             display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 0,
+          }}>
+          {/* Detonation countdown pills — shown above enemies */}
+          {battle.detonationQueue && battle.detonationQueue.length > 0 && (
+            <div style={{
+              display: 'flex',
+              gap: 6,
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              marginBottom: compact ? 6 : 10,
+            }}>
+              {battle.detonationQueue.map((qe, i) => {
+                const turns = qe.turnsUntilFire ?? 1;
+                const color = turns >= 4 ? '#4a9eff'
+                  : turns === 3 ? '#22d3ee'
+                  : turns === 2 ? '#fbbf24'
+                  : '#ef4444';
+                const icon = qe.element === 'ice' ? '🧊'
+                  : qe.element === 'fire' ? '🔥' : '⚡';
+                const value = qe.blockAmount ?? qe.damageAllAmount ?? qe.chainAmount ?? qe.burnApply ?? 0;
+                return (
+                  <div key={i} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 3,
+                    padding: '2px 8px',
+                    borderRadius: 12,
+                    background: 'rgba(0,0,0,0.5)',
+                    border: `1px solid ${color}`,
+                    fontSize: compact ? 10 : 12,
+                    color,
+                    fontWeight: 'bold',
+                  }}>
+                    <span>{icon}</span>
+                    <span>{value}</span>
+                    <span style={{ opacity: 0.8, fontSize: compact ? 9 : 11 }}>in {turns}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div style={{
+            display: 'flex',
             gap: 16,
             flexWrap: 'wrap',
             justifyContent: 'center',
@@ -532,6 +541,7 @@ export const BattleScreen: React.FC = () => {
                 isFleeing
               />
             ))}
+          </div>
           </div>
         </div>
 

@@ -111,13 +111,13 @@ function applyEvokeEffect(
   }
 
   if (evoke.queueBlock) {
-    b.detonationQueue = [...b.detonationQueue, { element: 'ice' as const, blockAmount: evoke.queueBlock }];
+    b.detonationQueue = [...b.detonationQueue, { element: 'ice' as const, blockAmount: evoke.queueBlock, turnsUntilFire: 1 }];
   }
   if (evoke.queueDamageAll) {
-    b.detonationQueue = [...b.detonationQueue, { element: 'fire' as const, damageAllAmount: evoke.queueDamageAll }];
+    b.detonationQueue = [...b.detonationQueue, { element: 'fire' as const, damageAllAmount: evoke.queueDamageAll, turnsUntilFire: 1 }];
   }
   if (evoke.queueChain) {
-    b.detonationQueue = [...b.detonationQueue, { element: 'lightning' as const, chainAmount: evoke.queueChain }];
+    b.detonationQueue = [...b.detonationQueue, { element: 'lightning' as const, chainAmount: evoke.queueChain, turnsUntilFire: 1 }];
   }
 
   if (evoke.damageAllEqualsCounterOffer) {
@@ -430,6 +430,14 @@ export function executePlayCard(
           ...newBattle.enemies[enemyIdx],
           statusEffects: mergeStatusEffects(newBattle.enemies[enemyIdx].statusEffects, debuffs),
         };
+        // Primed reduces all detonation queue timers immediately
+        const primedApplied = effects.applyToTarget.primed ?? 0;
+        if (primedApplied > 0 && newBattle.detonationQueue && newBattle.detonationQueue.length > 0) {
+          newBattle.detonationQueue = newBattle.detonationQueue.map(qe => ({
+            ...qe,
+            turnsUntilFire: Math.max(1, (qe.turnsUntilFire ?? 1) - primedApplied),
+          }));
+        }
       }
     }
   }
@@ -546,6 +554,14 @@ export function executePlayCard(
       ...enemy,
       statusEffects: mergeStatusEffects(enemy.statusEffects, allDebuffs),
     }));
+    // Primed (applyToAll): reduce all detonation queue timers immediately
+    const primedAllApplied = effects.applyToAll.primed ?? 0;
+    if (primedAllApplied > 0 && newBattle.detonationQueue && newBattle.detonationQueue.length > 0) {
+      newBattle.detonationQueue = newBattle.detonationQueue.map(qe => ({
+        ...qe,
+        turnsUntilFire: Math.max(1, (qe.turnsUntilFire ?? 1) - primedAllApplied),
+      }));
+    }
   }
 
   // Apply block
@@ -813,7 +829,7 @@ export function executePlayCard(
     }
     newBattle.detonationQueue = [
       ...(newBattle.detonationQueue || []),
-      { element: 'ice' as const, blockAmount: iceBlockAmt },
+      { element: 'ice' as const, blockAmount: iceBlockAmt, turnsUntilFire: 1 },
     ];
   }
   if (effects.queueDamageAll || effects.queueBurn) {
@@ -827,14 +843,155 @@ export function executePlayCard(
         element: 'fire' as const,
         damageAllAmount: fireDmg,
         burnApply: fireBurn,
+        turnsUntilFire: 1,
       },
     ];
   }
   if (effects.queueChain) {
     newBattle.detonationQueue = [
       ...(newBattle.detonationQueue || []),
-      { element: 'lightning' as const, chainAmount: effects.queueChain },
+      { element: 'lightning' as const, chainAmount: effects.queueChain, turnsUntilFire: 1 },
     ];
+  }
+
+  // Tiered ice queue
+  if (effects.queueBlockQuick) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'ice' as const, blockAmount: effects.queueBlockQuick, turnsUntilFire: 2 }];
+  }
+  if (effects.queueBlockDelayed) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'ice' as const, blockAmount: effects.queueBlockDelayed, turnsUntilFire: 3 }];
+  }
+  if (effects.queueBlockCharged) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'ice' as const, blockAmount: effects.queueBlockCharged, turnsUntilFire: 4 }];
+  }
+
+  // Tiered fire queue
+  if (effects.queueDamageAllQuick) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'fire' as const, damageAllAmount: effects.queueDamageAllQuick, turnsUntilFire: 2 }];
+  }
+  if (effects.queueDamageAllDelayed) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'fire' as const, damageAllAmount: effects.queueDamageAllDelayed, turnsUntilFire: 3 }];
+  }
+  if (effects.queueDamageAllCharged) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'fire' as const, damageAllAmount: effects.queueDamageAllCharged, turnsUntilFire: 4 }];
+  }
+
+  // Tiered lightning queue
+  if (effects.queueChainQuick) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'lightning' as const, chainAmount: effects.queueChainQuick, turnsUntilFire: 2 }];
+  }
+  if (effects.queueChainDelayed) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'lightning' as const, chainAmount: effects.queueChainDelayed, turnsUntilFire: 3 }];
+  }
+  if (effects.queueChainCharged) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'lightning' as const, chainAmount: effects.queueChainCharged, turnsUntilFire: 4 }];
+  }
+
+  // Tiered burn queue
+  if (effects.queueBurnDelayed) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'fire' as const, burnApply: effects.queueBurnDelayed, turnsUntilFire: 3 }];
+  }
+  if (effects.queueBurnCharged) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'fire' as const, burnApply: effects.queueBurnCharged, turnsUntilFire: 4 }];
+  }
+
+  // accelerateQueue: reduce all queue timers by N (min 1)
+  if (effects.accelerateQueue && effects.accelerateQueue > 0) {
+    newBattle.detonationQueue = (newBattle.detonationQueue || []).map(qe => ({
+      ...qe,
+      turnsUntilFire: Math.max(1, (qe.turnsUntilFire ?? 1) - effects.accelerateQueue!),
+    }));
+  }
+
+  // amplifyQueue: multiply all queued amounts by (1 + N/100)
+  if (effects.amplifyQueue && effects.amplifyQueue > 0) {
+    const mult = 1 + effects.amplifyQueue / 100;
+    newBattle.detonationQueue = (newBattle.detonationQueue || []).map(qe => ({
+      ...qe,
+      blockAmount:     qe.blockAmount     ? Math.floor(qe.blockAmount * mult)     : undefined,
+      damageAllAmount: qe.damageAllAmount ? Math.floor(qe.damageAllAmount * mult) : undefined,
+      chainAmount:     qe.chainAmount     ? Math.floor(qe.chainAmount * mult)     : undefined,
+      burnApply:       qe.burnApply       ? Math.floor(qe.burnApply * mult)       : undefined,
+    }));
+  }
+
+  // stackMatchingQueue: add amount to the largest pending effect of matching element
+  if (effects.stackMatchingQueue) {
+    const { element, amount } = effects.stackMatchingQueue;
+    const queue = newBattle.detonationQueue || [];
+    let targetIdx = -1;
+    let targetMax = 0;
+    queue.forEach((qe, i) => {
+      if (qe.element !== element) return;
+      const val = qe.damageAllAmount ?? qe.chainAmount ?? qe.blockAmount ?? 0;
+      if (val > targetMax) { targetMax = val; targetIdx = i; }
+    });
+    if (targetIdx >= 0) {
+      newBattle.detonationQueue = queue.map((qe, i) => {
+        if (i !== targetIdx) return qe;
+        return {
+          ...qe,
+          blockAmount:     qe.blockAmount     ? qe.blockAmount + amount     : undefined,
+          damageAllAmount: qe.damageAllAmount ? qe.damageAllAmount + amount : undefined,
+          chainAmount:     qe.chainAmount     ? qe.chainAmount + amount     : undefined,
+        };
+      });
+    } else {
+      // No matching element found — queue a fast fire for amount
+      newBattle.detonationQueue = [...queue,
+        { element: 'fire' as const, damageAllAmount: amount, turnsUntilFire: 1 }];
+    }
+  }
+
+  // detonateNow: immediately fire ALL queued effects inline
+  if (effects.detonateNow && (newBattle.detonationQueue || []).length > 0) {
+    const queueToFire = newBattle.detonationQueue || [];
+    const firingElements = new Set(queueToFire.map(e => e.element));
+    const batchMult = firingElements.size >= 3 ? 2.0 : firingElements.size === 2 ? 1.5 : 1.0;
+
+    for (const qe of queueToFire) {
+      if (qe.blockAmount) {
+        newBattle.playerBlock += Math.floor(qe.blockAmount * batchMult);
+      }
+      if (qe.damageAllAmount) {
+        const dmg = Math.floor(qe.damageAllAmount * batchMult);
+        newBattle.enemies = newBattle.enemies.map(e => {
+          if (e.currentHp <= 0) return e;
+          return applyDamageToEnemy(e, calculateDamage(dmg, newBattle.playerStatusEffects, e.statusEffects, run.items));
+        });
+      }
+      if (qe.chainAmount) {
+        const chainDmg = Math.floor(qe.chainAmount * batchMult);
+        newBattle.enemies = newBattle.enemies.map(e => {
+          if (e.currentHp <= 0) return e;
+          return applyDamageToEnemy(e, calculateDamage(chainDmg, newBattle.playerStatusEffects, e.statusEffects, run.items));
+        });
+      }
+      if (qe.burnApply) {
+        const burnAmt = Math.floor(qe.burnApply * batchMult);
+        newBattle.enemies = newBattle.enemies.map(e => ({
+          ...e,
+          statusEffects: { ...e.statusEffects, burn: (e.statusEffects.burn || 0) + burnAmt },
+        }));
+      }
+    }
+    // Track kills from detonateNow
+    const killed = newBattle.enemies.filter(e => e.currentHp <= 0);
+    newBattle.killCount = (newBattle.killCount || 0) + killed.length;
+    newBattle.goldEarned = (newBattle.goldEarned || 0) + killed.reduce((s, e) => s + (e.gold || 0), 0);
+    newBattle.enemies = newBattle.enemies.filter(e => e.currentHp > 0);
+    newBattle.detonationQueue = [];
   }
   // ── End Detonation Queue mechanic ──────────────────────────────────────────
 
@@ -860,6 +1017,14 @@ export function executePlayCard(
         ...newBattle.enemies[enemyIdx],
         statusEffects: mergeStatusEffects(newBattle.enemies[enemyIdx].statusEffects, debuffs),
       };
+      // Primed reduces all detonation queue timers immediately
+      const primedApplied = effects.applyToTarget.primed ?? 0;
+      if (primedApplied > 0 && newBattle.detonationQueue && newBattle.detonationQueue.length > 0) {
+        newBattle.detonationQueue = newBattle.detonationQueue.map(qe => ({
+          ...qe,
+          turnsUntilFire: Math.max(1, (qe.turnsUntilFire ?? 1) - primedApplied),
+        }));
+      }
     }
   }
 
@@ -1993,6 +2158,8 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   // Bleed is NOT decremented by tickStatusEffects — we handle tick + decrement here for full control
   let bleedGoldEarned = 0;
   let bleedKillCount = 0;
+  let detonationKillCount = 0;
+  let detonationGoldEarned = 0;
   postDeployEnemies = postDeployEnemies.map(e => {
     const bleedDmg = e.statusEffects.bleed || 0;
     if (bleedDmg <= 0) return e;
@@ -2042,8 +2209,8 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
     if (p.resilience) engineerPassiveStatus.resilience = (engineerPassiveStatus.resilience || 0) + p.resilience;
     if (p.counterOffer) engineerPassiveStatus.counterOffer = (engineerPassiveStatus.counterOffer || 0) + p.counterOffer;
     if (p.generateTokens) engineerTokenGain += p.generateTokens;
-    if (p.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: p.queueBlock });
-    if (p.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: p.queueDamageAll });
+    if (p.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: p.queueBlock, turnsUntilFire: 1 });
+    if (p.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: p.queueDamageAll, turnsUntilFire: 1 });
     if (p.vulnerableRandom && postDeployEnemies.length > 0) {
       const vuln = p.vulnerableRandom;
       const idx = Math.floor(Math.random() * postDeployEnemies.length);
@@ -2070,8 +2237,8 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       if (p.resilience) engineerPassiveStatus.resilience = (engineerPassiveStatus.resilience || 0) + p.resilience;
       if (p.counterOffer) engineerPassiveStatus.counterOffer = (engineerPassiveStatus.counterOffer || 0) + p.counterOffer;
       if (p.generateTokens) engineerTokenGain += p.generateTokens;
-      if (p.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: p.queueBlock });
-      if (p.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: p.queueDamageAll });
+      if (p.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: p.queueBlock, turnsUntilFire: 1 });
+      if (p.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: p.queueDamageAll, turnsUntilFire: 1 });
     }
   }
 
@@ -2093,8 +2260,8 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
         if (rp.resilience) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { resilience: rp.resilience });
         if (rp.counterOffer) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { counterOffer: rp.counterOffer });
         if (rp.generateTokens) engineerTokenGain += rp.generateTokens;
-        if (rp.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: rp.queueBlock });
-        if (rp.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: rp.queueDamageAll });
+        if (rp.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: rp.queueBlock, turnsUntilFire: 1 });
+        if (rp.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: rp.queueDamageAll, turnsUntilFire: 1 });
         if (rp.vulnerableRandom && postDeployEnemies.length > 0) {
           const vuln2 = rp.vulnerableRandom;
           const idx2 = Math.floor(Math.random() * postDeployEnemies.length);
@@ -2123,8 +2290,8 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       if (hp2.resilience) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { resilience: hp2.resilience });
       if (hp2.counterOffer) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { counterOffer: hp2.counterOffer });
       if (hp2.generateTokens) engineerTokenGain += hp2.generateTokens;
-      if (hp2.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: hp2.queueBlock });
-      if (hp2.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: hp2.queueDamageAll });
+      if (hp2.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: hp2.queueBlock, turnsUntilFire: 1 });
+      if (hp2.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: hp2.queueDamageAll, turnsUntilFire: 1 });
       if (hp2.vulnerableRandom && postDeployEnemies.length > 0) {
         const vuln3 = hp2.vulnerableRandom;
         const idx3 = Math.floor(Math.random() * postDeployEnemies.length);
@@ -2173,7 +2340,16 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
 
   // Process Detonation Queue (Backend mechanic: scheduled effects fire at start of player's turn)
   // Note: engineer passive queued effects (engineerQueuedEffects) are seeded for NEXT turn in return
-  const queueToProcess: QueuedEffect[] = battle.detonationQueue || [];
+
+  // Tick all timers — decrement turnsUntilFire by 1
+  const tickedQueue: QueuedEffect[] = (battle.detonationQueue || []).map(qe => ({
+    ...qe,
+    turnsUntilFire: (qe.turnsUntilFire ?? 1) - 1,
+  }));
+
+  // Split: fire effects at 0, keep the rest for next turn
+  const queueToProcess: QueuedEffect[] = tickedQueue.filter(qe => qe.turnsUntilFire <= 0);
+  const remainingQueue: QueuedEffect[] = tickedQueue.filter(qe => qe.turnsUntilFire > 0);
   let detonationBlock = 0;
   if (queueToProcess.length > 0) {
     const queueElements = new Set(queueToProcess.map(e => e.element));
@@ -2253,7 +2429,10 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       }
     }
 
-    // Filter enemies killed by detonations
+    // Filter enemies killed by detonations — count kills and gold first
+    const detonationKilled = postDeployEnemies.filter(e => e.currentHp <= 0);
+    detonationKillCount += detonationKilled.length;
+    detonationGoldEarned += detonationKilled.reduce((sum, e) => sum + (e.gold || 0), 0);
     postDeployEnemies = postDeployEnemies.filter(e => e.currentHp > 0);
   }
 
@@ -2266,9 +2445,9 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
     };
   }
 
-  // Accumulate bleed kill/gold into battle totals
-  const totalKillCount = (battle.killCount || 0) + bleedKillCount;
-  const totalGoldEarned = (battle.goldEarned || 0) + bleedGoldEarned;
+  // Accumulate bleed + detonation kill/gold into battle totals
+  const totalKillCount = (battle.killCount || 0) + bleedKillCount + detonationKillCount;
+  const totalGoldEarned = (battle.goldEarned || 0) + bleedGoldEarned + detonationGoldEarned;
 
   return {
     battle: {
@@ -2296,7 +2475,7 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       nextTurnEnergyPenalty: 0,
       flow: retainFlow > 0 ? Math.min(battle.flow ?? 0, retainFlow) : 0,
       nextCardCostReduction: 0,
-      detonationQueue: engineerQueuedEffects,
+      detonationQueue: [...remainingQueue, ...engineerQueuedEffects],
       dodgedThisTurn: false,
     },
     stressChange,

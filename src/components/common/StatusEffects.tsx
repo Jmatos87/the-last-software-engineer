@@ -23,6 +23,7 @@ const effectInfo: Record<string, { icon: string; label: string; unit: string; co
   savingsAccount: { icon: '🏦', label: 'Savings Account — Retain block between turns (up to stacks)', unit: 'stacks', color: 'var(--accent-yellow)' },
   counterOffer: { icon: '💼', label: 'Counter-Offer — Deal damage back when hit', unit: 'stacks', color: 'var(--accent-orange)' },
   hustleCulture: { icon: '💪', label: 'Hustle Culture — +1 energy per turn, but +3 stress per stack', unit: 'stacks', color: 'var(--accent-red)' },
+  primed: { icon: '🎯', label: 'Primed — Detonation timers were reduced when applied', unit: 'turns', color: '#f97316' },
 };
 
 export const StatusEffects: React.FC<StatusEffectsProps> = ({ effects }) => {
