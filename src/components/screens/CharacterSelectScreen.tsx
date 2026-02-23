@@ -43,7 +43,7 @@ export const CharacterSelectScreen: React.FC = () => {
       </div>
 
       <div style={{ display: 'flex', gap: compact ? 10 : 20, flexWrap: 'wrap', justifyContent: 'center' }}>
-        {characters.map(char => (
+        {characters.filter(c => c.available).map(char => (
           <div
             key={char.id}
             onClick={() => handleSelect(char.id)}
@@ -59,7 +59,24 @@ export const CharacterSelectScreen: React.FC = () => {
               textAlign: 'center',
             }}
           >
-            <div style={{ fontSize: compact ? 28 : 48, marginBottom: compact ? 4 : 8 }}>{char.icon}</div>
+            {char.portrait ? (
+              <div style={{
+                width: compact ? 80 : 120,
+                height: compact ? 96 : 144,
+                margin: '0 auto',
+                marginBottom: compact ? 4 : 8,
+                borderRadius: 'var(--radius-sm)',
+                overflow: 'hidden',
+              }}>
+                <img
+                  src={char.portrait}
+                  alt={char.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', transform: 'scale(1.3)' }}
+                />
+              </div>
+            ) : (
+              <div style={{ fontSize: compact ? 28 : 48, marginBottom: compact ? 4 : 8 }}>{char.icon}</div>
+            )}
             <h3 style={{ fontSize: 16, marginBottom: 4 }}>{char.name}</h3>
             <p style={{ fontSize: 11, color: 'var(--accent-purple)', marginBottom: 8 }}>{char.title}</p>
             {char.available ? (

@@ -1,5 +1,7 @@
 import type { CharacterDef } from '../types';
 import frontendPortrait from '../assets/front-end-class.png';
+import backendPortrait from '../assets/backend-class.png';
+import aiPortrait from '../assets/ai-class.png';
 
 export const characters: CharacterDef[] = [
   {
@@ -39,6 +41,7 @@ export const characters: CharacterDef[] = [
     ],
     starterRelicId: 'production_server',
     icon: '🖥️',
+    portrait: backendPortrait,
     available: true,
   },
   {
@@ -77,6 +80,7 @@ export const characters: CharacterDef[] = [
     ],
     starterRelicId: 'gpu_cluster',
     icon: '🤖',
+    portrait: aiPortrait,
     available: true,
   },
 ];
