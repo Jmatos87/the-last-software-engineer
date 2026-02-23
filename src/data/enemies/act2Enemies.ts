@@ -8,21 +8,6 @@ export const act2Enemies: Record<string, EnemyDef> = {
 
   // ── Act 2 Common Enemies ──
 
-  // RITUALIST — Optimize This buffs → Edge Case hits scaled
-  whiteboard_demon: {
-    id: 'whiteboard_demon',
-    name: 'Whiteboard Demon',
-    hp: 115,
-    gold: 40,
-    icon: '📊',
-    moves: [
-      { name: 'Solve in O(n)', type: 'attack', damage: 12, icon: '📊', quip: '"Show me your spell of linear traversal, mortal."' },
-      { name: 'Optimize This', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📉', quip: '"Surely your incantation can be more... efficient?"' },
-      { name: 'Time Complexity', type: 'attack', damage: 14, stressDamage: 5, icon: '⏱️', quip: '"Quadratic time? A fool\'s enchantment."' },
-      { name: 'Edge Case', type: 'attack', damage: 22, icon: '🔥', quip: '"What if the array holds NOTHING, whelp?"' },
-    ],
-  },
-
   // RITUALIST — literal escalating difficulty: Easy < Medium < Hard
   leetcode_goblin: {
     id: 'leetcode_goblin',
@@ -98,52 +83,6 @@ export const act2Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  // ESCALATOR — passive support + indirect escalation via buff_allies; now has actual attack
-  recruiter_middleman: {
-    id: 'recruiter_middleman',
-    name: 'Recruiter Middleman',
-    hp: 130,
-    gold: 34,
-    icon: '🤵',
-    moves: [
-      { name: 'Shield Candidates', type: 'buff_allies', applyToSelf: { resilience: 1 }, icon: '🛡️', quip: '"I shall ward you for the preparatory rite."' },
-      { name: 'Stall', type: 'defend', block: 12, icon: '⏳', quip: '"The guildmaster has departed on a quest."' },
-      { name: 'Pipeline Management', type: 'buff_allies', applyToSelf: { confidence: 2 }, icon: '📊', quip: '"You dwell within our talent reservoir!"' },
-      { name: 'The Runaround', type: 'attack', damage: 13, stressDamage: 6, icon: '🔄', quip: '"Allow me to teleport you to another keeper..."' },
-    ],
-  },
-
-  // RITUALIST — Feature Creep buffs; Deploy Pressure is scaled payoff
-  take_home_v2: {
-    id: 'take_home_v2',
-    name: 'Take-Home Project v2',
-    hp: 115,
-    gold: 42,
-    icon: '💻',
-    moves: [
-      { name: 'MVP Sprint', type: 'attack', damage: 12, icon: '🏃', quip: '"Forge the artifact by moonrise."' },
-      { name: 'Feature Creep', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"Oh, also enchant it with dark mode."' },
-      { name: 'Deploy Pressure', type: 'attack', damage: 20, stressDamage: 6, icon: '🚀', quip: '"Deploy to the realm. No staging grounds."' },
-      { name: 'Stack Overflow', type: 'attack_defend', damage: 12, block: 6, icon: '📚', quip: '"Sealed as a duplicate inscription."' },
-    ],
-  },
-
-  // WILDCARD — hideIntent; gold drain then surprise Take It Or Leave It
-  the_lowballer: {
-    id: 'the_lowballer',
-    name: 'The Lowballer',
-    hp: 100,
-    gold: 38,
-    icon: '💵',
-    hideIntent: true,
-    moves: [
-      { name: 'We Offer Exposure', type: 'gold_steal', goldSteal: 10, stressDamage: 5, icon: '💸', quip: '"Think of the glory, not the gold!"' },
-      { name: 'Budget Cuts', type: 'gold_steal', goldSteal: 8, icon: '✂️', quip: '"The kingdom\'s coffers grow thin, you see."' },
-      { name: 'Take It Or Leave It', type: 'attack', damage: 22, icon: '🤷', quip: '"My final decree. Non-negotiable."' },
-      { name: 'Equity Instead', type: 'stress_attack', stressDamage: 11, icon: '📉', quip: '"0.001% of a crumbling keep. Generous!"' },
-    ],
-  },
-
   // WILDCARD — hideIntent; exhaust disrupts then Technical Difficulties surprise combo
   zoom_fatigue: {
     id: 'zoom_fatigue',
@@ -157,36 +96,6 @@ export const act2Enemies: Record<string, EnemyDef> = {
       { name: 'Camera Off Despair', type: 'stress_attack', stressDamage: 8, icon: '📷', quip: '"We prefer all familiars visible."' },
       { name: 'Technical Difficulties', type: 'exhaust', exhaustCount: 2, stressDamage: 5, icon: '⚠️', quip: '"Apologies, the ley lines are disrupted—*bzzt*"' },
       { name: 'Reconnecting...', type: 'attack', damage: 18, icon: '🔌', quip: '"The portal reopens. Where were we?"' },
-    ],
-  },
-
-  // COMPOUND — debuffs compound; Call References lands on heavily debuffed player
-  reference_checker: {
-    id: 'reference_checker',
-    name: 'Reference Checker',
-    hp: 105,
-    gold: 32,
-    icon: '🔍',
-    moves: [
-      { name: 'Background Scan', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🔍', quip: '"Interesting deeds in your quest log..."' },
-      { name: 'Inconsistency Found', type: 'attack', damage: 16, icon: '⚠️', quip: '"This date on your scroll doesn\'t align."' },
-      { name: 'Verify Credentials', type: 'debuff', applyToTarget: { weak: 2 }, icon: '📋', quip: '"Your \'degree\' from which arcane academy?"' },
-      { name: 'Call References', type: 'attack', damage: 22, stressDamage: 6, icon: '📞', quip: '"Your former liege was... quite candid."' },
-    ],
-  },
-
-  // WAKE-UP — Reschedule is passive stress; activates with Double-Booked then Calendar Tetris
-  scheduling_nightmare: {
-    id: 'scheduling_nightmare',
-    name: 'Scheduling Nightmare',
-    hp: 110,
-    gold: 36,
-    icon: '📅',
-    moves: [
-      { name: 'Reschedule', type: 'stress_attack', stressDamage: 8, icon: '📅', quip: '"A dark omen arose. Next fortnight?"' },
-      { name: 'Double-Booked', type: 'attack', damage: 13, icon: '📆', quip: '"Alas, two champions occupy this time rune."' },
-      { name: 'Time Zone Chaos', type: 'attack', damage: 12, stressDamage: 5, icon: '🌐', quip: '"Was that Dwarven Standard or Elvish time?"' },
-      { name: 'Calendar Tetris', type: 'attack', damage: 18, applyToTarget: { weak: 1, vulnerable: 1 }, icon: '🧩', quip: '"The only slot is the fourth hour of Thursday\'s dawn."' },
     ],
   },
 
@@ -285,23 +194,6 @@ export const act2Enemies: Record<string, EnemyDef> = {
     ],
   },
 
-  // BERSERKER — starts with confidence +3; Overtime Mandate stacks more; All-Hands is the finisher
-  crunch_time_manager: {
-    id: 'crunch_time_manager',
-    name: 'Crunch Time Manager',
-    hp: 260,
-    gold: 105,
-    icon: '⏰',
-    isElite: true,
-    startStatusEffects: { confidence: 3 },
-    moves: [
-      { name: 'Need This By EOD', type: 'attack', damage: 14, stressDamage: 6, icon: '⏰', quip: '"End of day means sundown in MY realm."' },
-      { name: 'Overtime Mandate', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"All souls shall toil beyond the bell!"' },
-      { name: 'Weekend Work', type: 'attack', damage: 14, stressDamage: 5, icon: '📅', quip: '"Just a brief Sabbath deployment."' },
-      { name: 'Sprint Review', type: 'energy_drain', energyDrain: 1, stressDamage: 7, icon: '🏃', quip: '"Why does this quest scroll remain open?"' },
-      { name: 'All-Hands Pressure', type: 'attack', damage: 24, stressDamage: 9, icon: '💥', quip: '"The elder council watches your every move."' },
-    ],
-  },
 
   // ── Act 2 Bosses (HP bumped, phases added) ──
 
@@ -455,36 +347,26 @@ export const act2Enemies: Record<string, EnemyDef> = {
 // ── Act 2 Encounter Tables ──
 
 export const act2Solos: string[][] = [
-  ['whiteboard_demon'],
   ['leetcode_goblin'],
   ['culture_fit_enforcer'],
   ['behavioral_question_bot'],
   ['pair_programmer_enemy'],
   ['trivia_quizmaster'],
-  ['recruiter_middleman'],
-  ['take_home_v2'],
-  ['the_lowballer'],
   ['zoom_fatigue'],
-  ['reference_checker'],
-  ['scheduling_nightmare'],
 ];
 
 export const act2Duos: string[][] = [
-  ['whiteboard_demon', 'trivia_quizmaster'],            // Double vulnerable stacking
-  ['recruiter_middleman', 'take_home_v2'],              // Support buffs DPS
   ['culture_fit_enforcer', 'behavioral_question_bot'],  // Stress pincer attack
-  ['pair_programmer_enemy', 'reference_checker'],       // Double weak lock
-  ['the_lowballer', 'zoom_fatigue'],                    // Gold drain + exhaust
   ['leetcode_goblin', 'leetcode_goblin'],               // Pure DPS race
-  ['scheduling_nightmare', 'culture_fit_enforcer'],     // Debuff + stress
-  ['whiteboard_demon', 'pair_programmer_enemy'],        // Vulnerable + boosted follow-up
+  ['pair_programmer_enemy', 'zoom_fatigue'],            // Weak lock + exhaust
+  ['trivia_quizmaster', 'behavioral_question_bot'],     // Double stress
+  ['leetcode_goblin', 'pair_programmer_enemy'],         // DPS + debuff
 ];
 
 export const act2Trios: string[][] = [
-  ['recruiter_middleman', 'whiteboard_demon', 'take_home_v2'],                       // Buffed assault
-  ['leetcode_goblin', 'leetcode_goblin', 'leetcode_goblin'],                         // Grind rush
-  ['culture_fit_enforcer', 'behavioral_question_bot', 'scheduling_nightmare'],       // Stress gauntlet
-  ['the_lowballer', 'zoom_fatigue', 'reference_checker'],                            // Resource siege
+  ['leetcode_goblin', 'leetcode_goblin', 'leetcode_goblin'],                    // Grind rush
+  ['culture_fit_enforcer', 'behavioral_question_bot', 'zoom_fatigue'],          // Stress gauntlet
+  ['leetcode_goblin', 'pair_programmer_enemy', 'trivia_quizmaster'],            // Mixed pressure
 ];
 
 export const act2ElitePool: string[][] = [
@@ -492,7 +374,6 @@ export const act2ElitePool: string[][] = [
   ['whiteboard_hydra'],
   ['hr_gatekeeper'],
   ['the_algorithm'],
-  ['crunch_time_manager'],
 ];
 
 export const act2BossPool: string[][] = [
