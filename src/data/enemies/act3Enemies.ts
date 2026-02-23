@@ -16,10 +16,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 62,
     icon: '🏛️',
     moves: [
-      { name: "Let's Talk Scalability", type: 'attack_defend', damage: 12, block: 10, icon: '📐', quip: '"Draw the architecture. All of it."' },
-      { name: 'Load Balancer', type: 'buff', applyToSelf: { confidence: 3, resilience: 1 }, icon: '⚖️', quip: '"Distributing incoming damage..."' },
-      { name: 'Distributed Slam', type: 'attack', damage: 22, icon: '🌐', quip: '"Across 47 microservices!"' },
-      { name: 'Microservice Barrage', type: 'attack', damage: 11, times: 2, icon: '🔧', quip: '"Each one a separate repo."' },
+      { name: "Let's Talk Scalability", type: 'attack_defend', damage: 12, block: 10, icon: '📐', quip: '"Behold my architecture, mortal. Kneel before it."' },
+      { name: 'Load Balancer', type: 'buff', applyToSelf: { confidence: 3, resilience: 1 }, icon: '⚖️', quip: '"I distribute my wrath across all realms."' },
+      { name: 'Distributed Slam', type: 'attack', damage: 22, icon: '🌐', quip: '"Forty-seven shards of ruin descend upon you!"' },
+      { name: 'Microservice Barrage', type: 'attack', damage: 11, times: 2, icon: '🔧', quip: '"Each repo a separate cursed tomb."' },
     ],
   },
 
@@ -31,10 +31,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 62,
     icon: '💼',
     moves: [
-      { name: 'Lowball Offer', type: 'gold_steal', goldSteal: 20, icon: '💸', quip: '"Best we can do. Economy, y\'know."' },
-      { name: 'Market Rate Denial', type: 'attack', damage: 14, stressDamage: 6, icon: '📉', quip: '"Our internal bands are different."' },
-      { name: 'Benefits Package', type: 'gold_steal', goldSteal: 14, stressDamage: 4, icon: '📦', quip: '"Free snacks count as comp, right?"' },
-      { name: 'Final Offer', type: 'attack', damage: 24, icon: '🤝', quip: '"Take it or we move on."' },
+      { name: 'Lowball Offer', type: 'gold_steal', goldSteal: 20, icon: '💸', quip: '"The treasury offers scraps. Be grateful, worm."' },
+      { name: 'Market Rate Denial', type: 'attack', damage: 14, stressDamage: 6, icon: '📉', quip: '"Our kingdom\'s gold bands differ from yours."' },
+      { name: 'Benefits Package', type: 'gold_steal', goldSteal: 14, stressDamage: 4, icon: '📦', quip: '"Stale bread counts as compensation here."' },
+      { name: 'Final Offer', type: 'attack', damage: 24, icon: '🤝', quip: '"Accept or perish. There is no third path."' },
     ],
   },
 
@@ -46,10 +46,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 48,
     icon: '🎭',
     moves: [
-      { name: "You Don't Belong", type: 'stress_attack', stressDamage: 12, icon: '😰', quip: '"They\'ll realize any day now."' },
-      { name: 'Self Doubt', type: 'debuff', applyToTarget: { weak: 2 }, icon: '😟', quip: '"You just got lucky so far."' },
-      { name: 'Anxiety Spike', type: 'stress_attack', stressDamage: 15, icon: '😱', quip: '"Everyone else is smarter."' },
-      { name: 'Spiral', type: 'attack', damage: 14, stressDamage: 8, applyToTarget: { vulnerable: 2 }, icon: '🌀', quip: '"Google your own name lately?"' },
+      { name: "You Don't Belong", type: 'stress_attack', stressDamage: 12, icon: '😰', quip: '"The ancient ward senses a fraud in these halls."' },
+      { name: 'Self Doubt', type: 'debuff', applyToTarget: { weak: 2 }, icon: '😟', quip: '"Luck carried you here. Skill did not."' },
+      { name: 'Anxiety Spike', type: 'stress_attack', stressDamage: 15, icon: '😱', quip: '"Every soul in this dungeon outranks you."' },
+      { name: 'Spiral', type: 'attack', damage: 14, stressDamage: 8, applyToTarget: { vulnerable: 2 }, icon: '🌀', quip: '"Scry your own name. See the nothing within."' },
     ],
   },
 
@@ -62,10 +62,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '📦',
     hideIntent: true,
     moves: [
-      { name: 'Looks Great!', type: 'defend', block: 8, icon: '✨', quip: '"Unlimited PTO! (Don\'t use it.)"' },
-      { name: 'SURPRISE!', type: 'attack', damage: 28, stressDamage: 8, icon: '💥', quip: '"$5000 deductible! Gotcha!"' },
-      { name: 'Fine Print', type: 'attack', damage: 16, icon: '📜', quip: '"Dental is extra. Way extra."' },
-      { name: 'Reset Trap', type: 'defend', block: 8, icon: '📦', quip: '"Vision starts after 12 months."' },
+      { name: 'Looks Great!', type: 'defend', block: 8, icon: '✨', quip: '"Unlimited rest days! (The dead rest forever.)"' },
+      { name: 'SURPRISE!', type: 'attack', damage: 28, stressDamage: 8, icon: '💥', quip: '"The chest was a mimic all along, fool!"' },
+      { name: 'Fine Print', type: 'attack', damage: 16, icon: '📜', quip: '"The scroll\'s true curse lies in clause seven."' },
+      { name: 'Reset Trap', type: 'defend', block: 8, icon: '📦', quip: '"Healing potions unlock after twelve moons."' },
     ],
   },
 
@@ -77,10 +77,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 45,
     icon: '💎',
     moves: [
-      { name: 'Vesting Cliff', type: 'exhaust', exhaustCount: 2, stressDamage: 7, icon: '📅', quip: '"Only 3 more years to go!"' },
-      { name: 'Paper Money', type: 'attack', damage: 15, icon: '📄', quip: '"Worth millions! On paper."' },
-      { name: 'Accumulate', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"Reinvesting gains..."' },
-      { name: 'Golden Cage', type: 'attack', damage: 22, applyToTarget: { confidence: -1 }, icon: '🔒', quip: '"Leave now and lose it all."' },
+      { name: 'Vesting Cliff', type: 'exhaust', exhaustCount: 2, stressDamage: 7, icon: '📅', quip: '"Three more winters until the seal breaks."' },
+      { name: 'Paper Money', type: 'attack', damage: 15, icon: '📄', quip: '"Phantom gold! Worth millions in the spirit realm."' },
+      { name: 'Accumulate', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"I hoard power like a dragon hoards coin."' },
+      { name: 'Golden Cage', type: 'attack', damage: 22, applyToTarget: { confidence: -1 }, icon: '🔒', quip: '"Flee now and your soul-bond shatters."' },
     ],
   },
 
@@ -92,10 +92,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 54,
     icon: '📜',
     moves: [
-      { name: 'Legal Binding', type: 'exhaust', exhaustCount: 2, icon: '⚖️', quip: '"You signed page 47. Remember?"' },
-      { name: 'Cease & Desist', type: 'attack', damage: 16, icon: '🚫', quip: '"Our lawyers will be in touch."' },
-      { name: 'Restriction', type: 'debuff', applyToTarget: { weak: 2, resilience: -1 }, icon: '🔗', quip: '"No working in tech for 2 years."' },
-      { name: 'Court Order', type: 'attack', damage: 24, stressDamage: 7, icon: '⚖️', quip: '"See you in court. We have 40 lawyers."' },
+      { name: 'Legal Binding', type: 'exhaust', exhaustCount: 2, icon: '⚖️', quip: '"You signed the blood pact on page forty-seven."' },
+      { name: 'Cease & Desist', type: 'attack', damage: 16, icon: '🚫', quip: '"My legion of barristers hungers for you."' },
+      { name: 'Restriction', type: 'debuff', applyToTarget: { weak: 2, resilience: -1 }, icon: '🔗', quip: '"No questing in any realm for two cycles."' },
+      { name: 'Court Order', type: 'attack', damage: 24, stressDamage: 7, icon: '⚖️', quip: '"The tribunal has forty sworn paladins. You have none."' },
     ],
   },
 
@@ -107,10 +107,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 50,
     icon: '🔄',
     moves: [
-      { name: 'Pivoting to AI', type: 'attack', damage: 16, icon: '🤖', quip: '"We\'re an AI company now."' },
-      { name: 'Pivoting to Blockchain', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⛓️', quip: '"Web3 is definitely still a thing."' },
-      { name: 'Pivoting to Cloud', type: 'attack_defend', damage: 14, block: 12, icon: '☁️', quip: '"Everything is serverless now."' },
-      { name: 'Pivoting to... Pivot', type: 'attack', damage: 20, stressDamage: 8, icon: '🔄', quip: '"Our core business is pivoting."' },
+      { name: 'Pivoting to AI', type: 'attack', damage: 16, icon: '🤖', quip: '"We serve the golem lords now."' },
+      { name: 'Pivoting to Blockchain', type: 'buff', applyToSelf: { confidence: 3 }, icon: '⛓️', quip: '"The chain-rune prophecy lives yet!"' },
+      { name: 'Pivoting to Cloud', type: 'attack_defend', damage: 14, block: 12, icon: '☁️', quip: '"All spells are serverless incantations now."' },
+      { name: 'Pivoting to... Pivot', type: 'attack', damage: 20, stressDamage: 8, icon: '🔄', quip: '"Our true power is shapeshifting. Always."' },
     ],
   },
 
@@ -122,10 +122,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 48,
     icon: '🔥',
     moves: [
-      { name: 'Smolder', type: 'debuff', applyToTarget: { poison: 4 }, icon: '🔥', quip: '"You love what you do, right?"' },
-      { name: 'Flare Up', type: 'attack', damage: 13, stressDamage: 6, icon: '💥', quip: '"Sunday scaries are normal."' },
-      { name: 'Slow Burn', type: 'stress_attack', stressDamage: 12, icon: '🕯️', quip: '"It\'s just a phase. For 3 years."' },
-      { name: 'Ember Spread', type: 'debuff', applyToTarget: { poison: 5, vulnerable: 2 }, icon: '🌋', quip: '"Your passion is your problem."' },
+      { name: 'Smolder', type: 'debuff', applyToTarget: { poison: 4 }, icon: '🔥', quip: '"Your passion is kindling. I am the flame."' },
+      { name: 'Flare Up', type: 'attack', damage: 13, stressDamage: 6, icon: '💥', quip: '"Sunday dread is merely my ember stirring."' },
+      { name: 'Slow Burn', type: 'stress_attack', stressDamage: 12, icon: '🕯️', quip: '"Three years the fire smolders. Then ash."' },
+      { name: 'Ember Spread', type: 'debuff', applyToTarget: { poison: 5, vulnerable: 2 }, icon: '🌋', quip: '"Your devotion feeds my inferno, fool."' },
     ],
   },
 
@@ -137,10 +137,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 58,
     icon: '📧',
     moves: [
-      { name: "Let's Circle Back", type: 'attack', damage: 14, icon: '🔄', quip: '"Per my last email..."' },
-      { name: 'Agenda Overload', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📋', quip: '"42-item agenda for a 30-min call."' },
-      { name: 'Reply All Storm', type: 'attack', damage: 12, times: 2, icon: '📧', quip: '"Please remove me from this thread."' },
-      { name: 'Action Items', type: 'attack', damage: 24, stressDamage: 7, icon: '✅', quip: '"You own all 17 action items."' },
+      { name: "Let's Circle Back", type: 'attack', damage: 14, icon: '🔄', quip: '"Per my last sending spell, adventurer..."' },
+      { name: 'Agenda Overload', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📋', quip: '"Forty-two runes on the war council scroll."' },
+      { name: 'Reply All Storm', type: 'attack', damage: 12, times: 2, icon: '📧', quip: '"Remove me from this cursed message chain!"' },
+      { name: 'Action Items', type: 'attack', damage: 24, stressDamage: 7, icon: '✅', quip: '"Seventeen quest markers. All yours, hero."' },
     ],
   },
 
@@ -152,10 +152,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 52,
     icon: '🤝',
     moves: [
-      { name: 'Match Their Offer', type: 'heal_allies', healAmount: 20, icon: '💊', quip: '"We can match... mostly."' },
-      { name: 'Retention Bonus', type: 'attack', damage: 15, icon: '💰', quip: '"One-time payment. Non-negotiable."' },
-      { name: 'We Value You', type: 'heal_allies', healAmount: 16, icon: '❤️', quip: '"You\'re like family! (See Act 2.)"' },
-      { name: 'Guilt Trip', type: 'attack', damage: 19, stressDamage: 7, icon: '😢', quip: '"After everything we\'ve done?"' },
+      { name: 'Match Their Offer', type: 'heal_allies', healAmount: 20, icon: '💊', quip: '"We can match their bounty... mostly."' },
+      { name: 'Retention Bonus', type: 'attack', damage: 15, icon: '💰', quip: '"One chest of gold. Non-negotiable, wretch."' },
+      { name: 'We Value You', type: 'heal_allies', healAmount: 16, icon: '❤️', quip: '"You are clan! We devour clan last."' },
+      { name: 'Guilt Trip', type: 'attack', damage: 19, stressDamage: 7, icon: '😢', quip: '"After every blessing we bestowed upon you?"' },
     ],
   },
 
@@ -167,10 +167,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 52,
     icon: '🔎',
     moves: [
-      { name: 'Deep Search', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🔎', quip: '"Found your MySpace page."' },
-      { name: 'Found Something', type: 'attack', damage: 22, icon: '⚠️', quip: '"Care to explain this tweet?"' },
-      { name: 'Verify Employment', type: 'debuff', applyToTarget: { vulnerable: 2, weak: 1 }, icon: '📋', quip: '"That gap year looks suspicious."' },
-      { name: 'Criminal Record Scan', type: 'attack', damage: 20, stressDamage: 7, icon: '🔍', quip: '"One parking ticket in 2019..."' },
+      { name: 'Deep Search', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🔎', quip: '"My scrying orb found your old guild page."' },
+      { name: 'Found Something', type: 'attack', damage: 22, icon: '⚠️', quip: '"Care to explain this rune you inscribed?"' },
+      { name: 'Verify Employment', type: 'debuff', applyToTarget: { vulnerable: 2, weak: 1 }, icon: '📋', quip: '"That gap year in the Underdark looks suspicious."' },
+      { name: 'Criminal Record Scan', type: 'attack', damage: 20, stressDamage: 7, icon: '🔍', quip: '"One tavern brawl in the year of the dragon..."' },
     ],
   },
 
@@ -182,10 +182,10 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 60,
     icon: '🚚',
     moves: [
-      { name: 'Palo Alto or Bust', type: 'attack', damage: 16, stressDamage: 8, icon: '🏠', quip: '"1BR for $4,500/month. Steal!"' },
-      { name: 'Moving Costs', type: 'gold_steal', goldSteal: 18, icon: '💸', quip: '"We cover $500. Movers cost $8K."' },
-      { name: 'Culture Shock', type: 'buff', applyToSelf: { confidence: 3 }, icon: '😵', quip: '"Hope you like kombucha on tap."' },
-      { name: 'Housing Crisis', type: 'attack', damage: 26, stressDamage: 8, icon: '🏠', quip: '"Your commute is only 2 hours!"' },
+      { name: 'Palo Alto or Bust', type: 'attack', damage: 16, stressDamage: 8, icon: '🏠', quip: '"A hovel in the capital. Only 4,500 gold a moon!"' },
+      { name: 'Moving Costs', type: 'gold_steal', goldSteal: 18, icon: '💸', quip: '"We cover a single mule. The caravan costs 8,000."' },
+      { name: 'Culture Shock', type: 'buff', applyToSelf: { confidence: 3 }, icon: '😵', quip: '"Hope you enjoy enchanted kombucha on tap."' },
+      { name: 'Housing Crisis', type: 'attack', damage: 26, stressDamage: 8, icon: '🏠', quip: '"Your pilgrimage to the office: only two hours!"' },
     ],
   },
 
@@ -200,17 +200,17 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🎩',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 5 }, quip: '"The board demands RESULTS. NOW."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 5 }, quip: '"The council of elders demands TRIBUTE. Now."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: 'Executive Order', type: 'attack', damage: 22, icon: '📜', quip: '"This came from the top."' },
-      { name: 'Quarterly Review', type: 'attack_defend', damage: 14, block: 16, icon: '📊', quip: '"Numbers are down. Your fault."' },
-      { name: 'Shareholder Pressure', type: 'buff', applyToSelf: { confidence: 4 }, icon: '📈', quip: '"The shareholders demand growth!"' },
+      { name: 'Executive Order', type: 'attack', damage: 22, icon: '📜', quip: '"This decree fell from the throne itself."' },
+      { name: 'Quarterly Review', type: 'attack_defend', damage: 14, block: 16, icon: '📊', quip: '"The harvest numbers falter. You are to blame."' },
+      { name: 'Shareholder Pressure', type: 'buff', applyToSelf: { confidence: 4 }, icon: '📈', quip: '"The shareholders demand blood and growth!"' },
       // Phase 2 (3-5)
-      { name: 'Emergency Board Meeting', type: 'energy_drain', energyDrain: 1, stressDamage: 10, icon: '🔥', quip: '"This is a CRISIS."' },
-      { name: 'Board Decision', type: 'attack', damage: 34, stressDamage: 13, icon: '⚡', quip: '"The board has spoken."' },
-      { name: 'Hostile Acquisition', type: 'attack', damage: 18, times: 2, stressDamage: 11, icon: '☠️', quip: '"We\'re taking EVERYTHING."' },
+      { name: 'Emergency Board Meeting', type: 'energy_drain', energyDrain: 1, stressDamage: 10, icon: '🔥', quip: '"Summon the war council. This is a SIEGE."' },
+      { name: 'Board Decision', type: 'attack', damage: 34, stressDamage: 13, icon: '⚡', quip: '"The elders have spoken. Kneel."' },
+      { name: 'Hostile Acquisition', type: 'attack', damage: 18, times: 2, stressDamage: 11, icon: '☠️', quip: '"We conquer EVERYTHING in our path."' },
     ],
   },
 
@@ -223,17 +223,17 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '⛓️',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 5 }, quip: '"You\'ll NEVER leave."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 5 }, quip: '"Your chains are eternal. You will NEVER escape."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: 'Vest Schedule', type: 'exhaust', exhaustCount: 3, stressDamage: 9, icon: '📅', quip: '"Your cliff is in 11 months."' },
-      { name: 'Retention Hit', type: 'energy_drain', energyDrain: 1, stressDamage: 6, icon: '⛓️', quip: '"You can\'t afford to leave."' },
-      { name: 'Stock Lock', type: 'exhaust', exhaustCount: 2, icon: '🔒', quip: '"90-day exercise window. Good luck."' },
+      { name: 'Vest Schedule', type: 'exhaust', exhaustCount: 3, stressDamage: 9, icon: '📅', quip: '"Your soul-bond cliff is eleven moons away."' },
+      { name: 'Retention Hit', type: 'energy_drain', energyDrain: 1, stressDamage: 6, icon: '⛓️', quip: '"You cannot afford freedom, thrall."' },
+      { name: 'Stock Lock', type: 'exhaust', exhaustCount: 2, icon: '🔒', quip: '"Ninety sunsets to exercise. The clock devours."' },
       // Phase 2 (3-5)
-      { name: 'Unvested Fury', type: 'buff', applyToSelf: { confidence: 5 }, icon: '💎', quip: '"Your equity is WORTHLESS."' },
-      { name: 'Golden Slam', type: 'attack', damage: 32, stressDamage: 11, icon: '💰', quip: '"Trapped by your own success!"' },
-      { name: 'Market Crash', type: 'attack', damage: 16, times: 2, icon: '📉', quip: '"Portfolio value: ZERO."' },
+      { name: 'Unvested Fury', type: 'buff', applyToSelf: { confidence: 5 }, icon: '💎', quip: '"Your phantom equity is WORTHLESS!"' },
+      { name: 'Golden Slam', type: 'attack', damage: 32, stressDamage: 11, icon: '💰', quip: '"Caged by your own ambition, worm!"' },
+      { name: 'Market Crash', type: 'attack', damage: 16, times: 2, icon: '📉', quip: '"The treasury burns. Your fortune: ASHES."' },
     ],
   },
 
@@ -246,17 +246,17 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🌀',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"EVERYTHING must go."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"The old order crumbles. EVERYTHING must fall."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: 'Shuffle Teams', type: 'summon', summonId: 'chaos_agent', summonCount: 2, icon: '🔀', quip: '"Your team no longer exists."' },
-      { name: 'New Manager', type: 'attack', damage: 17, stressDamage: 6, icon: '👤', quip: '"Meet your 4th manager this year."' },
-      { name: 'Restructure', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '🌀', quip: '"Your role has been \'realigned.\'"' },
+      { name: 'Shuffle Teams', type: 'summon', summonId: 'chaos_agent', summonCount: 2, icon: '🔀', quip: '"Your war party has been dissolved by decree."' },
+      { name: 'New Manager', type: 'attack', damage: 17, stressDamage: 6, icon: '👤', quip: '"Behold your fourth overlord this cycle."' },
+      { name: 'Restructure', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '🌀', quip: '"Your rank has been ritually realigned."' },
       // Phase 2 (3-5)
-      { name: 'Recall Chaos', type: 'summon', summonId: 'chaos_agent', summonCount: 1, icon: '🌀', quip: '"Deploying change management consultants."' },
-      { name: 'Mass Layoff', type: 'attack', damage: 32, icon: '🌊', quip: '"Efficiency optimization complete."' },
-      { name: 'Reorg Slam', type: 'attack', damage: 17, times: 2, stressDamage: 11, icon: '💥', quip: '"Your role has been ELIMINATED."' },
+      { name: 'Recall Chaos', type: 'summon', summonId: 'chaos_agent', summonCount: 1, icon: '🌀', quip: '"Summoning change-sorcerer consultants."' },
+      { name: 'Mass Layoff', type: 'attack', damage: 32, icon: '🌊', quip: '"The culling is complete. Efficiency achieved."' },
+      { name: 'Reorg Slam', type: 'attack', damage: 17, times: 2, stressDamage: 11, icon: '💥', quip: '"Your station has been ANNIHILATED."' },
     ],
   },
 
@@ -269,15 +269,15 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🗿',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 5 }, quip: '"DEBT LIMIT EXCEEDED."' },
+      { hpPercent: 50, moveStartIndex: 2, onEnter: { confidence: 5 }, quip: '"DEBT THRESHOLD BREACHED. The golem awakens fully."' },
     ],
     moves: [
       // Phase 1 (0-1)
-      { name: 'Legacy Code', type: 'attack', damage: 13, icon: '📟', quip: '"This was written in jQuery. In 2024."' },
-      { name: 'Accumulate', type: 'buff', applyToSelf: { confidence: 5 }, icon: '📈', quip: '"TODO: fix later (2019)"' },
+      { name: 'Legacy Code', type: 'attack', damage: 13, icon: '📟', quip: '"This rune was carved in jQuery. In the modern age."' },
+      { name: 'Accumulate', type: 'buff', applyToSelf: { confidence: 5 }, icon: '📈', quip: '"TODO: slay hero later. (Written seven winters ago.)"' },
       // Phase 2 (2-3)
-      { name: 'Spaghetti Strike', type: 'attack', damage: 24, icon: '🍝', quip: '"One file. 14,000 lines."' },
-      { name: 'Technical Bankruptcy', type: 'attack', damage: 36, stressDamage: 12, icon: '💥', quip: '"No tests. No docs. No hope."' },
+      { name: 'Spaghetti Strike', type: 'attack', damage: 24, icon: '🍝', quip: '"One cursed tome. Fourteen thousand incantations."' },
+      { name: 'Technical Bankruptcy', type: 'attack', damage: 36, stressDamage: 12, icon: '💥', quip: '"No wards. No scrolls. No salvation."' },
     ],
   },
 
@@ -291,17 +291,17 @@ export const act3Enemies: Record<string, EnemyDef> = {
     isElite: true,
     startStatusEffects: { confidence: 5 },
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"Your 30 days are UP."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"Your thirty sunsets are OVER, worm."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: 'Performance Review', type: 'debuff', applyToTarget: { confidence: -1, resilience: -1 }, icon: '📉', quip: '"Meets expectations. Barely."' },
-      { name: 'Improvement Plan', type: 'stress_attack', stressDamage: 16, icon: '📋', quip: '"You have 30 days."' },
-      { name: 'Final Warning', type: 'attack', damage: 24, stressDamage: 9, icon: '⚠️', quip: '"This is your last chance."' },
+      { name: 'Performance Review', type: 'debuff', applyToTarget: { confidence: -1, resilience: -1 }, icon: '📉', quip: '"Meets expectations. Barely. The tribunal is displeased."' },
+      { name: 'Improvement Plan', type: 'stress_attack', stressDamage: 16, icon: '📋', quip: '"You have thirty days before the axe falls."' },
+      { name: 'Final Warning', type: 'attack', damage: 24, stressDamage: 9, icon: '⚠️', quip: '"This is your last rite, adventurer."' },
       // Phase 2 (3-5)
-      { name: 'Clock Is Ticking', type: 'energy_drain', energyDrain: 1, stressDamage: 8, icon: '⏰', quip: '"Tick. Tock."' },
-      { name: 'Last Chance', type: 'attack', damage: 32, icon: '⚠️', quip: '"This is it."' },
-      { name: 'Terminated', type: 'attack', damage: 30, stressDamage: 16, icon: '🚪', quip: '"Security will escort you out."' },
+      { name: 'Clock Is Ticking', type: 'energy_drain', energyDrain: 1, stressDamage: 8, icon: '⏰', quip: '"The hourglass drains. Tick. Tock."' },
+      { name: 'Last Chance', type: 'attack', damage: 32, icon: '⚠️', quip: '"The executioner sharpens the blade."' },
+      { name: 'Terminated', type: 'attack', damage: 30, stressDamage: 16, icon: '🚪', quip: '"The guard-golems will escort you to the void."' },
     ],
   },
 
@@ -315,22 +315,22 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '👥',
     isBoss: true,
     phases: [
-      { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"The committee is getting serious."' },
-      { hpPercent: 30, moveStartIndex: 5, onEnter: { confidence: 2 }, quip: '"FINAL DELIBERATION."' },
+      { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"The conclave grows restless. Blood will be weighed."' },
+      { hpPercent: 30, moveStartIndex: 5, onEnter: { confidence: 2 }, quip: '"FINAL DELIBERATION. The gavel falls at dawn."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: 'Committee Review', type: 'attack', damage: 14, icon: '📋', quip: '"We\'ve reviewed your... everything."' },
-      { name: 'Stress Interview', type: 'stress_attack', stressDamage: 14, icon: '😰', quip: '"Sell me this pen. Now this desk."' },
-      { name: 'Deliberation', type: 'defend', block: 22, icon: '🤔', quip: '"We need to discuss amongst ourselves."' },
+      { name: 'Committee Review', type: 'attack', damage: 14, icon: '📋', quip: '"We have scried your entire existence, mortal."' },
+      { name: 'Stress Interview', type: 'stress_attack', stressDamage: 14, icon: '😰', quip: '"Sell me this enchanted pen. Now this throne."' },
+      { name: 'Deliberation', type: 'defend', block: 22, icon: '🤔', quip: '"The conclave retreats to deliberate your fate."' },
       // Phase 2 (3-4)
-      { name: 'Budget Discussion', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '💰', quip: '"Headcount is frozen. Mostly."' },
-      { name: 'Counter-Counter Offer', type: 'attack', damage: 24, stressDamage: 9, icon: '⚖️', quip: '"We counter your counter. Again."' },
+      { name: 'Budget Discussion', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 2 }, icon: '💰', quip: '"The war chest is sealed. Mostly."' },
+      { name: 'Counter-Counter Offer', type: 'attack', damage: 24, stressDamage: 9, icon: '⚖️', quip: '"We counter your counter-hex. Again."' },
       // Phase 3: DPS race (5-8)
-      { name: 'Recall Committee', type: 'summon', summonId: 'committee_chair', summonCount: 1, icon: '📋', quip: '"We need full quorum for this vote."' },
-      { name: 'Counter-Slam', type: 'attack', damage: 33, stressDamage: 13, icon: '⚖️', quip: '"Counter. Counter. COUNTER."' },
-      { name: 'Committee Slam', type: 'attack', damage: 52, icon: '💥', quip: '"Motion to reject. All in favor?"' },
-      { name: 'Offer Rescinded', type: 'attack', damage: 44, stressDamage: 17, icon: '📄', quip: '"The offer has been WITHDRAWN."' },
+      { name: 'Recall Committee', type: 'summon', summonId: 'committee_chair', summonCount: 1, icon: '📋', quip: '"Summon the full tribunal for this verdict."' },
+      { name: 'Counter-Slam', type: 'attack', damage: 33, stressDamage: 13, icon: '⚖️', quip: '"Counter. Counter. COUNTERSPELL."' },
+      { name: 'Committee Slam', type: 'attack', damage: 52, icon: '💥', quip: '"Motion to smite. All elders in favor?"' },
+      { name: 'Offer Rescinded', type: 'attack', damage: 44, stressDamage: 17, icon: '📄', quip: '"The pact has been REVOKED by the high council."' },
     ],
   },
 
@@ -342,23 +342,23 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🏆',
     isBoss: true,
     phases: [
-      { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"Enough pleasantries."' },
-      { hpPercent: 30, moveStartIndex: 5, onEnter: { confidence: 5 }, quip: '"I AM the company."' },
+      { hpPercent: 60, moveStartIndex: 3, onEnter: { confidence: 4 }, quip: '"Enough pleasantries. The dragon stirs."' },
+      { hpPercent: 30, moveStartIndex: 5, onEnter: { confidence: 5 }, quip: '"I AM the empire. Bow or burn."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: 'Visionary Speech', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🎤', quip: '"We\'re changing the world."' },
-      { name: 'Inspire Fear', type: 'stress_attack', stressDamage: 12, icon: '😨', quip: '"Layoffs? What layoffs?"' },
-      { name: 'Corporate Strategy', type: 'attack_defend', damage: 14, block: 12, icon: '📊', quip: '"It\'s a paradigm shift."' },
+      { name: 'Visionary Speech', type: 'buff', applyToSelf: { confidence: 2 }, icon: '🎤', quip: '"We shall reshape the realm itself."' },
+      { name: 'Inspire Fear', type: 'stress_attack', stressDamage: 12, icon: '😨', quip: '"Purges? What purges? Kneel."' },
+      { name: 'Corporate Strategy', type: 'attack_defend', damage: 14, block: 12, icon: '📊', quip: '"Behold the paradigm incantation."' },
       // Phase 2 (3-4)
-      { name: 'Execute!', type: 'attack', damage: 22, icon: '⚡', quip: '"Ship it or I ship you out."' },
-      { name: 'Disruption', type: 'attack', damage: 25, stressDamage: 11, icon: '💥', quip: '"We disrupted the disruptors."' },
+      { name: 'Execute!', type: 'attack', damage: 22, icon: '⚡', quip: '"Ship the spell or I ship you to the abyss."' },
+      { name: 'Disruption', type: 'attack', damage: 25, stressDamage: 11, icon: '💥', quip: '"We disrupted the disruptors\' realm."' },
       // Phase 3 (5-9)
-      { name: 'Rehire PR', type: 'summon', summonId: 'pr_manager', summonCount: 1, icon: '📢', quip: '"Get me positive coverage on this."' },
-      { name: 'Disrupt Everything', type: 'attack', damage: 32, stressDamage: 13, icon: '💥', quip: '"Disrupt EVERYTHING."' },
-      { name: 'Golden Parachute', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🪂', quip: '"I have a $50M exit package."' },
-      { name: 'Move Fast Break Things', type: 'attack', damage: 44, icon: '🔥', quip: '"Including your career!"' },
-      { name: 'Hostile Takeover', type: 'attack', damage: 56, stressDamage: 21, icon: '☠️', quip: '"Bow before the brand."' },
+      { name: 'Rehire PR', type: 'summon', summonId: 'pr_manager', summonCount: 1, icon: '📢', quip: '"Summon the bards. Spin this slaughter."' },
+      { name: 'Disrupt Everything', type: 'attack', damage: 32, stressDamage: 13, icon: '💥', quip: '"RAZE every kingdom. Disrupt EVERYTHING."' },
+      { name: 'Golden Parachute', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🪂', quip: '"I have a fifty-million-gold escape portal."' },
+      { name: 'Move Fast Break Things', type: 'attack', damage: 44, icon: '🔥', quip: '"Including your bones, adventurer!"' },
+      { name: 'Hostile Takeover', type: 'attack', damage: 56, stressDamage: 21, icon: '☠️', quip: '"BOW before the Dragon King of Commerce."' },
     ],
   },
 
@@ -370,21 +370,21 @@ export const act3Enemies: Record<string, EnemyDef> = {
     icon: '🎭',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"The doubt is spreading..."' },
-      { hpPercent: 25, moveStartIndex: 5, onEnter: { confidence: 5 }, quip: '"COMPLETE MELTDOWN IMMINENT."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3 }, quip: '"The shadow-curse spreads through your veins..."' },
+      { hpPercent: 25, moveStartIndex: 5, onEnter: { confidence: 5 }, quip: '"TOTAL PSYCHIC COLLAPSE. The void hungers."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: "You're A Fraud", type: 'debuff', applyToTarget: { confidence: -2 }, icon: '🎭', quip: '"You don\'t deserve this offer."' },
-      { name: 'Everyone Knows', type: 'stress_attack', stressDamage: 17, icon: '👁️', quip: '"They\'re all whispering about you."' },
-      { name: 'Spiral of Doubt', type: 'stress_attack', stressDamage: 14, icon: '🌀', quip: '"Was any of it real?"' },
+      { name: "You're A Fraud", type: 'debuff', applyToTarget: { confidence: -2 }, icon: '🎭', quip: '"You never earned this quest, pretender."' },
+      { name: 'Everyone Knows', type: 'stress_attack', stressDamage: 17, icon: '👁️', quip: '"A thousand eyes whisper your secret."' },
+      { name: 'Spiral of Doubt', type: 'stress_attack', stressDamage: 14, icon: '🌀', quip: '"Was any of your legend real?"' },
       // Phase 2 (3-4)
-      { name: 'Recall Inner Critic', type: 'summon', summonId: 'inner_critic', summonCount: 1, icon: '🪞', quip: '"Listen to that voice inside you."' },
-      { name: "They'll Find Out", type: 'attack', damage: 20, stressDamage: 14, icon: '😱', quip: '"Day one. They\'ll know."' },
+      { name: 'Recall Inner Critic', type: 'summon', summonId: 'inner_critic', summonCount: 1, icon: '🪞', quip: '"Hear the demon that dwells within you."' },
+      { name: "They'll Find Out", type: 'attack', damage: 20, stressDamage: 14, icon: '😱', quip: '"Dawn breaks. They will see through the mask."' },
       // Phase 3 (5-7)
-      { name: 'Identity Crisis', type: 'debuff', applyToTarget: { weak: 3, vulnerable: 3, confidence: -3 }, icon: '🪞', quip: '"Who even are you anymore?"' },
-      { name: 'Complete Meltdown', type: 'attack', damage: 42, stressDamage: 32, icon: '🔥', quip: '"EVERYTHING IS FALLING APART."' },
-      { name: 'You Never Belonged', type: 'attack', damage: 38, stressDamage: 22, icon: '🎭', quip: '"They\'re going to REVOKE your degree."' },
+      { name: 'Identity Crisis', type: 'debuff', applyToTarget: { weak: 3, vulnerable: 3, confidence: -3 }, icon: '🪞', quip: '"Who even are you beneath the armor?"' },
+      { name: 'Complete Meltdown', type: 'attack', damage: 42, stressDamage: 32, icon: '🔥', quip: '"REALITY ITSELF UNRAVELS AROUND YOU."' },
+      { name: 'You Never Belonged', type: 'attack', damage: 38, stressDamage: 22, icon: '🎭', quip: '"The guild will REVOKE your adventurer\'s seal."' },
     ],
   },
 
@@ -397,8 +397,8 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 0,
     icon: '🌀',
     moves: [
-      { name: 'Restructure', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🌀', quip: '"Your role has been \'realigned.\'"' },
-      { name: 'Disrupt', type: 'attack', damage: 9, stressDamage: 5, icon: '💥', quip: '"Change is good. Probably."' },
+      { name: 'Restructure', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🌀', quip: '"Your rank has been ritually reassigned."' },
+      { name: 'Disrupt', type: 'attack', damage: 9, stressDamage: 5, icon: '💥', quip: '"Chaos is a ladder. You are beneath it."' },
     ],
   },
 
@@ -409,8 +409,8 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 12,
     icon: '📋',
     moves: [
-      { name: 'Due Diligence', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '📋', quip: '"We need more documentation."' },
-      { name: 'Review Complete', type: 'attack', damage: 13, icon: '✅', quip: '"Motion to reject. Seconded."' },
+      { name: 'Due Diligence', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '📋', quip: '"The tribunal demands more evidence scrolls."' },
+      { name: 'Review Complete', type: 'attack', damage: 13, icon: '✅', quip: '"Motion to condemn. Seconded."' },
     ],
   },
 
@@ -421,8 +421,8 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 10,
     icon: '⚖️',
     moves: [
-      { name: 'Policy', type: 'corrupt', icon: '📜', quip: '"Per regulation 47-B..."' },
-      { name: 'Enforcement', type: 'attack', damage: 9, applyToTarget: { vulnerable: 1 }, icon: '🔨', quip: '"Non-compliance is not tolerated."' },
+      { name: 'Policy', type: 'corrupt', icon: '📜', quip: '"Per sacred regulation forty-seven-B..."' },
+      { name: 'Enforcement', type: 'attack', damage: 9, applyToTarget: { vulnerable: 1 }, icon: '🔨', quip: '"Defiance of the code is punished by smiting."' },
     ],
   },
 
@@ -433,9 +433,9 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 14,
     icon: '📢',
     moves: [
-      { name: 'Spin Story', type: 'heal_allies', healAmount: 18, icon: '🌀', quip: '"The CEO remains fully committed."' },
-      { name: 'Press Release', type: 'stress_attack', stressDamage: 12, icon: '📰', quip: '"Sources say you\'re not a culture fit."' },
-      { name: 'No Comment', type: 'defend', block: 8, icon: '🤐', quip: '"We cannot confirm or deny."' },
+      { name: 'Spin Story', type: 'heal_allies', healAmount: 18, icon: '🌀', quip: '"The Dragon King remains fully committed to peace."' },
+      { name: 'Press Release', type: 'stress_attack', stressDamage: 12, icon: '📰', quip: '"The heralds proclaim you unfit for the realm."' },
+      { name: 'No Comment', type: 'defend', block: 8, icon: '🤐', quip: '"The court can neither confirm nor deny."' },
     ],
   },
 
@@ -446,8 +446,8 @@ export const act3Enemies: Record<string, EnemyDef> = {
     gold: 10,
     icon: '🪞',
     moves: [
-      { name: 'Self-Doubt', type: 'debuff', applyToTarget: { weak: 1, vulnerable: 1 }, icon: '😟', quip: '"You don\'t deserve this."' },
-      { name: 'Spiral', type: 'attack', damage: 10, stressDamage: 14, icon: '🌀', quip: '"Everyone can see through you."' },
+      { name: 'Self-Doubt', type: 'debuff', applyToTarget: { weak: 1, vulnerable: 1 }, icon: '😟', quip: '"You never deserved to wield that sword."' },
+      { name: 'Spiral', type: 'attack', damage: 10, stressDamage: 14, icon: '🌀', quip: '"Every soul in the realm sees through you."' },
     ],
   },
 };

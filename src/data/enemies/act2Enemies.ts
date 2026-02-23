@@ -16,10 +16,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 40,
     icon: '📊',
     moves: [
-      { name: 'Solve in O(n)', type: 'attack', damage: 12, icon: '📊', quip: '"Now do it without extra space."' },
-      { name: 'Optimize This', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📉', quip: '"Can you do better?"' },
-      { name: 'Time Complexity', type: 'attack', damage: 14, stressDamage: 5, icon: '⏱️', quip: '"That\'s O(n²). Unacceptable."' },
-      { name: 'Edge Case', type: 'attack', damage: 22, icon: '🔥', quip: '"What if the array is empty?"' },
+      { name: 'Solve in O(n)', type: 'attack', damage: 12, icon: '📊', quip: '"Show me your spell of linear traversal, mortal."' },
+      { name: 'Optimize This', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📉', quip: '"Surely your incantation can be more... efficient?"' },
+      { name: 'Time Complexity', type: 'attack', damage: 14, stressDamage: 5, icon: '⏱️', quip: '"Quadratic time? A fool\'s enchantment."' },
+      { name: 'Edge Case', type: 'attack', damage: 22, icon: '🔥', quip: '"What if the array holds NOTHING, whelp?"' },
     ],
   },
 
@@ -31,10 +31,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 34,
     icon: '👺',
     moves: [
-      { name: 'Easy Problem', type: 'attack', damage: 9, icon: '🟢', quip: '"This one\'s a warmup."' },
-      { name: 'Medium Problem', type: 'attack', damage: 14, icon: '🟡', quip: '"Just invert a binary tree."' },
-      { name: 'Hard Problem', type: 'attack', damage: 20, icon: '🔴', quip: '"This one\'s a classic!"' },
-      { name: 'Time Limit Exceeded', type: 'stress_attack', stressDamage: 11, icon: '⏰', quip: '"Your solution timed out. Again."' },
+      { name: 'Easy Problem', type: 'attack', damage: 9, icon: '🟢', quip: '"A simple ward to start. Heh heh."' },
+      { name: 'Medium Problem', type: 'attack', damage: 14, icon: '🟡', quip: '"Invert the cursed tree! Quickly now!"' },
+      { name: 'Hard Problem', type: 'attack', damage: 20, icon: '🔴', quip: '"A legendary riddle. Many have perished here."' },
+      { name: 'Time Limit Exceeded', type: 'stress_attack', stressDamage: 11, icon: '⏰', quip: '"The hourglass ran dry. Again, fool."' },
     ],
   },
 
@@ -46,10 +46,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 36,
     icon: '😊',
     moves: [
-      { name: "We're Like Family", type: 'stress_attack', stressDamage: 9, icon: '👨‍👩‍👧‍👦', quip: '"A dysfunctional one, but still!"' },
-      { name: 'Red Flag', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🚩', quip: '"We work hard AND play hard."' },
-      { name: 'Pizza Parties!', type: 'attack', damage: 12, stressDamage: 6, icon: '🍕', quip: '"Instead of raises this quarter!"' },
-      { name: 'Forced Fun', type: 'attack', damage: 18, stressDamage: 8, icon: '🎉', quip: '"Mandatory team karaoke at 6 AM!"' },
+      { name: "We're Like Family", type: 'stress_attack', stressDamage: 9, icon: '👨‍👩‍👧‍👦', quip: '"We are a clan bound by oath. Mostly dysfunction."' },
+      { name: 'Red Flag', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🚩', quip: '"We toil hard AND revel hard in these halls."' },
+      { name: 'Pizza Parties!', type: 'attack', damage: 12, stressDamage: 6, icon: '🍕', quip: '"Feast rations instead of gold this moon!"' },
+      { name: 'Forced Fun', type: 'attack', damage: 18, stressDamage: 8, icon: '🎉', quip: '"Mandatory revelry at dawn. No exceptions."' },
     ],
   },
 
@@ -61,10 +61,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 36,
     icon: '🎭',
     moves: [
-      { name: 'Tell Me About A Time...', type: 'debuff', applyToTarget: { weak: 2 }, icon: '🕐', quip: '"Use the STAR method, please."' },
-      { name: 'Why Should We Hire You?', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🤔', quip: '"Convince me you exist."' },
-      { name: 'Where Do You See Yourself?', type: 'stress_attack', stressDamage: 9, icon: '🔮', quip: '"Not here, apparently."' },
-      { name: 'Competency Check', type: 'attack', damage: 18, icon: '✅', quip: '"Hmm, insufficient leadership."' },
+      { name: 'Tell Me About A Time...', type: 'debuff', applyToTarget: { weak: 2 }, icon: '🕐', quip: '"Recount your deeds using the sacred STAR method."' },
+      { name: 'Why Should We Hire You?', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🤔', quip: '"Convince this tribunal you are worthy of breath."' },
+      { name: 'Where Do You See Yourself?', type: 'stress_attack', stressDamage: 9, icon: '🔮', quip: '"Gaze into the scrying orb. Not here, clearly."' },
+      { name: 'Competency Check', type: 'attack', damage: 18, icon: '✅', quip: '"The scrolls reveal... insufficient valor."' },
     ],
   },
 
@@ -76,10 +76,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 38,
     icon: '👥',
     moves: [
-      { name: 'Copy That', type: 'attack_defend', damage: 10, block: 7, icon: '📋', quip: '"I would\'ve used a reducer here."' },
-      { name: 'Actually...', type: 'attack', damage: 16, icon: '☝️', quip: '"Well, actually, it\'s O(log n)."' },
-      { name: 'Let Me Drive', type: 'attack', damage: 13, stressDamage: 5, icon: '⌨️', quip: '"*types furiously on your keyboard*"' },
-      { name: 'Code Review', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 1 }, icon: '👀', quip: '"47 comments on your PR."' },
+      { name: 'Copy That', type: 'attack_defend', damage: 10, block: 7, icon: '📋', quip: '"I would have used a different sigil here."' },
+      { name: 'Actually...', type: 'attack', damage: 16, icon: '☝️', quip: '"Well actually, that rune is logarithmic."' },
+      { name: 'Let Me Drive', type: 'attack', damage: 13, stressDamage: 5, icon: '⌨️', quip: '"*seizes your enchanted quill mid-stroke*"' },
+      { name: 'Code Review', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 1 }, icon: '👀', quip: '"Forty-seven grievances inscribed on your scroll."' },
     ],
   },
 
@@ -91,10 +91,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 30,
     icon: '❓',
     moves: [
-      { name: 'Pop Quiz!', type: 'attack', damage: 15, icon: '❓', quip: '"What\'s the max heap size in V8?"' },
-      { name: 'Trick Question', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🃏', quip: '"Trick question — there\'s no answer."' },
-      { name: 'Bonus Round', type: 'attack', damage: 12, icon: '⭐', quip: '"Now in Haskell."' },
-      { name: 'Stumped!', type: 'stress_attack', stressDamage: 10, icon: '😶', quip: '"The silence speaks volumes."' },
+      { name: 'Pop Quiz!', type: 'attack', damage: 15, icon: '❓', quip: '"Name the max heap rune capacity of V8!"' },
+      { name: 'Trick Question', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🃏', quip: '"A trick! There was never an answer, fool."' },
+      { name: 'Bonus Round', type: 'attack', damage: 12, icon: '⭐', quip: '"Now solve it in the Haskell tongue."' },
+      { name: 'Stumped!', type: 'stress_attack', stressDamage: 10, icon: '😶', quip: '"Your silence echoes through the chamber."' },
     ],
   },
 
@@ -106,10 +106,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 34,
     icon: '🤵',
     moves: [
-      { name: 'Shield Candidates', type: 'buff_allies', applyToSelf: { resilience: 1 }, icon: '🛡️', quip: '"I\'ll prep you for the prep call."' },
-      { name: 'Stall', type: 'defend', block: 12, icon: '⏳', quip: '"The hiring manager is OOO."' },
-      { name: 'Pipeline Management', type: 'buff_allies', applyToSelf: { confidence: 2 }, icon: '📊', quip: '"You\'re in our talent pipeline!"' },
-      { name: 'The Runaround', type: 'attack', damage: 13, stressDamage: 6, icon: '🔄', quip: '"Let me transfer you to..."' },
+      { name: 'Shield Candidates', type: 'buff_allies', applyToSelf: { resilience: 1 }, icon: '🛡️', quip: '"I shall ward you for the preparatory rite."' },
+      { name: 'Stall', type: 'defend', block: 12, icon: '⏳', quip: '"The guildmaster has departed on a quest."' },
+      { name: 'Pipeline Management', type: 'buff_allies', applyToSelf: { confidence: 2 }, icon: '📊', quip: '"You dwell within our talent reservoir!"' },
+      { name: 'The Runaround', type: 'attack', damage: 13, stressDamage: 6, icon: '🔄', quip: '"Allow me to teleport you to another keeper..."' },
     ],
   },
 
@@ -121,10 +121,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 42,
     icon: '💻',
     moves: [
-      { name: 'MVP Sprint', type: 'attack', damage: 12, icon: '🏃', quip: '"Ship it by Monday."' },
-      { name: 'Feature Creep', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"Oh, also add dark mode."' },
-      { name: 'Deploy Pressure', type: 'attack', damage: 20, stressDamage: 6, icon: '🚀', quip: '"Deploy to prod. No staging."' },
-      { name: 'Stack Overflow', type: 'attack_defend', damage: 12, block: 6, icon: '📚', quip: '"Closed as duplicate."' },
+      { name: 'MVP Sprint', type: 'attack', damage: 12, icon: '🏃', quip: '"Forge the artifact by moonrise."' },
+      { name: 'Feature Creep', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"Oh, also enchant it with dark mode."' },
+      { name: 'Deploy Pressure', type: 'attack', damage: 20, stressDamage: 6, icon: '🚀', quip: '"Deploy to the realm. No staging grounds."' },
+      { name: 'Stack Overflow', type: 'attack_defend', damage: 12, block: 6, icon: '📚', quip: '"Sealed as a duplicate inscription."' },
     ],
   },
 
@@ -137,10 +137,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '💵',
     hideIntent: true,
     moves: [
-      { name: 'We Offer Exposure', type: 'gold_steal', goldSteal: 10, stressDamage: 5, icon: '💸', quip: '"Think of the experience!"' },
-      { name: 'Budget Cuts', type: 'gold_steal', goldSteal: 8, icon: '✂️', quip: '"Market conditions, you understand."' },
-      { name: 'Take It Or Leave It', type: 'attack', damage: 22, icon: '🤷', quip: '"Final offer. Non-negotiable."' },
-      { name: 'Equity Instead', type: 'stress_attack', stressDamage: 11, icon: '📉', quip: '"0.001% pre-dilution. Generous!"' },
+      { name: 'We Offer Exposure', type: 'gold_steal', goldSteal: 10, stressDamage: 5, icon: '💸', quip: '"Think of the glory, not the gold!"' },
+      { name: 'Budget Cuts', type: 'gold_steal', goldSteal: 8, icon: '✂️', quip: '"The kingdom\'s coffers grow thin, you see."' },
+      { name: 'Take It Or Leave It', type: 'attack', damage: 22, icon: '🤷', quip: '"My final decree. Non-negotiable."' },
+      { name: 'Equity Instead', type: 'stress_attack', stressDamage: 11, icon: '📉', quip: '"0.001% of a crumbling keep. Generous!"' },
     ],
   },
 
@@ -152,11 +152,11 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 38,
     icon: '😴',
     moves: [
-      { name: 'Buffer...', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '🔄', quip: '"Can everyone see my screen?"' },
-      { name: "You're On Mute", type: 'attack', damage: 14, icon: '🔇', quip: '"You\'re still on mute."' },
-      { name: 'Camera Off Despair', type: 'stress_attack', stressDamage: 8, icon: '📷', quip: '"We prefer cameras on."' },
-      { name: 'Technical Difficulties', type: 'exhaust', exhaustCount: 2, stressDamage: 5, icon: '⚠️', quip: '"Sorry, my internet—*bzzt*"' },
-      { name: 'Reconnecting...', type: 'attack', damage: 18, icon: '🔌', quip: '"Aaaand we\'re back."' },
+      { name: 'Buffer...', type: 'exhaust', exhaustCount: 1, stressDamage: 5, icon: '🔄', quip: '"Can all spirits see my scrying mirror?"' },
+      { name: "You're On Mute", type: 'attack', damage: 14, icon: '🔇', quip: '"Your voice is still silenced, adventurer."' },
+      { name: 'Camera Off Despair', type: 'stress_attack', stressDamage: 8, icon: '📷', quip: '"We prefer all familiars visible."' },
+      { name: 'Technical Difficulties', type: 'exhaust', exhaustCount: 2, stressDamage: 5, icon: '⚠️', quip: '"Apologies, the ley lines are disrupted—*bzzt*"' },
+      { name: 'Reconnecting...', type: 'attack', damage: 18, icon: '🔌', quip: '"The portal reopens. Where were we?"' },
     ],
   },
 
@@ -168,10 +168,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 32,
     icon: '🔍',
     moves: [
-      { name: 'Background Scan', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🔍', quip: '"Interesting GitHub history..."' },
-      { name: 'Inconsistency Found', type: 'attack', damage: 16, icon: '⚠️', quip: '"This date doesn\'t match."' },
-      { name: 'Verify Credentials', type: 'debuff', applyToTarget: { weak: 2 }, icon: '📋', quip: '"Your \'degree\' from where now?"' },
-      { name: 'Call References', type: 'attack', damage: 22, stressDamage: 6, icon: '📞', quip: '"Your old boss was... candid."' },
+      { name: 'Background Scan', type: 'debuff', applyToTarget: { vulnerable: 1, weak: 1 }, icon: '🔍', quip: '"Interesting deeds in your quest log..."' },
+      { name: 'Inconsistency Found', type: 'attack', damage: 16, icon: '⚠️', quip: '"This date on your scroll doesn\'t align."' },
+      { name: 'Verify Credentials', type: 'debuff', applyToTarget: { weak: 2 }, icon: '📋', quip: '"Your \'degree\' from which arcane academy?"' },
+      { name: 'Call References', type: 'attack', damage: 22, stressDamage: 6, icon: '📞', quip: '"Your former liege was... quite candid."' },
     ],
   },
 
@@ -183,10 +183,10 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 36,
     icon: '📅',
     moves: [
-      { name: 'Reschedule', type: 'stress_attack', stressDamage: 8, icon: '📅', quip: '"Something came up. Next week?"' },
-      { name: 'Double-Booked', type: 'attack', damage: 13, icon: '📆', quip: '"Oops, we have two of you."' },
-      { name: 'Time Zone Chaos', type: 'attack', damage: 12, stressDamage: 5, icon: '🌐', quip: '"Was that PST or EST? Or IST?"' },
-      { name: 'Calendar Tetris', type: 'attack', damage: 18, applyToTarget: { weak: 1, vulnerable: 1 }, icon: '🧩', quip: '"Only slot is 4 AM Thursday."' },
+      { name: 'Reschedule', type: 'stress_attack', stressDamage: 8, icon: '📅', quip: '"A dark omen arose. Next fortnight?"' },
+      { name: 'Double-Booked', type: 'attack', damage: 13, icon: '📆', quip: '"Alas, two champions occupy this time rune."' },
+      { name: 'Time Zone Chaos', type: 'attack', damage: 12, stressDamage: 5, icon: '🌐', quip: '"Was that Dwarven Standard or Elvish time?"' },
+      { name: 'Calendar Tetris', type: 'attack', damage: 18, applyToTarget: { weak: 1, vulnerable: 1 }, icon: '🧩', quip: '"The only slot is the fourth hour of Thursday\'s dawn."' },
     ],
   },
 
@@ -201,18 +201,18 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '🧓',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 4 }, quip: '"You call yourself a SENIOR?"' },
+      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 4 }, quip: '"You dare call yourself a SENIOR mage?"' },
     ],
     moves: [
       // Phase 1 (0-3)
-      { name: 'Explain Your Process', type: 'attack', damage: 13, stressDamage: 5, icon: '🔬', quip: '"Walk me through every decision."' },
-      { name: 'Code Review', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 1 }, icon: '👀', quip: '"I see you used var. In 2026."' },
-      { name: 'Deep Dive', type: 'attack', damage: 15, icon: '🤿', quip: '"Let\'s go three levels deeper."' },
-      { name: 'Years of Experience', type: 'buff', applyToSelf: { confidence: 4 }, icon: '📅', quip: '"I\'ve been doing this since Perl."' },
+      { name: 'Explain Your Process', type: 'attack', damage: 13, stressDamage: 5, icon: '🔬', quip: '"Recount every arcane decision you made."' },
+      { name: 'Code Review', type: 'debuff', applyToTarget: { weak: 2, vulnerable: 1 }, icon: '👀', quip: '"I see you used var. In this age? Pathetic."' },
+      { name: 'Deep Dive', type: 'attack', damage: 15, icon: '🤿', quip: '"We descend three dungeon levels deeper."' },
+      { name: 'Years of Experience', type: 'buff', applyToSelf: { confidence: 4 }, icon: '📅', quip: '"I\'ve wielded code since the Perl Dynasty."' },
       // Phase 2 (4-6)
-      { name: '"I\'ve Seen Everything"', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📅', quip: '"I\'ve been doing this since before you were born."' },
-      { name: 'Pop Quiz', type: 'attack', damage: 8, times: 3, icon: '❓', quip: '"What\'s the time complexity? NOW."' },
-      { name: 'Code Review: FAILED', type: 'attack', damage: 20, stressDamage: 8, icon: '🧹', quip: '"This code is an embarrassment."' },
+      { name: '"I\'ve Seen Everything"', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📅', quip: '"I\'ve walked these halls since before your birth."' },
+      { name: 'Pop Quiz', type: 'attack', damage: 8, times: 3, icon: '❓', quip: '"Name the time complexity! NOW, whelp!"' },
+      { name: 'Code Review: FAILED', type: 'attack', damage: 20, stressDamage: 8, icon: '🧹', quip: '"This spellwork is an abomination."' },
     ],
   },
 
@@ -225,18 +225,18 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '🐉',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 3 }, quip: '"For every answer, THREE more questions."' },
+      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 3 }, quip: '"Slay one question, THREE more shall rise!"' },
     ],
     moves: [
       // Phase 1 (0-3)
-      { name: 'Follow-Up Question', type: 'attack', damage: 9, icon: '❓', quip: '"But what about concurrency?"' },
-      { name: 'Multi-Part Problem', type: 'attack', damage: 7, times: 2, icon: '📝', quip: '"Part A... and Part B."' },
-      { name: 'Grow Heads', type: 'summon', summonId: 'question_fragment', summonCount: 1, icon: '🐲', quip: '"One more follow-up question..."' },
-      { name: 'Whiteboard Barrage', type: 'attack', damage: 12, stressDamage: 4, icon: '📊', quip: '"Now diagram the entire system."' },
+      { name: 'Follow-Up Question', type: 'attack', damage: 9, icon: '❓', quip: '"But what of concurrency, little one?"' },
+      { name: 'Multi-Part Problem', type: 'attack', damage: 7, times: 2, icon: '📝', quip: '"Part the First... and Part the Second."' },
+      { name: 'Grow Heads', type: 'summon', summonId: 'question_fragment', summonCount: 1, icon: '🐲', quip: '"Another head sprouts with a new riddle..."' },
+      { name: 'Whiteboard Barrage', type: 'attack', damage: 12, stressDamage: 4, icon: '📊', quip: '"Diagram the entire realm. Now."' },
       // Phase 2 (4-6)
-      { name: 'Hydra Awakens', type: 'summon', summonId: 'question_fragment', summonCount: 1, icon: '🐲', quip: '"The whiteboard is INFINITE."' },
-      { name: 'Infinite Follow-Ups', type: 'attack', damage: 5, times: 4, icon: '❓', quip: '"Part C, D, E, F..."' },
-      { name: 'Erase Everything', type: 'attack', damage: 18, stressDamage: 7, exhaustCount: 1, icon: '🧽', quip: '"Start over. From the BEGINNING."' },
+      { name: 'Hydra Awakens', type: 'summon', summonId: 'question_fragment', summonCount: 1, icon: '🐲', quip: '"The whiteboard stretches into INFINITY!"' },
+      { name: 'Infinite Follow-Ups', type: 'attack', damage: 5, times: 4, icon: '❓', quip: '"Part C, D, E, F — they never end!"' },
+      { name: 'Erase Everything', type: 'attack', damage: 18, stressDamage: 7, exhaustCount: 1, icon: '🧽', quip: '"Begin again. From the VERY beginning."' },
     ],
   },
 
@@ -249,17 +249,17 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '🚪',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"COMPLIANCE MODE ACTIVATED."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"COMPLIANCE WARD ACTIVATED."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: 'Bureaucracy Wall', type: 'defend', block: 15, icon: '🧱', quip: '"Fill out form HR-7B first."' },
-      { name: 'Red Tape', type: 'energy_drain', energyDrain: 1, stressDamage: 7, icon: '📎', quip: '"That requires three approvals."' },
-      { name: 'Policy Enforcement', type: 'corrupt', stressDamage: 5, icon: '📋', quip: '"Per section 4, subsection C... here\'s a bug."' },
+      { name: 'Bureaucracy Wall', type: 'defend', block: 15, icon: '🧱', quip: '"Submit parchment HR-7B before proceeding."' },
+      { name: 'Red Tape', type: 'energy_drain', energyDrain: 1, stressDamage: 7, icon: '📎', quip: '"That requires three elder seals of approval."' },
+      { name: 'Policy Enforcement', type: 'corrupt', stressDamage: 5, icon: '📋', quip: '"Per chapter four, subsection rune C... a curse."' },
       // Phase 2 (3-5)
-      { name: 'Policy Overhaul', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📋', quip: '"New policy: ZERO TOLERANCE."' },
-      { name: 'Compliance Hammer', type: 'attack', damage: 18, icon: '🔨', quip: '"Non-compliant resources will be PURGED."' },
-      { name: 'Access Permanently Denied', type: 'attack', damage: 22, stressDamage: 8, icon: '🚫', quip: '"Your badge has been DEACTIVATED."' },
+      { name: 'Policy Overhaul', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📋', quip: '"New decree: ZERO TOLERANCE for adventurers."' },
+      { name: 'Compliance Hammer', type: 'attack', damage: 18, icon: '🔨', quip: '"Non-compliant souls shall be PURGED."' },
+      { name: 'Access Permanently Denied', type: 'attack', damage: 22, stressDamage: 8, icon: '🚫', quip: '"Your guild sigil has been REVOKED."' },
     ],
   },
 
@@ -272,16 +272,16 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '🧮',
     isElite: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"ENTERING DEEP LEARNING MODE."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 2 }, quip: '"ENTERING DEEP ARCANA MODE."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: 'Analyze Pattern', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📊', quip: '"Training on your weaknesses..."' },
-      { name: 'Optimized Strike', type: 'attack', damage: 12, icon: '⚡', quip: '"Calculated. Precise. Devastating."' },
-      { name: 'Recursive Loop', type: 'attack', damage: 8, times: 2, icon: '🔄', quip: '"while(true) { reject(); }"' },
+      { name: 'Analyze Pattern', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📊', quip: '"Training my runes upon your weaknesses..."' },
+      { name: 'Optimized Strike', type: 'attack', damage: 12, icon: '⚡', quip: '"Calculated. Precise. Merciless."' },
+      { name: 'Recursive Loop', type: 'attack', damage: 8, times: 2, icon: '🔄', quip: '"while(true) \\{ banish(); \\}"' },
       // Phase 2 (3-4)
-      { name: 'Machine Learning', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤖', quip: '"I learned from 10M rejections."' },
-      { name: 'Neural Overload', type: 'attack', damage: 22, stressDamage: 8, icon: '🧠', quip: '"Processing power: MAXIMUM."' },
+      { name: 'Machine Learning', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤖', quip: '"I trained on ten million failed quests."' },
+      { name: 'Neural Overload', type: 'attack', damage: 22, stressDamage: 8, icon: '🧠', quip: '"Processing power of the elder gods: MAXIMUM."' },
     ],
   },
 
@@ -295,11 +295,11 @@ export const act2Enemies: Record<string, EnemyDef> = {
     isElite: true,
     startStatusEffects: { confidence: 3 },
     moves: [
-      { name: 'Need This By EOD', type: 'attack', damage: 14, stressDamage: 6, icon: '⏰', quip: '"EOD means 5 PM my time zone."' },
-      { name: 'Overtime Mandate', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"We\'re all pulling extra hours!"' },
-      { name: 'Weekend Work', type: 'attack', damage: 14, stressDamage: 5, icon: '📅', quip: '"Just a quick Saturday deploy."' },
-      { name: 'Sprint Review', type: 'energy_drain', energyDrain: 1, stressDamage: 7, icon: '🏃', quip: '"Why is this ticket still open?"' },
-      { name: 'All-Hands Pressure', type: 'attack', damage: 24, stressDamage: 9, icon: '💥', quip: '"The board is watching."' },
+      { name: 'Need This By EOD', type: 'attack', damage: 14, stressDamage: 6, icon: '⏰', quip: '"End of day means sundown in MY realm."' },
+      { name: 'Overtime Mandate', type: 'buff', applyToSelf: { confidence: 3 }, icon: '📈', quip: '"All souls shall toil beyond the bell!"' },
+      { name: 'Weekend Work', type: 'attack', damage: 14, stressDamage: 5, icon: '📅', quip: '"Just a brief Sabbath deployment."' },
+      { name: 'Sprint Review', type: 'energy_drain', energyDrain: 1, stressDamage: 7, icon: '🏃', quip: '"Why does this quest scroll remain open?"' },
+      { name: 'All-Hands Pressure', type: 'attack', damage: 24, stressDamage: 9, icon: '💥', quip: '"The elder council watches your every move."' },
     ],
   },
 
@@ -313,22 +313,22 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '🐲',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3, resilience: 1 }, quip: '"The panel has reached a consensus."' },
-      { hpPercent: 25, moveStartIndex: 6, onEnter: { confidence: 4 }, quip: '"The panel is UNANIMOUS."' },
+      { hpPercent: 50, moveStartIndex: 3, onEnter: { confidence: 3, resilience: 1 }, quip: '"The tribunal has reached a dark consensus."' },
+      { hpPercent: 25, moveStartIndex: 6, onEnter: { confidence: 4 }, quip: '"The tribunal is UNANIMOUS in judgment."' },
     ],
     moves: [
       // Phase 1 (0-2)
-      { name: 'Technical Question', type: 'attack', damage: 11, icon: '🔧', quip: '"Explain polymorphism. In Latin."' },
-      { name: 'Stress Question', type: 'stress_attack', stressDamage: 10, icon: '😰', quip: '"We all disagree. Convince us."' },
-      { name: 'Panel Buff', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"*whispering among themselves*"' },
+      { name: 'Technical Question', type: 'attack', damage: 11, icon: '🔧', quip: '"Define polymorphism. In ancient Draconic."' },
+      { name: 'Stress Question', type: 'stress_attack', stressDamage: 10, icon: '😰', quip: '"We all disagree. Sway us or perish."' },
+      { name: 'Panel Buff', type: 'buff', applyToSelf: { confidence: 2 }, icon: '📈', quip: '"*dark whispers echo among the council*"' },
       // Phase 2 (3-5)
-      { name: 'Cross-Examination', type: 'attack', damage: 15, stressDamage: 5, icon: '⚔️', quip: '"That contradicts what you said."' },
-      { name: 'Group Deliberation', type: 'defend', block: 14, icon: '🤔', quip: '"We need to align internally."' },
-      { name: 'Final Verdict', type: 'attack', damage: 26, stressDamage: 9, icon: '⚖️', quip: '"The panel has decided."' },
+      { name: 'Cross-Examination', type: 'attack', damage: 15, stressDamage: 5, icon: '⚔️', quip: '"That contradicts your earlier testimony, mortal."' },
+      { name: 'Group Deliberation', type: 'defend', block: 14, icon: '🤔', quip: '"The council must align its verdicts."' },
+      { name: 'Final Verdict', type: 'attack', damage: 26, stressDamage: 9, icon: '⚖️', quip: '"The tribunal has rendered judgment."' },
       // Phase 3: DPS race (6-8)
-      { name: 'Recall Panel', type: 'summon', summonId: 'panel_member_a', summonCount: 1, icon: '🧑', quip: '"We need a full quorum."' },
-      { name: 'Cross-Examination Barrage', type: 'attack', damage: 14, times: 3, icon: '⚔️', quip: '"Answer. Answer. ANSWER."' },
-      { name: 'Unanimous Rejection', type: 'attack', damage: 40, stressDamage: 16, icon: '⚖️', quip: '"Motion to reject. ALL in favor."' },
+      { name: 'Recall Panel', type: 'summon', summonId: 'panel_member_a', summonCount: 1, icon: '🧑', quip: '"Summon the full quorum to the hall."' },
+      { name: 'Cross-Examination Barrage', type: 'attack', damage: 14, times: 3, icon: '⚔️', quip: '"Answer. Answer. ANSWER, mortal!"' },
+      { name: 'Unanimous Rejection', type: 'attack', damage: 40, stressDamage: 16, icon: '⚖️', quip: '"Motion to banish. ALL in favor."' },
     ],
   },
 
@@ -340,22 +340,22 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '⌨️',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 3 }, quip: '"Time is running out..."' },
-      { hpPercent: 25, moveStartIndex: 7, onEnter: { confidence: 4 }, quip: '"COMPILATION: FAILED."' },
+      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 3 }, quip: '"The sands of the hourglass grow thin..."' },
+      { hpPercent: 25, moveStartIndex: 7, onEnter: { confidence: 4 }, quip: '"COMPILATION RITUAL: FAILED."' },
     ],
     moves: [
       // Phase 1 (0-3)
-      { name: 'Timer Start', type: 'attack', damage: 9, icon: '⏱️', quip: '"You have 45 minutes. Go."' },
-      { name: 'Syntax Error', type: 'attack', damage: 12, stressDamage: 4, icon: '🔴', quip: '"Missing semicolon on line 1."' },
-      { name: 'Runtime Exception', type: 'attack', damage: 14, icon: '💥', quip: '"undefined is not a function."' },
-      { name: 'Compiler Fury', type: 'buff', applyToSelf: { confidence: 4 }, icon: '🔥', quip: '"142 errors found."' },
+      { name: 'Timer Start', type: 'attack', damage: 9, icon: '⏱️', quip: '"You have forty-five candle-marks. Begin."' },
+      { name: 'Syntax Error', type: 'attack', damage: 12, stressDamage: 4, icon: '🔴', quip: '"A missing sigil on the very first rune."' },
+      { name: 'Runtime Exception', type: 'attack', damage: 14, icon: '💥', quip: '"Undefined is not a known incantation."' },
+      { name: 'Compiler Fury', type: 'buff', applyToSelf: { confidence: 4 }, icon: '🔥', quip: '"One hundred and forty-two heresies found."' },
       // Phase 2 (4-6)
-      { name: 'Spawn Test Case', type: 'summon', summonId: 'test_case', summonCount: 1, icon: '🐛', quip: '"Running test suite... 47 failures."' },
-      { name: 'Segfault', type: 'attack', damage: 19, icon: '💀', quip: '"Core dumped. So did your career."' },
-      { name: "TIME'S UP!", type: 'attack', damage: 33, stressDamage: 14, icon: '⏰', quip: '"Pencils down. Step away."' },
+      { name: 'Spawn Test Case', type: 'summon', summonId: 'test_case', summonCount: 1, icon: '🐛', quip: '"The trial suite awakens... forty-seven failures."' },
+      { name: 'Segfault', type: 'attack', damage: 19, icon: '💀', quip: '"Core dumped. As was your destiny."' },
+      { name: "TIME'S UP!", type: 'attack', damage: 33, stressDamage: 14, icon: '⏰', quip: '"Quills down. Step away from the altar."' },
       // Phase 3: DPS race (7-8)
-      { name: "TIME'S UP! (Overtime)", type: 'attack', damage: 38, stressDamage: 16, icon: '⏰', quip: '"You ran out of time. AGAIN."' },
-      { name: 'FAILED', type: 'attack', damage: 44, stressDamage: 18, icon: '💀', quip: '"Interview status: TERMINATED."' },
+      { name: "TIME'S UP! (Overtime)", type: 'attack', damage: 38, stressDamage: 16, icon: '⏰', quip: '"The hourglass shattered long ago, fool."' },
+      { name: 'FAILED', type: 'attack', damage: 44, stressDamage: 18, icon: '💀', quip: '"Trial status: SOUL TERMINATED."' },
     ],
   },
 
@@ -367,24 +367,24 @@ export const act2Enemies: Record<string, EnemyDef> = {
     icon: '👔',
     isBoss: true,
     phases: [
-      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 4 }, quip: '"Now the real interview begins."' },
-      { hpPercent: 25, moveStartIndex: 8, onEnter: { confidence: 5 }, quip: '"You\'re DONE here."' },
+      { hpPercent: 50, moveStartIndex: 4, onEnter: { confidence: 4 }, quip: '"Now the TRUE trial begins, adventurer."' },
+      { hpPercent: 25, moveStartIndex: 8, onEnter: { confidence: 5 }, quip: '"You are FINISHED in these lands."' },
     ],
     moves: [
       // Phase 1 (0-3)
-      { name: "Let's Chat Casually", type: 'debuff', applyToTarget: { weak: 2 }, icon: '☕', quip: '"This isn\'t an interview. Relax."' },
-      { name: 'Culture Assessment', type: 'stress_attack', stressDamage: 9, icon: '🏢', quip: '"How do you handle ambiguity?"' },
-      { name: 'Subtle Probe', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🔍', quip: '"Interesting... very interesting."' },
-      { name: 'Strategic Vision', type: 'attack', damage: 12, icon: '🎯', quip: '"What\'s your 5-year roadmap?"' },
+      { name: "Let's Chat Casually", type: 'debuff', applyToTarget: { weak: 2 }, icon: '☕', quip: '"This isn\'t a trial. Lower your guard."' },
+      { name: 'Culture Assessment', type: 'stress_attack', stressDamage: 9, icon: '🏢', quip: '"How do you navigate the fog of ambiguity?"' },
+      { name: 'Subtle Probe', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🔍', quip: '"Interesting... most interesting indeed."' },
+      { name: 'Strategic Vision', type: 'attack', damage: 12, icon: '🎯', quip: '"What does your five-year prophecy foretell?"' },
       // Phase 2 (4-7)
-      { name: 'Technical Deep-Dive', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤿', quip: '"Gloves off."' },
-      { name: 'Architecture Review', type: 'attack', damage: 20, icon: '🏗️', quip: '"This doesn\'t scale."' },
-      { name: 'Scale Question', type: 'attack', damage: 16, stressDamage: 6, icon: '📊', quip: '"What if we have a billion users?"' },
-      { name: 'Executive Decision', type: 'attack', damage: 35, stressDamage: 13, icon: '⚡', quip: '"I\'ve seen enough."' },
+      { name: 'Technical Deep-Dive', type: 'buff', applyToSelf: { confidence: 3 }, icon: '🤿', quip: '"The gauntlets come off."' },
+      { name: 'Architecture Review', type: 'attack', damage: 20, icon: '🏗️', quip: '"This fortress design does not scale."' },
+      { name: 'Scale Question', type: 'attack', damage: 16, stressDamage: 6, icon: '📊', quip: '"What if a billion souls storm the gates?"' },
+      { name: 'Executive Decision', type: 'attack', damage: 35, stressDamage: 13, icon: '⚡', quip: '"I have seen enough of your craft."' },
       // Phase 3: DPS race (8-10)
-      { name: 'Recall Assistant', type: 'summon', summonId: 'executive_assistant', summonCount: 1, icon: '💼', quip: '"Get me an update on this candidate."' },
-      { name: "You're Fired", type: 'attack', damage: 34, stressDamage: 14, icon: '🔥', quip: '"Pack your things. NOW."' },
-      { name: 'Severance Denied', type: 'attack', damage: 46, stressDamage: 19, icon: '☠️', quip: '"And you owe US money."' },
+      { name: 'Recall Assistant', type: 'summon', summonId: 'executive_assistant', summonCount: 1, icon: '💼', quip: '"Fetch me a full report on this challenger."' },
+      { name: "You're Fired", type: 'attack', damage: 34, stressDamage: 14, icon: '🔥', quip: '"Gather your belongings. BEGONE."' },
+      { name: 'Severance Denied', type: 'attack', damage: 46, stressDamage: 19, icon: '☠️', quip: '"And you owe the kingdom gold."' },
     ],
   },
 
@@ -397,8 +397,8 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 0,
     icon: '❓',
     moves: [
-      { name: 'Follow-Up', type: 'debuff', applyToTarget: { weak: 1 }, icon: '❓', quip: '"But what about edge cases?"' },
-      { name: 'Part B', type: 'attack', damage: 9, icon: '📝', quip: '"Now do it in O(1) space."' },
+      { name: 'Follow-Up', type: 'debuff', applyToTarget: { weak: 1 }, icon: '❓', quip: '"But what of the edge cases, traveler?"' },
+      { name: 'Part B', type: 'attack', damage: 9, icon: '📝', quip: '"Now solve it in constant mana space."' },
     ],
   },
 
@@ -409,8 +409,8 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 8,
     icon: '🧑',
     moves: [
-      { name: 'Alignment', type: 'buff_allies', applyToSelf: { confidence: 1 }, icon: '🤝', quip: '"The panel concurs."' },
-      { name: 'Cross-Question', type: 'attack', damage: 8, applyToTarget: { weak: 1 }, icon: '⚔️', quip: '"Interesting answer. But why?"' },
+      { name: 'Alignment', type: 'buff_allies', applyToSelf: { confidence: 1 }, icon: '🤝', quip: '"The council speaks as one voice."' },
+      { name: 'Cross-Question', type: 'attack', damage: 8, applyToTarget: { weak: 1 }, icon: '⚔️', quip: '"A curious answer. Explain your reasoning."' },
     ],
   },
 
@@ -421,8 +421,8 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 8,
     icon: '👩',
     moves: [
-      { name: 'We Disagree', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🚩', quip: '"That contradicts what you said earlier."' },
-      { name: 'Deliberate', type: 'defend', block: 10, icon: '🤔', quip: '"*whispering with the panel*"' },
+      { name: 'We Disagree', type: 'debuff', applyToTarget: { vulnerable: 2 }, icon: '🚩', quip: '"That contradicts your earlier oath."' },
+      { name: 'Deliberate', type: 'defend', block: 10, icon: '🤔', quip: '"*murmurs with the tribunal in shadow*"' },
     ],
   },
 
@@ -433,8 +433,8 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 6,
     icon: '🐛',
     moves: [
-      { name: 'Bug Report', type: 'corrupt', icon: '🐛', quip: '"Your code has 7 failures."' },
-      { name: 'Edge Case', type: 'attack', damage: 10, stressDamage: 4, icon: '🔴', quip: '"What if input is null?"' },
+      { name: 'Bug Report', type: 'corrupt', icon: '🐛', quip: '"Seven failures plague your spellwork."' },
+      { name: 'Edge Case', type: 'attack', damage: 10, stressDamage: 4, icon: '🔴', quip: '"What if the input is pure void?"' },
     ],
   },
 
@@ -445,9 +445,9 @@ export const act2Enemies: Record<string, EnemyDef> = {
     gold: 12,
     icon: '💼',
     moves: [
-      { name: 'Calendar Block', type: 'energy_drain', energyDrain: 1, icon: '📅', quip: '"The VP is in back-to-back meetings."' },
-      { name: 'Redirect', type: 'gold_steal', goldSteal: 12, icon: '💸', quip: '"Billing this to your department."' },
-      { name: 'Status Update', type: 'heal_allies', healAmount: 15, icon: '📊', quip: '"Good news for the board."' },
+      { name: 'Calendar Block', type: 'energy_drain', energyDrain: 1, icon: '📅', quip: '"The overlord is in back-to-back war councils."' },
+      { name: 'Redirect', type: 'gold_steal', goldSteal: 12, icon: '💸', quip: '"Billing this tithe to your guild."' },
+      { name: 'Status Update', type: 'heal_allies', healAmount: 15, icon: '📊', quip: '"Favorable omens for the high council."' },
     ],
   },
 };
