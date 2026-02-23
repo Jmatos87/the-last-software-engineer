@@ -10,7 +10,6 @@ import { useGameStore } from '../../store/gameStore';
 import type { CardInstance, Deployment, EnemyInstance } from '../../types';
 import { CardComponent, CardOverlay } from './CardComponent';
 import { EnemyDisplay } from './EnemyDisplay';
-import { ConsumableBar } from './ConsumableBar';
 import { HpBar } from '../common/HpBar';
 import { EnergyOrb } from '../common/EnergyOrb';
 import { StatusEffects } from '../common/StatusEffects';
@@ -69,6 +68,7 @@ const DeploymentPanel: React.FC<{ deployments: Deployment[] }> = ({ deployments 
 const PlayerStatusPanel: React.FC = () => {
   const run = useGameStore(s => s.run);
   const battle = useGameStore(s => s.battle);
+  const { compact } = useMobile();
   const { setNodeRef, isOver } = useDroppable({
     id: 'self-target',
     data: { selfTarget: true },
@@ -80,29 +80,29 @@ const PlayerStatusPanel: React.FC = () => {
     <div
       ref={setNodeRef}
       style={{
-        padding: '8px 12px',
+        padding: compact ? '4px 8px' : '8px 12px',
         background: isOver ? 'rgba(74, 222, 128, 0.1)' : 'var(--bg-card)',
         border: `2px solid ${isOver ? 'var(--accent-green)' : 'var(--border-color)'}`,
         borderRadius: 'var(--radius-md)',
         transition: 'all var(--transition-fast)',
         display: 'flex',
         flexDirection: 'column',
-        gap: 6,
-        minWidth: 140,
+        gap: compact ? 3 : 6,
+        minWidth: compact ? 100 : 140,
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 3 : 6, width: '100%' }}>
         {battle.playerBlock > 0 && (
-          <span style={{ fontSize: 12, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: compact ? 10 : 12, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
             🛡️{battle.playerBlock}
           </span>
         )}
         <div style={{ flex: 1 }}>
-          <HpBar current={run.hp} max={run.maxHp} height={10} label="HP" />
+          <HpBar current={run.hp} max={run.maxHp} height={compact ? 7 : 10} label={compact ? undefined : 'HP'} />
         </div>
       </div>
       <div style={{ width: '100%' }}>
-        <HpBar current={run.stress} max={run.maxStress} height={10} color="var(--accent-purple)" label="STRESS" />
+        <HpBar current={run.stress} max={run.maxStress} height={compact ? 7 : 10} color="var(--accent-purple)" label={compact ? undefined : 'STRESS'} />
       </div>
       <StatusEffects effects={battle.playerStatusEffects} />
     </div>
@@ -255,7 +255,12 @@ export const BattleScreen: React.FC = () => {
         background: 'var(--bg-primary)',
       }}>
         {/* Top bar */}
-        <TopBar extra={<span>Turn {battle.turn}</span>} />
+        <TopBar
+          extra={<span>Turn {battle.turn}</span>}
+          onUseConsumable={(id) => useConsumable(id)}
+          onTargetEnemyConsumable={(id) => setTargetingConsumableId(id)}
+          battleDisabled={enemyTurnPlaying || battleWon}
+        />
 
         {/* Battle area */}
         <div style={{
@@ -263,8 +268,8 @@ export const BattleScreen: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: compact ? 24 : 80,
-          padding: compact ? '12px 12px 0' : '24px 40px 0',
+          gap: compact ? 16 : 80,
+          padding: compact ? '4px 8px 0' : '24px 40px 0',
           position: 'relative',
           ...(run?.act === 1 && {
             backgroundImage: `url(${act1Bg})`,
@@ -290,14 +295,14 @@ export const BattleScreen: React.FC = () => {
             gap: 8,
           }}>
             {/* Spacer matching enemy speech bubble placeholder so icons align horizontally */}
-            <div style={{ minHeight: compact ? 23 : 38 }} />
-            <div className={heroAnim} style={{ fontSize: compact ? 32 : 56 }}>{run.character.icon}</div>
+            <div style={{ minHeight: compact ? 14 : 38 }} />
+            <div className={heroAnim} style={{ fontSize: compact ? 24 : 56 }}>{run.character.icon}</div>
             <PlayerStatusPanel />
             {run.character.id === 'frontend_dev' && battle && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
                 {/* Flow State meter */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                  <span style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: 1 }}>FLOW</span>
+                  <span style={{ fontSize: compact ? 8 : 9, color: 'var(--text-muted)', letterSpacing: 1 }}>FLOW</span>
                   <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     {Array.from({ length: 8 }, (_, i) => {
                       const flow = battle.flow ?? 0;
@@ -306,8 +311,8 @@ export const BattleScreen: React.FC = () => {
                       const color = isAlmostOverflow ? '#f87171' : '#a78bfa';
                       return (
                         <div key={i} style={{
-                          width: compact ? 6 : 8,
-                          height: compact ? 12 : 16,
+                          width: compact ? 5 : 8,
+                          height: compact ? 8 : 16,
                           borderRadius: 2,
                           background: isFilled ? color : 'transparent',
                           border: `1px solid ${color}`,
@@ -318,7 +323,7 @@ export const BattleScreen: React.FC = () => {
                     })}
                   </div>
                   <span style={{
-                    fontSize: 9,
+                    fontSize: compact ? 8 : 9,
                     fontWeight: 'bold',
                     color: (battle.flow ?? 0) >= 6 ? '#f87171' : '#a78bfa',
                   }}>
@@ -331,7 +336,7 @@ export const BattleScreen: React.FC = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
                 {/* Temperature gauge */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                  <span style={{ fontSize: 9, color: 'var(--text-muted)', letterSpacing: 1 }}>TEMPERATURE</span>
+                  <span style={{ fontSize: compact ? 8 : 9, color: 'var(--text-muted)', letterSpacing: 1 }}>TEMPERATURE</span>
                   <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     {Array.from({ length: 11 }, (_, i) => {
                       const isCold = i <= 3;
@@ -340,8 +345,8 @@ export const BattleScreen: React.FC = () => {
                       const isActive = i === (battle.temperature ?? 5);
                       return (
                         <div key={i} style={{
-                          width: compact ? 6 : 8,
-                          height: compact ? 12 : 16,
+                          width: compact ? 5 : 8,
+                          height: compact ? 8 : 16,
                           borderRadius: 2,
                           background: isActive ? color : 'transparent',
                           border: `1px solid ${color}`,
@@ -352,7 +357,7 @@ export const BattleScreen: React.FC = () => {
                     })}
                   </div>
                   <span style={{
-                    fontSize: 9,
+                    fontSize: compact ? 8 : 9,
                     fontWeight: 'bold',
                     color: (battle.temperature ?? 5) <= 3 ? '#60a5fa' : (battle.temperature ?? 5) >= 7 ? '#f87171' : '#4ade80',
                   }}>
@@ -366,7 +371,7 @@ export const BattleScreen: React.FC = () => {
                     border: '1px solid rgba(245,158,11,0.5)',
                     borderRadius: 6,
                     padding: '2px 8px',
-                    fontSize: compact ? 10 : 12,
+                    fontSize: compact ? 9 : 12,
                     color: '#f59e0b',
                     fontWeight: 'bold',
                   }}>
@@ -418,10 +423,6 @@ export const BattleScreen: React.FC = () => {
                 </div>
               </div>
             )}
-            <ConsumableBar
-              onTargetEnemy={(cId) => setTargetingConsumableId(cId)}
-              disabled={enemyTurnPlaying || battleWon}
-            />
             {battle.deployments?.length > 0 && (
               <DeploymentPanel deployments={battle.deployments} />
             )}
@@ -443,7 +444,7 @@ export const BattleScreen: React.FC = () => {
 
           {/* VS divider */}
           <div style={{
-            fontSize: compact ? 16 : 24,
+            fontSize: compact ? 12 : 24,
             color: 'var(--text-muted)',
             fontWeight: 'bold',
           }}>
@@ -464,7 +465,7 @@ export const BattleScreen: React.FC = () => {
               gap: 6,
               flexWrap: 'wrap',
               justifyContent: 'center',
-              marginBottom: compact ? 6 : 10,
+              marginBottom: compact ? 3 : 10,
             }}>
               {battle.detonationQueue.map((qe, i) => {
                 const turns = qe.turnsUntilFire ?? 1;
@@ -484,13 +485,13 @@ export const BattleScreen: React.FC = () => {
                     borderRadius: 12,
                     background: 'rgba(0,0,0,0.5)',
                     border: `1px solid ${color}`,
-                    fontSize: compact ? 10 : 12,
+                    fontSize: compact ? 9 : 12,
                     color,
                     fontWeight: 'bold',
                   }}>
                     <span>{icon}</span>
                     <span>{value}</span>
-                    <span style={{ opacity: 0.8, fontSize: compact ? 9 : 11 }}>in {turns}</span>
+                    <span style={{ opacity: 0.8, fontSize: compact ? 8 : 11 }}>in {turns}</span>
                   </div>
                 );
               })}

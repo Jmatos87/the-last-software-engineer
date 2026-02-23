@@ -149,17 +149,17 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: compact ? 3 : 6,
-        padding: compact ? 6 : 12,
+        gap: compact ? 2 : 6,
+        padding: compact ? 4 : 12,
         background: isOver ? 'rgba(248, 113, 113, 0.1)' : 'transparent',
         border: `2px solid ${isOver ? 'var(--accent-red)' : isTargeted ? 'var(--accent-yellow)' : 'transparent'}`,
         borderRadius: 'var(--radius-lg)',
         transition: 'all var(--transition-fast)',
-        minWidth: compact ? 70 : 100,
+        minWidth: compact ? 56 : 100,
       }}
     >
       {/* Speech bubble placeholder — fixed height so layout doesn't shift */}
-      <div style={{ minHeight: compact ? 20 : 32, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+      <div style={{ minHeight: compact ? 14 : 32, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
         {speechBubble && (
           <div className="animate-speech-bubble" style={{
             position: 'relative',
@@ -194,7 +194,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
       {/* Enemy icon */}
       <div style={{
         fontSize: compact
-          ? (enemy.isBoss ? 40 : enemy.isElite ? 34 : 28)
+          ? (enemy.isBoss ? 28 : enemy.isElite ? 24 : 20)
           : (enemy.isBoss ? 64 : enemy.isElite ? 52 : 44),
         lineHeight: 1,
         filter: shaking ? 'brightness(2)' : 'none',
@@ -205,7 +205,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
 
       {/* Name */}
       <div style={{
-        fontSize: compact ? 10 : 12,
+        fontSize: compact ? 9 : 12,
         fontWeight: 'bold',
         color: enemy.isBoss ? 'var(--accent-orange)' : enemy.isElite ? 'var(--accent-purple)' : 'var(--text-primary)',
       }}>
@@ -217,8 +217,8 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 4,
-          fontSize: 12,
+          gap: compact ? 2 : 4,
+          fontSize: compact ? 10 : 12,
           color: 'var(--block-color)',
         }}>
           🛡️ {enemy.block}
@@ -226,8 +226,8 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
       )}
 
       {/* HP bar */}
-      <div style={{ width: compact ? 70 : 100 }}>
-        <HpBar current={enemy.currentHp} max={enemy.maxHp} height={8} />
+      <div style={{ width: compact ? 60 : 100 }}>
+        <HpBar current={enemy.currentHp} max={enemy.maxHp} height={compact ? 6 : 8} />
       </div>
 
       {/* Status effects */}
@@ -249,11 +249,11 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
       ) : (
         <Tooltip text={intentTooltip}>
           <div style={{
-            padding: compact ? '2px 6px' : '4px 8px',
+            padding: compact ? '1px 4px' : '4px 8px',
             background: 'var(--bg-card)',
             border: '1px solid var(--border-color)',
             borderRadius: 'var(--radius-sm)',
-            fontSize: compact ? 10 : 12,
+            fontSize: compact ? 9 : 12,
             display: 'flex',
             alignItems: 'center',
             gap: 4,

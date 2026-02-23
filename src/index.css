@@ -289,7 +289,7 @@ button.success {
   body { font-size: 12px; }
   button { padding: 4px 10px; font-size: 12px; }
   button.primary, button.danger, button.success { padding: 4px 10px; font-size: 12px; }
-  .consumable-slot { width: 28px; height: 28px; border-radius: 14px; }
-  .consumable-slot.filled span { font-size: 14px !important; }
+  .consumable-slot { width: 22px; height: 22px; border-radius: 11px; }
+  .consumable-slot.filled span { font-size: 12px !important; }
   ::-webkit-scrollbar { width: 4px; }
 }

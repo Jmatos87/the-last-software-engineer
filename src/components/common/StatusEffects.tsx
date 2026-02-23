@@ -1,6 +1,7 @@
 import React from 'react';
 import type { StatusEffect } from '../../types';
 import { Tooltip } from './Tooltip';
+import { useMobile } from '../../hooks/useMobile';
 
 interface StatusEffectsProps {
   effects: StatusEffect;
@@ -27,11 +28,12 @@ const effectInfo: Record<string, { icon: string; label: string; unit: string; co
 };
 
 export const StatusEffects: React.FC<StatusEffectsProps> = ({ effects }) => {
+  const { compact } = useMobile();
   const entries = Object.entries(effects).filter(([, v]) => v && v > 0);
   if (entries.length === 0) return null;
 
   return (
-    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', gap: compact ? 2 : 4, flexWrap: 'wrap' }}>
       {entries.map(([key, value]) => {
         const info = effectInfo[key];
         if (!info) return null;
@@ -40,12 +42,12 @@ export const StatusEffects: React.FC<StatusEffectsProps> = ({ effects }) => {
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 2,
-              padding: '2px 6px',
+              gap: 1,
+              padding: compact ? '1px 3px' : '2px 6px',
               background: 'var(--bg-primary)',
               border: `1px solid ${info.color}`,
               borderRadius: 'var(--radius-sm)',
-              fontSize: 11,
+              fontSize: compact ? 9 : 11,
               color: info.color,
             }}>
               <span>{info.icon}</span>

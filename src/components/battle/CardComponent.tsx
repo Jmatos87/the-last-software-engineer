@@ -155,8 +155,8 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
       {...attributes}
       onClick={onClick}
       style={{
-        width: compact ? 80 : 120,
-        minHeight: compact ? 100 : 160,
+        width: compact ? 68 : 120,
+        minHeight: compact ? 82 : 160,
         background: isDragging ? 'var(--bg-card-hover)' : 'var(--bg-card)',
         border: `2px solid ${borderColor}`,
         borderRadius: 'var(--radius-md)',
@@ -181,14 +181,14 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
         alignItems: 'center',
       }}>
         <div style={{
-          width: compact ? 18 : 24,
-          height: compact ? 18 : 24,
+          width: compact ? 16 : 24,
+          height: compact ? 16 : 24,
           borderRadius: '50%',
           background: 'var(--energy-color)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: compact ? 10 : 14,
+          fontSize: compact ? 9 : 14,
           fontWeight: 'bold',
           color: '#000',
         }}>
@@ -202,13 +202,13 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
       </div>
 
       {/* Icon */}
-      <div style={{ fontSize: compact ? 18 : 28, textAlign: 'center', margin: compact ? '2px 0' : '4px 0' }}>
+      <div style={{ fontSize: compact ? 14 : 28, textAlign: 'center', margin: compact ? '1px 0' : '4px 0' }}>
         {card.icon}
       </div>
 
       {/* Name */}
       <div style={{
-        fontSize: compact ? 9 : 11,
+        fontSize: compact ? 8 : 11,
         fontWeight: 'bold',
         textAlign: 'center',
         color: card.upgraded ? 'var(--accent-green)' : 'var(--text-primary)',
@@ -235,7 +235,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
 
       {/* Keywords & Target */}
       <div style={{
-        fontSize: compact ? 8 : 9,
+        fontSize: compact ? 7 : 9,
         color: 'var(--text-muted)',
         textAlign: 'center',
         display: 'flex',
@@ -264,8 +264,8 @@ export const CardOverlay: React.FC<{ card: CardInstance }> = ({ card }) => {
 
   return (
     <div style={{
-      width: compact ? 80 : 120,
-      minHeight: compact ? 100 : 160,
+      width: compact ? 68 : 120,
+      minHeight: compact ? 82 : 160,
       background: 'var(--bg-card-hover)',
       border: `2px solid ${borderColor}`,
       borderRadius: 'var(--radius-md)',
@@ -278,14 +278,14 @@ export const CardOverlay: React.FC<{ card: CardInstance }> = ({ card }) => {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{
-          width: compact ? 18 : 24, height: compact ? 18 : 24, borderRadius: '50%',
+          width: compact ? 16 : 24, height: compact ? 16 : 24, borderRadius: '50%',
           background: 'var(--energy-color)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: compact ? 10 : 14, fontWeight: 'bold', color: '#000',
+          fontSize: compact ? 9 : 14, fontWeight: 'bold', color: '#000',
         }}>{nextCardFree ? 0 : card.cost}</div>
       </div>
-      <div style={{ fontSize: compact ? 18 : 28, textAlign: 'center' }}>{card.icon}</div>
-      <div style={{ fontSize: compact ? 9 : 11, fontWeight: 'bold', textAlign: 'center' }}>{card.name}</div>
+      <div style={{ fontSize: compact ? 14 : 28, textAlign: 'center' }}>{card.icon}</div>
+      <div style={{ fontSize: compact ? 8 : 11, fontWeight: 'bold', textAlign: 'center' }}>{card.name}</div>
       {!compact && (
         <div style={{ fontSize: 10, color: 'var(--text-secondary)', textAlign: 'center' }}>{card.description}</div>
       )}

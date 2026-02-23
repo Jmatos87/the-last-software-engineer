@@ -8,7 +8,7 @@ interface EnergyOrbProps {
 
 export const EnergyOrb: React.FC<EnergyOrbProps> = ({ current, max }) => {
   const { compact } = useMobile();
-  const size = compact ? 36 : 56;
+  const size = compact ? 28 : 56;
   return (
     <div style={{
       width: size,
@@ -21,7 +21,7 @@ export const EnergyOrb: React.FC<EnergyOrbProps> = ({ current, max }) => {
       border: '2px solid var(--energy-color)',
       boxShadow: '0 0 15px rgba(251, 191, 36, 0.4)',
       fontWeight: 'bold',
-      fontSize: compact ? 14 : 20,
+      fontSize: compact ? 11 : 20,
       color: '#fff',
       textShadow: '0 1px 3px rgba(0,0,0,0.5)',
       flexShrink: 0,

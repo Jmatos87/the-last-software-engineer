@@ -4,9 +4,17 @@ import { HpBar } from './HpBar';
 import { Tooltip } from './Tooltip';
 import { useMobile } from '../../hooks/useMobile';
 
-export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
+interface TopBarProps {
+  extra?: React.ReactNode;
+  onUseConsumable?: (instanceId: string) => void;
+  onTargetEnemyConsumable?: (instanceId: string) => void;
+  battleDisabled?: boolean;
+}
+
+export const TopBar: React.FC<TopBarProps> = ({ extra, onUseConsumable, onTargetEnemyConsumable, battleDisabled }) => {
   const run = useGameStore(s => s.run);
   const restart = useGameStore(s => s.restart);
+  const discardConsumable = useGameStore(s => s.discardConsumable);
   const { compact } = useMobile();
   const [showQuitModal, setShowQuitModal] = useState(false);
   if (!run) return null;
@@ -74,20 +82,52 @@ export const TopBar: React.FC<{ extra?: React.ReactNode }> = ({ extra }) => {
       {/* Consumables */}
       {run.consumables && run.consumables.length > 0 && (
         <div style={{ display: 'flex', gap: 4, alignItems: 'center', marginLeft: 4 }}>
-          {run.consumables.map(c => (
-            <Tooltip key={c.instanceId} content={
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: 'bold', marginBottom: 4, color: 'var(--accent-cyan)' }}>
-                  {c.icon} {c.name}
+          {run.consumables.map(c => {
+            const inBattle = !!onUseConsumable;
+            const handleClick = inBattle && !battleDisabled ? () => {
+              if (c.target === 'enemy') {
+                onTargetEnemyConsumable?.(c.instanceId);
+              } else {
+                onUseConsumable?.(c.instanceId);
+              }
+            } : undefined;
+            return (
+              <Tooltip key={c.instanceId} content={
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ fontWeight: 'bold', marginBottom: 4, color: 'var(--accent-cyan)' }}>
+                    {c.icon} {c.name}
+                  </div>
+                  <div style={{ color: 'var(--text-secondary)', lineHeight: 1.4, fontSize: 12 }}>
+                    {c.description}
+                  </div>
+                  {inBattle && (
+                    <div style={{ color: 'var(--text-muted)', fontSize: 10, marginTop: 4 }}>
+                      {c.target === 'enemy' ? 'Click → select target' : 'Click to use'}
+                    </div>
+                  )}
+                  {inBattle && (
+                    <div
+                      onClick={e => { e.stopPropagation(); discardConsumable(c.instanceId); }}
+                      style={{ color: 'var(--accent-red)', fontSize: 10, marginTop: 4, cursor: 'pointer' }}
+                    >
+                      [Discard]
+                    </div>
+                  )}
                 </div>
-                <div style={{ color: 'var(--text-secondary)', lineHeight: 1.4, fontSize: 12 }}>
-                  {c.description}
-                </div>
-              </div>
-            }>
-              <span style={{ fontSize: 14, cursor: 'help' }}>{c.icon}</span>
-            </Tooltip>
-          ))}
+              }>
+                <span
+                  onClick={handleClick}
+                  style={{
+                    fontSize: compact ? 12 : 14,
+                    cursor: inBattle ? (battleDisabled ? 'not-allowed' : 'pointer') : 'help',
+                    opacity: battleDisabled ? 0.5 : 1,
+                  }}
+                >
+                  {c.icon}
+                </span>
+              </Tooltip>
+            );
+          })}
           <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>
             {run.consumables.length}/{run.maxConsumables}
           </span>
