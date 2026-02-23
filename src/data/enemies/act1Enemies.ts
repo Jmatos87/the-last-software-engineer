@@ -379,34 +379,24 @@ export const act1Enemies: Record<string, EnemyDef> = {
 
 export const act1Solos: string[][] = [
   ['resume_ats'],
-  ['legacy_ats'],
-  ['ai_ats'],
   ['recruiter_bot'],
-  ['ghost_company'],
-  ['take_home'],
   ['cover_letter_shredder'],
-  ['keyword_stuffer'],
   ['job_board_troll'],
   ['application_fee_scammer'],
-  ['entry_level_5yrs'],
   ['linkedin_notification_swarm'],
 ];
 
 export const act1Duos: string[][] = [
-  ['keyword_stuffer', 'resume_ats'],               // Buffer powers up striker
-  ['recruiter_bot', 'ghost_company'],               // Hope debuff + hidden intent
-  ['cover_letter_shredder', 'take_home'],           // Exhaust + stress pressure
+  ['resume_ats', 'recruiter_bot'],                  // Buff + escalate
   ['application_fee_scammer', 'job_board_troll'],   // Gold drain + vulnerable
-  ['ai_ats', 'keyword_stuffer'],                    // Discard hand + buff damage
-  ['entry_level_5yrs', 'recruiter_bot'],            // Tank + support debuffer
+  ['cover_letter_shredder', 'recruiter_bot'],        // Exhaust + pressure
   ['linkedin_notification_swarm', 'linkedin_notification_swarm'], // Swarm, tests AoE
-  ['legacy_ats', 'ghost_company'],                  // Block wall + hidden intent
 ];
 
 export const act1Trios: string[][] = [
-  ['keyword_stuffer', 'resume_ats', 'recruiter_bot'],                         // Buffer + striker + debuffer
+  ['resume_ats', 'recruiter_bot', 'cover_letter_shredder'],                                      // Buff + escalate + exhaust
   ['linkedin_notification_swarm', 'linkedin_notification_swarm', 'linkedin_notification_swarm'], // Stress swarm
-  ['cover_letter_shredder', 'application_fee_scammer', 'ghost_company'],      // Resource drain trio
+  ['cover_letter_shredder', 'application_fee_scammer', 'job_board_troll'],                       // Resource drain trio
 ];
 
 export const act1ElitePool: string[][] = [
