@@ -473,6 +473,43 @@ export const architectCards: Record<string, CardDef> = {
   },
 
   // ── Curse ──
+  whiteboard_cleared: {
+    id: 'whiteboard_cleared', name: 'Whiteboard Cleared', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'architect',
+    description: 'Gain 5 block. Reduce 6 Stress. Erase the board. Erase the anxiety.',
+    effects: { block: 5, copium: 6 },
+    upgradedEffects: { block: 8, copium: 9 },
+    upgradedDescription: 'Gain 8 block. Reduce 9 Stress.',
+    icon: '🗑️',
+  },
+  alignment_achieved: {
+    id: 'alignment_achieved', name: 'Alignment Achieved', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'architect',
+    description: 'Reduce 8 Stress. Draw 1 card. Everyone nodded. Nobody pushed back. This was a good meeting.',
+    effects: { copium: 8, draw: 1 },
+    upgradedEffects: { copium: 12, draw: 1 },
+    upgradedDescription: 'Reduce 12 Stress. Draw 1 card.',
+    icon: '🤝',
+  },
+  scope_locked: {
+    id: 'scope_locked', name: 'Scope Locked', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'architect',
+    description: 'Gain 8 block. Reduce 10 Stress. Requirements frozen. Brain unfrozen.',
+    effects: { block: 8, copium: 10 },
+    upgradedEffects: { block: 13, copium: 16 },
+    upgradedDescription: 'Gain 13 block. Reduce 16 Stress.',
+    icon: '🔒',
+  },
+  architecture_approved: {
+    id: 'architecture_approved', name: 'Architecture Approved', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'architect',
+    description: 'Reduce 14 Stress. Advance blueprint by 1. The committee said yes. The imposter is quiet.',
+    effects: { copium: 14, advanceBlueprint: 1 },
+    upgradedEffects: { copium: 18, advanceBlueprint: 2 },
+    upgradedDescription: 'Reduce 18 Stress. Advance blueprint by 2.',
+    icon: '📐',
+  },
+
   scope_creep: {
     id: 'scope_creep', name: 'Scope Creep', type: 'curse', target: 'self', cost: 0, rarity: 'curse',
     class: 'architect',

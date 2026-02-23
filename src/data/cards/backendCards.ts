@@ -520,6 +520,43 @@ export const backendCards: Record<string, CardDef> = {
   },
 
   // ── Curse ──
+  graceful_shutdown: {
+    id: 'graceful_shutdown', name: 'Graceful Shutdown', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'backend',
+    description: 'Gain 5 block. Reduce 6 Stress. No crashes. No panics. Just a clean exit.',
+    effects: { block: 5, copium: 6 },
+    upgradedEffects: { block: 8, copium: 9 },
+    upgradedDescription: 'Gain 8 block. Reduce 9 Stress.',
+    icon: '🛑',
+  },
+  rollback_plan: {
+    id: 'rollback_plan', name: 'Rollback Plan', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'backend',
+    description: 'Gain 4 block. Reduce 8 Stress. Undo the last 3 hours. The commit never happened.',
+    effects: { block: 4, copium: 8 },
+    upgradedEffects: { block: 7, copium: 12 },
+    upgradedDescription: 'Gain 7 block. Reduce 12 Stress.',
+    icon: '⏪',
+  },
+  maintenance_window: {
+    id: 'maintenance_window', name: 'Maintenance Window', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'backend',
+    description: 'Gain 8 block. Reduce 10 Stress. Scheduled downtime. Unscheduled calm.',
+    effects: { block: 8, copium: 10 },
+    upgradedEffects: { block: 13, copium: 16 },
+    upgradedDescription: 'Gain 13 block. Reduce 16 Stress.',
+    icon: '🔧',
+  },
+  load_balanced: {
+    id: 'load_balanced', name: 'Load Balanced', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'backend',
+    description: 'Reduce 14 Stress. Draw 1 card. Distribute the pain. Keep the calm.',
+    effects: { copium: 14, draw: 1 },
+    upgradedEffects: { copium: 18, draw: 2 },
+    upgradedDescription: 'Reduce 18 Stress. Draw 2 cards.',
+    icon: '⚖️',
+  },
+
   technical_debt: {
     id: 'technical_debt', name: 'Technical Debt', type: 'curse', target: 'self', cost: 0, rarity: 'curse',
     class: 'backend',

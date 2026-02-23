@@ -522,6 +522,43 @@ export const frontendCards: Record<string, CardDef> = {
   },
 
   // ── Frontend Curse ──
+  dark_mode: {
+    id: 'dark_mode', name: 'Dark Mode', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'frontend',
+    description: 'Gain 6 block. Reduce 6 Stress. The interface softened. So did the anxiety.',
+    effects: { block: 6, copium: 6 },
+    upgradedEffects: { block: 9, copium: 9 },
+    upgradedDescription: 'Gain 9 block. Reduce 9 Stress.',
+    icon: '🌑',
+  },
+  deploy_cancelled: {
+    id: 'deploy_cancelled', name: 'Deploy Cancelled', type: 'skill', target: 'self', cost: 1, rarity: 'common',
+    class: 'frontend',
+    description: 'Reduce 8 Stress. The Friday deploy was called off. You can breathe again.',
+    effects: { copium: 8 },
+    upgradedEffects: { copium: 11 },
+    upgradedDescription: 'Reduce 11 Stress.',
+    icon: '🚫',
+  },
+  component_reuse: {
+    id: 'component_reuse', name: 'Component Reuse', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'frontend',
+    description: 'Gain 8 block. Reduce 10 Stress. Write once. Stress never.',
+    effects: { block: 8, copium: 10 },
+    upgradedEffects: { block: 13, copium: 16 },
+    upgradedDescription: 'Gain 13 block. Reduce 16 Stress.',
+    icon: '♻️',
+  },
+  hotfix_approved: {
+    id: 'hotfix_approved', name: 'Hotfix Approved', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+    class: 'frontend',
+    description: 'Reduce 14 Stress. Draw 2 cards. The patch shipped. PR approved. Done.',
+    effects: { copium: 14, draw: 2 },
+    upgradedEffects: { copium: 18, draw: 2 },
+    upgradedDescription: 'Reduce 18 Stress. Draw 2 cards.',
+    icon: '✅',
+  },
+
   div_soup: {
     id: 'div_soup', name: 'Div Soup', type: 'curse', target: 'self', cost: 1, rarity: 'curse',
     class: 'frontend',
