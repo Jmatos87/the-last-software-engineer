@@ -12,6 +12,8 @@ const effectInfo: Record<string, { icon: string; label: string; unit: string; co
   vulnerable: { icon: '💔', label: 'Vulnerable — Take 50% more damage', unit: 'turns', color: 'var(--accent-red)' },
   weak: { icon: '😵', label: 'Weak — Deal 25% less damage', unit: 'turns', color: 'var(--accent-orange)' },
   poison: { icon: '☠️', label: 'Poison — Lose HP each turn, then decrements', unit: 'damage', color: 'var(--accent-purple)' },
+  bleed: { icon: '🩸', label: 'Bleed — Lose HP each turn, then decrements', unit: 'damage', color: '#ef4444' },
+  burn: { icon: '🔥', label: 'Burn — Lose HP each turn, then decrements', unit: 'damage', color: '#f97316' },
   hope: { icon: '✨', label: 'Hope — False promise... explodes into stress when it expires', unit: 'turns', color: 'var(--accent-yellow)' },
   cringe: { icon: '😬', label: 'Cringe — Stress healing is halved', unit: 'turns', color: 'var(--accent-orange)' },
   ghosted: { icon: '👻', label: 'Ghosted — A curse card is added to your deck each turn', unit: 'turns', color: 'var(--accent-purple)' },
