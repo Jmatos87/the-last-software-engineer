@@ -1596,6 +1596,7 @@ export function executeEnemyTurn(
     exhaustPile: [...battle.exhaustPile],
     enemies: battle.enemies.map(e => ({ ...e, statusEffects: { ...e.statusEffects } })),
     playerStatusEffects: { ...battle.playerStatusEffects },
+    dodgedThisTurn: false, // reset at start of enemy phase; re-set below if a dodge occurs
   };
   let playerHp = run.hp;
   let playerStress = run.stress;
@@ -2476,7 +2477,6 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       flow: retainFlow > 0 ? Math.min(battle.flow ?? 0, retainFlow) : 0,
       nextCardCostReduction: 0,
       detonationQueue: [...remainingQueue, ...engineerQueuedEffects],
-      dodgedThisTurn: false,
     },
     stressChange,
     hpChange,
