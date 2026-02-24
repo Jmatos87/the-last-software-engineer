@@ -101,6 +101,20 @@ export const EventScreen: React.FC = () => {
           {eventOutcome.message}
         </p>
 
+        {eventOutcome.goldChange !== undefined && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            fontSize: compact ? 16 : 20,
+            fontWeight: 'bold',
+            color: eventOutcome.goldChange >= 0 ? 'var(--accent-gold)' : 'var(--accent-red, #ef4444)',
+          }}>
+            <span>💰</span>
+            <span>{eventOutcome.goldChange >= 0 ? '+' : ''}{eventOutcome.goldChange} gold</span>
+          </div>
+        )}
+
         {eventOutcome.cardAdded && (() => {
           const card = eventOutcome.cardAdded!;
           const borderColor = card.type === 'attack' ? 'var(--card-attack)'

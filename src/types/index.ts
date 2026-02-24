@@ -610,6 +610,7 @@ export interface GameState {
   pendingEvent: EventDef | null;
   eventOutcome: {
     message: string;
+    goldChange?: number;
     cardAdded?: CardInstance;
     cardRemoved?: CardInstance;
     cardsRemoved?: CardInstance[];
@@ -622,6 +623,7 @@ export interface GameState {
   pendingRemoveMessage: string | null;
   pendingRemoveCardsRemoved: CardInstance[];
   pendingRemoveRewards: {
+    goldChange?: number;
     cardAdded?: CardInstance;
     cardUpgraded?: CardInstance;
     consumableAdded?: ConsumableInstance;

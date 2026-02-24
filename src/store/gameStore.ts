@@ -25,7 +25,7 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
-const GAME_VERSION = '1.21.5';
+const GAME_VERSION = '1.21.6';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
@@ -791,9 +791,11 @@ export const useGameStore = create<GameState>()(
           const scaledHp = outcome.hp > 0 ? Math.floor(outcome.hp * evtScale) : outcome.hp;
           s.run.hp = Math.max(1, Math.min(s.run.maxHp, s.run.hp + scaledHp));
         }
+        let goldChange: number | undefined;
         if (outcome.gold) {
           const scaledGold = outcome.gold > 0 ? Math.floor(outcome.gold * evtScale) : outcome.gold;
           s.run.gold += scaledGold;
+          goldChange = scaledGold;
         }
         let cardAdded: any = undefined;
         if (outcome.addCard) {
@@ -925,6 +927,7 @@ export const useGameStore = create<GameState>()(
             ? (items.find(i => i.id === outcome.addItem) ?? undefined)
             : undefined;
           s.pendingRemoveRewards = {
+            goldChange: goldChange,
             cardAdded: cardAdded,
             cardUpgraded: cardUpgraded,
             consumableAdded: consumableAdded,
@@ -941,6 +944,7 @@ export const useGameStore = create<GameState>()(
 
         s.eventOutcome = {
           message: outcome.message,
+          goldChange: goldChange,
           cardAdded: cardAdded,
           cardRemoved: cardRemoved,
           cardUpgraded: cardUpgraded,
