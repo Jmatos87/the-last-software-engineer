@@ -799,23 +799,6 @@ export function executePlayCard(
     }
   }
 
-  // bonusDamageIfDodgedThisTurn
-  if (effects.bonusDamageIfDodgedThisTurnAmount && newBattle.dodgedThisTurn && targetInstanceId) {
-    const tIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
-    if (tIdx >= 0) {
-      const bonusDmg = calculateDamage(
-        effects.bonusDamageIfDodgedThisTurnAmount,
-        newBattle.playerStatusEffects,
-        newBattle.enemies[tIdx].statusEffects,
-        run.items
-      );
-      newBattle.enemies[tIdx] = applyDamageToEnemy({ ...newBattle.enemies[tIdx] }, bonusDmg);
-      if (newBattle.enemies[tIdx].currentHp <= 0) {
-        newBattle.goldEarned = (newBattle.goldEarned || 0) + (newBattle.enemies[tIdx].gold || 0);
-        newBattle.killCount = (newBattle.killCount || 0) + 1;
-      }
-    }
-  }
   // ── End Flow State mechanic ───────────────────────────────────────────────
 
   // ── Detonation Queue mechanics (Backend Engineer) ──────────────────────────

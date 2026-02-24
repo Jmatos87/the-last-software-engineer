@@ -514,10 +514,10 @@ export const frontendCards: Record<string, CardDef> = {
   phase_counter: {
     id: 'phase_counter', name: 'Phase Counter', type: 'attack', target: 'enemy', cost: 2, rarity: 'epic',
     class: 'frontend', archetype: 'evasion', exhaust: true,
-    description: 'Deal 8 damage. If you dodged this turn, deal 8 more. Exhaust. You phase through the strike — and answer from behind.',
-    effects: { damage: 8, bonusDamageIfDodgedThisTurn: true, bonusDamageIfDodgedThisTurnAmount: 8 },
-    upgradedEffects: { damage: 12, bonusDamageIfDodgedThisTurn: true, bonusDamageIfDodgedThisTurnAmount: 12 },
-    upgradedDescription: 'Deal 12 damage. If you dodged this turn, deal 12 more. Exhaust. The counter-phase intensifies — spectral fury.',
+    description: 'Deal 8 damage + 5 per Dodge stack. Exhaust. Every evasion sharpens the counterstrike — answer from behind.',
+    effects: { damage: 8, damagePerDodge: 5 },
+    upgradedEffects: { damage: 12, damagePerDodge: 7 },
+    upgradedDescription: 'Deal 12 damage + 7 per Dodge stack. Exhaust. The counter-phase intensifies — spectral fury.',
     icon: '👻',
   },
 
