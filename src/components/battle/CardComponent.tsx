@@ -5,17 +5,34 @@ import { useGameStore } from '../../store/gameStore';
 import { calculateDamage, calculateBlock, calculateCopium } from '../../utils/battleEngine';
 import { useMobile } from '../../hooks/useMobile';
 
-function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[], defenderEffects: StatusEffect) {
+function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[], defenderEffects: StatusEffect, dodgeScalesDamage: number = 0) {
   const effects = card.upgraded && card.upgradedEffects ? card.upgradedEffects : card.effects;
   const result: Record<string, { base: number; effective: number }> = {};
+  const dodgeBonus = dodgeScalesDamage * (playerEffects.dodge || 0);
 
   if (effects.damage) {
-    const effective = calculateDamage(effects.damage, playerEffects, defenderEffects, items);
+    const effective = calculateDamage(effects.damage + dodgeBonus, playerEffects, defenderEffects, items);
     result.damage = { base: effects.damage, effective };
   }
   if (effects.damageAll) {
-    const effective = calculateDamage(effects.damageAll, playerEffects, defenderEffects, items);
+    const effective = calculateDamage(effects.damageAll + dodgeBonus, playerEffects, defenderEffects, items);
     result.damageAll = { base: effects.damageAll, effective };
+  }
+  if (effects.damageIfFlowHigh) {
+    const effective = calculateDamage(effects.damageIfFlowHigh, playerEffects, defenderEffects, items);
+    result.damageIfFlowHigh = { base: effects.damageIfFlowHigh, effective };
+  }
+  if (effects.damageAllIfFlowHigh) {
+    const effective = calculateDamage(effects.damageAllIfFlowHigh, playerEffects, defenderEffects, items);
+    result.damageAllIfFlowHigh = { base: effects.damageAllIfFlowHigh, effective };
+  }
+  if (effects.damageIfHot) {
+    const effective = calculateDamage(effects.damageIfHot, playerEffects, defenderEffects, items);
+    result.damageIfHot = { base: effects.damageIfHot, effective };
+  }
+  if (effects.damageAllIfHot) {
+    const effective = calculateDamage(effects.damageAllIfHot, playerEffects, defenderEffects, items);
+    result.damageAllIfHot = { base: effects.damageAllIfHot, effective };
   }
   if (effects.block) {
     const effective = calculateBlock(effects.block, playerEffects, items);
@@ -29,8 +46,8 @@ function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, it
   return result;
 }
 
-function renderDescription(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[], defenderEffects: StatusEffect): React.ReactNode {
-  const computed = getEffectiveEffects(card, playerEffects, items, defenderEffects);
+function renderDescription(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[], defenderEffects: StatusEffect, dodgeScalesDamage: number = 0): React.ReactNode {
+  const computed = getEffectiveEffects(card, playerEffects, items, defenderEffects, dodgeScalesDamage);
   const desc = card.upgraded && card.upgradedDescription ? card.upgradedDescription : card.description;
 
   // Build replacement map: base value -> { effective, key }
@@ -49,6 +66,34 @@ function renderDescription(card: CardInstance, playerEffects: StatusEffect, item
       pattern: new RegExp(`Deal ${computed.damageAll.base} damage to ALL`),
       effective: computed.damageAll.effective,
       base: computed.damageAll.base,
+    });
+  }
+  if (computed.damageIfFlowHigh) {
+    replacements.push({
+      pattern: new RegExp(`deal ${computed.damageIfFlowHigh.base} more(?! to ALL)`),
+      effective: computed.damageIfFlowHigh.effective,
+      base: computed.damageIfFlowHigh.base,
+    });
+  }
+  if (computed.damageAllIfFlowHigh) {
+    replacements.push({
+      pattern: new RegExp(`deal ${computed.damageAllIfFlowHigh.base} more to ALL`),
+      effective: computed.damageAllIfFlowHigh.effective,
+      base: computed.damageAllIfFlowHigh.base,
+    });
+  }
+  if (computed.damageIfHot) {
+    replacements.push({
+      pattern: new RegExp(`deal ${computed.damageIfHot.base} more(?! to ALL)`),
+      effective: computed.damageIfHot.effective,
+      base: computed.damageIfHot.base,
+    });
+  }
+  if (computed.damageAllIfHot) {
+    replacements.push({
+      pattern: new RegExp(`deal ${computed.damageAllIfHot.base} more to ALL`),
+      effective: computed.damageAllIfHot.effective,
+      base: computed.damageAllIfHot.base,
     });
   }
   if (computed.block) {
@@ -127,11 +172,12 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
   const battle = useGameStore(s => s.battle);
   const items = useGameStore(s => s.run?.items ?? []);
   const playerEffects = battle?.playerStatusEffects ?? {};
+  const dodgeScalesDamage = battle?.dodgeScalesDamage ?? 0;
   // If any enemy is vulnerable, show the buffed damage on attack cards
   const anyEnemyVulnerable = battle?.enemies.some(e => (e.statusEffects.vulnerable || 0) > 0);
   const defenderEffects: StatusEffect = anyEnemyVulnerable ? { vulnerable: 1 } : {};
   const dynamicDescription = battle
-    ? renderDescription(card, playerEffects, items, defenderEffects)
+    ? renderDescription(card, playerEffects, items, defenderEffects, dodgeScalesDamage)
     : (card.upgraded && card.upgradedDescription ? card.upgradedDescription : card.description);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
