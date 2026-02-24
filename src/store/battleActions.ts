@@ -879,6 +879,24 @@ export function executePlayCard(
       { element: 'lightning' as const, chainAmount: effects.queueChainCharged, turnsUntilFire: 4 }];
   }
 
+  // Single-target fire queue (targetInstanceId required)
+  if (effects.queueDamage && targetInstanceId) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'fire' as const, damageAmount: effects.queueDamage, targetInstanceId, turnsUntilFire: 1 }];
+  }
+  if (effects.queueDamageQuick && targetInstanceId) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'fire' as const, damageAmount: effects.queueDamageQuick, targetInstanceId, turnsUntilFire: 2 }];
+  }
+  if (effects.queueDamageDelayed && targetInstanceId) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'fire' as const, damageAmount: effects.queueDamageDelayed, targetInstanceId, turnsUntilFire: 3 }];
+  }
+  if (effects.queueDamageCharged && targetInstanceId) {
+    newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
+      { element: 'fire' as const, damageAmount: effects.queueDamageCharged, targetInstanceId, turnsUntilFire: 4 }];
+  }
+
   // Tiered burn queue
   if (effects.queueBurnDelayed) {
     newBattle.detonationQueue = [...(newBattle.detonationQueue || []),
@@ -2344,6 +2362,18 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       // Ice: queued block
       if (qe.blockAmount) {
         detonationBlock += Math.floor(qe.blockAmount * batchMultiplier);
+      }
+      // Fire: queued single-target damage
+      if (qe.damageAmount && qe.targetInstanceId) {
+        const dmg = Math.floor(qe.damageAmount * batchMultiplier);
+        if (dmg > 0) {
+          const idx = postDeployEnemies.findIndex(e => e.instanceId === qe.targetInstanceId);
+          if (idx !== -1 && postDeployEnemies[idx].currentHp > 0) {
+            postDeployEnemies = postDeployEnemies.map((e, i) =>
+              i === idx ? applyDamageToEnemy(e, calculateDamage(dmg, battle.playerStatusEffects, e.statusEffects, run.items)) : e
+            );
+          }
+        }
       }
       // Fire: queued AoE damage
       if (qe.damageAllAmount) {

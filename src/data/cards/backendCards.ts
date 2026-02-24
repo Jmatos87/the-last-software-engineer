@@ -23,10 +23,10 @@ export const backendCards: Record<string, CardDef> = {
   scheduled_exception: {
     id: 'scheduled_exception', name: 'Scheduled Exception', type: 'attack', target: 'enemy', cost: 1, rarity: 'starter',
     class: 'backend', archetype: 'fire',
-    description: 'Deal 4 damage. Schedule 10 damage to all enemies next turn. You hurl an unstable incantation and pray it detonates on your enemies, not you.',
-    effects: { damage: 4, queueDamageAll: 10 },
-    upgradedEffects: { damage: 6, queueDamageAll: 14 },
-    upgradedDescription: 'Deal 6 damage. Schedule 14 damage to all enemies next turn. A more volatile incantation — the blast radius has grown.',
+    description: 'Deal 4 damage. Schedule 14 fire damage to this enemy next turn. You hurl an unstable incantation — a rune that burns twice.',
+    effects: { damage: 4, queueDamage: 14 },
+    upgradedEffects: { damage: 6, queueDamage: 20 },
+    upgradedDescription: 'Deal 6 damage. Schedule 20 fire damage to this enemy next turn. A more volatile incantation — the rune burns hotter.',
     icon: '🔥',
   },
   async_webhook: {
@@ -99,10 +99,10 @@ export const backendCards: Record<string, CardDef> = {
   garbage_fire: {
     id: 'garbage_fire', name: 'Garbage Fire', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
     class: 'backend', archetype: 'fire',
-    description: 'Deal 5 damage. Schedule 10 damage to all enemies next turn. The construct still shambles forward, wreathed in flame. Technically functional.',
-    effects: { damage: 5, queueDamageAll: 10 },
-    upgradedEffects: { damage: 7, queueDamageAll: 14 },
-    upgradedDescription: 'Deal 7 damage. Schedule 14 damage to all enemies next turn. The flames burn hotter; the construct doesn\'t care.',
+    description: 'Deal 5 damage. Schedule 15 fire damage to this enemy next turn. The construct shambles forward, wreathed in your scheduled flame.',
+    effects: { damage: 5, queueDamage: 15 },
+    upgradedEffects: { damage: 7, queueDamage: 21 },
+    upgradedDescription: 'Deal 7 damage. Schedule 21 fire damage to this enemy next turn. The flames burn hotter; it won\'t walk far.',
     icon: '🗑️',
   },
   exception_throw: {
@@ -117,10 +117,10 @@ export const backendCards: Record<string, CardDef> = {
   hot_path: {
     id: 'hot_path', name: 'Hot Path', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
     class: 'backend', archetype: 'fire',
-    description: 'Deal 6 damage. Schedule 8 damage to all enemies next turn. The scorched corridor — where a fifth of the labyrinth causes all the cave-ins.',
-    effects: { damage: 6, queueDamageAll: 8 },
-    upgradedEffects: { damage: 9, queueDamageAll: 12 },
-    upgradedDescription: 'Deal 9 damage. Schedule 12 damage to all enemies next turn. The corridor blazes hotter still.',
+    description: 'Deal 6 damage. Schedule 12 fire damage to this enemy next turn. The critical path burns brightest — all the heat, focused on one.',
+    effects: { damage: 6, queueDamage: 12 },
+    upgradedEffects: { damage: 9, queueDamage: 17 },
+    upgradedDescription: 'Deal 9 damage. Schedule 17 fire damage to this enemy next turn. The hot path incinerates.',
     icon: '🌡️',
   },
   memory_spike: {
@@ -135,21 +135,21 @@ export const backendCards: Record<string, CardDef> = {
   server_500: {
     id: 'server_500', name: '500 Error', type: 'attack', target: 'enemy', cost: 2, rarity: 'common',
     class: 'backend', archetype: 'fire',
-    description: 'Deal 12 damage. Schedule 12 damage to all enemies next turn. A catastrophic failure erupts from the arcane engine. The error was inside you all along.',
-    effects: { damage: 12, queueDamageAll: 12 },
-    upgradedEffects: { damage: 16, queueDamageAll: 16 },
-    upgradedDescription: 'Deal 16 damage. Schedule 16 damage to all enemies next turn. The engine explodes with greater fury.',
+    description: 'Deal 12 damage. Schedule 18 fire damage to this enemy next turn. A catastrophic failure, precisely targeted — the error was yours to aim.',
+    effects: { damage: 12, queueDamage: 18 },
+    upgradedEffects: { damage: 16, queueDamage: 24 },
+    upgradedDescription: 'Deal 16 damage. Schedule 24 fire damage to this enemy next turn. The engine detonates with surgical fury.',
     icon: '🚨',
   },
 
   // ── Lightning Commons ──
   webhook_blast: {
-    id: 'webhook_blast', name: 'Webhook Blast', type: 'attack', target: 'all_enemies', cost: 1, rarity: 'common',
+    id: 'webhook_blast', name: 'Webhook Blast', type: 'attack', target: 'enemy', cost: 1, rarity: 'common',
     class: 'backend', archetype: 'lightning',
-    description: 'Deal 5 damage to ALL enemies. Schedule 13 AoE damage. Fires in 2 turns. A signal bolt dispatched to forty-seven souls. None expected the summons.',
-    effects: { damageAll: 5, queueDamageAllQuick: 13 },
-    upgradedEffects: { damageAll: 8, queueDamageAllQuick: 18 },
-    upgradedDescription: 'Deal 8 damage to ALL enemies. Schedule 18 AoE damage. Fires in 2 turns. The summons reverberates louder.',
+    description: 'Deal 6 damage. Schedule 18 fire damage to this enemy. Fires in 2 turns. A signal bolt — dispatched, tracked, detonating on the mark.',
+    effects: { damage: 6, queueDamageQuick: 18 },
+    upgradedEffects: { damage: 9, queueDamageQuick: 25 },
+    upgradedDescription: 'Deal 9 damage. Schedule 25 fire damage to this enemy. Fires in 2 turns. The signal locks on tighter.',
     icon: '📡',
   },
   retry_loop: {
@@ -267,10 +267,10 @@ export const backendCards: Record<string, CardDef> = {
   pagerduty_alert: {
     id: 'pagerduty_alert', name: 'PagerDuty Alert', type: 'attack', target: 'enemy', cost: 1, rarity: 'rare',
     class: 'backend', archetype: 'fire',
-    description: 'Deal 8 damage. Gain 2 Confidence. Schedule 30 AoE damage. Fires in 3 turns. A dread klaxon at the witching hour. Every soul in the keep is now awake.',
-    effects: { damage: 8, applyToSelf: { confidence: 2 }, queueDamageAllDelayed: 30 },
-    upgradedEffects: { damage: 12, applyToSelf: { confidence: 3 }, queueDamageAllDelayed: 42 },
-    upgradedDescription: 'Deal 12 damage. Gain 3 Confidence. Schedule 42 AoE damage. Fires in 3 turns. The klaxon\'s fury redoubles.',
+    description: 'Deal 8 damage. Gain 2 Confidence. Schedule 45 fire damage to this enemy. Fires in 3 turns. A dread klaxon locked on your target — every engineer awake, converging on one.',
+    effects: { damage: 8, applyToSelf: { confidence: 2 }, queueDamageDelayed: 45 },
+    upgradedEffects: { damage: 12, applyToSelf: { confidence: 3 }, queueDamageDelayed: 62 },
+    upgradedDescription: 'Deal 12 damage. Gain 3 Confidence. Schedule 62 fire damage to this enemy. Fires in 3 turns. The klaxon\'s fury redoubles — inescapable.',
     icon: '📟',
   },
   hot_standby: {

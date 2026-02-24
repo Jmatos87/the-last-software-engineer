@@ -199,7 +199,7 @@ export const BattleScreen: React.FC = () => {
             gap: compact ? 8 : 24,
           }}>
           {/* Hero card */}
-          <HeroCard heroAnim={heroAnim} />
+          <HeroCard heroAnim={heroAnim} detonationQueue={battle.detonationQueue} />
 
           {/* VS divider */}
           <div style={{
@@ -219,45 +219,6 @@ export const BattleScreen: React.FC = () => {
             alignSelf: 'stretch',
             gap: 0,
           }}>
-          {/* Detonation countdown pills — shown above enemies */}
-          {battle.detonationQueue && battle.detonationQueue.length > 0 && (
-            <div style={{
-              display: 'flex',
-              gap: 6,
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              marginBottom: compact ? 3 : 10,
-            }}>
-              {battle.detonationQueue.map((qe, i) => {
-                const turns = qe.turnsUntilFire ?? 1;
-                const color = turns >= 4 ? '#4a9eff'
-                  : turns === 3 ? '#22d3ee'
-                  : turns === 2 ? '#fbbf24'
-                  : '#ef4444';
-                const icon = qe.element === 'ice' ? '🧊'
-                  : qe.element === 'fire' ? '🔥' : '⚡';
-                const value = qe.blockAmount ?? qe.damageAllAmount ?? qe.chainAmount ?? qe.burnApply ?? 0;
-                return (
-                  <div key={i} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 3,
-                    padding: '2px 8px',
-                    borderRadius: 12,
-                    background: 'rgba(0,0,0,0.5)',
-                    border: `1px solid ${color}`,
-                    fontSize: compact ? 9 : 12,
-                    color,
-                    fontWeight: 'bold',
-                  }}>
-                    <span>{icon}</span>
-                    <span>{value}</span>
-                    <span style={{ opacity: 0.8, fontSize: compact ? 8 : 11 }}>in {turns}</span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
           <div style={{
             display: 'flex',
             flex: 1,
@@ -286,6 +247,7 @@ export const BattleScreen: React.FC = () => {
                   playerStatusEffects={battle.playerStatusEffects}
                   isAttacking={attackingEnemyId === enemy.instanceId}
                   speechBubble={speechBubbles[enemy.instanceId] || null}
+                  detonationQueue={battle.detonationQueue}
                 />
               </div>
             ))}

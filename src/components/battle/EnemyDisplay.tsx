@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import type { EnemyInstance, StatusEffect } from '../../types';
+import type { EnemyInstance, StatusEffect, QueuedEffect } from '../../types';
 import { calculateDamage, calculateStressDamage } from '../../utils/battleEngine';
 import { HpBar } from '../common/HpBar';
 import { StatusEffects } from '../common/StatusEffects';
@@ -15,9 +15,10 @@ interface EnemyDisplayProps {
   isDying?: boolean;
   isFleeing?: boolean;
   speechBubble?: string | null;
+  detonationQueue?: QueuedEffect[];
 }
 
-export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, playerStatusEffects, isAttacking, isDying, isFleeing, speechBubble }) => {
+export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, playerStatusEffects, isAttacking, isDying, isFleeing, speechBubble, detonationQueue }) => {
   const { compact } = useMobile();
   const { setNodeRef, isOver } = useDroppable({
     id: `enemy-${enemy.instanceId}`,
@@ -244,6 +245,42 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
 
       {/* Status effects */}
       <StatusEffects effects={enemy.statusEffects} />
+
+      {/* Detonation countdown pills for effects targeting this enemy */}
+      {detonationQueue && (() => {
+        const relevant = detonationQueue.filter(qe =>
+          qe.element !== 'ice' && (
+            (qe.targetInstanceId === enemy.instanceId) ||
+            (!qe.targetInstanceId && (qe.damageAllAmount || qe.chainAmount))
+          )
+        );
+        if (relevant.length === 0) return null;
+        return (
+          <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', justifyContent: 'center' }}>
+            {relevant.map((qe, i) => {
+              const turns = qe.turnsUntilFire ?? 1;
+              const color = turns >= 4 ? '#4a9eff' : turns === 3 ? '#22d3ee' : turns === 2 ? '#fbbf24' : '#ef4444';
+              const value = qe.damageAmount ?? qe.damageAllAmount ?? qe.chainAmount ?? 0;
+              const icon = qe.element === 'fire' ? '🔥' : '⚡';
+              return (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 2,
+                  padding: compact ? '1px 4px' : '1px 6px',
+                  borderRadius: 8,
+                  background: 'rgba(0,0,0,0.5)',
+                  border: `1px solid ${color}`,
+                  fontSize: compact ? 8 : 10,
+                  color, fontWeight: 'bold',
+                }}>
+                  <span>{icon}</span>
+                  <span>{value}</span>
+                  <span style={{ opacity: 0.7 }}>T{turns}</span>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {/* Intent — below HP */}
       {hidden ? (

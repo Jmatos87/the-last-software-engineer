@@ -4,7 +4,7 @@ import { useGameStore } from '../../store/gameStore';
 import { HpBar } from '../common/HpBar';
 import { StatusEffects } from '../common/StatusEffects';
 import { useMobile } from '../../hooks/useMobile';
-import type { Deployment } from '../../types';
+import type { Deployment, QueuedEffect } from '../../types';
 
 const DeploymentPanel: React.FC<{ deployments: Deployment[] }> = ({ deployments }) => {
   if (deployments.length === 0) return null;
@@ -40,9 +40,10 @@ const DeploymentPanel: React.FC<{ deployments: Deployment[] }> = ({ deployments 
 
 interface HeroCardProps {
   heroAnim: '' | 'animate-shake' | 'animate-stress';
+  detonationQueue?: QueuedEffect[];
 }
 
-export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim }) => {
+export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue }) => {
   const run = useGameStore(s => s.run);
   const battle = useGameStore(s => s.battle);
   const { compact } = useMobile();
@@ -200,6 +201,35 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim }) => {
 
         {/* Status effects */}
         <StatusEffects effects={battle.playerStatusEffects} />
+
+        {/* Ice detonation countdown pills */}
+        {detonationQueue && (() => {
+          const iceQueue = detonationQueue.filter(qe => qe.element === 'ice');
+          if (iceQueue.length === 0) return null;
+          return (
+            <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', justifyContent: 'center' }}>
+              {iceQueue.map((qe, i) => {
+                const turns = qe.turnsUntilFire ?? 1;
+                const color = turns >= 4 ? '#4a9eff' : turns === 3 ? '#22d3ee' : turns === 2 ? '#fbbf24' : '#ef4444';
+                return (
+                  <div key={i} style={{
+                    display: 'flex', alignItems: 'center', gap: 2,
+                    padding: compact ? '1px 4px' : '1px 6px',
+                    borderRadius: 8,
+                    background: 'rgba(0,0,0,0.5)',
+                    border: `1px solid ${color}`,
+                    fontSize: compact ? 8 : 10,
+                    color, fontWeight: 'bold',
+                  }}>
+                    <span>🧊</span>
+                    <span>{qe.blockAmount ?? 0}</span>
+                    <span style={{ opacity: 0.7 }}>T{turns}</span>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
 
         {/* Token counter — AI Engineer */}
         {charId === 'ai_engineer' && (battle.tokens ?? 0) > 0 && (

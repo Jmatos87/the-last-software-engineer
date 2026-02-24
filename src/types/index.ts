@@ -165,6 +165,10 @@ export interface CardEffect {
   queueDamageAllQuick?: number;    // fire AoE, fires in 2 turns
   queueDamageAllDelayed?: number;  // fire AoE, fires in 3 turns
   queueDamageAllCharged?: number;  // fire AoE, fires in 4 turns
+  queueDamage?: number;            // fire single-target, fires in 1 turn
+  queueDamageQuick?: number;       // fire single-target, fires in 2 turns
+  queueDamageDelayed?: number;     // fire single-target, fires in 3 turns
+  queueDamageCharged?: number;     // fire single-target, fires in 4 turns
   queueChainQuick?: number;        // lightning chain, fires in 2 turns
   queueChainDelayed?: number;      // lightning chain, fires in 3 turns
   queueChainCharged?: number;      // lightning chain, fires in 4 turns
@@ -208,6 +212,8 @@ export interface QueuedEffect {
   element: 'ice' | 'fire' | 'lightning';
   blockAmount?: number;       // ice: gain this block when fired
   damageAllAmount?: number;   // fire: deal this to all enemies when fired
+  damageAmount?: number;      // fire: deal this to one specific enemy when fired (single-target)
+  targetInstanceId?: string;  // if set, only this enemy is hit (single-target fire)
   chainAmount?: number;       // lightning: deal this to each enemy when fired (scales with enemy count)
   burnApply?: number;         // fire: also apply this burn to all enemies when fired
   turnsUntilFire: number;     // countdown: 1=fast, 2=quick, 3=delayed, 4=charged
