@@ -620,6 +620,12 @@ export interface GameState {
   pendingRemoveCount: number | null;
   pendingRemoveMessage: string | null;
   pendingRemoveCardsRemoved: CardInstance[];
+  pendingRemoveRewards: {
+    cardAdded?: CardInstance;
+    cardUpgraded?: CardInstance;
+    consumableAdded?: ConsumableInstance;
+    itemAdded?: ItemDef;
+  } | null;
 
   // Actions
   selectCharacter: (characterId: string) => void;

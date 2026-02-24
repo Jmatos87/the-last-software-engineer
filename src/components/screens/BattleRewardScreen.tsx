@@ -26,26 +26,6 @@ export const BattleRewardScreen: React.FC = () => {
     return !!(e.startBattleVulnerable || e.startBattleWeak || e.startBattleDamage || e.stressPerCombat);
   };
 
-  const getEffectLines = (item: ItemDef): { text: string; negative: boolean }[] => {
-    const lines: { text: string; negative: boolean }[] = [];
-    const e = item.effect;
-    if (e.extraEnergy) lines.push({ text: `+${e.extraEnergy} Energy/turn`, negative: false });
-    if (e.extraDraw) lines.push({ text: `+${e.extraDraw} Card draw/turn`, negative: false });
-    if (e.extraHp) lines.push({ text: `+${e.extraHp} Max HP`, negative: false });
-    if (e.healOnKill) lines.push({ text: `Heal ${e.healOnKill} after combat`, negative: false });
-    if (e.extraGold) lines.push({ text: `+${e.extraGold} Gold/combat`, negative: false });
-    if (e.bonusDamage) lines.push({ text: `+${e.bonusDamage} Attack damage`, negative: false });
-    if (e.bonusBlock) lines.push({ text: `+${e.bonusBlock} Skill block`, negative: false });
-    if (e.startBattleConfidence) lines.push({ text: `+${e.startBattleConfidence} Confidence`, negative: false });
-    if (e.startBattleResilience) lines.push({ text: `+${e.startBattleResilience} Resilience`, negative: false });
-    if (e.healPerCombat) lines.push({ text: `Heal ${e.healPerCombat} at combat start`, negative: false });
-    if (e.startBattleVulnerable) lines.push({ text: `Start Vulnerable ${e.startBattleVulnerable}`, negative: true });
-    if (e.startBattleWeak) lines.push({ text: `Start Weak ${e.startBattleWeak}`, negative: true });
-    if (e.startBattleDamage) lines.push({ text: `Take ${e.startBattleDamage} damage at start`, negative: true });
-    if (e.stressPerCombat) lines.push({ text: `+${e.stressPerCombat} Stress/combat`, negative: true });
-    return lines;
-  };
-
   return (
     <div style={{
       height: '100%',
@@ -88,7 +68,6 @@ export const BattleRewardScreen: React.FC = () => {
             {pendingRewards.artifactChoices!.map(item => {
               const isDoublEdged = hasNegativeEffect(item);
               const borderColor = isDoublEdged ? '#e74c3c' : 'var(--accent-green)';
-              const effectLines = getEffectLines(item);
               return (
                 <div
                   key={item.id}
@@ -117,12 +96,8 @@ export const BattleRewardScreen: React.FC = () => {
                   <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>
                     {item.rarity}
                   </div>
-                  <div style={{ fontSize: 11, lineHeight: 1.4 }}>
-                    {effectLines.map((line, i) => (
-                      <div key={i} style={{ color: line.negative ? '#e74c3c' : 'var(--accent-green)' }}>
-                        {line.text}
-                      </div>
-                    ))}
+                  <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                    {item.description}
                   </div>
                 </div>
               );

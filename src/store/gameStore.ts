@@ -25,7 +25,7 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
-const GAME_VERSION = '1.20.9';
+const GAME_VERSION = '1.21.0';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
@@ -156,6 +156,7 @@ export const useGameStore = create<GameState>()(
     pendingRemoveCount: null,
     pendingRemoveMessage: null,
     pendingRemoveCardsRemoved: [],
+    pendingRemoveRewards: null,
 
     selectCharacter: (characterId: string) => {
       const char = characters.find(c => c.id === characterId);
@@ -908,6 +909,16 @@ export const useGameStore = create<GameState>()(
           s.pendingRemoveCount = outcome.removeChosenCard;
           s.pendingRemoveMessage = outcome.message;
           s.pendingRemoveCardsRemoved = [] as any;
+          // Save any other rewards so confirmRemoveEventCard can include them in eventOutcome
+          const pendingItemAdded = outcome.addItem
+            ? (items.find(i => i.id === outcome.addItem) ?? undefined)
+            : undefined;
+          s.pendingRemoveRewards = {
+            cardAdded: cardAdded,
+            cardUpgraded: cardUpgraded,
+            consumableAdded: consumableAdded,
+            itemAdded: pendingItemAdded as any,
+          };
           // Don't set eventOutcome yet — EventScreen will show card picker
           return;
         }
@@ -934,6 +945,7 @@ export const useGameStore = create<GameState>()(
         s.pendingRemoveCount = null;
         s.pendingRemoveMessage = null;
         s.pendingRemoveCardsRemoved = [];
+        s.pendingRemoveRewards = null;
         s.screen = 'MAP';
       });
       const updated = get();
@@ -1041,6 +1053,7 @@ export const useGameStore = create<GameState>()(
         s.pendingRemoveCount = null;
         s.pendingRemoveMessage = null;
         s.pendingRemoveCardsRemoved = [];
+        s.pendingRemoveRewards = null;
       });
     },
 
@@ -1359,14 +1372,16 @@ export const useGameStore = create<GameState>()(
         s.pendingRemoveCount -= 1;
 
         if (s.pendingRemoveCount <= 0) {
-          // All removals done — show outcome
+          // All removals done — show outcome, merging any deferred rewards
           s.eventOutcome = {
             message: s.pendingRemoveMessage || 'Cards removed.',
             cardsRemoved: s.pendingRemoveCardsRemoved as any,
+            ...(s.pendingRemoveRewards || {}),
           };
           s.pendingRemoveCount = null;
           s.pendingRemoveMessage = null;
           s.pendingRemoveCardsRemoved = [];
+          s.pendingRemoveRewards = null;
         }
       });
     },
