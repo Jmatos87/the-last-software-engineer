@@ -124,7 +124,8 @@ export const shrineEvents: EventDef[] = [
         outcome: {
           hp: 25,
           stress: -25,
-          message: 'You lie on the cushion and do absolutely nothing. No coding. No planning. No thinking about the meta. For the first time in this run, you exist without purpose. It is the most healing thing that has ever happened to you.',
+          addConsumable: 'random_common',
+          message: 'You lie on the cushion and do absolutely nothing. No coding. No planning. No thinking about the meta. For the first time in this run, you exist without purpose. When you rise, you find something useful left on the cushion by the last occupant.',
         },
       },
       {

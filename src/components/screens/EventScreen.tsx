@@ -284,6 +284,38 @@ export const EventScreen: React.FC = () => {
           );
         })()}
 
+        {eventOutcome.consumableFull && (() => {
+          const c = eventOutcome.consumableFull!;
+          const rarityColor = c.rarity === 'legendary' ? 'var(--accent-gold)' : c.rarity === 'epic' ? 'var(--accent-yellow)' : c.rarity === 'rare' ? 'var(--accent-blue)' : 'var(--text-secondary)';
+          return (
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 8,
+              opacity: 0.45,
+            }}>
+              <span style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 'bold' }}>
+                Consumable (slots full):
+              </span>
+              <div style={{
+                width: 160,
+                padding: 14,
+                background: 'var(--bg-card)',
+                border: `2px solid ${rarityColor}`,
+                borderRadius: 'var(--radius-md)',
+                textAlign: 'center',
+                filter: 'grayscale(1)',
+              }}>
+                <span style={{ fontSize: 24 }}>{c.icon}</span>
+                <div style={{ fontSize: 12, fontWeight: 'bold', marginTop: 4 }}>{c.name}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 6 }}>{c.rarity}</div>
+                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{c.description}</div>
+              </div>
+            </div>
+          );
+        })()}
+
         {eventOutcome.itemAdded && (() => {
           const item = eventOutcome.itemAdded!;
           const rarityColor = item.rarity === 'legendary' ? 'var(--accent-gold)' : item.rarity === 'epic' ? 'var(--accent-yellow)' : item.rarity === 'rare' ? 'var(--accent-blue)' : 'var(--text-secondary)';

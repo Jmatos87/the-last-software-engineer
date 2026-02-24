@@ -240,7 +240,8 @@ export const act2Events: EventDef[] = [
         outcome: {
           setFlag: 'has_referral_scroll_held',
           stress: -3,
-          message: 'The guard raises an eyebrow. "You want to... wait? For the FINAL round?" You nod. The scroll pulses brighter, as if agreeing. Whatever awaits at the end of this dungeon, this scroll will open doors you can\'t imagine. Patience is its own form of power.',
+          gold: 20,
+          message: 'The guard raises an eyebrow. "You want to... wait? For the FINAL round?" You nod. The scroll pulses brighter, as if agreeing. The guard, impressed by your patience, slides a few coins across the desk. Whatever awaits at the end of this dungeon, this scroll will open doors you can\'t imagine.',
         },
       },
       {

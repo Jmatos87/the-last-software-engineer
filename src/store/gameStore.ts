@@ -25,7 +25,7 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
-const GAME_VERSION = '1.21.2';
+const GAME_VERSION = '1.21.3';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
@@ -864,43 +864,54 @@ export const useGameStore = create<GameState>()(
 
         // Handle addConsumable
         let consumableAdded: ConsumableInstance | undefined;
-        if (outcome.addConsumable && s.run.consumables.length < s.run.maxConsumables) {
-          let cDef: import('../types').ConsumableDef | undefined;
+        let consumableFull: ConsumableInstance | undefined;
+        if (outcome.addConsumable) {
           const cType = outcome.addConsumable;
-          if (cType === 'random_common') cDef = getRandomConsumable('common');
-          else if (cType === 'random_uncommon') cDef = getRandomConsumable('rare'); // migrate old references
-          else if (cType === 'random_rare') cDef = getRandomConsumable('rare');
-          else if (cType === 'random_epic') cDef = getRandomConsumable('epic');
-          else if (cType === 'random_common_x2') {
-            // Add 2 commons
-            const c1 = getRandomConsumable('common');
-            const inst1: ConsumableInstance = { ...c1, instanceId: uuidv4() };
-            s.run.consumables.push(inst1 as any);
-            consumableAdded = inst1;
-            if (s.run.consumables.length < s.run.maxConsumables) {
-              const c2 = getRandomConsumable('common');
-              const inst2: ConsumableInstance = { ...c2, instanceId: uuidv4() };
-              s.run.consumables.push(inst2 as any);
+          const slotsAvailable = s.run.consumables.length < s.run.maxConsumables;
+          if (cType === 'random_common_x2') {
+            if (slotsAvailable) {
+              const c1 = getRandomConsumable('common');
+              const inst1: ConsumableInstance = { ...c1, instanceId: uuidv4() };
+              s.run.consumables.push(inst1 as any);
+              consumableAdded = inst1;
+              if (s.run.consumables.length < s.run.maxConsumables) {
+                const c2 = getRandomConsumable('common');
+                const inst2: ConsumableInstance = { ...c2, instanceId: uuidv4() };
+                s.run.consumables.push(inst2 as any);
+              }
+            } else {
+              consumableFull = { ...getRandomConsumable('common'), instanceId: uuidv4() };
             }
-            cDef = undefined; // Already handled
           } else if (cType === 'random_uncommon_x2') {
-            const c1 = getRandomConsumable('rare'); // migrate
-            const inst1: ConsumableInstance = { ...c1, instanceId: uuidv4() };
-            s.run.consumables.push(inst1 as any);
-            consumableAdded = inst1;
-            if (s.run.consumables.length < s.run.maxConsumables) {
-              const c2 = getRandomConsumable('rare');
-              const inst2: ConsumableInstance = { ...c2, instanceId: uuidv4() };
-              s.run.consumables.push(inst2 as any);
+            if (slotsAvailable) {
+              const c1 = getRandomConsumable('rare');
+              const inst1: ConsumableInstance = { ...c1, instanceId: uuidv4() };
+              s.run.consumables.push(inst1 as any);
+              consumableAdded = inst1;
+              if (s.run.consumables.length < s.run.maxConsumables) {
+                const c2 = getRandomConsumable('rare');
+                const inst2: ConsumableInstance = { ...c2, instanceId: uuidv4() };
+                s.run.consumables.push(inst2 as any);
+              }
+            } else {
+              consumableFull = { ...getRandomConsumable('rare'), instanceId: uuidv4() };
             }
-            cDef = undefined;
           } else {
-            cDef = getConsumableDef(cType);
-          }
-          if (cDef) {
-            const inst: ConsumableInstance = { ...cDef, instanceId: uuidv4() };
-            s.run.consumables.push(inst as any);
-            consumableAdded = inst;
+            let cDef: import('../types').ConsumableDef | undefined;
+            if (cType === 'random_common') cDef = getRandomConsumable('common');
+            else if (cType === 'random_uncommon') cDef = getRandomConsumable('rare');
+            else if (cType === 'random_rare') cDef = getRandomConsumable('rare');
+            else if (cType === 'random_epic') cDef = getRandomConsumable('epic');
+            else cDef = getConsumableDef(cType);
+            if (cDef) {
+              if (slotsAvailable) {
+                const inst: ConsumableInstance = { ...cDef, instanceId: uuidv4() };
+                s.run.consumables.push(inst as any);
+                consumableAdded = inst;
+              } else {
+                consumableFull = { ...cDef, instanceId: uuidv4() };
+              }
+            }
           }
         }
 
@@ -917,6 +928,7 @@ export const useGameStore = create<GameState>()(
             cardAdded: cardAdded,
             cardUpgraded: cardUpgraded,
             consumableAdded: consumableAdded,
+            consumableFull: consumableFull,
             itemAdded: pendingItemAdded as any,
           };
           // Don't set eventOutcome yet — EventScreen will show card picker
@@ -933,6 +945,7 @@ export const useGameStore = create<GameState>()(
           cardRemoved: cardRemoved,
           cardUpgraded: cardUpgraded,
           consumableAdded: consumableAdded,
+          consumableFull: consumableFull,
           itemAdded: itemAdded as any,
         };
       });

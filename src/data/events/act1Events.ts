@@ -84,7 +84,8 @@ export const act1Events: EventDef[] = [
         outcome: {
           hp: 8,
           stress: 5,
-          message: 'You drink until the listings blur into a pleasant smear of "fast-paced environment" and "rockstar developer." When you look up, the bard is crying. You join them. It\'s therapeutic, in its way.',
+          gold: 10,
+          message: 'You drink until the listings blur into a pleasant smear of "fast-paced environment" and "rockstar developer." When you look up, the bard is crying. You join them. It\'s therapeutic, in its way. Someone buys your next round — and slips a few coins on the way out.',
         },
       },
     ],
@@ -149,7 +150,8 @@ export const act1Events: EventDef[] = [
         outcome: {
           hp: 10,
           stress: -8,
-          message: 'You light a candle for each fallen profile. The ghosts seem grateful. One whispers a LeetCode solution. Another shares the salary they were too afraid to negotiate for. You leave feeling strangely at peace.',
+          gold: 15,
+          message: 'You light a candle for each fallen profile. The ghosts seem grateful. One whispers a LeetCode solution. Another shares the salary they were too afraid to negotiate for. A third leaves coins at the altar — compensation for witnessing their tragedy.',
         },
       },
     ],

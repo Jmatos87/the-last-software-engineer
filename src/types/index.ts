@@ -615,6 +615,7 @@ export interface GameState {
     cardsRemoved?: CardInstance[];
     cardUpgraded?: CardInstance;
     consumableAdded?: ConsumableInstance;
+    consumableFull?: ConsumableInstance;
     itemAdded?: ItemDef;
   } | null;
   pendingRemoveCount: number | null;
@@ -624,6 +625,7 @@ export interface GameState {
     cardAdded?: CardInstance;
     cardUpgraded?: CardInstance;
     consumableAdded?: ConsumableInstance;
+    consumableFull?: ConsumableInstance;
     itemAdded?: ItemDef;
   } | null;
 

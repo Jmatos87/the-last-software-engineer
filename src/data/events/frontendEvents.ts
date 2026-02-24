@@ -37,7 +37,8 @@ export const frontendEvents: EventDef[] = [
         outcome: {
           hp: 10,
           stress: -10,
-          message: 'It\'s 2026. You used a `<table>` for layout. You center-aligned a `<td>`. The maze collapses, embarrassed to exist around such primal energy. You\'ve made peace with who you are. The comments section of your soul will be chaotic.',
+          gold: 15,
+          message: 'It\'s 2026. You used a `<table>` for layout. You center-aligned a `<td>`. The maze collapses, embarrassed to exist around such primal energy. A senior dev watches in awe, slides you coins: "I\'ve been trying to do that for years."',
         },
       },
     ],

@@ -35,7 +35,8 @@ export const aiEngineerEvents: EventDef[] = [
         outcome: {
           hp: 15,
           stress: -10,
-          message: 'You set a CloudWatch alert and go outside. Walk. Eat a meal not at a desk. Sleep. At 2 AM, capacity opens. The checkpoint auto-resumes. You don\'t even wake up. Rest was the most optimal strategy all along.',
+          gold: 20,
+          message: 'You set a CloudWatch alert and go outside. Walk. Eat a meal not at a desk. Sleep. At 2 AM, capacity opens. The checkpoint auto-resumes. You wake up to a Slack message: "Training completed. Budget saved: $20." The cloud billed less than expected.',
         },
       },
     ],

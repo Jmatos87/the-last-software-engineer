@@ -151,7 +151,8 @@ export const act3Events: EventDef[] = [
         outcome: {
           hp: 10,
           stress: -12,
-          message: 'You stand up, nod politely, and walk out. The VP sputters. "But the FORM — the PROCESS—" Their voice fades as the door closes. Some rituals exist only because no one questions them. You question it. You\'re free.',
+          gold: 25,
+          message: 'You stand up, nod politely, and walk out. The VP sputters. "But the FORM — the PROCESS—" Their voice fades as the door closes. On your way out, a disgruntled employee slips you an envelope. "Nobody\'s walked out in years," they whisper. "You deserve this."',
         },
       },
     ],
