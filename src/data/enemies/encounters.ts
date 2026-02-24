@@ -70,7 +70,7 @@ export function getBossEncounter(act: number, run?: RunState): string[] {
     if (isAttackHeavy) return ['ghosting_phantom', 'ghost_echo', 'ghost_echo']; // hidden intent defeats attack planners
   }
   if (act === 2) {
-    if (isHighStress)    return ['panel_interview_hydra', 'panel_member_a', 'panel_member_b']; // stress attacks compound existing damage
+    if (isHighStress)    return ['live_coding_challenge', 'test_case'];                         // burst DPS punishes stressed/depleted runs
     if (hasPowerSynergy) return ['vp_of_engineering', 'executive_assistant'];                   // debuffs punish power setup windows
     return ['live_coding_challenge', 'test_case'];                                              // burst punishes depleted runs
   }
