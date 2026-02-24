@@ -238,7 +238,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
           fontWeight: 'bold',
           color: '#000',
         }}>
-          {battle?.nextCardCostZero ? 0 : card.cost}
+          {battle?.nextCardCostZero ? 0 : Math.max(0, card.cost - (battle?.nextCardCostReduction || 0))}
         </div>
         {!compact && (
           <span style={{ fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
@@ -305,6 +305,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
 export const CardOverlay: React.FC<{ card: CardInstance }> = ({ card }) => {
   const { compact } = useMobile();
   const nextCardFree = useGameStore(s => s.battle?.nextCardCostZero ?? false);
+  const nextCardCostReduction = useGameStore(s => s.battle?.nextCardCostReduction ?? 0);
   const borderColor = card.type === 'attack' ? 'var(--card-attack)'
     : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
 
@@ -328,7 +329,7 @@ export const CardOverlay: React.FC<{ card: CardInstance }> = ({ card }) => {
           background: 'var(--energy-color)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: compact ? 9 : 14, fontWeight: 'bold', color: '#000',
-        }}>{nextCardFree ? 0 : card.cost}</div>
+        }}>{nextCardFree ? 0 : Math.max(0, card.cost - (nextCardCostReduction || 0))}</div>
       </div>
       <div style={{ fontSize: compact ? 14 : 28, textAlign: 'center' }}>{card.icon}</div>
       <div style={{ fontSize: compact ? 8 : 11, fontWeight: 'bold', textAlign: 'center' }}>{card.name}</div>

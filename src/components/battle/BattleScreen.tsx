@@ -135,7 +135,8 @@ export const BattleScreen: React.FC = () => {
     const card = active.data.current?.card as CardInstance | undefined;
     if (!card) return;
 
-    if (!battle.nextCardCostZero && card.cost > battle.energy) return;
+    const effectiveCost = battle.nextCardCostZero ? 0 : Math.max(0, card.cost - (battle.nextCardCostReduction || 0));
+    if (effectiveCost > battle.energy) return;
 
     const overData = over.data.current;
 
@@ -366,7 +367,7 @@ export const BattleScreen: React.FC = () => {
               >
                 <CardComponent
                   card={card}
-                  disabled={!battle.nextCardCostZero && card.cost > battle.energy}
+                  disabled={Math.max(0, battle.nextCardCostZero ? 0 : card.cost - (battle.nextCardCostReduction || 0)) > battle.energy}
                 />
               </div>
             ))}

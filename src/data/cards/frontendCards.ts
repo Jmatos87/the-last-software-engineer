@@ -119,10 +119,10 @@ export const frontendCards: Record<string, CardDef> = {
   hot_key: {
     id: 'hot_key', name: 'Hot Key', type: 'skill', target: 'self', cost: 0, rarity: 'common',
     class: 'frontend', archetype: 'burst',
-    description: 'Gain 1 extra Flow. Reduce next card cost by 1. Ctrl+Shift+K — a rune sequence forged for war.',
+    description: 'Gain 1 extra Flow. Your next card costs 1 less. Ctrl+Shift+K — a rune sequence forged for war.',
     effects: { gainExtraFlow: 1, reduceNextCardCost: 1 },
     upgradedEffects: { gainExtraFlow: 2, reduceNextCardCost: 1 },
-    upgradedDescription: 'Gain 2 extra Flow. Reduce next card cost by 1. The runes hum with killing intent.',
+    upgradedDescription: 'Gain 2 extra Flow. Your next card costs 1 less. The runes hum with killing intent.',
     icon: '⌨️',
   },
   import_star: {
@@ -137,10 +137,10 @@ export const frontendCards: Record<string, CardDef> = {
   minify: {
     id: 'minify', name: 'Minify', type: 'skill', target: 'self', cost: 0, rarity: 'common',
     class: 'frontend', archetype: 'burst',
-    description: 'Reduce next card cost by 2. Draw 1. Tree-shaken, minified, gzipped — a spell compressed into a killing word.',
+    description: 'Your next card costs 2 less. Draw 1. Tree-shaken, minified, gzipped — a spell compressed into a killing word.',
     effects: { reduceNextCardCost: 2, draw: 1 },
     upgradedEffects: { reduceNextCardCost: 3, draw: 1 },
-    upgradedDescription: 'Reduce next card cost by 3. Draw 1. Further compressed — lethal in a single syllable.',
+    upgradedDescription: 'Your next card costs 3 less. Draw 1. Further compressed — lethal in a single syllable.',
     icon: '📉',
   },
   pipe_operator: {
@@ -255,10 +255,10 @@ export const frontendCards: Record<string, CardDef> = {
   tree_shake_burst: {
     id: 'tree_shake_burst', name: 'Tree Shake', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
     class: 'frontend', archetype: 'burst',
-    description: 'Reduce next card cost by 2. Draw 2. The dead code is pruned — only the killing branches remain.',
+    description: 'Your next card costs 2 less. Draw 2. The dead code is pruned — only the killing branches remain.',
     effects: { reduceNextCardCost: 2, draw: 2 },
     upgradedEffects: { reduceNextCardCost: 2, draw: 2 },
-    upgradedDescription: 'Cost 0. Reduce next card cost by 2. Draw 2. The tree shakes itself — free of charge.',
+    upgradedDescription: 'Cost 0. Your next card costs 2 less. Draw 2. The tree shakes itself — free of charge.',
     upgradedCost: 0,
     icon: '🌳',
   },
