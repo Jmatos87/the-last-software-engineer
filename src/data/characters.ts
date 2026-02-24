@@ -6,7 +6,7 @@ import aiPortrait from '../assets/ai-class.png';
 export const characters: CharacterDef[] = [
   {
     id: 'frontend_dev',
-    name: 'Frontend Dev',
+    name: 'Frontend Engineer',
     title: 'The Agile Shadow',
     hp: 75,
     energy: 3,
@@ -26,7 +26,7 @@ export const characters: CharacterDef[] = [
   },
   {
     id: 'backend_dev',
-    name: 'Backend Dev',
+    name: 'Backend Engineer',
     title: 'The Elemental Architect',
     hp: 85,
     energy: 3,

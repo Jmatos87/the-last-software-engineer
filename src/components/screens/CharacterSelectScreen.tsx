@@ -35,7 +35,7 @@ export const CharacterSelectScreen: React.FC = () => {
     }} className="animate-fade-in">
       <div style={{ textAlign: 'center' }}>
         <h1 style={{ fontSize: compact ? 18 : 28, color: 'var(--accent-cyan)', marginBottom: compact ? 4 : 8 }}>
-          {'>'} The Last Software Engineer _
+          The Last Software Engineer
         </h1>
         <p style={{ color: 'var(--text-secondary)', fontSize: compact ? 11 : 14 }}>
           Choose your class to begin
@@ -181,7 +181,7 @@ export const CharacterSelectScreen: React.FC = () => {
             disabled={!run}
             style={{ marginTop: compact ? 10 : 16, width: '100%', padding: compact ? 8 : 12, fontSize: compact ? 13 : 16 }}
           >
-            {'>'} Start Run _
+            Start Run
           </button>
         </div>
       )}
