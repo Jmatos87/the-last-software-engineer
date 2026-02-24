@@ -40,7 +40,7 @@ export const EventScreen: React.FC = () => {
           Choose {pendingRemoveCount} card{pendingRemoveCount > 1 ? 's' : ''} to remove:
         </p>
 
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 700 }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 700, maxHeight: compact ? '55vh' : '60vh', overflowY: 'auto', padding: '4px 2px' }}>
           {run.deck.map(card => {
             const borderColor = card.type === 'attack' ? 'var(--card-attack)'
               : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';

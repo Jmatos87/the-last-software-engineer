@@ -187,7 +187,7 @@ export const ShopScreen: React.FC = () => {
               </button>
             ) : (
               <div>
-                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12, maxHeight: compact ? '50vh' : '55vh', overflowY: 'auto', padding: '4px 2px' }}>
                   {run.deck.map(card => {
                     const borderColor = card.type === 'attack' ? 'var(--card-attack)'
                       : card.type === 'skill' ? 'var(--card-skill)' : 'var(--card-power)';
