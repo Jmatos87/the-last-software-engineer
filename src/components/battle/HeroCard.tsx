@@ -196,11 +196,10 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
             </div>
             {/* Stress bar */}
             <HpBar current={run.stress} max={run.maxStress} height={compact ? 4 : 7} color="var(--accent-purple)" />
+            {/* Status effects — inside HP/stress column so they sit right below */}
+            <StatusEffects effects={battle.playerStatusEffects} />
           </div>
         </div>
-
-        {/* Status effects */}
-        <StatusEffects effects={battle.playerStatusEffects} />
 
         {/* Ice detonation countdown pills */}
         {detonationQueue && (() => {
