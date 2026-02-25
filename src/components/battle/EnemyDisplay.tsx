@@ -164,7 +164,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
             border: '1px solid var(--accent-yellow)',
             borderRadius: 'var(--radius-md)',
             padding: compact ? '2px 6px' : '4px 10px',
-            fontSize: compact ? 9 : 11,
+            fontSize: compact ? 9 : 12,
             color: 'var(--text-primary)',
             fontStyle: 'italic',
             maxWidth: 160,
@@ -233,7 +233,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
       <div style={{ width: '100%' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 2 : 4, width: '100%' }}>
           {enemy.block > 0 && (
-            <span style={{ fontSize: compact ? 8 : 11, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: compact ? 8 : 12, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
               🛡️{enemy.block}
             </span>
           )}
@@ -269,7 +269,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
                   borderRadius: 8,
                   background: 'rgba(0,0,0,0.5)',
                   border: `1px solid ${color}`,
-                  fontSize: compact ? 8 : 10,
+                  fontSize: compact ? 8 : 12,
                   color, fontWeight: 'bold',
                 }}>
                   <span>{icon}</span>

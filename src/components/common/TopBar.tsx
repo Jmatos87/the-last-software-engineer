@@ -147,7 +147,7 @@ export const TopBar: React.FC<TopBarProps> = ({ extra, onUseConsumable, onTarget
         style={{
           marginLeft: extra ? 8 : 'auto',
           padding: compact ? '2px 6px' : '4px 10px',
-          fontSize: compact ? 9 : 11,
+          fontSize: compact ? 9 : 12,
           background: 'transparent',
           border: '1px solid var(--border-color)',
           color: 'var(--text-secondary)',

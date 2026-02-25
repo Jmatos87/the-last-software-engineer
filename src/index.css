@@ -4,9 +4,9 @@
   --bg-card: #1a2340;
   --bg-card-hover: #223060;
   --bg-surface: #0f1525;
-  --text-primary: #e0e6f0;
-  --text-secondary: #8892a8;
-  --text-muted: #4a5568;
+  --text-primary: #f0f4ff;
+  --text-secondary: #9daabb;
+  --text-muted: #6b7890;
   --accent-blue: #4a9eff;
   --accent-green: #4ade80;
   --accent-red: #f87171;
@@ -51,6 +51,7 @@ html, body, #root {
 
 body {
   font-family: var(--font-mono);
+  font-size: 14px;
   background: var(--bg-primary);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;

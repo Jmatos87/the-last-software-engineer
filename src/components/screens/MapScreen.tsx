@@ -159,7 +159,7 @@ export const MapScreen: React.FC = () => {
                   <text
                     x={x} y={y + (compact ? 26 : 36)}
                     textAnchor="middle"
-                    fontSize={compact ? 7 : 9}
+                    fontSize={compact ? 7 : 12}
                     fill="var(--text-muted)"
                     style={{ pointerEvents: 'none' }}
                   >

@@ -303,7 +303,7 @@ export const BattleScreen: React.FC = () => {
             }}>
               {battle.drawPile.length}
             </div>
-            <span style={{ fontSize: compact ? 7 : 9, color: 'var(--text-muted)' }}>DRAW</span>
+            <span style={{ fontSize: compact ? 7 : 12, color: 'var(--text-muted)' }}>DRAW</span>
           </div>
 
           {/* Energy orb */}
@@ -372,7 +372,7 @@ export const BattleScreen: React.FC = () => {
             }}>
               {battle.discardPile.length}
             </div>
-            <span style={{ fontSize: compact ? 7 : 9, color: 'var(--text-muted)' }}>DISCARD</span>
+            <span style={{ fontSize: compact ? 7 : 12, color: 'var(--text-muted)' }}>DISCARD</span>
           </div>
         </div>
       </div>

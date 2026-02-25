@@ -22,7 +22,7 @@ const DeploymentPanel: React.FC<{ deployments: Deployment[] }> = ({ deployments 
             border: '1px solid rgba(74,158,255,0.4)',
             borderRadius: 6,
             padding: compact ? '2px 5px' : '3px 7px',
-            fontSize: compact ? 8 : 11,
+            fontSize: compact ? 8 : 12,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -70,7 +70,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
     return (
       <div className="hero-gauge-col">
         <span style={{
-          fontSize: compact ? 6 : 8,
+          fontSize: compact ? 6 : 12,
           lineHeight: 1,
           color,
         }}>
@@ -91,7 +91,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
           })}
         </div>
         <span style={{
-          fontSize: compact ? 6 : 9,
+          fontSize: compact ? 6 : 12,
           fontWeight: 'bold',
           color,
           lineHeight: 1,
@@ -109,7 +109,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
     return (
       <div className="hero-gauge-col">
         <span style={{
-          fontSize: compact ? 6 : 8,
+          fontSize: compact ? 6 : 12,
           lineHeight: 1,
           color: tempColor,
         }}>
@@ -133,7 +133,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
           })}
         </div>
         <span style={{
-          fontSize: compact ? 6 : 9,
+          fontSize: compact ? 6 : 12,
           fontWeight: 'bold',
           color: tempColor,
           lineHeight: 1,
@@ -186,7 +186,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
             {/* Block + HP bar */}
             <div style={{ display: 'flex', alignItems: 'center', gap: compact ? 2 : 4 }}>
               {battle.playerBlock > 0 && (
-                <span style={{ fontSize: compact ? 8 : 11, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: compact ? 8 : 12, color: 'var(--block-color)', whiteSpace: 'nowrap' }}>
                   🛡️{battle.playerBlock}
                 </span>
               )}
@@ -218,7 +218,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
                     borderRadius: 8,
                     background: 'rgba(0,0,0,0.5)',
                     border: `1px solid ${color}`,
-                    fontSize: compact ? 8 : 10,
+                    fontSize: compact ? 8 : 12,
                     color, fontWeight: 'bold',
                   }}>
                     <span>🧊</span>
@@ -238,7 +238,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
             border: '1px solid rgba(245,158,11,0.5)',
             borderRadius: 4,
             padding: compact ? '1px 4px' : '2px 6px',
-            fontSize: compact ? 7 : 10,
+            fontSize: compact ? 7 : 12,
             color: '#f59e0b',
             fontWeight: 'bold',
           }}>
@@ -258,7 +258,7 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
             border: '1px solid rgba(251,191,36,0.5)',
             borderRadius: 4,
             padding: compact ? '1px 4px' : '2px 6px',
-            fontSize: compact ? 7 : 10,
+            fontSize: compact ? 7 : 12,
             color: '#fbbf24',
             fontWeight: 'bold',
             textAlign: 'center',

@@ -49,7 +49,7 @@ export const StatusEffects: React.FC<StatusEffectsProps> = ({ effects }) => {
               background: 'var(--bg-primary)',
               border: `1px solid ${info.color}`,
               borderRadius: 'var(--radius-sm)',
-              fontSize: compact ? 9 : 11,
+              fontSize: compact ? 9 : 12,
               color: info.color,
             }}>
               <span>{info.icon}</span>

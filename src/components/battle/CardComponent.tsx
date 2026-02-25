@@ -254,7 +254,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
 
       {/* Name */}
       <div style={{
-        fontSize: compact ? 8 : 11,
+        fontSize: compact ? 8 : 12,
         fontWeight: 'bold',
         textAlign: 'center',
         color: card.upgraded ? 'var(--accent-green)' : 'var(--text-primary)',
@@ -281,7 +281,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
 
       {/* Keywords & Target */}
       <div style={{
-        fontSize: compact ? 7 : 9,
+        fontSize: compact ? 7 : 12,
         color: 'var(--text-muted)',
         textAlign: 'center',
         display: 'flex',
@@ -332,7 +332,7 @@ export const CardOverlay: React.FC<{ card: CardInstance }> = ({ card }) => {
         }}>{nextCardFree ? 0 : Math.max(0, card.cost - (nextCardCostReduction || 0))}</div>
       </div>
       <div style={{ fontSize: compact ? 14 : 28, textAlign: 'center' }}>{card.icon}</div>
-      <div style={{ fontSize: compact ? 8 : 11, fontWeight: 'bold', textAlign: 'center' }}>{card.name}</div>
+      <div style={{ fontSize: compact ? 8 : 12, fontWeight: 'bold', textAlign: 'center' }}>{card.name}</div>
       {!compact && (
         <div style={{ fontSize: 10, color: 'var(--text-secondary)', textAlign: 'center' }}>{card.description}</div>
       )}
