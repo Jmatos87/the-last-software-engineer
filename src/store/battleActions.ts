@@ -539,7 +539,8 @@ export function executePlayCard(
     });
   }
   if (effects.blockIfCold && (newBattle.temperature ?? 5) <= 3) {
-    newBattle.playerBlock = (newBattle.playerBlock || 0) + effects.blockIfCold;
+    const coldBlock = calculateBlock(effects.blockIfCold, battle.playerStatusEffects, run.items, card.type === 'skill');
+    newBattle.playerBlock = (newBattle.playerBlock || 0) + coldBlock;
   }
 
   // Apply damage to all enemies
@@ -1123,6 +1124,7 @@ export function executePlayCard(
   }
   if (effects.blockPerPipeline && (newBattle.pipelineData || 0) > 0) {
     const pipelineBlock = effects.blockPerPipeline * (newBattle.pipelineData || 0);
+    // Pipeline block added raw (no calculateBlock) — resilience already applied via base block
     newBattle.playerBlock = (newBattle.playerBlock || 0) + pipelineBlock;
   }
   if (effects.pipelineThresholdDraw && (newBattle.pipelineData || 0) >= effects.pipelineThresholdDraw) {
@@ -1467,7 +1469,7 @@ export function executePlayCard(
   // blockPerSlot: bonus block scaled by slot count
   if (effects.blockPerSlot && (newBattle.engineerSlots || []).length > 0) {
     const slotBlock = effects.blockPerSlot * newBattle.engineerSlots.length;
-    newBattle.playerBlock += calculateBlock(slotBlock, newBattle.playerStatusEffects, run.items);
+    newBattle.playerBlock += calculateBlock(slotBlock, newBattle.playerStatusEffects, run.items, card.type === 'skill');
   }
 
   // damageAllPerSlot: bonus AoE damage scaled by slot count

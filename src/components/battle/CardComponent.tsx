@@ -8,6 +8,7 @@ import { useMobile } from '../../hooks/useMobile';
 function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, items: ItemDef[], defenderEffects: StatusEffect, dodgeScalesDamage: number = 0, pipelineData: number = 0) {
   const effects = card.upgraded && card.upgradedEffects ? card.upgradedEffects : card.effects;
   const result: Record<string, { base: number; effective: number }> = {};
+  const isSkill = card.type === 'skill';
   const dodgeBonus = dodgeScalesDamage * (playerEffects.dodge || 0);
   const pipelineDmgBonus = (effects.damagePerPipeline || 0) * pipelineData;
   const pipelineAoeDmgBonus = (effects.damageAllPerPipeline || 0) * pipelineData;
@@ -29,14 +30,10 @@ function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, it
     result.pipelineDamageAll = { base: effects.damageAllPerPipeline || 0, effective };
   }
   if (effects.block) {
-    // Fold pipeline block bonus into base block preview
-    if (pipelineBlockBonus > 0) {
-      const effective = calculateBlock(effects.block + pipelineBlockBonus, playerEffects, items);
-      result.block = { base: effects.block, effective };
-    } else {
-      const effective = calculateBlock(effects.block, playerEffects, items);
-      result.block = { base: effects.block, effective };
-    }
+    // Base block through calculateBlock (resilience, bonusBlock, skillBlockMultiplier)
+    // Pipeline block bonus added raw — matches engine behavior
+    const effective = calculateBlock(effects.block, playerEffects, items, isSkill) + pipelineBlockBonus;
+    result.block = { base: effects.block, effective };
   }
   if (effects.damageIfFlowHigh) {
     const effective = calculateDamage(effects.damageIfFlowHigh, playerEffects, defenderEffects, items);
@@ -54,6 +51,11 @@ function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, it
     const effective = calculateDamage(effects.damageAllIfHot, playerEffects, defenderEffects, items);
     result.damageAllIfHot = { base: effects.damageAllIfHot, effective };
   }
+  // blockIfCold: conditional block preview (parity with damageIfHot)
+  if (effects.blockIfCold) {
+    const effective = calculateBlock(effects.blockIfCold, playerEffects, items, isSkill);
+    result.blockIfCold = { base: effects.blockIfCold, effective };
+  }
   if (effects.copium) {
     const effective = calculateCopium(effects.copium, playerEffects, items);
     result.copium = { base: effects.copium, effective };
@@ -68,7 +70,7 @@ function getEffectiveEffects(card: CardInstance, playerEffects: StatusEffect, it
     result.damageAllPerSlot = { base: effects.damageAllPerSlot, effective };
   }
   if (effects.blockPerSlot) {
-    const effective = calculateBlock(effects.blockPerSlot, playerEffects, items);
+    const effective = calculateBlock(effects.blockPerSlot, playerEffects, items, isSkill);
     result.blockPerSlot = { base: effects.blockPerSlot, effective };
   }
   // Per-dodge scaling (Frontend)
@@ -174,6 +176,14 @@ function renderDescription(card: CardInstance, playerEffects: StatusEffect, item
       pattern: new RegExp(`(?:Gain |gain )${computed.block.base} [Bb]lock`),
       effective: computed.block.effective,
       base: computed.block.base,
+    });
+  }
+  // blockIfCold: conditional block preview (parity with damageIfHot)
+  if (computed.blockIfCold) {
+    replacements.push({
+      pattern: new RegExp(`\\+${computed.blockIfCold.base} block`),
+      effective: computed.blockIfCold.effective,
+      base: computed.blockIfCold.base,
     });
   }
   if (computed.copium) {
