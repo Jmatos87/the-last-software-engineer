@@ -44,7 +44,7 @@ export const CardPreview: React.FC<CardPreviewProps> = ({ card, x, y, label }) =
       {label && (
         <div style={{
           textAlign: 'center',
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: 'bold',
           color: 'var(--text-secondary)',
           marginBottom: 4,
@@ -116,7 +116,7 @@ export const CardPreview: React.FC<CardPreviewProps> = ({ card, x, y, label }) =
 
         {/* Rarity */}
         <div style={{
-          fontSize: 10,
+          fontSize: 12,
           color: 'var(--text-muted)',
           textAlign: 'center',
           textTransform: 'uppercase',

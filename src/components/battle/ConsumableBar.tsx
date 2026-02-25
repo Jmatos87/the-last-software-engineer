@@ -54,12 +54,12 @@ export const ConsumableBar: React.FC<ConsumableBarProps> = ({ onTargetEnemy, dis
               <div style={{ color: 'var(--text-secondary)', fontSize: 12, lineHeight: 1.4 }}>
                 {consumable.description}
               </div>
-              <div style={{ color: 'var(--text-muted)', fontSize: 10, marginTop: 4 }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 4 }}>
                 {consumable.target === 'enemy' ? 'Click → select target' : 'Click to use'}
               </div>
               <div
                 onClick={e => { e.stopPropagation(); discardConsumable(consumable.instanceId); }}
-                style={{ color: 'var(--accent-red)', fontSize: 10, marginTop: 4, cursor: 'pointer' }}
+                style={{ color: 'var(--accent-red)', fontSize: 12, marginTop: 4, cursor: 'pointer' }}
               >
                 [Discard]
               </div>

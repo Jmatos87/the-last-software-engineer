@@ -100,10 +100,10 @@ export const RestScreen: React.FC = () => {
                   }}
                 >
                   <div style={{ fontSize: 20, marginBottom: 4 }}>{card.icon}</div>
-                  <div style={{ fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
-                  <div style={{ fontSize: 10, color: 'var(--energy-color)', marginBottom: 4 }}>⚡{card.cost} → ⚡{upgCost}</div>
-                  <div style={{ fontSize: 9, color: 'var(--text-muted)', lineHeight: 1.3, marginBottom: 4 }}>{card.description}</div>
-                  <div style={{ fontSize: 9, color: 'var(--accent-green)', lineHeight: 1.3 }}>→ {upgDesc}</div>
+                  <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
+                  <div style={{ fontSize: 12, color: 'var(--energy-color)', marginBottom: 4 }}>⚡{card.cost} → ⚡{upgCost}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.3, marginBottom: 4 }}>{card.description}</div>
+                  <div style={{ fontSize: 12, color: 'var(--accent-green)', lineHeight: 1.3 }}>→ {upgDesc}</div>
                 </div>
               );
             })}
@@ -147,9 +147,9 @@ export const RestScreen: React.FC = () => {
                   }}
                 >
                   <div style={{ fontSize: 20, marginBottom: 4 }}>{card.icon}</div>
-                  <div style={{ fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
-                  <div style={{ fontSize: 10, color: 'var(--energy-color)', marginBottom: 4 }}>⚡{card.cost}</div>
-                  <div style={{ fontSize: 9, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
+                  <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
+                  <div style={{ fontSize: 12, color: 'var(--energy-color)', marginBottom: 4 }}>⚡{card.cost}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
                 </div>
               );
             })}

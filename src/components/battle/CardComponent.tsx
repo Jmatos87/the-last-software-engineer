@@ -241,7 +241,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
           {battle?.nextCardCostZero ? 0 : Math.max(0, card.cost - (battle?.nextCardCostReduction || 0))}
         </div>
         {!compact && (
-          <span style={{ fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
             {card.type}
           </span>
         )}
@@ -265,7 +265,7 @@ export const CardComponent: React.FC<CardComponentProps> = ({ card, disabled, on
       {/* Description (hidden on compact) */}
       {!compact && (
         <div style={{
-          fontSize: 9,
+          fontSize: 12,
           color: 'var(--text-secondary)',
           textAlign: 'center',
           lineHeight: 1.3,
@@ -334,7 +334,7 @@ export const CardOverlay: React.FC<{ card: CardInstance }> = ({ card }) => {
       <div style={{ fontSize: compact ? 14 : 28, textAlign: 'center' }}>{card.icon}</div>
       <div style={{ fontSize: compact ? 8 : 12, fontWeight: 'bold', textAlign: 'center' }}>{card.name}</div>
       {!compact && (
-        <div style={{ fontSize: 10, color: 'var(--text-secondary)', textAlign: 'center' }}>{card.description}</div>
+        <div style={{ fontSize: 12, color: 'var(--text-secondary)', textAlign: 'center' }}>{card.description}</div>
       )}
     </div>
   );

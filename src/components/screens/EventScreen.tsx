@@ -62,11 +62,11 @@ export const EventScreen: React.FC = () => {
                 onMouseLeave={e => { e.currentTarget.style.borderColor = borderColor; }}
               >
                 <div style={{ fontSize: 20, marginBottom: 4 }}>{card.icon}</div>
-                <div style={{ fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 6, fontSize: 10, marginBottom: 4 }}>
+                <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 6, fontSize: 12, marginBottom: 4 }}>
                   <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
                 </div>
-                <div style={{ fontSize: 9, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
               </div>
             );
           })}
@@ -142,11 +142,11 @@ export const EventScreen: React.FC = () => {
               >
                 <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
                 <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}</div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 12, marginBottom: 6 }}>
                   <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
                   <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
                 </div>
-                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
               </div>
             </div>
           );
@@ -179,11 +179,11 @@ export const EventScreen: React.FC = () => {
               >
                 <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
                 <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}+</div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 12, marginBottom: 6 }}>
                   <span style={{ color: 'var(--energy-color)' }}>⚡{card.upgradedCost ?? card.cost}</span>
                   <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
                 </div>
-                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.upgradedDescription ?? card.description}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.upgradedDescription ?? card.description}</div>
               </div>
             </div>
           );
@@ -217,11 +217,11 @@ export const EventScreen: React.FC = () => {
               >
                 <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
                 <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4, textDecoration: 'line-through' }}>{card.name}</div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 12, marginBottom: 6 }}>
                   <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
                   <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
                 </div>
-                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
               </div>
             </div>
           );
@@ -255,12 +255,12 @@ export const EventScreen: React.FC = () => {
                     }}
                   >
                     <div style={{ fontSize: 24, marginBottom: 4 }}>{card.icon}</div>
-                    <div style={{ fontSize: 11, fontWeight: 'bold', textDecoration: 'line-through', marginBottom: 4 }}>{card.name}</div>
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: 6, fontSize: 10, marginBottom: 4 }}>
+                    <div style={{ fontSize: 12, fontWeight: 'bold', textDecoration: 'line-through', marginBottom: 4 }}>{card.name}</div>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 6, fontSize: 12, marginBottom: 4 }}>
                       <span style={{ color: 'var(--energy-color)' }}>⚡{card.cost}</span>
                       <span style={{ color: 'var(--text-muted)' }}>{card.rarity}</span>
                     </div>
-                    <div style={{ fontSize: 9, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
                   </div>
                 );
               })}
@@ -291,8 +291,8 @@ export const EventScreen: React.FC = () => {
               }}>
                 <span style={{ fontSize: 24 }}>{c.icon}</span>
                 <div style={{ fontSize: 12, fontWeight: 'bold', marginTop: 4 }}>{c.name}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 6 }}>{c.rarity}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{c.description}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6 }}>{c.rarity}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{c.description}</div>
               </div>
             </div>
           );
@@ -323,8 +323,8 @@ export const EventScreen: React.FC = () => {
               }}>
                 <span style={{ fontSize: 24 }}>{c.icon}</span>
                 <div style={{ fontSize: 12, fontWeight: 'bold', marginTop: 4 }}>{c.name}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 6 }}>{c.rarity}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{c.description}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6 }}>{c.rarity}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{c.description}</div>
               </div>
             </div>
           );
@@ -353,8 +353,8 @@ export const EventScreen: React.FC = () => {
               }}>
                 <span style={{ fontSize: 24 }}>{item.icon}</span>
                 <div style={{ fontSize: 12, fontWeight: 'bold', marginTop: 4 }}>{item.name}</div>
-                <div style={{ fontSize: 10, color: rarityColor, marginBottom: 6 }}>{item.rarity}</div>
-                <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{item.description}</div>
+                <div style={{ fontSize: 12, color: rarityColor, marginBottom: 6 }}>{item.rarity}</div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{item.description}</div>
               </div>
             </div>
           );

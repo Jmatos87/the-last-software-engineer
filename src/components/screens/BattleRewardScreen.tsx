@@ -93,10 +93,10 @@ export const BattleRewardScreen: React.FC = () => {
                 >
                   <div style={{ fontSize: 32, marginBottom: 8 }}>{item.icon}</div>
                   <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{item.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6 }}>
                     {item.rarity}
                   </div>
-                  <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>
                     {item.description}
                   </div>
                 </div>
@@ -164,8 +164,8 @@ export const BattleRewardScreen: React.FC = () => {
                   >
                     <div style={{ fontSize: 32, marginBottom: 8 }}>{c.icon}</div>
                     <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{c.name}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>{c.rarity}</div>
-                    <div style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{c.description}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 6 }}>{c.rarity}</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{c.description}</div>
                   </div>
                 );
               })}
@@ -216,11 +216,11 @@ export const BattleRewardScreen: React.FC = () => {
                 >
                   <div style={{ fontSize: 32, marginBottom: 8 }}>{card.icon}</div>
                   <div style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 4 }}>{card.name}</div>
-                  <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 11, marginBottom: 6 }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: 12, marginBottom: 6 }}>
                     <span style={{ color: 'var(--energy-color)' }}>&#9889;{card.cost}</span>
                     <span style={{ color: card.rarity === 'legendary' ? 'var(--accent-gold)' : card.rarity === 'epic' ? 'var(--accent-yellow)' : card.rarity === 'rare' ? 'var(--accent-blue)' : 'var(--text-muted)' }}>{card.rarity}</span>
                   </div>
-                  <div style={{ fontSize: 10, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.4 }}>{card.description}</div>
                 </div>
               );
             })}

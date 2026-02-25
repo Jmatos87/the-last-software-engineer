@@ -78,7 +78,7 @@ export const CharacterSelectScreen: React.FC = () => {
               <div style={{ fontSize: compact ? 28 : 48, marginBottom: compact ? 4 : 8 }}>{char.icon}</div>
             )}
             <h3 style={{ fontSize: 16, marginBottom: 4 }}>{char.name}</h3>
-            <p style={{ fontSize: 11, color: 'var(--accent-purple)', marginBottom: 8 }}>{char.title}</p>
+            <p style={{ fontSize: 12, color: 'var(--accent-purple)', marginBottom: 8 }}>{char.title}</p>
             {char.available ? (
               <>
                 {!compact && (
@@ -129,7 +129,7 @@ export const CharacterSelectScreen: React.FC = () => {
                 <span style={{ fontSize: 28 }}>{relic.icon}</span>
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--accent-cyan)' }}>{relic.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{relic.description}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{relic.description}</div>
                 </div>
               </div>
             ) : null;
@@ -168,7 +168,7 @@ export const CharacterSelectScreen: React.FC = () => {
                     >
                       <span>{card.icon}</span>
                       <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.name}</span>
-                      <span style={{ color: 'var(--energy-color)', fontSize: 10, flexShrink: 0 }}>({card.cost})</span>
+                      <span style={{ color: 'var(--energy-color)', fontSize: 12, flexShrink: 0 }}>({card.cost})</span>
                     </div>
                   );
                 })}

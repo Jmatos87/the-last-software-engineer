@@ -101,14 +101,14 @@ export const TopBar: React.FC<TopBarProps> = ({ extra, onUseConsumable, onTarget
                     {c.description}
                   </div>
                   {inBattle && (
-                    <div style={{ color: 'var(--text-muted)', fontSize: 10, marginTop: 4 }}>
+                    <div style={{ color: 'var(--text-muted)', fontSize: 12, marginTop: 4 }}>
                       {c.target === 'enemy' ? 'Click → select target' : 'Click to use'}
                     </div>
                   )}
                   {inBattle && (
                     <div
                       onClick={e => { e.stopPropagation(); discardConsumable(c.instanceId); }}
-                      style={{ color: 'var(--accent-red)', fontSize: 10, marginTop: 4, cursor: 'pointer' }}
+                      style={{ color: 'var(--accent-red)', fontSize: 12, marginTop: 4, cursor: 'pointer' }}
                     >
                       [Discard]
                     </div>
@@ -128,7 +128,7 @@ export const TopBar: React.FC<TopBarProps> = ({ extra, onUseConsumable, onTarget
               </Tooltip>
             );
           })}
-          <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             {run.consumables.length}/{run.maxConsumables}
           </span>
         </div>

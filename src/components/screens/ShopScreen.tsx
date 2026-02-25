@@ -91,7 +91,7 @@ export const ShopScreen: React.FC = () => {
             >
               <div style={{ fontSize: 24, marginBottom: 4 }}>{card.icon}</div>
               <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
-              <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginBottom: 6 }}>{card.description}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6 }}>{card.description}</div>
               <div style={{ color: 'var(--gold-color)', fontSize: 13, fontWeight: 'bold' }}>
                 {sold ? 'SOLD' : `💰 ${cost}`}
               </div>
@@ -124,7 +124,7 @@ export const ShopScreen: React.FC = () => {
             >
               <div style={{ fontSize: 28, marginBottom: 4 }}>{item.icon}</div>
               <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{item.name}</div>
-              <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginBottom: 6 }}>{item.description}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6 }}>{item.description}</div>
               <div style={{ color: 'var(--gold-color)', fontSize: 13, fontWeight: 'bold' }}>
                 {owned ? 'OWNED' : `💰 ${cost}`}
               </div>
@@ -159,7 +159,7 @@ export const ShopScreen: React.FC = () => {
             >
               <div style={{ fontSize: 28, marginBottom: 4 }}>{c.icon}</div>
               <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{c.name}</div>
-              <div style={{ fontSize: 10, color: 'var(--text-secondary)', marginBottom: 6 }}>{c.description}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 6 }}>{c.description}</div>
               <div style={{ color: 'var(--gold-color)', fontSize: 13, fontWeight: 'bold' }}>
                 {sold ? 'SOLD' : slotsFull ? 'SLOTS FULL' : `💰 ${cost}`}
               </div>
@@ -209,9 +209,9 @@ export const ShopScreen: React.FC = () => {
                         }}
                       >
                         <div style={{ fontSize: 20, marginBottom: 4 }}>{card.icon}</div>
-                        <div style={{ fontSize: 11, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
-                        <div style={{ fontSize: 10, color: 'var(--energy-color)', marginBottom: 4 }}>⚡{card.cost}</div>
-                        <div style={{ fontSize: 9, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
+                        <div style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 2 }}>{card.name}</div>
+                        <div style={{ fontSize: 12, color: 'var(--energy-color)', marginBottom: 4 }}>⚡{card.cost}</div>
+                        <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.3 }}>{card.description}</div>
                       </div>
                     );
                   })}
