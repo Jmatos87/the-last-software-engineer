@@ -95,18 +95,18 @@ export const neutralCards: Record<string, CardDef> = {
   },
 
   // ── Neutral Rare (was Uncommon) ──
-  pair_programming: {
-    id: 'pair_programming', name: 'Pair Programming', type: 'attack', target: 'enemy', cost: 1, rarity: 'rare',
-    description: 'Deal 6 damage x2. Two adventurers share one weapon. Twice the strikes, thrice the arguments.',
+  mob_programming: {
+    id: 'mob_programming', name: 'Mob Programming', type: 'attack', target: 'enemy', cost: 1, rarity: 'rare',
+    description: 'Deal 6 damage x2. Five adventurers share one weapon. Twice the strikes, five times the opinions.',
     effects: { damage: 6, times: 2 },
     upgradedEffects: { damage: 14, times: 2 },
     upgradedDescription: 'Cost 2. Deal 14 damage x2. A full party crowds the blade. Infinite opinions.',
     upgradedCost: 2,
     icon: '👥',
   },
-  sprint_planning: {
-    id: 'sprint_planning', name: 'Sprint Planning', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
-    description: 'Gain 1 energy. Draw 1 card. A lengthy war council to plan a single sword swing.',
+  daily_standup: {
+    id: 'daily_standup', name: 'Daily Stand-up', type: 'skill', target: 'self', cost: 1, rarity: 'rare',
+    description: 'Gain 1 energy. Draw 1 card. A fifteen-minute war council to plan a single sword swing.',
     effects: { energy: 1, draw: 1 },
     upgradedEffects: { energy: 1, draw: 2 },
     upgradedDescription: 'Cost 0. Gain 1 energy. Draw 2 cards. The council is mercifully brief this time.',
@@ -155,8 +155,8 @@ export const neutralCards: Record<string, CardDef> = {
     upgradedDescription: 'Exhaust. Gain 3 energy. Heal 15 HP. Gain 40 gold. They didn\'t conquer you. They crowned you.',
     icon: '💎',
   },
-  ipo_day: {
-    id: 'ipo_day', name: 'IPO Day', type: 'power', target: 'self', cost: 2, rarity: 'rare',
+  the_ipo: {
+    id: 'the_ipo', name: 'The IPO', type: 'power', target: 'self', cost: 2, rarity: 'rare',
     description: 'Gain 2 Networking. Gain 30 gold. The guild goes public. Your shares sink. Your title gleams.',
     effects: { gainGold: 30, applyToSelf: { networking: 2 } },
     upgradedEffects: { gainGold: 40, applyToSelf: { networking: 3 } },

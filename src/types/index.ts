@@ -144,6 +144,7 @@ export interface CardEffect {
   damageAllPerToken?: boolean;      // deal floor(tokens × 0.5) to ALL enemies, tokens → 0
   // Training Loop mechanic (AI Engineer)
   damagePerTimesPlayed?: number;    // deal N × playCount bonus damage to target
+  damageAllPerTimesPlayed?: number; // deal N × playCount bonus damage to ALL enemies
   blockPerTimesPlayed?: number;     // gain N × playCount bonus block
   bonusAtSecondPlay?: { damage?: number; block?: number; draw?: number; copium?: number; energy?: number };
   // Flow State mechanic (Frontend Engineer)

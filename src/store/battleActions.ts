@@ -1132,6 +1132,15 @@ export function executePlayCard(
       }
     }
   }
+  if (effects.damageAllPerTimesPlayed) {
+    const bonus = (effects.damageAllPerTimesPlayed + trainingLoopRelic) * currentPlayCount;
+    if (bonus > 0) {
+      newBattle.enemies = newBattle.enemies.map(e => {
+        const dmg = calculateDamage(bonus, battle.playerStatusEffects, e.statusEffects, run.items);
+        return applyDamageToEnemy(e, dmg);
+      });
+    }
+  }
   if (effects.blockPerTimesPlayed) {
     const bonus = (effects.blockPerTimesPlayed + trainingLoopRelic) * currentPlayCount;
     if (bonus > 0) {

@@ -463,6 +463,16 @@ export const aiEngineerCards: Record<string, CardDef> = {
     icon: '🎲',
   },
 
+  backpropagation: {
+    id: 'backpropagation', name: 'Backpropagation', type: 'attack', target: 'all_enemies', cost: 2, rarity: 'epic',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Deal damage to ALL enemies equal to 5 × times played this combat (1st: 5, 2nd: 10, 3rd: 15...). The error signal flows backward through every layer. Your enemies are the layers.',
+    effects: { damageAllPerTimesPlayed: 5 },
+    upgradedEffects: { damageAllPerTimesPlayed: 7 },
+    upgradedDescription: 'Deal 7 × plays to ALL enemies (1st: 7, 2nd: 14, 3rd: 21...). A more devastating gradient descent.',
+    icon: '🔁',
+  },
+
   regularization: {
     id: 'regularization', name: 'Regularization', type: 'skill', target: 'self', cost: 0, rarity: 'epic',
     class: 'ai_engineer', archetype: 'training_loop',
@@ -551,6 +561,17 @@ export const aiEngineerCards: Record<string, CardDef> = {
     upgradedEffects: { damage: 8, damagePerTimesPlayed: 7, bonusAtSecondPlay: { energy: 1 } },
     upgradedDescription: 'Deal 8 damage +7 per play. 2nd play: gain 1 energy. An eternal incantation of escalating doom.',
     icon: '♾️',
+  },
+
+  recursive_apocalypse: {
+    id: 'recursive_apocalypse', name: 'Recursive Apocalypse', type: 'attack', target: 'all_enemies', cost: 3, rarity: 'legendary',
+    class: 'ai_engineer', archetype: 'training_loop',
+    description: 'Deal damage to ALL enemies equal to 10 × times played this combat (1st: 10, 2nd: 20, 3rd: 30...). 2nd play: gain 1 energy. The recursion never terminates. Neither do your enemies — until now.',
+    effects: { damageAllPerTimesPlayed: 10, bonusAtSecondPlay: { energy: 1 } },
+    upgradedEffects: { damageAllPerTimesPlayed: 14, bonusAtSecondPlay: { energy: 1 } },
+    upgradedDescription: 'Cost 2. Deal 14 × plays to ALL (1st: 14, 2nd: 28...). 2nd play: gain 1 energy. Stack overflow. Reality included.',
+    upgradedCost: 2,
+    icon: '🌀',
   },
 
   // ── AI Engineer Curse ──────────────────────────────────────────────────────

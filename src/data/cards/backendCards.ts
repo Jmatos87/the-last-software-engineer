@@ -190,8 +190,8 @@ export const backendCards: Record<string, CardDef> = {
   },
 
   // ── Ice Rares ──
-  permafrost: {
-    id: 'permafrost', name: 'Permafrost', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
+  frozen_cache: {
+    id: 'frozen_cache', name: 'Frozen Cache', type: 'skill', target: 'self', cost: 2, rarity: 'rare',
     class: 'backend', archetype: 'ice',
     description: 'Gain 10 block. Schedule 20 block for next turn. An enchantment frozen in eternity — along with the curse bound inside it.',
     effects: { block: 10, queueBlock: 20 },
@@ -331,8 +331,8 @@ export const backendCards: Record<string, CardDef> = {
   },
 
   // ── Ice Epics ──
-  absolute_zero: {
-    id: 'absolute_zero', name: 'Absolute Zero', type: 'skill', target: 'self', cost: 2, rarity: 'epic',
+  deep_freeze: {
+    id: 'deep_freeze', name: 'Deep Freeze', type: 'skill', target: 'self', cost: 2, rarity: 'epic',
     class: 'backend', archetype: 'ice',
     description: 'Gain 15 block. Gain 3 Savings Account. Schedule 52 block. Fires in 4 turns. The void-frost — an unreachable cold. Your vault\'s wards attempt it anyway.',
     effects: { block: 15, applyToSelf: { savingsAccount: 3 }, queueBlockCharged: 52 },
@@ -442,8 +442,8 @@ export const backendCards: Record<string, CardDef> = {
   },
 
   // ── Legendaries ──
-  infinite_loop: {
-    id: 'infinite_loop', name: 'Infinite Loop', type: 'skill', target: 'self', cost: 3, rarity: 'legendary',
+  eternal_recursion: {
+    id: 'eternal_recursion', name: 'Eternal Recursion', type: 'skill', target: 'self', cost: 3, rarity: 'legendary',
     class: 'backend', archetype: 'lightning',
     description: 'Schedule 61 chain damage to each enemy. Fires in 4 turns. Draw 3 cards. An eternal incantation with no exit clause — the caster becomes the spell.',
     effects: { queueChainCharged: 61, draw: 3 },
