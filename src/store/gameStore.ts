@@ -25,7 +25,7 @@ function getPlayerClass(characterId?: string): CardClass | undefined {
 }
 
 const SAVE_KEY = 'tlse-save';
-const GAME_VERSION = '1.22.3';
+const GAME_VERSION = '1.23.1';
 
 function saveGame(state: { screen: import('../types').Screen; run: import('../types').RunState | null }) {
   try {
@@ -1256,6 +1256,11 @@ export const useGameStore = create<GameState>()(
         // setTemperature: AI Engineer — set temperature to N
         if (eff.setTemperature !== undefined) {
           s.battle.temperature = Math.max(0, Math.min(10, eff.setTemperature));
+        }
+
+        // setPipelineData: AI Engineer — set pipelineData to N
+        if (eff.setPipelineData !== undefined) {
+          s.battle.pipelineData = eff.setPipelineData;
         }
 
         // Remove dead enemies and track gold earned
