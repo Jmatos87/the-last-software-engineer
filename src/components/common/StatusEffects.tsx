@@ -35,7 +35,7 @@ export const StatusEffects: React.FC<StatusEffectsProps> = ({ effects }) => {
   if (entries.length === 0) return null;
 
   return (
-    <div style={{ display: 'flex', gap: compact ? 2 : 4, flexWrap: 'wrap' }}>
+    <div className="status-effects-area">
       {entries.map(([key, value]) => {
         const info = effectInfo[key];
         if (!info) return null;

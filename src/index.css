@@ -295,11 +295,12 @@ button.success {
   border-radius: var(--radius-lg);
   transition: all var(--transition-fast);
   overflow: hidden;
+  width: 250px;
+  height: 420px;
 }
 
 /* Hero card */
 .entity-card.hero {
-  width: 200px;
   padding: 12px;
   gap: 6px;
   border-color: var(--accent-blue);
@@ -327,11 +328,20 @@ button.success {
   align-items: center;
   gap: 6px;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Enemy card — wrapper allows absolute quip above */
+.enemy-card-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Enemy card */
 .entity-card.enemy {
-  width: 200px;
   padding: 8px;
   gap: 4px;
 }
@@ -344,6 +354,17 @@ button.success {
   box-shadow: 0 0 12px rgba(248, 113, 113, 0.3);
 }
 
+/* Speech bubble — absolutely positioned above enemy card */
+.enemy-speech-bubble {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 6px;
+  z-index: 10;
+  pointer-events: none;
+}
+
 /* Separator line inside entity cards */
 .entity-card .card-separator {
   width: 100%;
@@ -354,7 +375,7 @@ button.success {
 
 /* Portrait frame — icon/portrait area */
 .portrait-frame {
-  width: 170px;
+  width: 100%;
   flex: 1;
   min-height: 100px;
   display: flex;
@@ -363,7 +384,16 @@ button.success {
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
-.portrait-frame.hero { width: 170px; height: 204px; flex: none; }
+.portrait-frame.hero { width: 100%; flex: 1; min-height: 80px; }
+
+/* Status effects — capped to 3 rows */
+.status-effects-area {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  max-height: 72px; /* 3 rows: (20px badge + 4px gap) × 3 = 72px */
+  overflow: hidden;
+}
 
 /* Gauge pips */
 .gauge-pip {
@@ -380,18 +410,24 @@ button.success {
   .consumable-slot.filled span { font-size: 12px !important; }
   ::-webkit-scrollbar { width: 4px; }
 
+  .entity-card {
+    width: 100px;
+    height: 170px;
+  }
   .entity-card.hero {
-    width: 130px;
     padding: 6px;
     gap: 3px;
   }
   .hero-gauge-col { width: 10px; }
   .hero-content-col { gap: 3px; }
   .entity-card.enemy {
-    width: 120px;
     padding: 4px;
     gap: 2px;
   }
-  .portrait-frame { width: 100px; min-height: 60px; }
-  .portrait-frame.hero { width: 80px; height: 96px; flex: none; }
+  .portrait-frame { width: 100%; min-height: 30px; }
+  .portrait-frame.hero { width: 100%; flex: 1; min-height: 30px; }
+  .status-effects-area {
+    gap: 2px;
+    max-height: 45px; /* 3 rows: (13px badge + 2px gap) × 3 = 45px */
+  }
 }

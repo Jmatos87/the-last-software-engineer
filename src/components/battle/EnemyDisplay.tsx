@@ -151,14 +151,11 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
   ].filter(Boolean).join(' ');
 
   return (
-    <div
-      ref={setNodeRef}
-      className={`entity-card enemy ${stateClasses} ${animClass}`}
-    >
-      {/* Speech bubble placeholder — fixed height so layout doesn't shift */}
-      <div style={{ minHeight: compact ? 14 : 32, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-        {speechBubble && (
-          <div className="animate-speech-bubble" style={{
+    <div className="enemy-card-wrapper">
+      {/* Speech bubble — absolutely positioned above card */}
+      {speechBubble && (
+        <div className="enemy-speech-bubble animate-speech-bubble">
+          <div style={{
             position: 'relative',
             background: 'var(--bg-card)',
             border: '1px solid var(--accent-yellow)',
@@ -185,9 +182,13 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
               borderTop: '6px solid var(--accent-yellow)',
             }} />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
+      <div
+        ref={setNodeRef}
+        className={`entity-card enemy ${stateClasses} ${animClass}`}
+      >
       {/* Enemy icon / portrait */}
       <div className={`portrait-frame ${tierClass}`}>
         {enemy.portrait ? (
@@ -320,6 +321,7 @@ export const EnemyDisplay: React.FC<EnemyDisplayProps> = ({ enemy, isTargeted, p
           </div>
         </Tooltip>
       )}
+      </div>
     </div>
   );
 };
