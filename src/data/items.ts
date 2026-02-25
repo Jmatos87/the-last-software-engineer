@@ -24,9 +24,9 @@ export const items: ItemDef[] = [
   },
   {
     id: 'gpu_cluster', name: 'GPU Cluster', icon: '🔧',
-    description: 'Draw 1 extra card per turn. Training_loop cards gain +1 bonus per play count. $47,000/month in cloud compute.',
+    description: 'Draw 1 extra card per turn. Start each turn with 1 pipelineData. $47,000/month in cloud compute.',
     rarity: 'starter', class: 'ai_engineer', isStarter: true,
-    effect: { extraDraw: 1, trainingLoopBonus: 1 },
+    effect: { extraDraw: 1, pipelinePerTurnStart: 1 },
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -57,10 +57,10 @@ export const items: ItemDef[] = [
     effect: { drawOnOverflow: 2, dodgeOnOverflow: 2 },
   },
   {
-    id: 'dependency_hell', name: 'Dependency Hell', icon: '📦',
-    description: 'Start combat with 4 Flow. Start each combat with 8 stress. Peer dependencies: irreconcilable.',
+    id: 'memory_leak_relic', name: 'Memory Leak', icon: '💧',
+    description: 'Bleed applied by your cards is increased by 2. Start combat with 5 stress. The heap grows. You pretend not to notice.',
     rarity: 'epic', class: 'frontend',
-    effect: { startFlowBonus: 4, startBattleStress: 8 },
+    effect: { bleedBonus: 2, startBattleStress: 5 },
   },
   {
     id: 'css_custom_props', name: 'CSS Custom Properties', icon: '🎨',
@@ -150,19 +150,19 @@ export const items: ItemDef[] = [
   },
 
   // ═══════════════════════════════════════════════════════════════
-  // AI ENGINEER CLASS RELICS (temperature / tokens / training_loop)
+  // AI ENGINEER CLASS RELICS (temperature / data_pipeline / inference)
   // ═══════════════════════════════════════════════════════════════
   {
-    id: 'learning_rate', name: 'Learning Rate', icon: '📊',
-    description: 'Training_loop cards gain +1 extra bonus per play count on top of their listed rate.',
+    id: 'feature_store', name: 'Feature Store', icon: '📦',
+    description: 'Start each combat with 3 pipelineData on first turn. Pre-computed features. Someone planned ahead.',
     rarity: 'common', class: 'ai_engineer',
-    effect: { trainingLoopBonus: 1 },
+    effect: { startPipelineData: 3 },
   },
   {
-    id: 'token_faucet', name: 'Token Faucet', icon: '🪣',
-    description: 'Start each combat with 3 tokens. Lose 1 token per turn. It trickles. It drains.',
+    id: 'sensor_array', name: 'Sensor Array', icon: '📡',
+    description: 'Inference conditional bonuses grant +3 extra block/damage. More sensors. More certainty. More paranoia.',
     rarity: 'rare', class: 'ai_engineer',
-    effect: { startTokens: 3, tokenLossPerTurn: 1 },
+    effect: { inferenceBonus: 3 },
   },
   {
     id: 'feedback_loop', name: 'Feedback Loop', icon: '🔄',
@@ -183,10 +183,10 @@ export const items: ItemDef[] = [
     effect: { overflowBonusDamage: 10, overflowResetToZero: true },
   },
   {
-    id: 'context_limit', name: 'Context Limit', icon: '🪟',
-    description: 'Start combat with 2 Confidence and 2 Resilience. Start each combat with 8 stress. Burned in. Burned out.',
+    id: 'context_window', name: 'Context Window', icon: '🪟',
+    description: 'Retain 4 pipelineData between turns. Start combat with 5 stress. 8k context. 200k anxiety.',
     rarity: 'epic', class: 'ai_engineer',
-    effect: { startBattleConfidence: 2, startBattleResilience: 2, startBattleStress: 8 },
+    effect: { pipelineRetain: 4, startBattleStress: 5 },
   },
 
   // ═══════════════════════════════════════════════════════════════

@@ -31,14 +31,14 @@ export const engineerRoster: Record<string, EngineerSlot> = {
   ai_jr: {
     id: 'ai_jr', name: 'AI Jr', icon: '🤖',
     passiveEffect: { draw: 1 },
-    evokeEffect: { damage: 10, damageScalesWithTokens: 2 },
-    harmonicEffect: { damageAllScalesWithTokens: 3 },
+    evokeEffect: { damage: 10, damageScalesWithPipeline: 2 },
+    harmonicEffect: { damageAllScalesWithPipeline: 3 },
   },
   ai_sr: {
     id: 'ai_sr', name: 'AI Sr', icon: '🧠',
-    passiveEffect: { generateTokens: 2 },
-    evokeEffect: { damageAllScalesWithTokens: 3 },
-    harmonicEffect: { damageAllScalesWithTokens: 5 },
+    passiveEffect: { generatePipelineData: 2 },
+    evokeEffect: { damageAllScalesWithPipeline: 3 },
+    harmonicEffect: { damageAllScalesWithPipeline: 5 },
   },
   qa_engineer: {
     id: 'qa_engineer', name: 'QA Engineer', icon: '🔍',

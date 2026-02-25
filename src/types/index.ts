@@ -23,6 +23,7 @@ export interface ConsumableEffect {
   triggerDetonation?: boolean;         // fire detonation queue immediately (backend)
   advanceBlueprintConsumable?: number; // advance blueprint by N (architect)
   setTemperature?: number;             // set temperature to N (ai_engineer)
+  setPipelineData?: number;            // set pipelineData to N (ai_engineer)
 }
 
 export interface ConsumableDef {
@@ -136,17 +137,33 @@ export interface CardEffect {
   damageIfHot?: number;             // bonus damage to target if temp ≥ 7
   blockIfCold?: number;             // bonus block if temp ≤ 3
   damageAllIfHot?: number;          // bonus damage to ALL enemies if temp ≥ 7
-  // Token Economy mechanic (AI Engineer)
-  generateTokens?: number;          // add N tokens (persist across turns)
-  doubleTokens?: boolean;           // tokens × 2
-  damagePerToken?: boolean;         // deal damage = tokens to target, tokens → 0
-  blockPerToken?: boolean;          // gain block = tokens, tokens → 0
-  damageAllPerToken?: boolean;      // deal floor(tokens × 0.5) to ALL enemies, tokens → 0
-  // Training Loop mechanic (AI Engineer)
-  damagePerTimesPlayed?: number;    // deal N × playCount bonus damage to target
-  damageAllPerTimesPlayed?: number; // deal N × playCount bonus damage to ALL enemies
-  blockPerTimesPlayed?: number;     // gain N × playCount bonus block
-  bonusAtSecondPlay?: { damage?: number; block?: number; draw?: number; copium?: number; energy?: number };
+  // Data Pipeline mechanic (AI Engineer) — pipelineData resets each turn, +1 per card played
+  gainPipelineData?: number;        // gain N extra pipelineData (on top of +1 per card)
+  damagePerPipeline?: number;       // deal N × current pipelineData bonus damage to target
+  damageAllPerPipeline?: number;    // deal N × current pipelineData bonus damage to ALL enemies
+  blockPerPipeline?: number;        // gain N × current pipelineData bonus block
+  doublePipelineData?: boolean;     // double current pipelineData
+  pipelineThresholdDraw?: number;   // if pipelineData ≥ N: draw 1 card
+  pipelineThresholdEnergy?: number; // if pipelineData ≥ N: gain 1 energy
+  pipelineThresholdGainData?: number; // if pipelineData ≥ N: gain 3 more pipelineData
+  retainPipelineData?: number;      // (power) retain N pipelineData between turns
+  extraPipelinePerCard?: number;    // (power) each card played grants +N extra pipelineData
+  // Inference mechanic (AI Engineer) — react to enemy intents
+  blockIfEnemyAttacks?: number;     // if target enemy intends attack: gain N extra block
+  damageIfEnemyAttacks?: number;    // if target enemy intends attack: deal N extra damage
+  damageIfEnemyBuffs?: number;      // if target enemy intends buff/heal: deal N extra damage
+  blockIfEnemyDebuffs?: number;     // if target enemy intends debuff: gain N block + cleanse 1
+  confidenceIfEnemyBuffs?: number;  // if target enemy intends buff: gain N confidence
+  damageEqualsEnemyAttack?: boolean; // deal damage = enemy's intended attack damage
+  damageEqualsEnemyAttackMultiplier?: number; // multiply damageEqualsEnemyAttack by N
+  blockEqualsIncomingDamage?: boolean; // gain block = total incoming attack damage from all enemies
+  dodgeIfEnemyAttacks?: number;     // if enemy intends attack: gain N dodge
+  vulnerableIfEnemyAttacks?: number; // if enemy attacks: apply N vulnerable to target
+  weakIfEnemyDefends?: number;      // if enemy defends: apply N weak to target
+  blockIfAnyEnemyAttacks?: number;  // if ANY enemy intends attack: gain N block
+  inferenceStartOfTurnBlock?: number; // (power) turn start: if any enemy attacks, gain N block
+  inferenceStartOfTurnConfidence?: number; // (power) turn start: if any enemy buffs, gain N confidence
+  inferenceStartOfTurnDamageAll?: number; // (power) turn start: deal N to all attacking enemies
   // Flow State mechanic (Frontend Engineer)
   gainExtraFlow?: number;           // gain N extra flow on play (beyond the automatic +1 per card)
   damageIfFlowHigh?: number;        // bonus damage to target if flow >= 5
@@ -228,7 +245,7 @@ export interface EngineerPassive {
   dodge?: number;
   resilience?: number;
   counterOffer?: number;
-  generateTokens?: number;
+  generatePipelineData?: number;
   queueBlock?: number;
   queueDamageAll?: number;
   vulnerableRandom?: number;   // apply N vulnerable to random enemy each turn
@@ -240,14 +257,14 @@ export interface EngineerEvoke {
   draw?: number;
   energy?: number;
   damage?: number;                      // deal to random enemy
-  damageScalesWithTokens?: number;      // deal (damage) + tokens × N to random enemy
+  damageScalesWithPipeline?: number;    // deal (damage) + pipelineData × N to random enemy
   damageAll?: number;                   // deal to all enemies
   applyToAll?: StatusEffect;
   shuffleDiscardToDraw?: boolean;
   queueBlock?: number;                  // queue ice block for next detonation turn
   queueDamageAll?: number;              // queue fire AoE for next detonation turn
   queueChain?: number;                  // queue lightning chain for next detonation turn
-  damageAllScalesWithTokens?: number;   // deal tokens × N to all enemies, tokens → 0
+  damageAllScalesWithPipeline?: number; // deal pipelineData × N to all enemies
   damageAllEqualsCounterOffer?: boolean; // deal counterOffer stacks as damage to all
   gainCounterOfferDouble?: boolean;     // gain counterOffer = current counterOffer stacks
   doubleResilience?: boolean;           // gain resilience = current resilience stacks
@@ -453,6 +470,7 @@ export interface ItemDef {
     blockPerDodgeStack?: number;       // at turn start: gain N block per dodge stack
     startFlowBonus?: number;           // start combat with N flow
     overflowBonusDamage?: number;      // overflow deals N extra AoE damage (frontend + ai_engineer)
+    bleedBonus?: number;               // bleed applied by cards is increased by N
     // ── Backend relic fields ──
     firstIceDoubleQueue?: boolean;     // first ice card each combat queues double block
     healOnDetonate?: number;           // heal N HP after detonation fires
@@ -468,9 +486,10 @@ export interface ItemDef {
     // maxEngineerSlots is also an ItemDef effect field (cap at N, replaces default 3)
     confidencePerSlottedEngineer?: boolean; // gain 1 confidence/turn per slotted engineer
     // ── AI Engineer relic fields ──
-    trainingLoopBonus?: number;        // training_loop cards gain +N extra bonus per play count
-    startTokens?: number;              // start combat with N tokens
-    tokenLossPerTurn?: number;         // lose N tokens at end of each turn
+    startPipelineData?: number;        // start first turn of combat with N pipelineData
+    pipelineRetain?: number;           // retain N pipelineData between turns
+    inferenceBonus?: number;           // inference conditional bonuses grant +N extra block/damage
+    pipelinePerTurnStart?: number;     // gain N pipelineData at start of each turn
     overflowEnergyGain?: number;       // on temperature overflow: gain N energy
     overflowResetToZero?: boolean;     // overflow resets temperature to 0 instead of 5
     hotThreshold?: number;             // override hot bonus activation threshold (default 7)
@@ -558,8 +577,7 @@ export interface BattleState {
   nextCardCostZero: boolean;
   // AI Engineer mechanics
   temperature: number;              // 0–10, starts at 5; overflow ≥10 → AoE; freeze ≤0 → block
-  tokens: number;                   // token economy accumulator, persists across turns
-  cardPlayCounts: Record<string, number>; // times each card.id played this combat
+  pipelineData: number;              // data pipeline accumulator, resets each turn, +1 per card played
   nextTurnDrawPenalty: number;      // enemy debuff: reduce cards drawn next turn by this amount
   nextTurnEnergyPenalty: number;    // energy_drain accumulates here; applied and reset at startNewTurn
   // Frontend Engineer mechanics

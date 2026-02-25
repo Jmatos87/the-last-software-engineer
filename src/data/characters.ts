@@ -73,9 +73,9 @@ export const characters: CharacterDef[] = [
     maxStress: 85,
     description: 'Volatile and powerful. High variance, high reward. Unique stress-interaction mechanics.',
     starterDeckIds: [
-      'model_init', 'model_init', 'model_init', 'model_init',
-      'cold_inference', 'cold_inference',
-      'token_budget', 'epoch_start', 'calibration',
+      'neural_spike', 'neural_spike', 'neural_spike', 'neural_spike',
+      'threat_scan', 'threat_scan',
+      'data_feed', 'hot_read', 'cold_scan',
       'coffee_break',
     ],
     starterRelicId: 'gpu_cluster',

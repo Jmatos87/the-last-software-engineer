@@ -230,18 +230,18 @@ export const HeroCard: React.FC<HeroCardProps> = ({ heroAnim, detonationQueue })
           );
         })()}
 
-        {/* Token counter — AI Engineer */}
-        {charId === 'ai_engineer' && (battle.tokens ?? 0) > 0 && (
+        {/* Pipeline Data counter — AI Engineer */}
+        {charId === 'ai_engineer' && (battle.pipelineData ?? 0) > 0 && (
           <div style={{
-            background: 'rgba(245,158,11,0.15)',
-            border: '1px solid rgba(245,158,11,0.5)',
+            background: 'rgba(96,165,250,0.15)',
+            border: '1px solid rgba(96,165,250,0.5)',
             borderRadius: 4,
             padding: compact ? '1px 4px' : '2px 6px',
             fontSize: compact ? 7 : 12,
-            color: '#f59e0b',
+            color: '#60a5fa',
             fontWeight: 'bold',
           }}>
-            🪙 {battle.tokens}
+            📊 {battle.pipelineData}
           </div>
         )}
 

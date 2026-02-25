@@ -16,6 +16,17 @@ import {
   mergeStatusEffects,
 } from '../utils/battleEngine';
 
+// ── Inference Helper: classify enemy intent ──
+function getEnemyIntentType(enemy: EnemyInstance): 'attack' | 'defend' | 'buff' | 'debuff' | 'other' {
+  const t = enemy.currentMove?.type;
+  if (!t) return 'other';
+  if (['attack', 'attack_defend', 'stress_attack', 'dual_attack'].includes(t)) return 'attack';
+  if (t === 'defend') return 'defend';
+  if (['buff', 'buff_allies', 'heal_allies'].includes(t)) return 'buff';
+  if (['debuff', 'exhaust', 'corrupt', 'discard', 'energy_drain'].includes(t)) return 'debuff';
+  return 'other';
+}
+
 // ── Engineer Slot Helpers ──
 // Both helpers mutate the battle object in place (newBattle is const in executePlayCard)
 
@@ -34,13 +45,13 @@ function applyEvokeEffect(
     b.discardPile = newDiscardPile;
   }
 
-  // Single-target damage (+ optional token scaling)
-  if (evoke.damage !== undefined || evoke.damageScalesWithTokens !== undefined) {
+  // Single-target damage (+ optional pipeline scaling)
+  if (evoke.damage !== undefined || evoke.damageScalesWithPipeline !== undefined) {
     const baseDmg = evoke.damage || 0;
-    const tokenBonus = evoke.damageScalesWithTokens
-      ? Math.floor((b.tokens || 0) * evoke.damageScalesWithTokens)
+    const pipelineBonus = evoke.damageScalesWithPipeline
+      ? Math.floor((b.pipelineData || 0) * evoke.damageScalesWithPipeline)
       : 0;
-    const totalDmg = baseDmg + tokenBonus;
+    const totalDmg = baseDmg + pipelineBonus;
     if (totalDmg > 0 && b.enemies.length > 0) {
       const idx = Math.floor(Math.random() * b.enemies.length);
       const dmg = calculateDamage(totalDmg, b.playerStatusEffects, b.enemies[idx].statusEffects, run.items);
@@ -56,15 +67,14 @@ function applyEvokeEffect(
     );
   }
 
-  // AoE damage scales with tokens (consumes tokens)
-  if (evoke.damageAllScalesWithTokens) {
-    const totalDmg = Math.floor((b.tokens || 0) * evoke.damageAllScalesWithTokens);
+  // AoE damage scales with pipeline data (does NOT consume pipeline)
+  if (evoke.damageAllScalesWithPipeline) {
+    const totalDmg = Math.floor((b.pipelineData || 0) * evoke.damageAllScalesWithPipeline);
     if (totalDmg > 0) {
       b.enemies = b.enemies.map(e =>
         applyDamageToEnemy(e, calculateDamage(totalDmg, b.playerStatusEffects, e.statusEffects, run.items))
       );
     }
-    b.tokens = 0;
   }
 
   if (evoke.applyToAll) {
@@ -295,8 +305,7 @@ export function initBattle(run: RunState, enemyDefs: EnemyDef[]): { battle: Batt
       firstPowerPlayedThisCombat: false,
       nextCardCostZero: false,
       temperature: 5,
-      tokens: run.items.reduce((s, i) => s + (i.effect.startTokens || 0), 0),
-      cardPlayCounts: {},
+      pipelineData: run.items.reduce((s, i) => s + (i.effect.startPipelineData || 0), 0),
       nextTurnDrawPenalty: 0,
       nextTurnEnergyPenalty: 0,
       flow: Math.min(7, run.items.reduce((s, i) => s + (i.effect.startFlowBonus || 0), 0)),
@@ -392,10 +401,9 @@ export function executePlayCard(
     newBattle.firstNCardsFreeRemaining = battle.firstNCardsFreeRemaining - 1;
   }
 
-  // Step 1 — Training Loop tracking (must be FIRST so playCount is current when effects resolve)
-  const prevPlayCount = (newBattle.cardPlayCounts || {})[card.id] || 0;
-  newBattle.cardPlayCounts = { ...(newBattle.cardPlayCounts || {}), [card.id]: prevPlayCount + 1 };
-  const currentPlayCount = newBattle.cardPlayCounts[card.id];
+  // Pipeline data tracking: +1 per card played (+ extra from power cards via extraPipelinePerCardBonus)
+  const extraPipeline = (newBattle as any).extraPipelinePerCardBonus || 0;
+  newBattle.pipelineData = (newBattle.pipelineData || 0) + 1 + extraPipeline;
 
   const effects = card.upgraded && card.upgradedEffects ? { ...card.effects, ...card.upgradedEffects } : card.effects;
   const hitTimes = effects.times || 1;
@@ -1089,87 +1097,148 @@ export function executePlayCard(
     goldChange += effects.gainGold;
   }
 
-  // Step 4 — Token Economy effects
-  if (effects.generateTokens) {
-    newBattle.tokens = (newBattle.tokens ?? 0) + effects.generateTokens;
+  // ── Data Pipeline effects (AI Engineer) ──
+  if (effects.gainPipelineData) {
+    newBattle.pipelineData = (newBattle.pipelineData || 0) + effects.gainPipelineData;
   }
-  if (effects.doubleTokens) {
-    newBattle.tokens = (newBattle.tokens ?? 0) * 2;
+  if (effects.doublePipelineData) {
+    newBattle.pipelineData = (newBattle.pipelineData || 0) * 2;
   }
-  if (effects.damagePerToken && targetInstanceId && (newBattle.tokens ?? 0) > 0) {
+  if (effects.damagePerPipeline && targetInstanceId && (newBattle.pipelineData || 0) > 0) {
     const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
     if (enemyIdx !== -1) {
-      const dmg = calculateDamage(newBattle.tokens!, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
+      const pipelineDmg = effects.damagePerPipeline * (newBattle.pipelineData || 0);
+      const dmg = calculateDamage(pipelineDmg, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
       newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
-      newBattle.tokens = 0;
     }
   }
-  if (effects.blockPerToken && (newBattle.tokens ?? 0) > 0) {
-    newBattle.playerBlock = (newBattle.playerBlock || 0) + newBattle.tokens!;
-    newBattle.tokens = 0;
-  }
-  if (effects.damageAllPerToken && (newBattle.tokens ?? 0) > 0) {
-    const tokenDmgBase = Math.floor(newBattle.tokens! * 0.5);
-    if (tokenDmgBase > 0) {
+  if (effects.damageAllPerPipeline && (newBattle.pipelineData || 0) > 0) {
+    const pipelineDmg = effects.damageAllPerPipeline * (newBattle.pipelineData || 0);
+    if (pipelineDmg > 0) {
       newBattle.enemies = newBattle.enemies.map(e => {
-        const dmg = calculateDamage(tokenDmgBase, battle.playerStatusEffects, e.statusEffects, run.items);
+        const dmg = calculateDamage(pipelineDmg, battle.playerStatusEffects, e.statusEffects, run.items);
         return applyDamageToEnemy(e, dmg);
       });
     }
-    newBattle.tokens = 0;
+  }
+  if (effects.blockPerPipeline && (newBattle.pipelineData || 0) > 0) {
+    const pipelineBlock = effects.blockPerPipeline * (newBattle.pipelineData || 0);
+    newBattle.playerBlock = (newBattle.playerBlock || 0) + pipelineBlock;
+  }
+  if (effects.pipelineThresholdDraw && (newBattle.pipelineData || 0) >= effects.pipelineThresholdDraw) {
+    const { drawn: pdDrawn, newDrawPile: pdDp, newDiscardPile: pdDisc } = drawCards(newBattle.drawPile, newBattle.discardPile, 1);
+    newBattle.hand = [...newBattle.hand, ...pdDrawn];
+    newBattle.drawPile = pdDp;
+    newBattle.discardPile = pdDisc;
+  }
+  if (effects.pipelineThresholdEnergy && (newBattle.pipelineData || 0) >= effects.pipelineThresholdEnergy) {
+    newBattle.energy = (newBattle.energy || 0) + 1;
+  }
+  if (effects.pipelineThresholdGainData && (newBattle.pipelineData || 0) >= effects.pipelineThresholdGainData) {
+    newBattle.pipelineData = (newBattle.pipelineData || 0) + 3;
+  }
+  if (effects.retainPipelineData) {
+    // Power card: persist retain amount — cumulative across multiple power plays
+    (newBattle as any).retainPipelineAmount = ((newBattle as any).retainPipelineAmount || 0) + effects.retainPipelineData;
+  }
+  if (effects.extraPipelinePerCard) {
+    // Power card: each card played grants +N extra pipelineData — cumulative
+    (newBattle as any).extraPipelinePerCardBonus = ((newBattle as any).extraPipelinePerCardBonus || 0) + effects.extraPipelinePerCard;
   }
 
-  // Step 5 — Training Loop effects
-  // trainingLoopBonus relic: add N extra scaling per play count to training_loop cards
-  const trainingLoopRelic = run.items.reduce((s, i) => s + (i.effect.trainingLoopBonus || 0), 0);
-  if (effects.damagePerTimesPlayed && targetInstanceId) {
-    const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
-    if (enemyIdx !== -1) {
-      const bonus = (effects.damagePerTimesPlayed + trainingLoopRelic) * currentPlayCount;
-      if (bonus > 0) {
-        const dmg = calculateDamage(bonus, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
-        newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+  // ── Inference effects (AI Engineer) ── react to enemy intents
+  {
+    const inferenceBonus = run.items.reduce((s, i) => s + (i.effect.inferenceBonus || 0), 0);
+    const targetEnemy = targetInstanceId ? newBattle.enemies.find(e => e.instanceId === targetInstanceId) : undefined;
+    const targetEnemyIdx = targetInstanceId ? newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId) : -1;
+
+    if (effects.blockIfEnemyAttacks && targetEnemy && getEnemyIntentType(targetEnemy) === 'attack') {
+      newBattle.playerBlock += effects.blockIfEnemyAttacks + inferenceBonus;
+    }
+    if (effects.damageIfEnemyAttacks && targetEnemy && getEnemyIntentType(targetEnemy) === 'attack') {
+      const bonusDmg = effects.damageIfEnemyAttacks + inferenceBonus;
+      if (targetEnemyIdx !== -1) {
+        const dmg = calculateDamage(bonusDmg, battle.playerStatusEffects, newBattle.enemies[targetEnemyIdx].statusEffects, run.items);
+        newBattle.enemies[targetEnemyIdx] = applyDamageToEnemy(newBattle.enemies[targetEnemyIdx], dmg);
       }
     }
-  }
-  if (effects.damageAllPerTimesPlayed) {
-    const bonus = (effects.damageAllPerTimesPlayed + trainingLoopRelic) * currentPlayCount;
-    if (bonus > 0) {
-      newBattle.enemies = newBattle.enemies.map(e => {
-        const dmg = calculateDamage(bonus, battle.playerStatusEffects, e.statusEffects, run.items);
-        return applyDamageToEnemy(e, dmg);
-      });
-    }
-  }
-  if (effects.blockPerTimesPlayed) {
-    const bonus = (effects.blockPerTimesPlayed + trainingLoopRelic) * currentPlayCount;
-    if (bonus > 0) {
-      newBattle.playerBlock = (newBattle.playerBlock || 0) + calculateBlock(bonus, battle.playerStatusEffects, run.items);
-    }
-  }
-  if (effects.bonusAtSecondPlay && currentPlayCount >= 2) {
-    const bonus = effects.bonusAtSecondPlay;
-    if (bonus.damage && targetInstanceId) {
-      const enemyIdx = newBattle.enemies.findIndex(e => e.instanceId === targetInstanceId);
-      if (enemyIdx !== -1) {
-        const dmg = calculateDamage(bonus.damage, battle.playerStatusEffects, newBattle.enemies[enemyIdx].statusEffects, run.items);
-        newBattle.enemies[enemyIdx] = applyDamageToEnemy(newBattle.enemies[enemyIdx], dmg);
+    if (effects.damageIfEnemyBuffs && targetEnemy && getEnemyIntentType(targetEnemy) === 'buff') {
+      const bonusDmg = effects.damageIfEnemyBuffs + inferenceBonus;
+      if (targetEnemyIdx !== -1) {
+        const dmg = calculateDamage(bonusDmg, battle.playerStatusEffects, newBattle.enemies[targetEnemyIdx].statusEffects, run.items);
+        newBattle.enemies[targetEnemyIdx] = applyDamageToEnemy(newBattle.enemies[targetEnemyIdx], dmg);
       }
     }
-    if (bonus.block) {
-      newBattle.playerBlock = (newBattle.playerBlock || 0) + calculateBlock(bonus.block, battle.playerStatusEffects, run.items);
+    if (effects.blockIfEnemyDebuffs) {
+      const anyDebuffs = newBattle.enemies.some(e => getEnemyIntentType(e) === 'debuff');
+      if (anyDebuffs) {
+        newBattle.playerBlock += effects.blockIfEnemyDebuffs + inferenceBonus;
+        // Cleanse 1 temporary debuff: reduce one debuff by 1
+        const ps = newBattle.playerStatusEffects;
+        if ((ps.vulnerable || 0) > 0) {
+          newBattle.playerStatusEffects = { ...ps, vulnerable: ps.vulnerable! - 1 || undefined };
+        } else if ((ps.weak || 0) > 0) {
+          newBattle.playerStatusEffects = { ...ps, weak: ps.weak! - 1 || undefined };
+        }
+      }
     }
-    if (bonus.draw) {
-      const { drawn: bDrawn, newDrawPile: bDp, newDiscardPile: bDisc } = drawCards(newBattle.drawPile, newBattle.discardPile, bonus.draw);
-      newBattle.hand = [...newBattle.hand, ...bDrawn];
-      newBattle.drawPile = bDp;
-      newBattle.discardPile = bDisc;
+    if (effects.confidenceIfEnemyBuffs) {
+      const anyBuffs = newBattle.enemies.some(e => getEnemyIntentType(e) === 'buff');
+      if (anyBuffs) {
+        newBattle.playerStatusEffects = mergeStatusEffects(newBattle.playerStatusEffects, { confidence: effects.confidenceIfEnemyBuffs });
+      }
     }
-    if (bonus.copium) {
-      stressReduction += calculateCopium(bonus.copium, battle.playerStatusEffects, run.items);
+    if (effects.damageEqualsEnemyAttack && targetEnemy) {
+      const intendedDmg = targetEnemy.currentMove?.damage || 0;
+      const multiplier = effects.damageEqualsEnemyAttackMultiplier || 1;
+      const totalDmg = Math.floor(intendedDmg * multiplier);
+      if (totalDmg > 0 && targetEnemyIdx !== -1) {
+        const dmg = calculateDamage(totalDmg, battle.playerStatusEffects, newBattle.enemies[targetEnemyIdx].statusEffects, run.items);
+        newBattle.enemies[targetEnemyIdx] = applyDamageToEnemy(newBattle.enemies[targetEnemyIdx], dmg);
+      }
     }
-    if (bonus.energy) {
-      newBattle.energy += bonus.energy;
+    if (effects.blockEqualsIncomingDamage) {
+      const totalIncoming = newBattle.enemies.reduce((sum, e) => {
+        if (getEnemyIntentType(e) === 'attack') return sum + (e.currentMove?.damage || 0);
+        return sum;
+      }, 0);
+      newBattle.playerBlock += totalIncoming;
+    }
+    if (effects.dodgeIfEnemyAttacks && targetEnemy && getEnemyIntentType(targetEnemy) === 'attack') {
+      newBattle.playerStatusEffects = mergeStatusEffects(newBattle.playerStatusEffects, { dodge: effects.dodgeIfEnemyAttacks });
+    }
+    if (effects.vulnerableIfEnemyAttacks && targetEnemy && getEnemyIntentType(targetEnemy) === 'attack') {
+      if (targetEnemyIdx !== -1) {
+        newBattle.enemies[targetEnemyIdx] = {
+          ...newBattle.enemies[targetEnemyIdx],
+          statusEffects: mergeStatusEffects(newBattle.enemies[targetEnemyIdx].statusEffects, { vulnerable: effects.vulnerableIfEnemyAttacks }),
+        };
+      }
+    }
+    if (effects.weakIfEnemyDefends && targetEnemy && getEnemyIntentType(targetEnemy) === 'defend') {
+      if (targetEnemyIdx !== -1) {
+        newBattle.enemies[targetEnemyIdx] = {
+          ...newBattle.enemies[targetEnemyIdx],
+          statusEffects: mergeStatusEffects(newBattle.enemies[targetEnemyIdx].statusEffects, { weak: effects.weakIfEnemyDefends }),
+        };
+      }
+    }
+    if (effects.blockIfAnyEnemyAttacks) {
+      const anyAttacks = newBattle.enemies.some(e => getEnemyIntentType(e) === 'attack');
+      if (anyAttacks) {
+        newBattle.playerBlock += effects.blockIfAnyEnemyAttacks;
+      }
+    }
+
+    // Inference power cards — store start-of-turn effects persistently
+    if (effects.inferenceStartOfTurnBlock) {
+      (newBattle as any).inferenceStartOfTurnBlock = ((newBattle as any).inferenceStartOfTurnBlock || 0) + effects.inferenceStartOfTurnBlock;
+    }
+    if (effects.inferenceStartOfTurnConfidence) {
+      (newBattle as any).inferenceStartOfTurnConfidence = ((newBattle as any).inferenceStartOfTurnConfidence || 0) + effects.inferenceStartOfTurnConfidence;
+    }
+    if (effects.inferenceStartOfTurnDamageAll) {
+      (newBattle as any).inferenceStartOfTurnDamageAll = ((newBattle as any).inferenceStartOfTurnDamageAll || 0) + effects.inferenceStartOfTurnDamageAll;
     }
   }
 
@@ -2114,8 +2183,6 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   if (confPerEngineer && (battle.engineerSlots || []).length > 0) {
     turnStartStatusMerge.confidence = (turnStartStatusMerge.confidence || 0) + battle.engineerSlots.length;
   }
-  // tokenLossPerTurn relic: lose N tokens per turn (clamped to 0)
-  const tokenLoss = run.items.reduce((s, i) => s + (i.effect.tokenLossPerTurn || 0), 0);
   // retainFlow relic: retain up to N flow between turns instead of resetting to 0
   const retainFlow = run.items.reduce((s, i) => s + (i.effect.retainFlow || 0), 0);
 
@@ -2208,7 +2275,7 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
   // ── Engineer Slot Passives (Architect mechanic: fire every turn start) ──
   let engineerPassiveBlock = 0;
   let engineerPassiveEnergy = 0;
-  let engineerTokenGain = 0;
+  let engineerPipelineGain = 0;
   let engineerQueuedEffects: QueuedEffect[] = [];
   const engineerPassiveStatus: import('../types').StatusEffect = {};
 
@@ -2219,7 +2286,7 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
     if (p.dodge) engineerPassiveStatus.dodge = (engineerPassiveStatus.dodge || 0) + p.dodge;
     if (p.resilience) engineerPassiveStatus.resilience = (engineerPassiveStatus.resilience || 0) + p.resilience;
     if (p.counterOffer) engineerPassiveStatus.counterOffer = (engineerPassiveStatus.counterOffer || 0) + p.counterOffer;
-    if (p.generateTokens) engineerTokenGain += p.generateTokens;
+    if (p.generatePipelineData) engineerPipelineGain += p.generatePipelineData;
     if (p.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: p.queueBlock, turnsUntilFire: 1 });
     if (p.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: p.queueDamageAll, turnsUntilFire: 1 });
     if (p.vulnerableRandom && postDeployEnemies.length > 0) {
@@ -2247,7 +2314,7 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       if (p.dodge) engineerPassiveStatus.dodge = (engineerPassiveStatus.dodge || 0) + p.dodge;
       if (p.resilience) engineerPassiveStatus.resilience = (engineerPassiveStatus.resilience || 0) + p.resilience;
       if (p.counterOffer) engineerPassiveStatus.counterOffer = (engineerPassiveStatus.counterOffer || 0) + p.counterOffer;
-      if (p.generateTokens) engineerTokenGain += p.generateTokens;
+      if (p.generatePipelineData) engineerPipelineGain += p.generatePipelineData;
       if (p.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: p.queueBlock, turnsUntilFire: 1 });
       if (p.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: p.queueDamageAll, turnsUntilFire: 1 });
     }
@@ -2270,7 +2337,7 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
         if (rp.dodge) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { dodge: rp.dodge });
         if (rp.resilience) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { resilience: rp.resilience });
         if (rp.counterOffer) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { counterOffer: rp.counterOffer });
-        if (rp.generateTokens) engineerTokenGain += rp.generateTokens;
+        if (rp.generatePipelineData) engineerPipelineGain += rp.generatePipelineData;
         if (rp.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: rp.queueBlock, turnsUntilFire: 1 });
         if (rp.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: rp.queueDamageAll, turnsUntilFire: 1 });
         if (rp.vulnerableRandom && postDeployEnemies.length > 0) {
@@ -2300,7 +2367,7 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       if (hp2.dodge) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { dodge: hp2.dodge });
       if (hp2.resilience) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { resilience: hp2.resilience });
       if (hp2.counterOffer) mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { counterOffer: hp2.counterOffer });
-      if (hp2.generateTokens) engineerTokenGain += hp2.generateTokens;
+      if (hp2.generatePipelineData) engineerPipelineGain += hp2.generatePipelineData;
       if (hp2.queueBlock) engineerQueuedEffects.push({ element: 'ice' as const, blockAmount: hp2.queueBlock, turnsUntilFire: 1 });
       if (hp2.queueDamageAll) engineerQueuedEffects.push({ element: 'fire' as const, damageAllAmount: hp2.queueDamageAll, turnsUntilFire: 1 });
       if (hp2.vulnerableRandom && postDeployEnemies.length > 0) {
@@ -2320,13 +2387,13 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
     }
     // Fire harmonicEffect via applyEvokeEffect on a temporary state proxy
     if (slots[0].harmonicEffect) {
-      const tokensBefore = (battle.tokens ?? 0) + engineerTokenGain;
+      const pipelineBefore = (battle.pipelineData ?? 0) + engineerPipelineGain;
       const harmonicProxy = {
         ...battle,
         enemies: postDeployEnemies,
         playerStatusEffects: mergedWithEngineer,
         playerBlock: engineerPassiveBlock,
-        tokens: tokensBefore,
+        pipelineData: pipelineBefore,
         detonationQueue: engineerQueuedEffects,
         energy: 0, // energy handled separately via engineerPassiveEnergy
         hand,
@@ -2338,7 +2405,7 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       postDeployEnemies = harmonicProxy.enemies;
       mergedWithEngineer = harmonicProxy.playerStatusEffects;
       engineerPassiveBlock = harmonicProxy.playerBlock;
-      engineerTokenGain = harmonicProxy.tokens - (battle.tokens ?? 0);
+      engineerPipelineGain = harmonicProxy.pipelineData - (battle.pipelineData ?? 0);
       engineerQueuedEffects = harmonicProxy.detonationQueue;
       engineerPassiveEnergy += harmonicProxy.energy;
       // Also extract any hand/draw/discard changes from draw effects
@@ -2459,6 +2526,37 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
     postDeployEnemies = postDeployEnemies.filter(e => e.currentHp > 0);
   }
 
+  // ── Inference power start-of-turn effects (AI Engineer) ──
+  const infBlock = (battle as any).inferenceStartOfTurnBlock || 0;
+  const infConfidence = (battle as any).inferenceStartOfTurnConfidence || 0;
+  const infDmgAll = (battle as any).inferenceStartOfTurnDamageAll || 0;
+  if (infBlock > 0) {
+    const anyAttacks = postDeployEnemies.some(e => getEnemyIntentType(e) === 'attack');
+    if (anyAttacks) {
+      blockBonus += infBlock;
+    }
+  }
+  if (infConfidence > 0) {
+    const anyBuffs = postDeployEnemies.some(e => getEnemyIntentType(e) === 'buff');
+    if (anyBuffs) {
+      mergedWithEngineer = mergeStatusEffects(mergedWithEngineer, { confidence: infConfidence });
+    }
+  }
+  if (infDmgAll > 0) {
+    const attackingEnemies = postDeployEnemies.filter(e => getEnemyIntentType(e) === 'attack');
+    if (attackingEnemies.length > 0) {
+      postDeployEnemies = postDeployEnemies.map(e => {
+        if (getEnemyIntentType(e) !== 'attack' || e.currentHp <= 0) return e;
+        return applyDamageToEnemy(e, calculateDamage(infDmgAll, mergedWithEngineer, e.statusEffects, run.items));
+      });
+      // Track kills from inference damage
+      const infKilled = postDeployEnemies.filter(e => e.currentHp <= 0);
+      detonationKillCount += infKilled.length;
+      detonationGoldEarned += infKilled.reduce((sum, e) => sum + (e.gold || 0), 0);
+      postDeployEnemies = postDeployEnemies.filter(e => e.currentHp > 0);
+    }
+  }
+
   // Decay dodge by 1 at start of player's turn (predictable, visible decay)
   let finalPlayerStatus = mergedWithEngineer;
   if (finalPlayerStatus.dodge && finalPlayerStatus.dodge > 0) {
@@ -2492,8 +2590,14 @@ export function startNewTurn(battle: BattleState, run: RunState): { battle: Batt
       firstSkillPlayedThisTurn: false,
       nextCardCostZero: false,
       temperature: battle.temperature ?? 5,
-      tokens: Math.max(0, (battle.tokens ?? 0) + engineerTokenGain - tokenLoss),
-      cardPlayCounts: battle.cardPlayCounts ?? {},
+      pipelineData: (() => {
+        // Calculate retained pipeline data from power cards + pipelineRetain relic
+        const retainAmount = (battle as any).retainPipelineAmount || 0;
+        const relicRetain = run.items.reduce((s, i) => s + (i.effect.pipelineRetain || 0), 0);
+        const retainedPipeline = Math.min(battle.pipelineData || 0, retainAmount + relicRetain);
+        const pipelinePerTurnStart = run.items.reduce((s, i) => s + (i.effect.pipelinePerTurnStart || 0), 0);
+        return retainedPipeline + pipelinePerTurnStart + engineerPipelineGain;
+      })(),
       nextTurnDrawPenalty: 0,
       nextTurnEnergyPenalty: 0,
       flow: retainFlow > 0 ? Math.min(battle.flow ?? 0, retainFlow) : 0,

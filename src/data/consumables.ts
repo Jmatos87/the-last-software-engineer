@@ -62,6 +62,12 @@ export const consumables: Record<string, ConsumableDef> = {
     rarity: 'rare', target: 'self', class: 'frontend',
     effect: { gainFlow: 5 },
   },
+  exploit_kit: {
+    id: 'exploit_kit', name: 'Exploit Kit', icon: '🩸',
+    description: 'Apply 6 Bleed to target enemy. Frontend only. Zero-day. Their day.',
+    rarity: 'rare', target: 'enemy', class: 'frontend',
+    effect: { applyToTarget: { bleed: 6 } },
+  },
   detonation_primer: {
     id: 'detonation_primer', name: 'Detonation Primer', icon: '💥',
     description: 'Trigger your detonation queue immediately this turn. Backend only.',
@@ -79,6 +85,12 @@ export const consumables: Record<string, ConsumableDef> = {
     description: 'Set temperature to 9 (Hot state). AI Engineer only.',
     rarity: 'rare', target: 'self', class: 'ai_engineer',
     effect: { setTemperature: 9 },
+  },
+  preloaded_dataset: {
+    id: 'preloaded_dataset', name: 'Preloaded Dataset', icon: '📊',
+    description: 'Set pipelineData to 8. AI Engineer only. Someone left the training data in memory.',
+    rarity: 'rare', target: 'self', class: 'ai_engineer',
+    effect: { setPipelineData: 8 },
   },
   leetcode_grind: {
     id: 'leetcode_grind', name: 'LeetCode Grind Session', icon: '💻',
